@@ -3,12 +3,12 @@
         <h3>Outils</h3>
     </li>
     <li>
-        <button name="eraser">Efface</button>
+        <button (click)="switchToEraseCanvasEvent" name="eraser">Efface</button>
     </li>
     <li>
-        <button name="pensil">Crayon</button>
+        <button (click)="switchToPensilCanvasEvent" name="pensil">Crayon</button>
     </li>
     <li>
-        <input type="color" name="colorSelector">
+        <input type="color" (click)="changeColorEvent" name="colorSelector">
     </li>
 </ul>

@@ -6,7 +6,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
     styleUrls: ['./tool-box.component.scss'],
 })
 export class ToolBoxComponent {
-    @Output() switchToEraseCanvasEvent: EventEmitter<void> = new EventEmitter<void>();
-    @Output() switchToPensilCanvasEvent: EventEmitter<void> = new EventEmitter<void>();
-    @Output() changeColorEvent: EventEmitter<void> = new EventEmitter<void>();
+    @Output() userCanvasStateEvent: EventEmitter<void> = new EventEmitter<void>();
+    @Output() changeColorEvent: EventEmitter<string> = new EventEmitter<string>();
 }

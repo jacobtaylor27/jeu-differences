@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Tool } from '@app/constant/tool';
 
 @Component({
     selector: 'app-tool-box',
@@ -6,6 +7,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
     styleUrls: ['./tool-box.component.scss'],
 })
 export class ToolBoxComponent {
-    @Output() userCanvasStateEvent: EventEmitter<void> = new EventEmitter<void>();
+    @Output() userCanvasStateEvent: EventEmitter<Tool> = new EventEmitter<Tool>();
     @Output() changeColorEvent: EventEmitter<string> = new EventEmitter<string>();
+    tool = Tool;
 }

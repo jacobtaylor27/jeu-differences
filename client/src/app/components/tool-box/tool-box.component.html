@@ -3,10 +3,10 @@
         <h3>Outils</h3>
     </li>
     <li>
-        <button (click)="userCanvasStateEvent.emit()" name="eraser">Efface</button>
+        <button (click)="userCanvasStateEvent.emit(tool.Eraser)" name="eraser">Efface</button>
     </li>
     <li>
-        <button (click)="userCanvasStateEvent.emit()" name="pensil">Crayon</button>
+        <button (click)="userCanvasStateEvent.emit(tool.Pensil)" name="pensil">Crayon</button>
     </li>
     <li>
         <input type="color" (change)="changeColorEvent.emit(colorSelector.value)" name="colorSelector" #colorSelector>

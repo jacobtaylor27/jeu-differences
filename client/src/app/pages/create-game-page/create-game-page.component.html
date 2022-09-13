@@ -1,1 +1,28 @@
-<p>create-game-page works!</p>
+<form [formGroup]="this.form" (ngSubmit)="onSubmit()">
+    <ul>
+        <li>
+            <label for="name">Nom du jeu: </label>
+            <input id="name" type="text" formControlName="name">
+        </li>
+        <li id="toolBox">
+            <app-tool-box (changeColorEvent)="changeColor($event)" (userCanvasStateEvent)="changePensilState($event)"></app-tool-box>
+        </li>
+        <li class="canvas">
+            <canvas id="img" width="640" height="480" formControlName="img"></canvas>
+            <label for="img">Titre: Image Source</label>
+        </li>
+        <li class="canvas">
+            <canvas id="imgDiff" width="640" height="480" formControlName="imgDiff"></canvas>
+            <label for="imgDiff">Titre: Image a changer </label>
+        </li>
+        <li>
+            <label for="expansionRadius">Choisir le rayon d'elargissement: </label>
+            <select id="expansionRadius" formControlName="expansionRadius">
+                <option value="3">3px</option>
+                <option value="0">0px</option>
+                <option value="9">9px</option>
+                <option value="15">15px</option>
+            </select>
+        </li>
+    </ul>
+</form>

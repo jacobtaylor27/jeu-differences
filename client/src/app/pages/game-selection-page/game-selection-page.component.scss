@@ -1,0 +1,22 @@
+.card-container {
+    display: flex;
+    justify-content: center;
+}
+
+mat-toolbar {
+    margin-bottom: 20px;
+}
+
+mat-grid-list {
+    width: 80vw;
+}
+
+mat-grid-tile {
+    background-color: lightblue;
+}
+
+button {
+    position: inherit;
+    transform: translateY(37vh);
+    height: 10vh;
+}

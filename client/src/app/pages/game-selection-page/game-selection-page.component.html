@@ -1,1 +1,14 @@
-<p>game-selection-page works!</p>
+<main [ngClass]="favoriteTheme">
+    <mat-toolbar color="primary">Select your game mode !</mat-toolbar>
+    <div class="card-container">
+        <button mat-button><</button>
+
+        <mat-grid-list color="primary" cols="2" rowHeight="2:1" [gutterSize]="'30px'">
+            <mat-grid-tile *ngFor="let gameCard of gameCards">
+                <app-game-card></app-game-card>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+        <button mat-button>></button> 
+    </div>
+</main>

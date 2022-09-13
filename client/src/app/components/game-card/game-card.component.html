@@ -1,3 +1,28 @@
+<div>
+    <mat-card-title>{{gameName}}</mat-card-title>
+    <br>
+    <img src="{{imgSource}}" alt="aurore">
+    <br>
+    <button class="fav-icon" mat-icon-button aria-label="Play Game Button" matTooltip="Select Game" (click)="onSelectPlayGame()">
+        Jouer
+    </button>
+    <button class="fav-icon" mat-icon-button aria-label="Create Game Button" matTooltip="Select Game" (click)="onSelectCreateGame()">
+        Créer
+    </button>
+</div>
 
-
-
+<ng-template #enterNameDialogContentRef>
+    <div class="dialog-content">
+        <mat-form-field>
+            <input matInput placeholder="Enter your name">
+        </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline">
+        <mat-label>Input</mat-label>
+        <input matInput placeholder="Name">
+      </mat-form-field>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button>Continue</button>
+    </div>
+</ng-template>

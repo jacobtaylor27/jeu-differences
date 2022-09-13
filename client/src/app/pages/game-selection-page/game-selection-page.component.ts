@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GameCardComponent } from '@app/components/game-card/game-card.component';
 
 @Component({
   selector: 'app-game-selection-page',
   templateUrl: './game-selection-page.component.html',
   styleUrls: ['./game-selection-page.component.scss']
 })
-export class GameSelectionPageComponent implements OnInit {
+export class GameSelectionPageComponent {
+  constructor(private readonly matDialog: MatDialog) {}
 
-  constructor() { }
+  favoriteTheme: string = 'deeppurple-amber-theme';
+  name:string;
 
-  ngOnInit(): void {
-  }
-
+  gameCards: GameCardComponent[] = [
+    new GameCardComponent(this.matDialog),
+    new GameCardComponent(this.matDialog),
+    new GameCardComponent(this.matDialog),
+    new GameCardComponent(this.matDialog)
+  ];
 }

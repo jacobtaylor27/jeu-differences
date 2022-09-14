@@ -11,12 +11,16 @@ mat-grid-list {
     width: 80vw;
 }
 
+.mat-grid-list {
+    padding-bottom: 0;
+}
+
 mat-grid-tile {
     background-color: lightblue;
 }
 
 button {
     position: inherit;
-    transform: translateY(37vh);
-    height: 10vh;
+    transform: translateY(40vh);
+    height: 50px;
 }

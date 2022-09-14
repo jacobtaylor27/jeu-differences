@@ -13,6 +13,7 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { CreateGamePageComponent } from './pages/create-game-page/create-game-page.component';
 import { ToolBoxComponent } from './components/tool-box/tool-box.component';
+import { DrawCanvasComponent } from './components/draw-canvas/draw-canvas.component';
 
 /**
  * Main module that is used in main.ts.
@@ -30,6 +31,7 @@ import { ToolBoxComponent } from './components/tool-box/tool-box.component';
         SidebarComponent,
         CreateGamePageComponent,
         ToolBoxComponent,
+        DrawCanvasComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

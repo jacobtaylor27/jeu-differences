@@ -17,6 +17,10 @@ export class DrawCanvasComponent {
         this.isClick = true;
         this.reposition(event);
     }
+
+    stop() {
+        this.isClick = false;
+    }
     reposition(event: MouseEvent) {
         this.coordDraw.x = event.clientX - this.canvas.nativeElement.offsetLeft;
         this.coordDraw.y = event.clientY - this.canvas.nativeElement.offsetTop;

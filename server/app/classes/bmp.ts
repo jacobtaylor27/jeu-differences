@@ -17,17 +17,21 @@ export class Bmp {
             const scanLine = [];
 
             for (let j = 0; j < this.width; j++) {
-                const PIXEL_SIZE = 4;
-                const pixel: Pixel = {
-                    a: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Intensity],
-                    r: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Red],
-                    g: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Green],
-                    b: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Blue],
-                };
+                const pixel: Pixel = this.getPixel(rawData, i, j);
                 scanLine.push(pixel);
             }
             pixels.push(scanLine);
         }
         return pixels;
+    }
+
+    private getPixel(rawData: number[], i: number, j: number): Pixel {
+        const PIXEL_SIZE = 4;
+        return {
+            a: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Intensity],
+            r: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Red],
+            g: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Green],
+            b: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Blue],
+        };
     }
 }

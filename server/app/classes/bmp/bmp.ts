@@ -1,5 +1,5 @@
-import { Pixel } from '@app/classes/pixel';
-import { PixelOffset } from '@app/constantes/pixel-offset';
+import { Pixel } from '@app/interface/pixel';
+import { PixelOffset } from '@app/constante/pixel-offset';
 export class Bmp {
     width: number;
     height: number;

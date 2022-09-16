@@ -1,4 +1,4 @@
-import { Bmp } from '@app/classes/bmp';
+import { Bmp } from '@app/classes/bmp/bmp';
 import * as bmp from 'bmp-js';
 import * as fs from 'fs';
 

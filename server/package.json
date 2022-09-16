@@ -29,7 +29,8 @@
             "app/index.ts",
             "app/server.ts",
             "app/app.ts",
-            "app/constantes/*.ts"
+            "app/constante/*.ts",
+            "app/interface/*.ts"
         ],
         "require": [
             "ts-node/register",

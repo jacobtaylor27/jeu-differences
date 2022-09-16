@@ -17,7 +17,10 @@ export class Bmp {
             const scanLine = [];
 
             for (let j = 0; j < this.width; j++) {
-                const pixel: Pixel = this.getPixel(rawData, i, j);
+                const PIXEL_SIZE = 4;
+
+                const beginRange = (i * this.width + j) * PIXEL_SIZE;
+                const pixel: Pixel = this.getPixel(rawData.slice(beginRange, beginRange + PIXEL_SIZE));
                 scanLine.push(pixel);
             }
             pixels.push(scanLine);
@@ -25,13 +28,12 @@ export class Bmp {
         return pixels;
     }
 
-    private getPixel(rawData: number[], i: number, j: number): Pixel {
-        const PIXEL_SIZE = 4;
+    private getPixel(pixel: number[]): Pixel {
         return {
-            a: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Intensity],
-            r: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Red],
-            g: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Green],
-            b: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Blue],
+            a: pixel[PixelOffset.Intensity],
+            r: pixel[PixelOffset.Red],
+            g: pixel[PixelOffset.Green],
+            b: pixel[PixelOffset.Blue],
         };
     }
 }

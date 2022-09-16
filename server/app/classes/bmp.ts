@@ -1,8 +1,5 @@
 import { Pixel } from '@app/classes/pixel';
-
-const COLOR_PER_PIXEL = 3;
-const LONG_SIZE = 4;
-
+import { PixelOffset } from '@app/constantes/pixel-offset';
 export class Bmp {
     width: number;
     height: number;
@@ -15,24 +12,20 @@ export class Bmp {
     }
 
     convertRawToPixels(rawData: number[]): Pixel[][] {
-        const padding = this.width % LONG_SIZE;
         const pixels = [];
-
         for (let i = 0; i < this.height; i++) {
             const scanLine = [];
 
             for (let j = 0; j < this.width; j++) {
+                const PIXEL_SIZE = 4;
                 const pixel: Pixel = {
-                    r: rawData[(i * this.width + j) * COLOR_PER_PIXEL],
-                    g: rawData[(i * this.width + j) * COLOR_PER_PIXEL + 1],
-                    b: rawData[(i * this.width + j) * COLOR_PER_PIXEL + 2],
+                    a: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Intensity],
+                    r: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Red],
+                    g: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Green],
+                    b: rawData[(i * this.width + j) * PIXEL_SIZE + PixelOffset.Blue],
                 };
                 scanLine.push(pixel);
             }
-            for (let j = 0; j < padding; j++) {
-                scanLine.pop();
-            }
-
             pixels.push(scanLine);
         }
         return pixels;

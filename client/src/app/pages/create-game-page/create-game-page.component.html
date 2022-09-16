@@ -8,11 +8,11 @@
             <app-tool-box (changeColorEvent)="changeColor($event)" (userCanvasStateEvent)="changePensilState($event)"></app-tool-box>
         </li>
         <li class="canvas">
-            <canvas id="img" width="640" height="480" formControlName="img"></canvas>
+            <canvas id="img" width="640px" height="480px" formControlName="img"></canvas>
             <label for="img">Titre: Image Source</label>
         </li>
         <li class="canvas">
-            <canvas id="imgDiff" width="640" height="480" formControlName="imgDiff"></canvas>
+            <app-draw-canvas id="imgDiff"></app-draw-canvas>
             <label for="imgDiff">Titre: Image a changer </label>
         </li>
         <li>

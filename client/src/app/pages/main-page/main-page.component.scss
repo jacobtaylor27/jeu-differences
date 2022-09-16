@@ -1,44 +1,39 @@
-.container {
-    min-height: 100vh;
-    height: auto;
+
+.title { 
+    font-size: 40px ;
+    margin-bottom: 8rem;
+    margin-top: 1em;
 }
 
-.justified {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto ;
+    padding: 1em;
+  }
 
-.button {
-    margin-top: 10px;
+  .grid-item {
     text-align: center;
-}
-
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
-}
-
-.header-item {
-    justify-content: center;
+    padding: 2rem;
+    font-size: 3rem;
+  }
+  ul {
+    list-style-type:none ; 
+  }
+  span {
+    font-size: large;
+  }
+  button { 
+    margin-top: 2vh;
+    border: none;
+    color: white;
+    padding: 12px 32px;
     text-align: center;
-}
-
-.footer-item {
-    text-align: center;
-}
-
-.footer-item p :nth-child(even) {
-    color: orange;
-}
-.footer-item p :nth-child(odd) {
-    color: blue;
-}
-
-.server-message {
-    justify-content: center;
-    width: 20%;
-    min-width: min-content;
-}
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1,5rem;
+    width: 15em;
+  }
+  img { 
+    height: 80%;
+    width: 70%;
+  }

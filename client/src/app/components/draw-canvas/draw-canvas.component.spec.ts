@@ -52,3 +52,25 @@ describe('DrawCanvasComponent', () => {
         component.draw({} as MouseEvent);
         expect(drawPointSpy).toHaveBeenCalled();
     });
+
+    it('drawPoint should set the style of the pensil and create the point', () => {
+        component.coordDraw = { x: 0, y: 0 };
+        component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        component.pencil = { width: 5, cap: 'round', color: component.color };
+        drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
+        const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const beginPathSpy = spyOn(ctx, 'beginPath');
+        const moveToSpy = spyOn(ctx, 'moveTo');
+        const lineToSpy = spyOn(ctx, 'lineTo');
+        const stokeSpy = spyOn(ctx, 'stroke');
+        component.drawPoint({} as MouseEvent);
+        expect(beginPathSpy).toHaveBeenCalled();
+        expect(moveToSpy).toHaveBeenCalled();
+        expect(lineToSpy).toHaveBeenCalled();
+        expect(stokeSpy).toHaveBeenCalled();
+        expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
+        expect(ctx.lineWidth).toEqual(component.pencil.width);
+        expect(ctx.lineCap).toEqual(component.pencil.cap);
+        expect(ctx.strokeStyle).toEqual(component.pencil.color);
+    });
+});

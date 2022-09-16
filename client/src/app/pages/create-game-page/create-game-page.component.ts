@@ -9,8 +9,9 @@ import { Tool } from '@app/constant/tool';
 })
 export class CreateGamePageComponent {
     form: FormGroup;
-    pensil: string = '#0000';
-    tool: Tool = Tool.Pensil;
+    imgSourceLink: string;
+    pencil: string = '#0000';
+    tool: Tool = Tool.Pencil;
 
     constructor() {
         this.form = new FormGroup({
@@ -22,10 +23,10 @@ export class CreateGamePageComponent {
     }
 
     changeColor(color: string) {
-        this.pensil = color;
+        this.pencil = color;
     }
 
-    changePensilState(tool: Tool) {
+    changePencilState(tool: Tool) {
         this.tool = tool;
     }
 

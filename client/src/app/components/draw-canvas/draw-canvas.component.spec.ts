@@ -33,4 +33,11 @@ describe('DrawCanvasComponent', () => {
         component.start({} as MouseEvent);
         expect(component.isClick).toBeTrue();
     });
-});
+    it('should stop to draw in the canvas', () => {
+        component.isClick = true;
+        component.stop();
+        expect(component.isClick).toBeFalse();
+        component.isClick = false;
+        component.stop();
+        expect(component.isClick).toBeFalse();
+    });

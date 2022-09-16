@@ -1,9 +1,7 @@
 ul {
     list-style-type: none;
     display: flex;
-    flex-direction: column;
-    border: 0.25em solid;
-    width: 10em;
-    justify-content: center;
+    height: 1.25em;
+    justify-content: space-between;
     padding: 0;
 }

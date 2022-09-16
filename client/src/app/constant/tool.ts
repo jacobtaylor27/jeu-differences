@@ -1,4 +1,4 @@
 export enum Tool {
-    Pensil = 'Pensil',
+    Pencil = 'Pencil',
     Eraser = 'Eraser',
 }

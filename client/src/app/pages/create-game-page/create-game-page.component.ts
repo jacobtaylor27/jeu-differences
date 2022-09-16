@@ -9,6 +9,8 @@ import { Tool } from '@app/constant/tool';
 })
 export class CreateGamePageComponent {
     form: FormGroup;
+    pensil: string = '#0000';
+    tool: Tool = Tool.Pensil;
 
     constructor() {
         this.form = new FormGroup({
@@ -18,15 +20,15 @@ export class CreateGamePageComponent {
             imgDiff: new FormControl(null, Validators.required),
         });
     }
+
     changeColor(color: string) {
-        console.log(color);
-        return;
+        this.pensil = color;
     }
 
     changePensilState(tool: Tool) {
-        console.log(tool);
-        return;
+        this.tool = tool;
     }
+
     onSubmit() {
         return;
     }

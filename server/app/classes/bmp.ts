@@ -1,13 +1,11 @@
-import * as bmp from 'bmp-js';
-import * as fs from 'fs';
-
 export class Bmp {
     width: number;
     height: number;
-    bmpData: bmp.BmpDecoder;
+    rawData: number[];
 
-    constructor(filepath: string) {
-        const bmpBuffer = fs.readFileSync(filepath);
-        this.bmpData = bmp.decode(bmpBuffer);
+    constructor(width: number, height: number, rawData: number[]) {
+        this.height = height;
+        this.width = width;
+        this.rawData = rawData;
     }
 }

@@ -12,7 +12,6 @@ export class BmpDecoder {
                 }
                 const bmpData = bmp.decode(data);
                 const rawData: number[] = bmpData.data.toJSON().data;
-
                 resolve(new Bmp(bmpData.width, bmpData.height, rawData));
             });
         });

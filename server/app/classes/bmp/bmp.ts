@@ -1,5 +1,5 @@
-import { Pixel } from '@app/interface/pixel';
 import { PixelOffset } from '@app/constante/pixel-offset';
+import { Pixel } from '@app/interface/pixel';
 export class Bmp {
     width: number;
     height: number;
@@ -11,7 +11,7 @@ export class Bmp {
         this.pixels = this.convertRawToPixels(rawData);
     }
 
-    convertRawToPixels(rawData: number[]): Pixel[][] {
+    private convertRawToPixels(rawData: number[]): Pixel[][] {
         const pixels = [];
         for (let i = 0; i < this.height; i++) {
             const scanLine = [];

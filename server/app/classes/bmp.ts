@@ -23,9 +23,9 @@ export class Bmp {
 
             for (let j = 0; j < this.width; j++) {
                 const pixel: Pixel = {
-                    r: rawData[(i * this.width + this.height) * COLOR_PER_PIXEL],
-                    g: rawData[(i * this.width + this.height) * COLOR_PER_PIXEL + 1],
-                    b: rawData[(i * this.width + this.height) * COLOR_PER_PIXEL + 2],
+                    r: rawData[(i * this.width + j) * COLOR_PER_PIXEL],
+                    g: rawData[(i * this.width + j) * COLOR_PER_PIXEL + 1],
+                    b: rawData[(i * this.width + j) * COLOR_PER_PIXEL + 2],
                 };
                 scanLine.push(pixel);
             }

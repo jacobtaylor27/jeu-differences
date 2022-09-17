@@ -1,4 +1,4 @@
-import { PixelOffset } from '@app/constante/pixel-offset';
+import { PixelOffset } from '@app/constants/pixel-offset';
 import { Pixel } from '@app/interface/pixel';
 export class Bmp {
     width: number;

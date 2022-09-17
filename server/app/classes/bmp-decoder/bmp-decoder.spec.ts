@@ -2,8 +2,8 @@ import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe('HttpException', () => {
-    it('Should create an object Bmp based on bmp file of size 2x2', () => {
+describe('BmpDecoder', () => {
+    it('Should create an object Bmp based on bmp file of size 2x2', async () => {
         const expectedWidth = 2;
         const expectedHeight = 2;
         const pixelsExpected = [
@@ -16,11 +16,23 @@ describe('HttpException', () => {
                 { a: 0, r: 255, g: 255, b: 255 },
             ],
         ];
-        const filepath = '../../assets/bmp_test_2x2.bmp';
-        BmpDecoder.decode(filepath).then((bmpProduced) => {
-            expect(bmpProduced.width).to.equals(expectedWidth);
-            expect(bmpProduced.height).to.equals(expectedHeight);
-            expect(bmpProduced.pixels).to.equals(pixelsExpected);
-        });
+        const filepath = './assets/bmp_test_2x2.bmp';
+        const bmpProduced = await BmpDecoder.decode(filepath);
+
+        expect(bmpProduced.width).to.equals(expectedWidth);
+        expect(bmpProduced.height).to.equals(expectedHeight);
+        expect(bmpProduced.pixels).to.eql(pixelsExpected);
     });
+
+    it('Should throw an error if the path is incorrect', async () => {
+        const invalidPath = '';
+        try {
+            const result = await BmpDecoder.decode(invalidPath);
+            expect(result).to.equals(undefined);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
+    });
+
+    it('Should return undefined if the file is not a bitmap', () => {});
 });

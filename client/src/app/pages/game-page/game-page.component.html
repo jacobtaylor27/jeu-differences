@@ -1,6 +1,16 @@
-<div class="container">
-    <app-sidebar></app-sidebar>
-    <section class="play-area-container">
-        <app-play-area class="play-area" tabindex="0"></app-play-area>
-    </section>
-</div>
+<main [ngClass]="favoriteTheme" class="mat-app-background">
+    <mat-toolbar color="primary">
+        <span>MODE CLASSIQUE SOLO</span>
+    </mat-toolbar>
+
+    <div class="page">
+        <div class="header">
+            <app-sidebar> </app-sidebar>
+            <section class="container">
+                <section class="play-area-container">
+                    <app-play-area class="play-area" tabindex="0"></app-play-area>
+                </section>
+            </section>
+        </div>
+    </div>
+</main>

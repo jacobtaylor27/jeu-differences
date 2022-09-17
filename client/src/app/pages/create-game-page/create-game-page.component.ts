@@ -19,8 +19,8 @@ export class CreateGamePageComponent {
         this.form = new FormGroup({
             name: new FormControl('', Validators.required),
             expansionRadius: new FormControl(3, Validators.required),
-            img: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y)]),
-            imgDiff: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y)]),
+            img: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y), this.differenceValidator()]),
+            imgDiff: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y), this.differenceValidator()]),
         });
     }
 
@@ -30,6 +30,13 @@ export class CreateGamePageComponent {
         };
     }
 
+    differenceValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const numberDifference = 5;
+            const difference: Vec2 = { x: 2, y: 10 };
+            return numberDifference < difference.y && numberDifference > difference.x ? { difference: { value: control.value } } : null;
+        };
+    }
     onSubmit() {
         return;
     }

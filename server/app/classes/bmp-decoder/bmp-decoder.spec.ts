@@ -24,15 +24,25 @@ describe('BmpDecoder', () => {
         expect(bmpProduced.pixels).to.eql(pixelsExpected);
     });
 
+    it('Should create an object Bmp based on bmp file of size 3x2', async () => {});
+
     it('Should throw an error if the path is incorrect', async () => {
         const invalidPath = '';
         try {
-            const result = await BmpDecoder.decode(invalidPath);
-            expect(result).to.equals(undefined);
+            const bmpProduced = await BmpDecoder.decode(invalidPath);
+            expect(bmpProduced).to.equals(undefined);
         } catch (e) {
             expect(e).to.be.instanceof(Error);
         }
     });
 
-    it('Should return undefined if the file is not a bitmap', () => {});
+    it('Should return an error if the file is not a bitmap', async () => {
+        const filepath = './assets/jpg_test.jpg';
+        try {
+            const bmpProduced = await BmpDecoder.decode(filepath);
+            expect(bmpProduced).to.equals(undefined);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
+    });
 });

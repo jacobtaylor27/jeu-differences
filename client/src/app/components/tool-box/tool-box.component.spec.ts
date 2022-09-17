@@ -45,4 +45,9 @@ describe('ToolBoxComponent', () => {
         expect(component.pencil.color).toEqual(expectedColor);
     });
 
+    it('should change the width of the pencil', async () => {
+        const expectedWidth = 3;
+        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+            expect(newPencil).toEqual(component.pencil);
+        });
 });

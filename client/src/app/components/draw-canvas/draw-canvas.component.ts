@@ -11,6 +11,8 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 })
 export class DrawCanvasComponent {
     @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('img', { static: false }) img!: ElementRef<HTMLCanvasElement>;
+
     coordDraw: Vec2 = { x: 0, y: 0 };
     isClick: boolean = false;
     pencil: Pencil = { width: 5, cap: 'round', color: '#000000', state: Tool.Pencil };
@@ -19,6 +21,7 @@ export class DrawCanvasComponent {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
         });
+    }
 
     // https://daily-dev-tips.com/posts/javascript-mouse-drawing-on-the-canvas/
     start(event: MouseEvent) {

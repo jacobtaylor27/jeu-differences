@@ -81,7 +81,7 @@ describe('BmpDecoder', () => {
         }
     });
 
-    it('Should return an error if the file is not a bitmap', async () => {
+    it('Should throw an error if the file is not a bitmap', async () => {
         const filepath = './assets/jpg_test.jpg';
         try {
             const bmpProduced = await BmpDecoder.decode(filepath);

@@ -8,11 +8,17 @@ describe('DrawCanvasComponent', () => {
     let component: DrawCanvasComponent;
     let fixture: ComponentFixture<DrawCanvasComponent>;
     let drawServiceSpyObj: jasmine.SpyObj<DrawService>;
+    let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
+
     beforeEach(async () => {
         drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['reposition']);
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $pencil: new Subject() });
         await TestBed.configureTestingModule({
             declarations: [DrawCanvasComponent],
-            providers: [{ provide: DrawService, useValue: drawServiceSpyObj }],
+            providers: [
+                { provide: DrawService, useValue: drawServiceSpyObj },
+                { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
+            ],
         }).compileComponents();
         fixture = TestBed.createComponent(DrawCanvasComponent);
         component = fixture.componentInstance;
@@ -44,7 +50,6 @@ describe('DrawCanvasComponent', () => {
 
     it('should draw when the client is clicking on the canvas', () => {
         component.isClick = false;
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
         const drawPointSpy = spyOn(component, 'drawPoint');
         component.draw({} as MouseEvent);
         expect(drawPointSpy).not.toHaveBeenCalled();

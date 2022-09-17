@@ -22,14 +22,6 @@ export class CreateGamePageComponent {
         });
     }
 
-    changeColor(color: string) {
-        this.pencil = color;
-    }
-
-    changePencilState(tool: Tool) {
-        this.tool = tool;
-    }
-
     onSubmit() {
         return;
     }

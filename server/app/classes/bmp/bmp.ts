@@ -31,9 +31,9 @@ export class Bmp {
     private getPixel(pixel: number[]): Pixel {
         return {
             a: pixel[PixelOffset.Intensity],
-            b: pixel[PixelOffset.Red],
+            r: pixel[PixelOffset.Red],
             g: pixel[PixelOffset.Green],
-            r: pixel[PixelOffset.Blue],
+            b: pixel[PixelOffset.Blue],
         };
     }
 

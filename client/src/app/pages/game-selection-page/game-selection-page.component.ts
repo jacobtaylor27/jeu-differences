@@ -1,60 +1,53 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GameCardComponent } from '@app/components/game-card/game-card.component';
-import { Vec2 } from '@app/interfaces/vec2';
+import { GameCard } from '@app/classes/game-card';
+import { GameSelectionService } from '@app/services/game-selection.service';
 
 @Component({
   selector: 'app-game-selection-page',
   templateUrl: './game-selection-page.component.html',
   styleUrls: ['./game-selection-page.component.scss']
 })
-export class GameSelectionPageComponent implements OnInit{
-  constructor(private readonly matDialog: MatDialog) {}
+export class GameSelectionPageComponent implements OnInit {
+  @ViewChild('enterNameDialogContentRef')
+  private readonly enterNameDialogContentRef: TemplateRef<HTMLElement>;
 
+  gameCards: GameCard[] = [];
   favoriteTheme: string = 'deeppurple-amber-theme';
-  currentRange: Vec2;
 
-  gameCards: GameCardComponent[] = [];
+  constructor(public readonly GameSelectionService: GameSelectionService, private readonly matDialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.populateGameCards();
-    this.currentRange = { x: 0, y: 4 };
-    this.showFirstFour();
+    this.getGameCards();
   }
 
-  populateGameCards(): void {
-    for (let i = 0; i < 12; i++) {
-      this.gameCards.push(new GameCardComponent(this.matDialog));
-    }
+  hasCardsBefore(): boolean {
+    return this.GameSelectionService.hasPreviousCards();
   }
 
-  showFirstFour(): void {
-    for (let i = this.currentRange.x; i < this.currentRange.y; i++) {
-      this.gameCards[i].isShown = true;
-    }
+  hasCardsAfter(): boolean { 
+    return this.GameSelectionService.hasNextCards();
   }
 
-  hideAllCards(): void {
-    for (let i = 0; i < this.gameCards.length; i++) {
-      this.gameCards[i].isShown = false;
-    }
+  getGameCards(): void {
+    this.gameCards = this.GameSelectionService.getActiveCards();
   }
-
-  showFourCards(startIndex: number, endIndex: number): void {
-    for (let i = this.currentRange.x; i < this.currentRange.y; i++) {
-      this.gameCards[i].isShown = true;
-    }
-  }
-
-  showNextFour(): void {}
-
-  showPreviousFour(): void {}
 
   onClickPrevious(): void {
-    this.showPreviousFour();
+    this.GameSelectionService.showPreviousFour();
+    this.getGameCards();
   }
 
   onClickNext(): void {
-    this.showNextFour();
+    this.GameSelectionService.showNextFour();
+    this.getGameCards();
+  }
+
+  onSelectPlayGame(): void {
+    this.matDialog.open(this.enterNameDialogContentRef);
+  }
+
+  onSelectCreateGame(): void {
+    this.matDialog.open(this.enterNameDialogContentRef);
   }
 }

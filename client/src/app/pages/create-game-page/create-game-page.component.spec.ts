@@ -71,4 +71,8 @@ describe('CreateGamePageComponent', () => {
         expect(nbDifference?.difference.value).toEqual(mockControl.value);
     });
 
+    it('should calculateDifference return the number of difference between two images', () => {
+        const expectedDifference = 5;
+        expect(component.calculateDifference()).toEqual(expectedDifference);
+    });
 });

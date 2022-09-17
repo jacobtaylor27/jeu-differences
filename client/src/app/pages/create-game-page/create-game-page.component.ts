@@ -29,6 +29,9 @@ export class CreateGamePageComponent {
 
     sizeImgValidator(width: number, height: number): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
+            if (control.value === null) {
+                return null;
+            }
             return control.value.height === height && control.value.width === width ? { sizeImg: { value: control.value } } : null;
         };
     }

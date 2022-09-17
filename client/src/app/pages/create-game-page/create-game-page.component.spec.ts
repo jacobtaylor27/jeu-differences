@@ -32,4 +32,24 @@ describe('CreateGamePageComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should sizeImgValidator return null if the value of control is null', () => {
+        const mockControl = { value: null } as FormControl;
+        const mockSize = { x: 0, y: 0 };
+        expect(component.sizeImgValidator(mockSize.x, mockSize.y)(mockControl)).toEqual(null);
+    });
+
+    it('should sizeImgValidator return null if the size of the img is not the size of the canvas', () => {
+        const mockControl = { value: { height: 1, width: 1 } } as FormControl;
+        const mockSize = { x: 0, y: 0 };
+        expect(component.sizeImgValidator(mockSize.x, mockSize.y)(mockControl)).toEqual(null);
+    });
+
+    it('should sizeImgValidator return not null if the size of the image is the size of the canvas', () => {
+        const mockControl = { value: { height: 1, width: 1 } } as FormControl;
+        const mockSize = { x: 1, y: 1 };
+        const validator = component.sizeImgValidator(mockSize.x, mockSize.y)(mockControl);
+        expect(validator).not.toEqual(null);
+        expect(validator?.sizeImg.value).toEqual(mockControl.value);
+    });
 });

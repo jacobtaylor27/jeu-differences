@@ -23,7 +23,7 @@ export class ToolBoxComponent {
         if (value === null) {
             return 0;
         }
-        return value?.toString() + 'px';
+        return value.toString() + 'px';
     }
 
     changePencilColor(color: string) {
@@ -31,7 +31,7 @@ export class ToolBoxComponent {
         this.toolService.$pencil.next(this.pencil);
     }
 
-    changeWithPencil(event: MatSliderChange) {
+    changePencilWith(event: MatSliderChange) {
         this.pencil.width = event.value !== null ? event.value : 0;
         this.toolService.$pencil.next(this.pencil);
     }

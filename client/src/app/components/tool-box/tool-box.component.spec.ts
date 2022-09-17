@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSliderChange } from '@angular/material/slider';
+// import { MatSliderChange } from '@angular/material/slider';
 import { Tool } from '@app/constant/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
@@ -62,4 +63,13 @@ describe('ToolBoxComponent', () => {
         expect(component.pencil.width).toEqual(0);
     });
 
+    it('should format the value', () => {
+        const expectedValue = 3;
+        const expectedLabel = expectedValue.toString() + 'px';
+        expect(component.formatLabel(expectedValue)).toEqual(expectedLabel);
+    });
+
+    it('should return 0 if the value is null', () => {
+        expect(component.formatLabel(null)).toEqual(0);
+    });
 });

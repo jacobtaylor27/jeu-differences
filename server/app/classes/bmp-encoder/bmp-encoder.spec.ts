@@ -6,27 +6,30 @@ import * as fs from 'fs';
 import { describe } from 'mocha';
 
 describe('BmpEncoder', async () => {
-    const FILEPATH_FOR_RESULT = './assets/test-bmp/result.bmp';
-    const FILEPATH_FOR_STUB = './assets/test-bmp/test_bmp_original.bmp';
-    const bmpDecoded: Bmp = await BmpDecoder.decode(FILEPATH_FOR_STUB);
-
     beforeEach(() => {
-        fs.unlink(FILEPATH_FOR_RESULT, () => {
+        const resultFilePath = './assets/test-bmp/result.bmp';
+        fs.unlink(resultFilePath, () => {
             return;
         });
     });
 
     it('encode() should convert a Bmp into a .bmp file', async () => {
-        const bmpEncoded = BmpEncoder.encode(FILEPATH_FOR_RESULT, bmpDecoded);
-        const bmpExpected: Bmp = await BmpDecoder.decode(FILEPATH_FOR_RESULT);
-        expect(bmpEncoded).to.eql(bmpExpected);
+        const resultFilePath = './assets/test-bmp/result.bmp';
+        const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
+
+        const bmpDecoded: Bmp = await BmpDecoder.decode(originalBmpFilePath);
+        BmpEncoder.encode(resultFilePath, bmpDecoded);
+        const bmpExpected: Bmp = await BmpDecoder.decode(resultFilePath);
+        expect(bmpDecoded).to.eql(bmpExpected);
     });
 
     it('Should throw an error if the file is not a bitmap', async () => {
-        const incorrectFileFormat = './assets/test-bmp/jpg_test.jpg';
+        const incorrectFileExtension = './assets/test-bmp/jpg_test.jpg';
+        const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
+        const bmpDecoded: Bmp = await BmpDecoder.decode(originalBmpFilePath);
         try {
-            const bmpEncoded = BmpEncoder.encode(incorrectFileFormat, bmpDecoded);
+            const bmpEncoded = BmpEncoder.encode(incorrectFileExtension, bmpDecoded);
             expect(bmpEncoded).to.equals(undefined);
         } catch (e) {
             expect(e).to.be.instanceof(Error);

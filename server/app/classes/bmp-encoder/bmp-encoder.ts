@@ -35,8 +35,7 @@ export class BmpEncoder {
     private static assertParameters(filename: string) {
         // prettier-ignore
         // eslint-disable-next-line
-        const reg = new RegExp('^.*\.(bmp)$');
-        if (filename.match(reg) === null) {
+        if (filename.match('^.*\.(bmp)$')?.length === 0) {
             throw new Error('File extension must be a .bmp');
         }
     }

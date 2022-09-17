@@ -25,3 +25,8 @@ export class ToolBoxComponent {
         }
         return value?.toString() + 'px';
     }
+
+    changePencilColor(color: string) {
+        this.pencil.color = color;
+        this.toolService.$pencil.next(this.pencil);
+    }

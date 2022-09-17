@@ -8,12 +8,12 @@ describe('BmpDecoder', () => {
         const expectedHeight = 2;
         const pixelsExpected = [
             [
-                { a: 0, r: 0, g: 0, b: 255 },
-                { a: 0, r: 255, g: 0, b: 0 },
+                { a: 0, b: 0, g: 0, r: 255 },
+                { a: 0, b: 255, g: 0, r: 0 },
             ],
             [
-                { a: 0, r: 0, g: 255, b: 0 },
-                { a: 0, r: 255, g: 255, b: 255 },
+                { a: 0, b: 0, g: 255, r: 0 },
+                { a: 0, b: 255, g: 255, r: 255 },
             ],
         ];
         const filepath = './assets/bmp_test_2x2.bmp';
@@ -29,14 +29,14 @@ describe('BmpDecoder', () => {
         const expectedHeight = 2;
         const pixelsExpected = [
             [
-                { a: 0, r: 0, g: 0, b: 255 },
-                { a: 0, r: 255, g: 0, b: 0 },
-                { a: 0, r: 128, g: 0, b: 128 },
+                { a: 0, b: 0, g: 0, r: 255 },
+                { a: 0, b: 255, g: 0, r: 0 },
+                { a: 0, b: 128, g: 0, r: 128 },
             ],
             [
-                { a: 0, r: 192, g: 192, b: 192 },
-                { a: 0, r: 255, g: 255, b: 0 },
-                { a: 0, r: 0, g: 255, b: 255 },
+                { a: 0, b: 192, g: 192, r: 192 },
+                { a: 0, b: 255, g: 255, r: 0 },
+                { a: 0, b: 0, g: 255, r: 255 },
             ],
         ];
         const filepath = './assets/bmp_test_3x2.bmp';
@@ -51,16 +51,16 @@ describe('BmpDecoder', () => {
         const expectedHeight = 3;
         const pixelsExpected = [
             [
-                { a: 0, r: 0, g: 0, b: 255 },
-                { a: 0, r: 255, g: 0, b: 0 },
+                { a: 0, b: 0, g: 0, r: 255 },
+                { a: 0, b: 255, g: 0, r: 0 },
             ],
             [
-                { a: 0, r: 0, g: 255, b: 0 },
-                { a: 0, r: 255, g: 0, b: 255 },
+                { a: 0, b: 0, g: 255, r: 0 },
+                { a: 0, b: 255, g: 0, r: 255 },
             ],
             [
-                { a: 0, r: 192, g: 192, b: 192 },
-                { a: 0, r: 128, g: 128, b: 128 },
+                { a: 0, b: 192, g: 192, r: 192 },
+                { a: 0, b: 128, g: 128, r: 128 },
             ],
         ];
 

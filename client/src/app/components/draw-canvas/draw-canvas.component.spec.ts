@@ -1,6 +1,10 @@
 import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Tool } from '@app/constant/tool';
+import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 import { DrawCanvasComponent } from './draw-canvas.component';
 
@@ -58,10 +62,10 @@ describe('DrawCanvasComponent', () => {
         expect(drawPointSpy).toHaveBeenCalled();
     });
 
-    it('drawPoint should set the style of the pensil and create the point', () => {
+    it('drawPoint should set the style of the pencil and create the point', () => {
         component.coordDraw = { x: 0, y: 0 };
         component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
-        component.pencil = { width: 5, cap: 'round', color: component.color };
+        component.pencil = { width: 5, cap: 'round', color: '#000000', state: Tool.Pencil };
         drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
         const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
@@ -78,4 +82,13 @@ describe('DrawCanvasComponent', () => {
         expect(ctx.lineCap).toEqual(component.pencil.cap);
         expect(ctx.strokeStyle).toEqual(component.pencil.color);
     });
-});
+
+    it('should not erase if the client is clicking and select the eraser', () => {
+        component.pencil.state = Tool.Eraser;
+        component.isClick = true;
+        const eraseSpy = spyOn(component, 'erase');
+        const drawSpy = spyOn(component, 'drawPoint');
+        component.draw({} as MouseEvent);
+        expect(eraseSpy).toHaveBeenCalled();
+        expect(drawSpy).not.toHaveBeenCalled();
+    });

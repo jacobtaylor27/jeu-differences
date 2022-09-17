@@ -11,9 +11,10 @@ import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
-import { CreateGamePageComponent } from './pages/create-game-page/create-game-page.component';
-import { ToolBoxComponent } from './components/tool-box/tool-box.component';
-import { DrawCanvasComponent } from './components/draw-canvas/draw-canvas.component';
+import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
+import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
+import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
+import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 
 /**
  * Main module that is used in main.ts.
@@ -32,6 +33,7 @@ import { DrawCanvasComponent } from './components/draw-canvas/draw-canvas.compon
         CreateGamePageComponent,
         ToolBoxComponent,
         DrawCanvasComponent,
+        DialogFormsErrorComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

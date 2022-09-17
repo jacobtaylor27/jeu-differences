@@ -35,4 +35,14 @@ describe('ToolBoxComponent', () => {
         component.changePencilState(expectedTool);
         expect(component.pencil.state).toEqual(expectedTool);
     });
+
+    it('should change the color of the pencil', async () => {
+        const expectedColor = 'test';
+        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+            expect(newPencil).toEqual(component.pencil);
+        });
+        component.changePencilColor(expectedColor);
+        expect(component.pencil.color).toEqual(expectedColor);
+    });
+
 });

@@ -10,28 +10,7 @@ export class DifferenceBetween2Images {
         this.secondImagePath = secondPath;
     }
 
-    private async firstImageBmp(firstImagePath: string): Promise<Bmp> {
-        return await BmpDecoder.decode(firstImagePath);
-    }
-    private async secondImageBmp(secondImagePath: string): Promise<Bmp> {
-        return await BmpDecoder.decode(secondImagePath);
-    }
-    private haveSameHeight(firstImageHeight: number, secondImageHeight: number) {
-        return firstImageHeight === secondImageHeight;
-    }
-    private haveSameWidth(firstImageWidth: number, secondImageWidth: number): boolean {
-        return firstImageWidth === secondImageWidth; 
-    }
-    private equalPixels(firstPixel: Pixel, secondPixel: Pixel): boolean {
-        return firstPixel.a === secondPixel.a && firstPixel.b === secondPixel.b && firstPixel.g === secondPixel.g && firstPixel.r === secondPixel.r ; 
-    }
-    private whitePixel(pixel: Pixel): void {
-        pixel.a = 0;
-        pixel.b = 255;
-        pixel.g = 255;
-        pixel.r = 255;
-    }
-    private async differenceBetween2Images(firstPath: string, secondPath: string) {
+    static async differenceBetween2Images(firstPath: string, secondPath: string): Promise<Bmp> {
         const firstBmp = await this.firstImageBmp(firstPath);
         const secondBmp = await this.secondImageBmp(secondPath);
         if (this.haveSameHeight(firstBmp.height, secondBmp.height) && this.haveSameWidth(firstBmp.width, secondBmp.width)) {
@@ -41,5 +20,28 @@ export class DifferenceBetween2Images {
                 }
             }
         }
+        return secondBmp; 
+    }
+
+    static async firstImageBmp(firstImagePath: string): Promise<Bmp> {
+        return await BmpDecoder.decode(firstImagePath);
+    }
+    static async secondImageBmp(secondImagePath: string): Promise<Bmp> {
+        return await BmpDecoder.decode(secondImagePath);
+    }
+    static haveSameHeight(firstImageHeight: number, secondImageHeight: number) {
+        return firstImageHeight === secondImageHeight;
+    }
+    static haveSameWidth(firstImageWidth: number, secondImageWidth: number): boolean {
+        return firstImageWidth === secondImageWidth; 
+    }
+    static equalPixels(firstPixel: Pixel, secondPixel: Pixel): boolean {
+        return firstPixel.a === secondPixel.a && firstPixel.b === secondPixel.b && firstPixel.g === secondPixel.g && firstPixel.r === secondPixel.r ; 
+    }
+    static whitePixel(pixel: Pixel): void {
+        pixel.a = 0;
+        pixel.b = 255;
+        pixel.g = 255;
+        pixel.r = 255;
     }
 }

@@ -36,7 +36,7 @@ export class Bmp {
         };
     }
 
-    private assertParameters(width: number, height: number, rawData: number[]) {
+    private assertParameters(width: number, height: number, rawData: number[]): void {
         if (width <= 0 || height <= 0) {
             throw new RangeError();
         }

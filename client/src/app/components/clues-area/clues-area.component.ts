@@ -6,13 +6,13 @@ import { Component } from '@angular/core';
     styleUrls: ['./clues-area.component.scss'],
 })
 export class CluesAreaComponent {
-    NUMBER_OF_CLUES: number = 3;
+    numberOfClues: number = 3;
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
 
     getClue() {
         this.clueAskedCounter++;
-        if (this.clueAskedCounter === this.NUMBER_OF_CLUES) {
+        if (this.clueAskedCounter === this.numberOfClues) {
             this.isDisabled = true;
         }
         // TODO add logic

@@ -30,3 +30,9 @@ export class ToolBoxComponent {
         this.pencil.color = color;
         this.toolService.$pencil.next(this.pencil);
     }
+
+    changeWithPencil(event: MatSliderChange) {
+        this.pencil.width = event.value !== null ? event.value : 0;
+        this.toolService.$pencil.next(this.pencil);
+    }
+}

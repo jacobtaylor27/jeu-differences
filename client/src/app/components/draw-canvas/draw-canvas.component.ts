@@ -1,21 +1,24 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Tool } from '@app/constant/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 @Component({
     selector: 'app-draw-canvas',
     templateUrl: './draw-canvas.component.html',
     styleUrls: ['./draw-canvas.component.scss'],
 })
 export class DrawCanvasComponent {
-    @Input() tool: Tool;
-    @Input() color: string = '#000000';
     @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
     coordDraw: Vec2 = { x: 0, y: 0 };
     isClick: boolean = false;
-    pencil: Pencil = { width: 5, cap: 'round', color: this.color };
-    constructor(private drawService: DrawService) {}
+    pencil: Pencil = { width: 5, cap: 'round', color: '#000000', state: Tool.Pencil };
+
+    constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
+        this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
+            this.pencil = newPencil;
+        });
 
     // https://daily-dev-tips.com/posts/javascript-mouse-drawing-on-the-canvas/
     start(event: MouseEvent) {

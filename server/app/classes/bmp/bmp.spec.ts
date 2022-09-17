@@ -28,7 +28,7 @@ describe('Bmp', () => {
 
     // Is it a good practice to throw exception if parameters are bad?
     // Am I verifying correctly that an exception has been thrown?
-    it('An exception should be thrown if the width is less of equal to 0', () => {
+    it('An exception should be thrown if the width is less or equal to 0', () => {
         const invalidWidth = -1;
         const validHeight = 1;
         const validDataRow = [0, 1, 2, 3];
@@ -41,7 +41,7 @@ describe('Bmp', () => {
         }
     });
 
-    it('An exception should be throw if the height is less of equal to 0', () => {
+    it('An exception should be throw if the height is less or equal to 0', () => {
         const validWidth = 1;
         const invalidHeight = -1;
         const validDataRow = [0, 1, 2, 3];

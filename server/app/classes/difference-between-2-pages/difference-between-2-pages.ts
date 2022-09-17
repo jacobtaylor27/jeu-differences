@@ -11,8 +11,8 @@ export class DifferenceBetween2Images {
     }
 
     static async differenceBetween2Images(firstPath: string, secondPath: string): Promise<Bmp> {
-        const firstBmp = await this.firstImageBmp(firstPath);
-        const secondBmp = await this.secondImageBmp(secondPath);
+        const firstBmp = await this.produceImageBmp(firstPath);
+        const secondBmp = await this.produceImageBmp(secondPath);
         if (this.haveSameHeight(firstBmp.height, secondBmp.height) && this.haveSameWidth(firstBmp.width, secondBmp.width)) {           
             for (let i = 0; i < firstBmp.pixels.length; i++) {
                 for (let j = 0; j < firstBmp.pixels.length; j++) {
@@ -25,11 +25,8 @@ export class DifferenceBetween2Images {
         return secondBmp; 
     }
 
-    static async firstImageBmp(firstImagePath: string): Promise<Bmp> {
-        return await BmpDecoder.decode(firstImagePath);
-    }
-    static async secondImageBmp(secondImagePath: string): Promise<Bmp> {
-        return await BmpDecoder.decode(secondImagePath);
+    static async produceImageBmp(imagePath: string): Promise<Bmp> {
+        return await BmpDecoder.decode(imagePath);
     }
     static haveSameHeight(firstImageHeight: number, secondImageHeight: number) {
         return firstImageHeight === secondImageHeight;

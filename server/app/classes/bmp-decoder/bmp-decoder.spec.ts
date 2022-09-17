@@ -26,6 +26,8 @@ describe('BmpDecoder', () => {
 
     it('Should create an object Bmp based on bmp file of size 3x2', async () => {});
 
+    it('Should create an object Bmp based on bmp file of size 2x3', async () => {});
+
     it('Should throw an error if the path is incorrect', async () => {
         const invalidPath = '';
         try {

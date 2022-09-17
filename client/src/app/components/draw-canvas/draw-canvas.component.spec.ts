@@ -102,3 +102,10 @@ describe('DrawCanvasComponent', () => {
         expect(clearRectSpy).toHaveBeenCalled();
         expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
     });
+
+    it('should receive a new pencil', () => {
+        const expectedPencil = { cap: 'round', width: 3, state: Tool.Eraser, color: '#000100' } as Pencil;
+        toolBoxServiceSpyObj.$pencil.next(expectedPencil);
+        expect(component.pencil).toEqual(expectedPencil);
+    });
+});

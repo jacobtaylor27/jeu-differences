@@ -32,7 +32,7 @@ export class CreateGamePageComponent {
 
     differenceValidator(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
-            const numberDifference = 5;
+            const numberDifference = 5; // remove this line and add the validation function when is done
             const difference: Vec2 = { x: 2, y: 10 };
             return numberDifference < difference.y && numberDifference > difference.x ? { difference: { value: control.value } } : null;
         };

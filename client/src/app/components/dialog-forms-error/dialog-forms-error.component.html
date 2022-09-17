@@ -1,1 +1,6 @@
-<p>dialog-forms-error works!</p>
+<h2 mat-dialog-title>{{formTitle}} Errors</h2>
+<mat-dialog-content>
+    <ul *ngFor="let message of errorMessages">
+        <li>{{message}}</li>
+    </ul>
+</mat-dialog-content>

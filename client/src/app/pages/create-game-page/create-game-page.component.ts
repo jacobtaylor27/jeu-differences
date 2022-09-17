@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Tool } from '@app/constant/tool';
@@ -15,7 +16,7 @@ export class CreateGamePageComponent {
     tool: Tool = Tool.Pencil;
     size: Vec2 = { x: 480, y: 640 };
 
-    constructor() {
+    constructor(private http: HttpClient) {
         this.form = new FormGroup({
             name: new FormControl('', Validators.required),
             expansionRadius: new FormControl(3, Validators.required),
@@ -37,7 +38,16 @@ export class CreateGamePageComponent {
             return numberDifference < difference.y && numberDifference > difference.x ? { difference: { value: control.value } } : null;
         };
     }
+
+    // set submit function but it will be done with the route
     onSubmit() {
-        return;
+        const game = {
+            name: this.form.get('name')?.value,
+            expansionRadius: this.form.get('expansionRadius')?.value,
+            img: this.form.get('img')?.value,
+            imgDiff: this.form.get('imgDiff')?.value,
+        };
+
+        this.http.post('', game);
     }
 }

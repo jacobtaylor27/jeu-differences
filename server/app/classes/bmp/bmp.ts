@@ -25,7 +25,6 @@ export class Bmp {
             }
             pixels.push(scanLine);
         }
-        console.log(pixels);
         return pixels;
     }
 

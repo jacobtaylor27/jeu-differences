@@ -51,6 +51,13 @@ export class CreateGamePageComponent {
     }
     // set submit function but it will be done with the route
     onSubmit() {
+        if (!this.form.valid) {
+            const errorsMessages = Object.entries(this.form.controls)
+                .filter(([, control]) => !control.valid)
+                .map(([name]) => name + ' is not valid');
+            this.dialog.open(DialogFormsErrorComponent, { data: { formTitle: 'Create Game Form', errorMessages: errorsMessages } });
+            return;
+        }
         const game = {
             name: this.form.get('name')?.value,
             expansionRadius: this.form.get('expansionRadius')?.value,

@@ -33,6 +33,27 @@ describe('CreateGamePageComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('should not submit the form and open dialog if it s invalid', () => {
+        component.form = {
+            valid: false,
+            controls: { test: { valid: false } as FormControl, test1: { valid: true } as FormControl },
+        } as unknown as FormGroup;
+        const expectedErrorMessages = ['test is not valid'];
+        component.onSubmit();
+        expect(dialogSpyObj.open).toHaveBeenCalledWith(DialogFormsErrorComponent, {
+            data: { formTitle: 'Create Game Form', errorMessages: expectedErrorMessages },
+        });
+    });
+
+    it('should post the game settings when the form is valid', () => {
+        const formSpyObj = jasmine.createSpyObj('FormGroup', ['get', 'valid']);
+        const nbTimesFormGetCall = 4;
+        component.form = formSpyObj;
+        component.onSubmit();
+        expect(httpSpyObj.post).toHaveBeenCalled();
+        expect(formSpyObj.get).toHaveBeenCalledTimes(nbTimesFormGetCall);
+    });
+
     it('should sizeImgValidator return null if the value of control is null', () => {
         const mockControl = { value: null } as FormControl;
         const mockSize = { x: 0, y: 0 };

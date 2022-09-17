@@ -13,4 +13,8 @@ export class ToolBoxComponent {
     pencil: Pencil = { width: 5, cap: 'round', color: '#00000', state: Tool.Pencil };
     toolEnum: typeof Tool = Tool;
     constructor(public toolService: ToolBoxService) {}
-}
+
+    changePencilState(tool: Tool) {
+        this.pencil.state = tool;
+        this.toolService.$pencil.next(this.pencil);
+    }

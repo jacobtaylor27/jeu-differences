@@ -44,6 +44,12 @@ export class DrawCanvasComponent {
         this.drawPoint(event);
     }
 
+    erase(event: MouseEvent) {
+        const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        ctx.clearRect(this.coordDraw.x, this.coordDraw.y, this.pencil.width, this.pencil.width);
+    }
+
     drawPoint(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();

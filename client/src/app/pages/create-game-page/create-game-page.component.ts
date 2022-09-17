@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Tool } from '@app/constant/tool';
+import { Vec2 } from '@app/interfaces/vec2';
 
 @Component({
     selector: 'app-create-game-page',
@@ -12,14 +13,21 @@ export class CreateGamePageComponent {
     imgSourceLink: string;
     pencil: string = '#0000';
     tool: Tool = Tool.Pencil;
+    size: Vec2 = { x: 480, y: 640 };
 
     constructor() {
         this.form = new FormGroup({
             name: new FormControl('', Validators.required),
             expansionRadius: new FormControl(3, Validators.required),
-            img: new FormControl(null, Validators.required),
-            imgDiff: new FormControl(null, Validators.required),
+            img: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y)]),
+            imgDiff: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y)]),
         });
+    }
+
+    sizeImgValidator(width: number, height: number): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            return control.value.height === height && control.value.width === width ? { sizeImg: { value: control.value } } : null;
+        };
     }
 
     onSubmit() {

@@ -3,10 +3,10 @@
         <h3>Outils</h3>
     </li>
     <li>
-        <button (click)="this.changePencilState(this.toolEnum.Eraser)" name="eraser">Efface</button>
+        <button type="button" (click)="this.changePencilState(this.toolEnum.Eraser)" name="eraser">Efface</button>
     </li>
     <li>
-        <button (click)="changePencilState(this.toolEnum.Pencil)" name="pencil">Crayon</button>
+        <button type="button" (click)="changePencilState(this.toolEnum.Pencil)" name="pencil">Crayon</button>
     </li>
     <li>
         <input type="color" (change)="changePencilColor(colorSelector.value)" name="colorSelector" #colorSelector>

@@ -52,4 +52,23 @@ describe('CreateGamePageComponent', () => {
         expect(validator).not.toEqual(null);
         expect(validator?.sizeImg.value).toEqual(mockControl.value);
     });
+
+    it('should differenceValidator return null if the number of difference is not < 10 and > 2 ', () => {
+        const calcDiffSpy = spyOn(component, 'calculateDifference').and.callFake(() => 0);
+        const mockControl = { value: 'test' } as FormControl;
+        const nbDifference = component.differenceValidator()(mockControl);
+        expect(calcDiffSpy).toHaveBeenCalled();
+        expect(nbDifference).toEqual(null);
+    });
+
+    it('should differenceValidator return the value control of if the number of difference is < 10 and > 2', () => {
+        const mockDiff = 5;
+        const calcDiffSpy = spyOn(component, 'calculateDifference').and.callFake(() => mockDiff);
+        const mockControl = { value: 'test' } as FormControl;
+        const nbDifference = component.differenceValidator()(mockControl);
+        expect(calcDiffSpy).toHaveBeenCalled();
+        expect(nbDifference).not.toEqual(null);
+        expect(nbDifference?.difference.value).toEqual(mockControl.value);
+    });
+
 });

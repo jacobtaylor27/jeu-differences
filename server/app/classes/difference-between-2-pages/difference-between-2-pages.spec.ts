@@ -19,7 +19,7 @@ describe(' DifferenceBetween2Images', () => {
         const filepath1 = './assets/bmp_test_2x2.bmp';
         const filepath2 = './assets/bmp_test_2x2.bmp';
 
-        const bmpProduced = await DifferenceBetween2Images.differenceBetween2Images(filepath1,filepath2);
+        const bmpProduced = await DifferenceBetween2Images.differenceBetween2Images(filepath1, filepath2);
 
         expect(bmpProduced.width).to.equals(expectedWidth);
         expect(bmpProduced.height).to.equals(expectedHeight);

@@ -13,16 +13,17 @@ export class DifferenceBetween2Images {
     static async differenceBetween2Images(originalImagePath: string, modifiedImagePath: string): Promise<Bmp> {
         const originalImage = await this.produceImageBmp(originalImagePath);
         const modifiedImage = await this.produceImageBmp(modifiedImagePath);
+        const resultImage = await this.produceImageBmp(modifiedImagePath);
         if (this.haveSameHeight(originalImage.height, modifiedImage.height) && this.haveSameWidth(originalImage.width, modifiedImage.width)) {
             for (let i = 0; i < originalImage.pixels.length; i++) {
-                for (let j = 0; j < modifiedImage.pixels.length; j++) {
+                for (let j = 0; j < originalImage.pixels[i].length; j++) {
                     if (this.equalPixels(originalImage.pixels[i][j], modifiedImage.pixels[i][j])) {
-                        this.whitePixel(modifiedImage.pixels[i][j]);
+                        this.whitePixel(resultImage.pixels[i][j]);
                     }
                 }
             }
         }
-        return modifiedImage; 
+        return resultImage;
     }
 
     static async produceImageBmp(imagePath: string): Promise<Bmp> {
@@ -42,10 +43,11 @@ export class DifferenceBetween2Images {
             originalImage.r === modifiedImage.r
         );
     }
-    static whitePixel(pixel: Pixel): void {
+    static whitePixel(pixel: Pixel): Pixel {
         pixel.a = 0;
         pixel.b = 255;
         pixel.g = 255;
         pixel.r = 255;
+        return pixel;
     }
 }

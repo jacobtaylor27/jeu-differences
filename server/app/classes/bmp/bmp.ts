@@ -1,4 +1,5 @@
-import { PixelOffset, PIXEL_DEPT } from '@app/constants/pixel-offset';
+import { PIXEL_DEPT } from '@app/constants/encoding';
+import { PixelOffset } from '@app/enum/pixel-offset';
 import { Pixel } from '@app/interface/pixel';
 export class Bmp {
     width: number;
@@ -36,7 +37,7 @@ export class Bmp {
         };
     }
 
-    private assertParameters(width: number, height: number, rawData: number[]) {
+    private assertParameters(width: number, height: number, rawData: number[]): void {
         if (width <= 0 || height <= 0) {
             throw new RangeError();
         }

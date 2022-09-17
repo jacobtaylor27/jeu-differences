@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { Tool } from '@app/constant/tool';
 import { Vec2 } from '@app/interfaces/vec2';
 
@@ -16,7 +18,7 @@ export class CreateGamePageComponent {
     tool: Tool = Tool.Pencil;
     size: Vec2 = { x: 480, y: 640 };
 
-    constructor(private http: HttpClient) {
+    constructor(public dialog: MatDialog, private http: HttpClient) {
         this.form = new FormGroup({
             name: new FormControl('', Validators.required),
             expansionRadius: new FormControl(3, Validators.required),

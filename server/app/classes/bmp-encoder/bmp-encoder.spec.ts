@@ -6,9 +6,13 @@ import * as fs from 'fs';
 import { describe } from 'mocha';
 
 describe('BmpEncoder', async () => {
-    beforeEach(() => {
+    afterEach(() => {
         const resultFilePath = './assets/test-bmp/result.bmp';
+        const incorrectFileExtension = './assets/test-bmp/jpg_test.jpg';
         fs.unlink(resultFilePath, () => {
+            return;
+        });
+        fs.unlink(incorrectFileExtension, () => {
             return;
         });
     });

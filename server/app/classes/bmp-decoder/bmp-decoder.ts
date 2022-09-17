@@ -23,11 +23,10 @@ export class BmpDecoder {
         });
     }
 
-    private static assertParameters(filepath: string) {
+    private static assertParameters(filename: string) {
         // prettier-ignore
         // eslint-disable-next-line
-        const reg = new RegExp('^.*\.(bmp)$');
-        if (filepath.match(reg) === null) {
+        if (filename.match('^.*\.(bmp)$')?.length === 0) {
             throw new Error('File extension must be a .bmp');
         }
     }

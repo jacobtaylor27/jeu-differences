@@ -4,8 +4,8 @@ import * as bmp from 'bmp-js';
 import * as fs from 'fs';
 
 export class BmpEncoder {
-    static encode(filename: string, bmpObj: Bmp) {
-        this.assertParameters(filename);
+    static encode(filepath: string, bmpObj: Bmp) {
+        if (!this.isFileExtensionValid(filepath)) throw new Error('File extension must be a .bmp');
         const width: number = bmpObj.width;
         const height: number = bmpObj.height;
         const data: Buffer = this.getBuffer(bmpObj.pixels);
@@ -15,7 +15,7 @@ export class BmpEncoder {
             data,
         };
         const rawData = bmp.encode(bmpData);
-        fs.writeFileSync(filename, rawData.data);
+        fs.writeFileSync(filepath, rawData.data);
     }
 
     private static getBuffer(pixels: Pixel[][]): Buffer {
@@ -32,11 +32,12 @@ export class BmpEncoder {
         return Buffer.from(rawPixels);
     }
 
-    private static assertParameters(filename: string) {
+    private static isFileExtensionValid(filename: string): boolean {
         // prettier-ignore
         // eslint-disable-next-line
         if (filename.match('^.*\.(bmp)$')?.length === 0) {
-            throw new Error('File extension must be a .bmp');
+            return false;
         }
+        return true;
     }
 }

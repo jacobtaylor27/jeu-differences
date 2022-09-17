@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 export class BmpDecoder {
     static async decode(filepath: string): Promise<Bmp> {
-        this.assertParameters(filepath);
+        if (!this.isFileExtensionValid(filepath)) throw new Error('The file should end with .bmp');
         const bmpBuffer = await this.getFileContent(filepath);
         const bmpData = bmp.decode(bmpBuffer);
         const rawData: number[] = bmpData.data.toJSON().data;
@@ -23,11 +23,12 @@ export class BmpDecoder {
         });
     }
 
-    private static assertParameters(filename: string) {
+    private static isFileExtensionValid(filename: string): boolean {
         // prettier-ignore
         // eslint-disable-next-line
         if (filename.match('^.*\.(bmp)$')?.length === 0) {
-            throw new Error('File extension must be a .bmp');
+            return false;
         }
+        return true;
     }
 }

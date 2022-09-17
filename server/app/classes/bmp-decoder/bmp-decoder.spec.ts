@@ -4,8 +4,6 @@ import { describe } from 'mocha';
 
 describe('BmpDecoder', () => {
     it('Should create an object Bmp based on bmp file of size 2x2', async () => {
-        const expectedWidth = 2;
-        const expectedHeight = 2;
         const pixelsExpected = [
             [
                 { a: 0, r: 0, g: 0, b: 255 },
@@ -16,17 +14,16 @@ describe('BmpDecoder', () => {
                 { a: 0, r: 255, g: 255, b: 255 },
             ],
         ];
+
         const filepath = './assets/test-bmp/bmp_test_2x2.bmp';
         const bmpProduced = await BmpDecoder.decode(filepath);
 
-        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
-        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
+        expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
     it('Should create an object Bmp based on bmp file of size 3x2', async () => {
-        const expectedWidth = 3;
-        const expectedHeight = 2;
         const pixelsExpected = [
             [
                 { a: 0, r: 0, g: 0, b: 255 },
@@ -39,16 +36,15 @@ describe('BmpDecoder', () => {
                 { a: 0, r: 0, g: 255, b: 255 },
             ],
         ];
+
         const filepath = './assets/test-bmp/bmp_test_3x2.bmp';
         const bmpProduced = await BmpDecoder.decode(filepath);
-        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
-        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
+        expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
     it('Should create an object Bmp based on bmp file of size 2x3', async () => {
-        const expectedWidth = 2;
-        const expectedHeight = 3;
         const pixelsExpected = [
             [
                 { a: 0, r: 0, g: 0, b: 255 },
@@ -66,8 +62,8 @@ describe('BmpDecoder', () => {
 
         const filepath = './assets/test-bmp/bmp_test_2x3.bmp';
         const bmpProduced = await BmpDecoder.decode(filepath);
-        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
-        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
+        expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 

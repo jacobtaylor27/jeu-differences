@@ -21,9 +21,9 @@ describe('Bmp', () => {
 
         const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
-        expect(bmpProduced.width).to.equals(expectedWidth);
-        expect(bmpProduced.height).to.equals(expectedHeight);
-        expect(bmpProduced.pixels).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
+        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
     // Is it a good practice to throw exception if parameters are bad?

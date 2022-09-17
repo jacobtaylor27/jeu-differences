@@ -19,9 +19,9 @@ describe('BmpDecoder', () => {
         const filepath = './assets/test-bmp/bmp_test_2x2.bmp';
         const bmpProduced = await BmpDecoder.decode(filepath);
 
-        expect(bmpProduced.width).to.equals(expectedWidth);
-        expect(bmpProduced.height).to.equals(expectedHeight);
-        expect(bmpProduced.pixels).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
+        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
     it('Should create an object Bmp based on bmp file of size 3x2', async () => {
@@ -41,9 +41,9 @@ describe('BmpDecoder', () => {
         ];
         const filepath = './assets/test-bmp/bmp_test_3x2.bmp';
         const bmpProduced = await BmpDecoder.decode(filepath);
-        expect(bmpProduced.width).to.equals(expectedWidth);
-        expect(bmpProduced.height).to.equals(expectedHeight);
-        expect(bmpProduced.pixels).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
+        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
     it('Should create an object Bmp based on bmp file of size 2x3', async () => {
@@ -66,9 +66,9 @@ describe('BmpDecoder', () => {
 
         const filepath = './assets/test-bmp/bmp_test_2x3.bmp';
         const bmpProduced = await BmpDecoder.decode(filepath);
-        expect(bmpProduced.width).to.equals(expectedWidth);
-        expect(bmpProduced.height).to.equals(expectedHeight);
-        expect(bmpProduced.pixels).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
+        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
     it('Should throw an error if the path is incorrect', async () => {

@@ -13,6 +13,10 @@ describe('BmpEncoder', async () => {
         });
     });
 
+    // TODO: rendre la fonction utilisé dans le encoder async
+    // TODO: vérifier pourquoi est-ce que le fichier est détruit même après le beforeEach?
+    // Il devrait continuer d'exister puisqu'on le reproduit à chaque fois.
+
     it('encode() should convert a Bmp into a .bmp file', async () => {
         const resultFilePath = './assets/test-bmp/result.bmp';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
@@ -34,5 +38,8 @@ describe('BmpEncoder', async () => {
         } catch (e) {
             expect(e).to.be.instanceof(Error);
         }
+        expect(fs.existsSync(incorrectFileExtension)).to.equals(null);
     });
+
+    it('Should throw an error if the filename entered is not accepted by fs.writeFile', async () => {});
 });

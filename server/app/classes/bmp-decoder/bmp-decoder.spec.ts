@@ -90,4 +90,14 @@ describe('BmpDecoder', () => {
             expect(e).to.be.instanceof(Error);
         }
     });
+
+    it("Should throw an error if the file is a bitmap but doesn't exists", async () => {
+        const filepath = './assets/test-bmp/doesntexistfile.bmp';
+        try {
+            const bmpProduced = await BmpDecoder.decode(filepath);
+            expect(bmpProduced).to.equals(undefined);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
+    });
 });

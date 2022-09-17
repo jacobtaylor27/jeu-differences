@@ -26,9 +26,6 @@ export class BmpDecoder {
     private static isFileExtensionValid(filename: string): boolean {
         // prettier-ignore
         // eslint-disable-next-line
-        if (filename.match('^.*\.(bmp)$')?.length === 0) {
-            return false;
-        }
-        return true;
+        return  filename.match('^.*\.(bmp)$') !== null;
     }
 }

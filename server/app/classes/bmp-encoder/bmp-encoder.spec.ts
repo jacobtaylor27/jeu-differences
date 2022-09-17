@@ -38,7 +38,7 @@ describe('BmpEncoder', async () => {
         } catch (e) {
             expect(e).to.be.instanceof(Error);
         }
-        expect(fs.existsSync(incorrectFileExtension)).to.equals(null);
+        expect(fs.existsSync(incorrectFileExtension)).to.equals(false);
     });
 
     it('Should throw an error if the filename entered is not accepted by fs.writeFile', async () => {

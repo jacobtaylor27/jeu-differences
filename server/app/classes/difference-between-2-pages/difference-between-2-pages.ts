@@ -13,10 +13,12 @@ export class DifferenceBetween2Images {
     static async differenceBetween2Images(firstPath: string, secondPath: string): Promise<Bmp> {
         const firstBmp = await this.firstImageBmp(firstPath);
         const secondBmp = await this.secondImageBmp(secondPath);
-        if (this.haveSameHeight(firstBmp.height, secondBmp.height) && this.haveSameWidth(firstBmp.width, secondBmp.width)) {
+        if (this.haveSameHeight(firstBmp.height, secondBmp.height) && this.haveSameWidth(firstBmp.width, secondBmp.width)) {           
             for (let i = 0; i < firstBmp.pixels.length; i++) {
-                if (this.equalPixels(firstBmp[i], secondBmp[i])) {
-                    this.whitePixel(secondBmp[i]);
+                for (let j = 0; j < firstBmp.pixels.length; j++) {
+                    if (this.equalPixels(firstBmp.pixels[i][j], secondBmp.pixels[i][j])) {
+                        this.whitePixel(secondBmp.pixels[i][j]);
+                    }
                 }
             }
         }

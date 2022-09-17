@@ -1,3 +1,11 @@
-canvas {
+#canvas {
     border: 0.25em solid;
+    z-index: 0;
+    box-sizing: border-box;
+    position: relative;
+}
+
+#img {
+    position: absolute;
+    z-index: -1;
 }

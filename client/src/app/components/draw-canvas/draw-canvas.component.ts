@@ -15,7 +15,7 @@ export class DrawCanvasComponent {
 
     coordDraw: Vec2 = { x: 0, y: 0 };
     isClick: boolean = false;
-    pencil: Pencil = { width: 5, cap: 'round', color: '#000000', state: Tool.Pencil };
+    pencil: Pencil = { width: 1, cap: 'round', color: '#000000', state: Tool.Pencil };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {

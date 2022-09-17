@@ -18,3 +18,10 @@ export class ToolBoxComponent {
         this.pencil.state = tool;
         this.toolService.$pencil.next(this.pencil);
     }
+
+    formatLabel(value: number | null) {
+        if (value === null) {
+            return 0;
+        }
+        return value?.toString() + 'px';
+    }

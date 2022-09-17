@@ -27,6 +27,8 @@ describe('Bmp', () => {
         expect(bmpProduced.pixels).to.eql(pixelsExpected);
     });
 
+    // Is it a good practice to throw exception if parameters are bad?
+    // Am I verifying correctly that an exception has been thrown?
     it('An exception should be thrown if the width is less of equal to 0', () => {
         const invalidWidth = -1;
         const validHeight = 1;

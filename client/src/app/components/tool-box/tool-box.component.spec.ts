@@ -53,4 +53,13 @@ describe('ToolBoxComponent', () => {
         component.changePencilWith({ value: expectedWidth } as MatSliderChange);
         expect(component.pencil.width).toEqual(expectedWidth);
     });
+
+    it('should change the width to 0 if the value is null', () => {
+        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+            expect(newPencil).toEqual(component.pencil);
+        });
+        component.changePencilWith({ value: null } as MatSliderChange);
+        expect(component.pencil.width).toEqual(0);
+    });
+
 });

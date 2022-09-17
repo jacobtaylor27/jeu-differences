@@ -20,7 +20,7 @@ export class DifferenceBetween2Images {
         return firstImageHeight === secondImageHeight;
     }
     private haveSameWidth(firstImageWidth: number, secondImageWidth: number): boolean {
-        return firstImageWidth === secondImageWidth; 
+        return firstImageWidth === secondImageWidth;
     }
     private equalPixels(firstPixel: Pixel, secondPixel: Pixel): boolean {
         return firstPixel.a === secondPixel.a && firstPixel.b === secondPixel.b && firstPixel.g === secondPixel.g && firstPixel.r === secondPixel.r ; 

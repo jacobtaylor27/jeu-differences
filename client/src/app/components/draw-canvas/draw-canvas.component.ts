@@ -37,6 +37,10 @@ export class DrawCanvasComponent {
         if (!this.isClick) {
             return;
         }
+        if (this.pencil.state !== Tool.Pencil) {
+            this.erase(event);
+            return;
+        }
         this.drawPoint(event);
     }
 

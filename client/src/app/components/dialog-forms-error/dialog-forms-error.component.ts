@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-dialog-forms-error',
@@ -6,6 +7,5 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./dialog-forms-error.component.scss'],
 })
 export class DialogFormsErrorComponent {
-    @Input() formTitle: string;
-    @Input() errorMessages: string[];
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { formTitle: string; errorMessages: string[] }) {}
 }

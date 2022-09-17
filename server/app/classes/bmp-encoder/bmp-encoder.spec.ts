@@ -11,7 +11,9 @@ describe('BmpEncoder', async () => {
     const bmpDecoded: Bmp = await BmpDecoder.decode(FILEPATH_FOR_STUB);
 
     beforeEach(() => {
-        fs.unlink(FILEPATH_FOR_RESULT, (_) => {});
+        fs.unlink(FILEPATH_FOR_RESULT, () => {
+            return;
+        });
     });
 
     it('encode() should convert a Bmp into a .bmp file', async () => {

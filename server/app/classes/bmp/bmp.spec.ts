@@ -6,17 +6,16 @@ describe('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
         const expectedWidth = 2;
         const expectedHeight = 2;
-        // TODO: What am I suppose to do with magic numbers?
-        const rawData = [0, 1, 2, 3, 0, 3, 4, 5, 0, 6, 7, 8, 0, 9, 1, 0];
+        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
 
         const pixelsExpected = [
             [
                 { a: 0, b: 1, g: 2, r: 3 },
-                { a: 0, b: 3, g: 4, r: 5 },
+                { a: 0, b: 1, g: 2, r: 3 },
             ],
             [
-                { a: 0, b: 6, g: 7, r: 8 },
-                { a: 0, b: 9, g: 1, r: 0 },
+                { a: 0, b: 1, g: 2, r: 3 },
+                { a: 0, b: 1, g: 2, r: 3 },
             ],
         ];
 
@@ -58,7 +57,8 @@ describe('Bmp', () => {
     it('The number of pixels should match the width, the height and the depth of the pixels', () => {
         const validWidth = 1;
         const validHeight = 3;
-        const invalidRawData = [0, 1, 2, 3, 4];
+
+        const invalidRawData = [0, 1, 2, 3, 0];
 
         try {
             const bmpProduced = new Bmp(validWidth, validHeight, invalidRawData);

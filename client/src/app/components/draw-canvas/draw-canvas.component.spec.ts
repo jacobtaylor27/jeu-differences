@@ -92,3 +92,13 @@ describe('DrawCanvasComponent', () => {
         expect(eraseSpy).toHaveBeenCalled();
         expect(drawSpy).not.toHaveBeenCalled();
     });
+
+    it('should erase a point', () => {
+        drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
+        component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const clearRectSpy = spyOn(ctx, 'clearRect');
+        component.erase({} as MouseEvent);
+        expect(clearRectSpy).toHaveBeenCalled();
+        expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
+    });

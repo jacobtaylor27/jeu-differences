@@ -5,6 +5,7 @@ import * as fs from 'fs';
 
 export class BmpEncoder {
     static encode(filename: string, bmpObj: Bmp) {
+        this.assertParameters(filename);
         const width: number = bmpObj.width;
         const height: number = bmpObj.height;
         const data: Buffer = this.getBuffer(bmpObj.pixels);
@@ -29,5 +30,14 @@ export class BmpEncoder {
             });
         });
         return Buffer.from(rawPixels);
+    }
+
+    private static assertParameters(filename: string) {
+        // prettier-ignore
+        // eslint-disable-next-line
+        const reg = new RegExp('^.*\.(bmp)$');
+        if (filename.match(reg) === null) {
+            throw new Error('File extension must be a .bmp');
+        }
     }
 }

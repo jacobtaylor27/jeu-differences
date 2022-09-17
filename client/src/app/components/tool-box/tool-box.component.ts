@@ -1,5 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatSliderChange } from '@angular/material/slider';
 import { Tool } from '@app/constant/tool';
+import { Pencil } from '@app/interfaces/pencil';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 @Component({
     selector: 'app-tool-box',
@@ -7,7 +10,7 @@ import { Tool } from '@app/constant/tool';
     styleUrls: ['./tool-box.component.scss'],
 })
 export class ToolBoxComponent {
-    @Output() userCanvasStateEvent: EventEmitter<Tool> = new EventEmitter<Tool>();
-    @Output() changeColorEvent: EventEmitter<string> = new EventEmitter<string>();
-    tool = Tool;
+    pencil: Pencil = { width: 5, cap: 'round', color: '#00000', state: Tool.Pencil };
+    toolEnum: typeof Tool = Tool;
+    constructor(public toolService: ToolBoxService) {}
 }

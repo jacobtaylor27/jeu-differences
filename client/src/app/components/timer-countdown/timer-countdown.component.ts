@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription, timer } from 'rxjs';
 
 @Component({
@@ -6,15 +7,24 @@ import { Subscription, timer } from 'rxjs';
     templateUrl: './timer-countdown.component.html',
     styleUrls: ['./timer-countdown.component.scss'],
 })
-export class TimerCountdownComponent {
+export class TimerCountdownComponent implements OnInit, OnDestroy {
     @Input() timerAdmin: string;
     secondsDisplay: number;
     minutesDisplay: number;
     secondsLeft: number;
     sub: Subscription;
 
-    constructor() {
+    @ViewChild('gameOverDialog')
+    private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
+
+    constructor(private readonly matDialog: MatDialog) {}
+
+    ngOnInit(): void {
         this.countdownTimer();
+    }
+
+    ngOnDestroy(): void {
+        this.stopTimer();
     }
 
     private countdownTimer() {
@@ -22,13 +32,16 @@ export class TimerCountdownComponent {
         this.sub = $time.subscribe((seconds) => {
             if (seconds === Number(this.timerAdmin) + 1) {
                 this.stopTimer();
+                this.gameOver();
                 return;
             }
+            console.log(seconds);
             this.displaySeconds(seconds);
             this.displayMinutes(seconds);
             this.caculateSecondsLeft(seconds);
         });
     }
+
     private stopTimer() {
         this.sub.unsubscribe();
     }
@@ -53,5 +66,9 @@ export class TimerCountdownComponent {
 
     private pad(digit: any) {
         return digit <= 9 ? '0' + digit : digit;
+    }
+
+    private gameOver() {
+        this.matDialog.open(this.gameOverDialogRef);
     }
 }

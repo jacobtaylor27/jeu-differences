@@ -5,6 +5,13 @@
         <ng-template #elseBlock>
             <p class="timer-red">{{ displayTime() }}</p>
         </ng-template>
-        <!-- <p *ngIf="secondsLeft < 6" </p> -->
     </div>
 </section>
+
+<ng-template #gameOverDialog>
+    <h1 mat-dialog-title>Partie terminée !</h1>
+    <div mat-dialog-content>Pointage :</div>
+    <div mat-dialog-actions align="end">
+        <button mat-button routerLink="/home" mat-dialog-close>Quitter</button>
+    </div>
+</ng-template>

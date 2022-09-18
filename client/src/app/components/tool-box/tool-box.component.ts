@@ -10,7 +10,7 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./tool-box.component.scss'],
 })
 export class ToolBoxComponent {
-    pencil: Pencil = { width: 5, cap: 'round', color: '#00000', state: Tool.Pencil };
+    pencil: Pencil = { width: 1, cap: 'round', color: '#00000', state: Tool.Pencil };
     toolEnum: typeof Tool = Tool;
     constructor(public toolService: ToolBoxService) {}
 

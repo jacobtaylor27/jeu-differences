@@ -5,7 +5,7 @@ import { MINUTES_IN_AN_HOUR, SECONDS_IN_AN_MINUTE } from '@app/constants/time';
     providedIn: 'root',
 })
 export class TimeFormatter {
-    getMMSSFormat(second: number): string {
+    static getMMSSFormat(second: number): string {
         if (second < 0) {
             throw new Error('time should always be positive');
         }

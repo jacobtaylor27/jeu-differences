@@ -10,13 +10,17 @@
                         <h3 class="highscore-title"><b>Meilleurs scores</b></h3>
                         <div class="scores">
                             <ul class="highscores-solo">
-                                <li class="highscores-solo-title"><b>Solo</b></li> 
-                                <li *ngFor="let score of gameCard.scoresSolo">{{ score.getName() }} &mdash; {{ score.getTime() }}</li>
+                                <li class="highscores-solo-title"><b>Solo</b></li>
+                                <li *ngFor="let score of gameCard.scoresSolo">
+                                    {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
+                                </li>
                             </ul>
 
                             <ul class="highscores-multi">
                                 <li class="highscores-multi-title"><b>1 vs 1</b></li>
-                                <li *ngFor="let score of gameCard.scoresMultiplayer">{{ score.getName() }} &mdash; {{ score.getTime() }}</li>
+                                <li *ngFor="let score of gameCard.scoresMultiplayer">
+                                    {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
+                                </li>
                             </ul>
                         </div>
                     </mat-card-content>

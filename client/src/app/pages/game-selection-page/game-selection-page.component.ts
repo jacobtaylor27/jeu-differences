@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameSelectionService } from '@app/services/game-selection.service';
 
@@ -49,5 +50,9 @@ export class GameSelectionPageComponent implements OnInit {
 
     onSelectCreateGame(): void {
         this.matDialog.open(this.enterNameDialogContentRef);
+    }
+
+    formatScoreTime(scoreTime: number): string {
+        return TimeFormatter.getMMSSFormat(scoreTime);
     }
 }

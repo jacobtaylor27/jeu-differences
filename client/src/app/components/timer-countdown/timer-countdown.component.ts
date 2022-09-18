@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription, timer } from 'rxjs';
 
 @Component({
@@ -69,6 +69,8 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     }
 
     private gameOver() {
-        this.matDialog.open(this.gameOverDialogRef);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        this.matDialog.open(this.gameOverDialogRef, dialogConfig);
     }
 }

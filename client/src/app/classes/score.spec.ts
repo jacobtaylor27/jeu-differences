@@ -20,7 +20,7 @@ describe('Score', () => {
     it('should convert time', () => {
         score.time = 60;
         expect(score.convertTime()).toEqual('1:00');
-        
+
         score.time = 9;
         expect(score.convertTime()).toEqual('0:09');
     });

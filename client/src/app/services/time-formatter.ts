@@ -1,7 +1,11 @@
+import { Injectable } from '@angular/core';
 import { MINUTES_IN_AN_HOUR, SECONDS_IN_AN_MINUTE } from '@app/constants/time';
 
+@Injectable({
+    providedIn: 'root',
+})
 export class TimeFormatter {
-    static getMMSSFormat(second: number): string {
+    getMMSSFormat(second: number): string {
         if (second < 0) {
             throw new Error('time should always be positive');
         }

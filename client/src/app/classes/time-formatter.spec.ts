@@ -8,9 +8,13 @@ describe('TimeFormatter', () => {
         }).compileComponents();
     });
 
-    it("seconds should be converted into a time  'MM:SS'", () => {
-        const expectedFormatedTime = '0:00';
-        expect(TimeFormatter.getMMSSFormat(0)).toEqual(expectedFormatedTime);
+    it("seconds should be converted into a time 'MM:SS'", () => {
+        const basicFormat = '0:00';
+        const basicEquivalent = 0;
+        const edgeCase = '1:33';
+        const edgeEquivalent = 93;
+        expect(TimeFormatter.getMMSSFormat(basicEquivalent)).toEqual(basicFormat);
+        expect(TimeFormatter.getMMSSFormat(edgeEquivalent)).toEqual(edgeCase);
     });
 
     it('a number of seconds negative should throw an exception', () => {

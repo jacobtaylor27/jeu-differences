@@ -197,7 +197,7 @@ describe('GameSelectionService', () => {
     let activeCards = service.gameCards.filter(card => card.isShown);
     expect(activeCards.length).toEqual(4);
 
-    service.setActiveCards(4, 8);
+    service.setActiveCards(4, 7);
     activeCards = service.gameCards.filter(card => card.isShown);
     expect(activeCards.length).toEqual(4);
   });
@@ -213,6 +213,7 @@ describe('GameSelectionService', () => {
     expect(cards.length).toEqual(4);
 
     service.hideAllCards();
+    cards = service.getActiveCards();
     expect(cards.length).toEqual(0);
   });
 
@@ -228,5 +229,19 @@ describe('GameSelectionService', () => {
     service.decreaseActiveRange();
     expect(service.activeCardsRange.start).toEqual(6);
     expect(service.activeCardsRange.end).toEqual(9);
+  });
+
+  it('showNextFour should show next 4 cards', () => {
+    service.showNextFour();
+    expect(service.gameCards.findIndex(card => card.isShown)).toEqual(4);
+    expect(service.gameCards[7].isShown).toBeTruthy();
+  });
+
+  it('showPreviousFour should show previous 4 cards', () => {
+    service.activeCardsRange.start = 8;
+    service.activeCardsRange.end = 11;
+    service.showPreviousFour();
+    expect(service.gameCards.findIndex(card => card.isShown)).toEqual(4);
+    expect(service.gameCards[7].isShown).toBeTruthy();
   });
 });

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { PlayerScore } from '@app/classes/player-score';
+import { GameCategory } from '@app/enums/game-category';
 import { GameCard } from '@app/interfaces/game-card';
 
 @Injectable({
@@ -63,5 +65,32 @@ export class GameSelectionService {
         this.activeCardsRange.end -= 4;
     }
 
-    private initialiseGameCard(): void {}
+    private initialiseGameCard(): void {
+        const DEFAULT_NB_OF_CARDS = 12;
+        const DEFAULT_SCORES = [0, 1, 2];
+        const soloScores = this.initialiseScores(DEFAULT_SCORES, GameCategory.Solo);
+        const multiplayerScores = this.initialiseScores(DEFAULT_SCORES, GameCategory.Multiplayer);
+
+        for (let i = 0; i < DEFAULT_NB_OF_CARDS; i++) {
+            const newCard: GameCard = {
+                isShown: false,
+                gameName: `Game ${i}`,
+                imgSource: 'https://picsum.photos/500',
+                scoresSolo: soloScores,
+                scoresMultiplayer: multiplayerScores,
+            };
+            this.gameCards.push(newCard);
+        }
+    }
+
+    private initialiseScores(score: number[], gameCategory: GameCategory): PlayerScore[] {
+        const scores: PlayerScore[] = [];
+
+        for (let i = 0; i < score.length; i++) {
+            const arbitraryNb = 5;
+            const timeForGame = arbitraryNb * i;
+            scores.push(new PlayerScore(`Player ${i}`, timeForGame, gameCategory));
+        }
+        return scores;
+    }
 }

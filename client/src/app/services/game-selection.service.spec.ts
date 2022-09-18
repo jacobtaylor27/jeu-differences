@@ -1,7 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { PlayerScore } from '@app/classes/player-score';
-import { GameCategory } from '@app/enums/game-category';
-
 import { GameSelectionService } from './game-selection.service';
 
 describe('GameSelectionService', () => {
@@ -10,22 +7,6 @@ describe('GameSelectionService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
         gameSelectionService = new GameSelectionService();
-        gameSelectionService.gameInformation = [
-            {
-                gameName: 'Game Name 1',
-                imgSource: 'https://picsum.photos/500',
-                scoresSolo: [
-                    new PlayerScore('Player 1', 620, GameCategory.Solo),
-                    new PlayerScore('Player 2', 78, GameCategory.Solo),
-                    new PlayerScore('Player 3', 32, GameCategory.Solo),
-                ],
-                scoresMultiplayer: [
-                    new PlayerScore('Player X', 122, GameCategory.Multiplayer),
-                    new PlayerScore('Player Y', 88, GameCategory.Multiplayer),
-                    new PlayerScore('Player Z', 54, GameCategory.Multiplayer),
-                ],
-            },
-        ];
     });
 
     it('should be created', () => {

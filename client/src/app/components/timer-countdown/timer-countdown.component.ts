@@ -38,7 +38,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
             console.log(seconds);
             this.displaySeconds(seconds);
             this.displayMinutes(seconds);
-            this.caculateSecondsLeft(seconds);
+            this.calculateSecondsLeft(seconds);
         });
     }
 
@@ -52,7 +52,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
         this.minutesDisplay = this.pad(Math.floor((Number(this.timerAdmin) - totalSeconds) / 60) % 60);
     }
 
-    private caculateSecondsLeft(totalSeconds: number) {
+    private calculateSecondsLeft(totalSeconds: number) {
         this.secondsLeft = Number(this.timerAdmin) - totalSeconds;
     }
 

@@ -13,6 +13,7 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
+import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
 
 /**
  * Main module that is used in main.ts.
@@ -30,6 +31,7 @@ import { CluesAreaComponent } from './components/clues-area/clues-area.component
         SidebarComponent,
         ExitGameButtonComponent,
         CluesAreaComponent,
+        TimerCountdownComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

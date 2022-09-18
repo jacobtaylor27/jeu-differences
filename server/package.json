@@ -28,7 +28,9 @@
             "**/*.spec.ts",
             "app/index.ts",
             "app/server.ts",
-            "app/app.ts"
+            "app/app.ts",
+            "app/constante/*.ts",
+            "app/interface/*.ts"
         ],
         "require": [
             "ts-node/register",
@@ -49,6 +51,7 @@
         "@common": "out/common"
     },
     "dependencies": {
+        "bmp-js": "^0.1.0",
         "cookie-parser": "1.4.5",
         "cors": "2.8.5",
         "debug": "4.3.4",
@@ -64,6 +67,7 @@
         "typedi": "0.10.0"
     },
     "devDependencies": {
+        "@types/bmp-js": "^0.1.0",
         "@types/body-parser": "1.19.1",
         "@types/chai": "4.3.3",
         "@types/cookie-parser": "1.4.3",

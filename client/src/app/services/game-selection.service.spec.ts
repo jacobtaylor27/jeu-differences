@@ -26,10 +26,9 @@ describe('GameSelectionService', () => {
         expect(service.hasNextCards()).toBeFalsy();
     });
 
-    it('fetchGameCards should retrieve cards and fill gameCards attributes', () => {
+    it('initialiseGameCard should initialise the attribute gameCards', () => {
         const DEFAULT_NB_CARDS = 11;
         const INDEX_OF_FIRST_CARD = 0;
-        // Il devrait y avoir un spy pour vérifier que la méthode a été appelée correctement.
         expect(service.gameCards.length).toEqual(DEFAULT_NB_CARDS);
         expect(service.gameCards[INDEX_OF_FIRST_CARD].gameName).toEqual('Game Name 0');
         expect(service.gameCards[INDEX_OF_FIRST_CARD].imgSource).toEqual('https://picsum.photos/500');
@@ -38,12 +37,15 @@ describe('GameSelectionService', () => {
     });
 
     it('setActiveCards should make 4 cards of the list active', () => {
+        const DEFAULT_ACTIVE_CARDS = 4;
         let activeCards = service.gameCards.filter((card) => card.isShown);
-        expect(activeCards.length).toEqual(4);
+        expect(activeCards.length).toEqual(DEFAULT_ACTIVE_CARDS);
 
-        service.setActiveCards(4, 7);
+        const beginRange = 4;
+        const endRange = 7;
+        service.setActiveCards(beginRange, endRange);
         activeCards = service.gameCards.filter((card) => card.isShown);
-        expect(activeCards.length).toEqual(4);
+        expect(activeCards.length).toEqual(DEFAULT_ACTIVE_CARDS);
     });
 
     it('hideAllCards should make all cards hidden', () => {

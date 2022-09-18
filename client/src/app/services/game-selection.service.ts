@@ -1,175 +1,15 @@
 import { Injectable } from '@angular/core';
-import { GameCard } from '@app/classes/game-card';
-import { Score } from '@app/classes/score';
-import { GameCategory } from '@app/enums/game-category';
+import { GameCard } from '@app/interfaces/game-card';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameSelectionService {
-    // fake game cards
-    gameInformation = [
-        {
-            gameName: 'Game Name 1',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 2',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 3',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 4',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 5',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 6',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 7',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 8',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 9',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 10',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-        {
-            gameName: 'Game Name 11',
-            imgSource: 'https://picsum.photos/500',
-            scoresSolo: [
-                new Score('Player 1', 620, GameCategory.Solo),
-                new Score('Player 2', 78, GameCategory.Solo),
-                new Score('Player 3', 32, GameCategory.Solo),
-            ],
-            scoresMultiplayer: [
-                new Score('Player X', 122, GameCategory.Multiplayer),
-                new Score('Player Y', 88, GameCategory.Multiplayer),
-                new Score('Player Z', 54, GameCategory.Multiplayer),
-            ],
-        },
-    ];
-
     activeCardsRange = { start: 0, end: 3 };
     gameCards: GameCard[] = [];
 
     constructor() {
-        this.fetchGameCards();
+        this.initialiseGameCard();
         this.setActiveCards(this.activeCardsRange.start, this.activeCardsRange.end);
     }
 
@@ -179,17 +19,6 @@ export class GameSelectionService {
 
     hasNextCards(): boolean {
         return this.activeCardsRange.end < this.gameCards.length - 1;
-    }
-
-    fetchGameCards(): void {
-        this.gameInformation.forEach((gameInformation) => {
-            const gc = new GameCard();
-            gc.gameName = gameInformation.gameName;
-            gc.imgSource = gameInformation.imgSource;
-            gc.scoresSolo = gameInformation.scoresSolo;
-            gc.scoresMultiplayer = gameInformation.scoresMultiplayer;
-            this.gameCards.push(gc);
-        });
     }
 
     setActiveCards(start: number, end: number): void {
@@ -233,4 +62,6 @@ export class GameSelectionService {
         this.activeCardsRange.start -= 4;
         this.activeCardsRange.end -= 4;
     }
+
+    private initialiseGameCard(): void {}
 }

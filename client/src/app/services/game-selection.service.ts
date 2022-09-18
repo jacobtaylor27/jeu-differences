@@ -66,7 +66,7 @@ export class GameSelectionService {
     }
 
     private initialiseGameCard(): void {
-        const DEFAULT_NB_OF_CARDS = 12;
+        const DEFAULT_NB_OF_CARDS = 11;
         const DEFAULT_SCORES = [0, 1, 2];
         const soloScores = this.initialiseScores(DEFAULT_SCORES, GameCategory.Solo);
         const multiplayerScores = this.initialiseScores(DEFAULT_SCORES, GameCategory.Multiplayer);
@@ -74,7 +74,7 @@ export class GameSelectionService {
         for (let i = 0; i < DEFAULT_NB_OF_CARDS; i++) {
             const newCard: GameCard = {
                 isShown: false,
-                gameName: `Game ${i}`,
+                gameName: `Game Name ${i}`,
                 imgSource: 'https://picsum.photos/500',
                 scoresSolo: soloScores,
                 scoresMultiplayer: multiplayerScores,

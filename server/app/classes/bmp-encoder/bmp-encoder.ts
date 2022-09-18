@@ -14,7 +14,18 @@ export class BmpEncoder {
             height,
             data,
         };
-        fs.writeFileSync(filepath, bmp.encode(bmpData).data);
+        await this.writeFile(filepath, bmp.encode(bmpData).data);
+    }
+
+    private static async writeFile(filepath: string, buffer: Buffer): Promise<void> {
+        return new Promise((resolve, reject) => {
+            fs.writeFile(filepath, buffer, (err) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve();
+            });
+        });
     }
 
     private static getBuffer(pixels: Pixel[][]): Buffer {

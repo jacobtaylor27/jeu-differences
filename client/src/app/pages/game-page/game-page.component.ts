@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-// import { CommunicationService } from '@app/services/communication.service';
-// import { Message } from '@common/message';
-// import { BehaviorSubject } from 'rxjs';
-// import { map } from 'rxjs/operators';
+import { CommunicationService } from '@app/services/communication.service';
+import { Message } from '@common/message';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-game-page',
@@ -11,21 +11,21 @@ import { Component } from '@angular/core';
 })
 export class GamePageComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
+    message: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-    // message: BehaviorSubject<string> = new BehaviorSubject<string>('');
-    // constructor(private readonly communicationService: CommunicationService) {
-    //     this.getMessagesFromServer();
-    // }
+    constructor(private readonly communicationService: CommunicationService) {
+        this.getTimerValue();
+    }
 
-    // getMessagesFromServer(): void {
-    //     this.communicationService
-    //         .getTimeValue()
-    //         // Cette étape transforme l'objet Message en un seul string
-    //         .pipe(
-    //             map((message: Message) => {
-    //                 return ` ${message.body}`;
-    //             }),
-    //         )
-    //         .subscribe(this.message);
-    // }
+    getTimerValue(): void {
+        this.communicationService
+            .getTimeValue()
+            // Cette étape transforme l'objet Message en un seul string
+            .pipe(
+                map((message: Message) => {
+                    return ` ${message.body}`;
+                }),
+            )
+            .subscribe(this.message);
+    }
 }

@@ -2,13 +2,12 @@
     <mat-toolbar color="primary">
         <span>MODE CLASSIQUE SOLO</span>
         <span class="filler"></span>
-        <!-- <div>{{ message.getValue() }}</div> -->
         <app-exit-game-button></app-exit-game-button>
     </mat-toolbar>
 
     <div class="page">
         <div class="header">
-            <app-sidebar> </app-sidebar>
+            <app-sidebar [timer]="message.getValue()"> </app-sidebar>
 
             <section class="container">
                 <section class="play-area-container">

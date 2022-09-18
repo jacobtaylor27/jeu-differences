@@ -1,11 +1,10 @@
-import { TestBed } from '@angular/core/testing';
 import { GameCard } from '@app/classes/game-card';
 
-describe('CanvasTestHelper', () => {
+describe('GameCard', () => {
     let gameCard: GameCard;
 
     beforeEach(() => {
-        gameCard = TestBed.inject(GameCard);
+        gameCard = new GameCard();
     });
 
     it('should be created', () => {

@@ -9,6 +9,8 @@ import { Subscription, timer } from 'rxjs';
 })
 export class TimerCountdownComponent implements OnInit, OnDestroy {
     @Input() timerAdmin: string;
+    @Input() clueAskedCounter: number;
+    private timer: number = 0;
     secondsDisplay: number;
     minutesDisplay: number;
     secondsLeft: number;
@@ -20,6 +22,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     constructor(private readonly matDialog: MatDialog) {}
 
     ngOnInit(): void {
+        this.calculateTime();
         this.countdownTimer();
     }
 
@@ -30,12 +33,13 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     private countdownTimer() {
         const $time = timer(0, 1000);
         this.sub = $time.subscribe((seconds) => {
-            if (seconds === Number(this.timerAdmin) + 1) {
+            if (seconds === this.timer + 1) {
                 this.stopTimer();
                 this.gameOver();
                 return;
             }
             console.log(seconds);
+            this.calculateTime();
             this.displaySeconds(seconds);
             this.displayMinutes(seconds);
             this.calculateSecondsLeft(seconds);
@@ -45,15 +49,20 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     private stopTimer() {
         this.sub.unsubscribe();
     }
+
+    private calculateTime() {
+        this.timer = Number(this.timerAdmin) - this.clueAskedCounter * 5;
+    }
+
     private displaySeconds(totalSeconds: number) {
-        this.secondsDisplay = this.pad((Number(this.timerAdmin) - totalSeconds) % 60);
+        this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60);
     }
     private displayMinutes(totalSeconds: number) {
-        this.minutesDisplay = this.pad(Math.floor((Number(this.timerAdmin) - totalSeconds) / 60) % 60);
+        this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60);
     }
 
     private calculateSecondsLeft(totalSeconds: number) {
-        this.secondsLeft = Number(this.timerAdmin) - totalSeconds;
+        this.secondsLeft = this.timer - totalSeconds;
     }
 
     displayTime(): string {

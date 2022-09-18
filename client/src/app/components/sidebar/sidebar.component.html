@@ -10,10 +10,10 @@
             </section>
         </mat-grid-tile>
         <mat-grid-tile>
-            <app-clues-area></app-clues-area>
+            <app-clues-area (clueCounter)="onClueAsked($event)"></app-clues-area>
         </mat-grid-tile>
         <mat-grid-tile>
-            <app-timer-countdown [timerAdmin]="timer"></app-timer-countdown>
+            <app-timer-countdown [timerAdmin]="timer" [clueAskedCounter]="askedClue"></app-timer-countdown>
         </mat-grid-tile>
     </mat-grid-list>
 </div>

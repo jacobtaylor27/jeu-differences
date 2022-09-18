@@ -7,4 +7,9 @@ import { Component, Input } from '@angular/core';
 })
 export class SidebarComponent {
     @Input() timer = '';
+    @Input() askedClue: number = 0;
+
+    onClueAsked(eventData: number) {
+        this.askedClue = eventData;
+    }
 }

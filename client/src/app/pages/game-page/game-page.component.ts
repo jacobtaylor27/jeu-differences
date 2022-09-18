@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 })
 export class GamePageComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
+
     message: BehaviorSubject<string> = new BehaviorSubject<string>('');
     constructor(private readonly communicationService: CommunicationService) {
         this.getMessagesFromServer();

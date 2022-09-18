@@ -49,14 +49,16 @@ describe('GameSelectionService', () => {
     });
 
     it('hideAllCards should make all cards hidden', () => {
+        const DEFAULT_NB_CARDS = 11;
         service.hideAllCards();
         const hiddenCards = service.gameCards.filter((card) => card.isShown === false);
-        expect(hiddenCards.length).toEqual(11);
+        expect(hiddenCards.length).toEqual(DEFAULT_NB_CARDS);
     });
 
     it('getActiveCards should return an array with all the active cards', () => {
         let cards = service.getActiveCards();
-        expect(cards.length).toEqual(4);
+        const DEFAULT_NB_CARDS = 4;
+        expect(cards.length).toEqual(DEFAULT_NB_CARDS);
 
         service.hideAllCards();
         cards = service.getActiveCards();
@@ -65,16 +67,21 @@ describe('GameSelectionService', () => {
 
     it('increaseActiveRange should increase starting and ending range by 4', () => {
         service.increaseActiveRange();
-        expect(service.activeCardsRange.start).toEqual(4);
-        expect(service.activeCardsRange.end).toEqual(7);
+        const beginRange = 4;
+        const endRange = 7;
+        expect(service.activeCardsRange.start).toEqual(beginRange);
+        expect(service.activeCardsRange.end).toEqual(endRange);
     });
 
     it('decreaseActiveRange should decrease starting and ending range by 4', () => {
         service.activeCardsRange.start = 10;
         service.activeCardsRange.end = 13;
         service.decreaseActiveRange();
-        expect(service.activeCardsRange.start).toEqual(6);
-        expect(service.activeCardsRange.end).toEqual(9);
+
+        const beginRange = 6;
+        const endRange = 9;
+        expect(service.activeCardsRange.start).toEqual(beginRange);
+        expect(service.activeCardsRange.end).toEqual(endRange);
     });
 
     it('showNextFour should show next 4 cards', () => {

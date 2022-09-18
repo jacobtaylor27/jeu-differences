@@ -6,10 +6,9 @@ import { Component, HostListener } from '@angular/core';
     styleUrls: ['./clues-area.component.scss'],
 })
 export class CluesAreaComponent {
-    numberOfClues: number = 3;
+    private numberOfClues: number = 3;
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
-    keyForClueIsPressed: boolean = true;
 
     @HostListener('window: keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {

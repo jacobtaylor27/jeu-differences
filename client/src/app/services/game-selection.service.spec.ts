@@ -192,4 +192,41 @@ describe('GameSelectionService', () => {
     expect(service.gameCards[0].scoresSolo.length).toEqual(3);
     expect(service.gameCards[0].scoresMultiplayer.length).toEqual(3);
   });
+
+  it('setActiveCards should make 4 cards of the list active', () => {
+    let activeCards = service.gameCards.filter(card => card.isShown);
+    expect(activeCards.length).toEqual(4);
+
+    service.setActiveCards(4, 8);
+    activeCards = service.gameCards.filter(card => card.isShown);
+    expect(activeCards.length).toEqual(4);
+  });
+
+  it('hideAllCards should make all cards hidden', () => {
+    service.hideAllCards();
+    const hiddenCards = service.gameCards.filter(card => card.isShown === false);
+    expect(hiddenCards.length).toEqual(11);
+  });
+
+  it('getActiveCards should return an array with all the active cards', () => {
+    let cards = service.getActiveCards();
+    expect(cards.length).toEqual(4);
+
+    service.hideAllCards();
+    expect(cards.length).toEqual(0);
+  });
+
+  it('increaseActiveRange should increase starting and ending range by 4', () => {
+    service.increaseActiveRange();
+    expect(service.activeCardsRange.start).toEqual(4);
+    expect(service.activeCardsRange.end).toEqual(7);
+  });
+
+  it('decreaseActiveRange should decrease starting and ending range by 4', () => {
+    service.activeCardsRange.start = 10;
+    service.activeCardsRange.end = 13;
+    service.decreaseActiveRange();
+    expect(service.activeCardsRange.start).toEqual(6);
+    expect(service.activeCardsRange.end).toEqual(9);
+  });
 });

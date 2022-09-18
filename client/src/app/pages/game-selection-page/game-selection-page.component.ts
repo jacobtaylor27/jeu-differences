@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameSelectionService } from '@app/services/game-selection.service';

@@ -5,18 +5,18 @@
             <div class="card-container">
                 <mat-card>
                     <mat-card-title class="game-name-title">{{ gameCard.gameName }}</mat-card-title>
-                    <img mat-card-lg-image [src]="gameCard.imgSource">
+                    <img mat-card-lg-image [src]="gameCard.imgSource" />
                     <mat-card-content class="highscores-content">
                         <h3 class="highscore-title"><b>Meilleurs scores</b></h3>
                         <div class="scores">
                             <ul class="highscores-solo">
-                                <li class="highscores-solo-title"><b>Solo</b></li>
-                                <li *ngFor="let score of gameCard.scoresSolo">{{ score.name }} &mdash; {{ score.convertTime() }}</li>
+                                <li class="highscores-solo-title"><b>Solo</b></li> 
+                                <li *ngFor="let score of gameCard.scoresSolo">{{ score.getName() }} &mdash; {{ score.getTime() }}</li>
                             </ul>
 
                             <ul class="highscores-multi">
                                 <li class="highscores-multi-title"><b>1 vs 1</b></li>
-                                <li *ngFor="let score of gameCard.scoresMultiplayer">{{ score.name }} &mdash; {{ score.convertTime() }}</li>
+                                <li *ngFor="let score of gameCard.scoresMultiplayer">{{ score.getName() }} &mdash; {{ score.getTime() }}</li>
                             </ul>
                         </div>
                     </mat-card-content>
@@ -29,10 +29,10 @@
                         <div class="dialog-content">
                             <mat-form-field>
                                 <mat-label>Quel est votre nom?</mat-label>
-                                <input matInput>
+                                <input matInput />
                             </mat-form-field>
                         </div>
-                        
+
                         <div mat-dialog-actions>
                             <button mat-flat-button color="primary" mat-dialog-close>Annuler</button>
                             <button mat-flat-button color="primary">Continuer</button>
@@ -44,9 +44,11 @@
     </div>
 
     <div class="controls">
-        <button mat-flat-button color="primary" [disabled]="!hasCardsBefore()" aria-label="Parties précédentes" (click)="onClickPrevious()">< Précédentes</button>
-        <button mat-flat-button color="primary" [disabled]="!hasCardsAfter()" aria-label="Prochaines parties" (click)="onClickNext()">Prochaines ></button>
+        <button mat-flat-button color="primary" [disabled]="!hasCardsBefore()" aria-label="Parties précédentes" (click)="onClickPrevious()">
+            < Précédentes
+        </button>
+        <button mat-flat-button color="primary" [disabled]="!hasCardsAfter()" aria-label="Prochaines parties" (click)="onClickNext()">
+            Prochaines >
+        </button>
     </div>
 </main>
-
-

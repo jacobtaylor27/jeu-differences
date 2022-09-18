@@ -12,12 +12,14 @@ export class TimerCountdownComponent {
     secondsDisplay: number;
     minutesDisplay: number;
     sub: Subscription;
+
     constructor(timerService: TimerService) {
         // console.log(timerService.timer.getValue());
         this.timerValue = Number(timerService.timer.getValue());
         console.log(this.timerValue);
         this.countdownTimer();
     }
+
     private countdownTimer() {
         const $time = timer(0, 1000);
         this.sub = $time.subscribe((seconds) => {
@@ -33,10 +35,10 @@ export class TimerCountdownComponent {
         this.sub.unsubscribe();
     }
     private displaySeconds(ticks: number) {
-        this.secondsDisplay = this.pad(this.timerValue % 60);
+        this.secondsDisplay = this.pad((this.timerValue - ticks) % 60);
     }
     private displayMinutes(ticks: number) {
-        this.minutesDisplay = this.pad(Math.floor(this.timerValue / 60) % 60);
+        this.minutesDisplay = this.pad(Math.floor((this.timerValue - ticks) / 60) % 60);
     }
     private pad(digit: any) {
         return digit <= 9 ? '0' + digit : digit;

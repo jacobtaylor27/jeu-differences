@@ -8,7 +8,7 @@ export class CountdownTimerService {
     private valueTimer: number = 0;
 
     // TODO : add admin inputs for both minutes and seconds
-    constructor(secondsAdmin: number = 0, minutesAdmin: number = 2) {
+    constructor(secondsAdmin: number = 20, minutesAdmin: number = 0) {
         this.seconds = secondsAdmin;
         this.minutes = minutesAdmin;
         this.setValueTimer();

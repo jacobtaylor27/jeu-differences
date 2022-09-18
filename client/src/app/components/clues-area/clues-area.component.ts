@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
     selector: 'app-clues-area',
@@ -9,6 +9,14 @@ export class CluesAreaComponent {
     numberOfClues: number = 3;
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
+    keyForClueIsPressed: boolean = true;
+
+    @HostListener('window: keydown', ['$event'])
+    buttonDetect(event: KeyboardEvent) {
+        if (event.key === 'i') {
+            this.getClue();
+        }
+    }
 
     getClue() {
         this.clueAskedCounter++;

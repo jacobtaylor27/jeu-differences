@@ -57,8 +57,8 @@ describe('GameSelectionService', () => {
 
     it('getActiveCards should return an array with all the active cards', () => {
         let cards = service.getActiveCards();
-        const DEFAULT_NB_CARDS = 4;
-        expect(cards.length).toEqual(DEFAULT_NB_CARDS);
+        const DEFAULT_ACTIVE_CARDS = 4;
+        expect(cards.length).toEqual(DEFAULT_ACTIVE_CARDS);
 
         service.hideAllCards();
         cards = service.getActiveCards();
@@ -86,7 +86,8 @@ describe('GameSelectionService', () => {
 
     it('showNextFour should show next 4 cards', () => {
         service.showNextFour();
-        expect(service.gameCards.findIndex((card) => card.isShown)).toEqual(4);
+        const activeCards = 4;
+        expect(service.gameCards.findIndex((card) => card.isShown)).toEqual(activeCards);
         expect(service.gameCards[7].isShown).toBeTruthy();
     });
 
@@ -94,7 +95,8 @@ describe('GameSelectionService', () => {
         service.activeCardsRange.start = 8;
         service.activeCardsRange.end = 11;
         service.showPreviousFour();
-        expect(service.gameCards.findIndex((card) => card.isShown)).toEqual(4);
+        const activeCards = 4;
+        expect(service.gameCards.findIndex((card) => card.isShown)).toEqual(activeCards);
         expect(service.gameCards[7].isShown).toBeTruthy();
     });
 });

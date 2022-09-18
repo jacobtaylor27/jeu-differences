@@ -1,41 +1,45 @@
-<form [formGroup]="this.form" (ngSubmit)="onSubmit()">
-    <ul id="main">
-        <li>
-            <label for="name">Nom du jeu: </label>
-            <input id="name" type="text" formControlName="name">
-        </li>
-        <li id="tool">
-            <ul>
-                <li>
-                    <app-tool-box></app-tool-box>
-                </li>
-                <li>
-                    <select id="expansionRadius" formControlName="expansionRadius">
-                        <option value="3">3px rayon d'elargissement</option>
-                        <option value="0">0px rayon d'elargissement</option>
-                        <option value="9">9px rayon d'elargissement</option>
-                        <option value="15">15px rayon d'elargissement</option>
-                    </select>
-                </li>
-                <li>
-                    <button type="button">Televerser une image</button>
-                </li>
-                <li>
-                    <button type="button">Validation</button>
-                </li>
-                <li>
-                    <button type="submit">Creer</button>
-                </li>
-            </ul>
-        </li>
-        <li class="canvas" id="drawImg">
-            <app-draw-canvas id="imgDiff"></app-draw-canvas>
-            <label for="imgDiff">Titre: Image a changer </label>
-        </li>
-        <li class="canvas">
-            <img class="img" width="640px" height="480px" src="imgSourceLink" alt="Image Source" formControlName="img" *ngIf="imgSourceLink !== undefined; blankTemplate">
-            <div class="img" width="640px" height="480px" #blankTemplate></div>
-            <label for="img">Titre: Image Source</label>
-        </li>
-    </ul>
-</form>
+<div class="main">
+    <form [formGroup]="this.form" (ngSubmit)="onSubmit()">
+        <div class="img-tools">
+            <button type="button">Televerser une image</button>
+        </div>
+        <div class="img-container">
+            <div class="drawImg">
+                <label for="imgDiff">Titre: Canvas éditeur </label>
+                <app-draw-canvas id="imgDiff"></app-draw-canvas>
+            </div>
+
+            <div class="drawImg">
+                <label for="img">Titre: Image Source</label>
+                <img
+                    id="img"
+                    width="640px"
+                    height="480px"
+                    src="imgSourceLink"
+                    alt="Image Source"
+                    formControlName="img"
+                    *ngIf="imgSourceLink !== undefined; blankTemplate"
+                />
+                <div class="img" width="640px" height="480px" #blankTemplate></div>
+            </div>
+        </div>
+        <div class="toolbox-container">
+            <app-tool-box></app-tool-box>
+        </div>
+
+        <div class="submission-container">
+            <div class="submission-box">
+                <select id="expansionRadius" formControlName="expansionRadius">
+                    <option value="0">0px rayon d'elargissement</option>
+                    <option value="3" selected>3px rayon d'elargissement</option>
+                    <option value="9">9px rayon d'elargissement</option>
+                    <option value="15">15px rayon d'elargissement</option>
+                </select>
+
+                <button type="button">Valider</button>
+
+                <button type="submit">Valider et créer</button>
+            </div>
+        </div>
+    </form>
+</div>

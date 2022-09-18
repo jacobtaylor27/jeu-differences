@@ -1,17 +1,13 @@
-<ul>
-    <li>
-        <h3>Outils</h3>
-    </li>
-    <li>
-        <button type="button" (click)="this.changePencilState(this.toolEnum.Eraser)" name="eraser">Efface</button>
-    </li>
-    <li>
-        <button type="button" (click)="changePencilState(this.toolEnum.Pencil)" name="pencil">Crayon</button>
-    </li>
-    <li>
-        <input type="color" (change)="changePencilColor(colorSelector.value)" name="colorSelector" #colorSelector>
-    </li>
-    <li>
-        <mat-slider min="1" max="5" step="0.5" thumbLabel (change)="changePencilWith($event)" [displayWith]="formatLabel"></mat-slider>
-    </li>
-</ul>
+<div class="tool-container">
+    <button type="button" (click)="this.changePencilState(this.toolEnum.Eraser)" name="eraser" class="tool">
+        <span class="material-symbols-outlined"> remove </span>
+    </button>
+
+    <button type="button" (click)="changePencilState(this.toolEnum.Pencil)" name="pencil" class="tool">
+        <span class="material-symbols-outlined"> edit </span>
+    </button>
+
+    <input type="color" (change)="changePencilColor(colorSelector.value)" name="colorSelector" #colorSelector />
+
+    <mat-slider min="1" max="5" step="0.5" thumbLabel (change)="changePencilWith($event)" [displayWith]="formatLabel"></mat-slider>
+</div>

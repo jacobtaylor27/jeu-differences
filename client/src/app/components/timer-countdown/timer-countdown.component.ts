@@ -10,6 +10,7 @@ export class TimerCountdownComponent {
     @Input() timerAdmin: string;
     secondsDisplay: number;
     minutesDisplay: number;
+    secondsLeft: number;
     sub: Subscription;
 
     constructor() {
@@ -25,16 +26,21 @@ export class TimerCountdownComponent {
             }
             this.displaySeconds(seconds);
             this.displayMinutes(seconds);
+            this.caculateSecondsLeft(seconds);
         });
     }
     private stopTimer() {
         this.sub.unsubscribe();
     }
-    private displaySeconds(ticks: number) {
-        this.secondsDisplay = this.pad((Number(this.timerAdmin) - ticks) % 60);
+    private displaySeconds(totalSeconds: number) {
+        this.secondsDisplay = this.pad((Number(this.timerAdmin) - totalSeconds) % 60);
     }
-    private displayMinutes(ticks: number) {
-        this.minutesDisplay = this.pad(Math.floor((Number(this.timerAdmin) - ticks) / 60) % 60);
+    private displayMinutes(totalSeconds: number) {
+        this.minutesDisplay = this.pad(Math.floor((Number(this.timerAdmin) - totalSeconds) / 60) % 60);
+    }
+
+    private caculateSecondsLeft(totalSeconds: number) {
+        this.secondsLeft = Number(this.timerAdmin) - totalSeconds;
     }
 
     displayTime(): string {

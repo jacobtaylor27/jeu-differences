@@ -1,8 +1,10 @@
 <section class="timer">
-    <p class="timer-clock">
-        <mat-icon class="clock-icon">timer</mat-icon>
-        {{ displayTime() }}
-        <!-- {{ minutesDisplay && minutesDisplay <= 59 ? minutesDisplay : '00' }} : {{ secondsDisplay && secondsDisplay <= 59 ? secondsDisplay : '00' }} -->
-        <br />
-    </p>
+    <div class="timer-clock">
+        <mat-icon class="clock-icon" [ngStyle]="{ color: secondsLeft > 5 ? 'black' : 'red' }">timer</mat-icon>
+        <p *ngIf="secondsLeft > 5; else elseBlock">{{ displayTime() }}</p>
+        <ng-template #elseBlock>
+            <p class="timer-red">{{ displayTime() }}</p>
+        </ng-template>
+        <!-- <p *ngIf="secondsLeft < 6" </p> -->
+    </div>
 </section>

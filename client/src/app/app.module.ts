@@ -14,6 +14,7 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
+import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 
 /**
  * Main module that is used in main.ts.
@@ -32,6 +33,7 @@ import { TimerCountdownComponent } from './components/timer-countdown/timer-coun
         ExitGameButtonComponent,
         CluesAreaComponent,
         TimerCountdownComponent,
+        TimerStopwatchComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

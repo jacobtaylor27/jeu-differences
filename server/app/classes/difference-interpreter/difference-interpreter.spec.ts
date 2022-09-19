@@ -43,6 +43,28 @@ describe('Difference interpreter', () => {
         const difference: Difference[][] = DifferenceInterpreter.getDifference(bmpWithColors);
         expect(difference.length).to.equal(nbOfDifference);
     });
-    it('Black pixels side by side should be considered as one difference', () => {});
-    it('Black pixels in diagonal should be considered as one difference', () => {});
+    it('Black pixels side by side should be considered as one difference', () => {
+        // prettier-ignore
+        // eslint-disable-next-line
+        const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0];
+        const width = 2;
+        const height = 2;
+        const bmpWithColors = new Bmp(width, height, rawData);
+        const nbOfDifference = 1;
+
+        const difference: Difference[][] = DifferenceInterpreter.getDifference(bmpWithColors);
+        expect(difference.length).to.equal(nbOfDifference);
+    });
+    it('Black pixels in diagonal should be considered as one difference', () => {
+        // prettier-ignore
+        // eslint-disable-next-line
+        const rawData = [0, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0];
+        const width = 2;
+        const height = 2;
+        const bmpWithColors = new Bmp(width, height, rawData);
+        const nbOfDifference = 1;
+
+        const difference: Difference[][] = DifferenceInterpreter.getDifference(bmpWithColors);
+        expect(difference.length).to.equal(nbOfDifference);
+    });
 });

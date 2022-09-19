@@ -1,7 +1,8 @@
 <section [ngClass]="favoriteTheme">
     <div class="game-cards-container">
-        <div class="game-card-container" *ngFor="let i of [1, 2, 3, 4]">
-            <app-game-card></app-game-card>
+        <div class="game-card-container" *ngFor="let gameCard of gameCards">
+            <app-game-card
+            [gameCard]="gameCard"></app-game-card>
         </div>
     </div>
 

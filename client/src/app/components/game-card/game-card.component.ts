@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { GameCard } from '@app/interfaces/game-card';
 
 @Component({
   selector: 'app-game-card',
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
 })
 export class GameCardComponent {
   constructor() { }
+
+  @Input() gameCard: GameCard;
 
   favoriteTheme: string = 'deeppurple-amber-theme';
 }

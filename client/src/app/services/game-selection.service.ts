@@ -73,6 +73,7 @@ export class GameSelectionService {
 
         for (let i = 0; i < DEFAULT_NB_OF_CARDS; i++) {
             const newCard: GameCard = {
+                isCreated: false,
                 isShown: false,
                 gameName: `Game Name ${i}`,
                 imgSource: 'https://picsum.photos/500',

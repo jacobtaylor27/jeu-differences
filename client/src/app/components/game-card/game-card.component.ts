@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 })
 export class GameCardComponent {
   constructor() { }
+
+  favoriteTheme: string = 'deeppurple-amber-theme';
 }

@@ -16,6 +16,7 @@ import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
+import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 
 /**
  * Main module that is used in main.ts.
@@ -35,6 +36,7 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
         ToolBoxComponent,
         DrawCanvasComponent,
         DialogFormsErrorComponent,
+        GameSelectionPageComponent,
         AdminPageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],

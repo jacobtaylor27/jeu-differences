@@ -4,6 +4,7 @@ import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.com
 import { AdminPageComponent } from '@app/pages/admin-page/admin-page.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
+import { GameSelectionPageComponent } from '@app/pages/game-selection-page/game-selection-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 
@@ -12,6 +13,7 @@ const routes: Routes = [
     { path: 'home', component: MainPageComponent },
     { path: 'game', component: GamePageComponent },
     { path: 'create', component: CreateGamePageComponent },
+    { path: 'select', component: GameSelectionPageComponent },
     { path: 'material', component: MaterialPageComponent },
     { path: 'draw', component: DrawCanvasComponent },
     { path: 'admin', component: AdminPageComponent },

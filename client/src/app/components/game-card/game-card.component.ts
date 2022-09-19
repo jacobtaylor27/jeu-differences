@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 
 @Component({
@@ -12,4 +13,8 @@ export class GameCardComponent {
   @Input() gameCard: GameCard;
 
   favoriteTheme: string = 'deeppurple-amber-theme';
+
+  formatScoreTime(scoreTime: number): string {
+    return TimeFormatter.getMMSSFormat(scoreTime);
+  }
 }

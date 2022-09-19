@@ -9,14 +9,14 @@
                 <ul class="highscores-solo">
                     <li class="highscores-solo-title"><b>Solo</b></li>
                     <li *ngFor="let score of gameCard.scoresSolo">
-                        {{ score.getName() }} &mdash; {{ score.getTime() }}
+                        {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
                     </li>
                 </ul>
 
                 <ul class="highscores-multi">
                     <li class="highscores-multi-title"><b>1 vs 1</b></li>
                     <li *ngFor="let score of gameCard.scoresMultiplayer">
-                        {{ score.getName() }} &mdash; {{ score.getTime() }}
+                        {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
                     </li>
                 </ul>
             </div>

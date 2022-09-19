@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 
 @Component({
@@ -7,12 +7,11 @@ import { Subscription, timer } from 'rxjs';
     styleUrls: ['./timer-stopwatch.component.scss'],
 })
 export class TimerStopwatchComponent implements OnInit {
-    minutesInitial: number = 2;
-    secondsInitial: number = 0;
-    valueTimer: number = 0;
+    @Input() clueAskedCounter: number;
 
     minutesDisplay: number = 0;
     secondsDisplay: number = 0;
+    secondsTotal: number;
 
     sub: Subscription;
 
@@ -27,8 +26,9 @@ export class TimerStopwatchComponent implements OnInit {
     private startTimer() {
         const time = timer(1, 1000);
         this.sub = time.subscribe((seconds) => {
-            this.secondsDisplay = this.getSeconds(seconds);
-            this.minutesDisplay = this.getMinutes(seconds);
+            this.calculateTime(seconds);
+            this.secondsDisplay = this.getSeconds(this.secondsTotal);
+            this.minutesDisplay = this.getMinutes(this.secondsTotal);
         });
     }
 
@@ -36,16 +36,20 @@ export class TimerStopwatchComponent implements OnInit {
         this.sub.unsubscribe();
     }
 
-    private getSeconds(ticks: number) {
-        return this.pad(ticks % 60);
+    private getSeconds(seconds: number) {
+        return this.pad(seconds % 60);
     }
 
-    private getMinutes(ticks: number) {
-        return this.pad(Math.floor(ticks / 60) % 60);
+    private getMinutes(seconds: number) {
+        return this.pad(Math.floor(seconds / 60) % 60);
     }
 
     private pad(digit: any) {
         return digit <= 9 ? '0' + digit : digit;
+    }
+
+    private calculateTime(seconds: number) {
+        this.secondsTotal = seconds + this.clueAskedCounter * 5;
     }
 
     displayTime(): string {

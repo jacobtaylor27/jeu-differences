@@ -1,0 +1,18 @@
+#canvas {
+    z-index: 0;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0px 0px 0px 2px #000000;
+    width: 640px;
+    height: 480px;
+}
+
+#img {
+    position: absolute;
+    z-index: -1;
+}
+
+.canvas-container {
+    width: 640px;
+    height: 480px;
+}

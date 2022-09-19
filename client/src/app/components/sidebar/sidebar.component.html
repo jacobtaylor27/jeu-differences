@@ -13,7 +13,8 @@
             <app-clues-area (clueCounter)="onClueAsked($event)"></app-clues-area>
         </mat-grid-tile>
         <mat-grid-tile>
-            <app-timer-countdown [timerAdmin]="timer" [clueAskedCounter]="askedClue"></app-timer-countdown>
+            <!-- <app-timer-countdown [timerAdmin]="timer" [clueAskedCounter]="askedClue"></app-timer-countdown> -->
+            <app-timer-stopwatch></app-timer-stopwatch>
         </mat-grid-tile>
     </mat-grid-list>
 </div>

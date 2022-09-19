@@ -14,6 +14,7 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
+import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
 
 /**
  * Main module that is used in main.ts.
@@ -32,6 +33,7 @@ import { GameCardComponent } from './components/game-card/game-card.component';
         GameSelectionPageComponent,
         AdminPageComponent,
         GameCardComponent,
+        GameConstantsSettingsComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

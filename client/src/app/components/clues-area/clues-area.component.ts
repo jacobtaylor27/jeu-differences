@@ -14,7 +14,9 @@ export class CluesAreaComponent {
     @HostListener('window: keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         if (event.key === 'i') {
-            this.getClue();
+            if (!this.isDisabled) {
+                this.getClue();
+            }
         }
     }
 

@@ -17,6 +17,7 @@ import { GameCardComponent } from './components/game-card/game-card.component';
 import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameCarouselComponent } from './components/game-carousel/game-carousel.component';
+import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 
 /**
  * Main module that is used in main.ts.
@@ -38,6 +39,7 @@ import { GameCarouselComponent } from './components/game-carousel/game-carousel.
         GameConstantsSettingsComponent,
         UserNameInputComponent,
         GameCarouselComponent,
+        AdminCommandsComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { describe } from 'mocha';
 
 describe('Difference', () => {
-    it('A diffence should be created', () => {
+    it('A difference should be created', () => {
         const coordinate: Coordinate = {
             row: 0,
             column: 0,
@@ -13,7 +13,7 @@ describe('Difference', () => {
         expect(difference.getCoordinate()).to.deep.equal(coordinate);
     });
 
-    it("getCoordinates should't allow negative coordinates", () => {
+    it("getCoordinates shouldn't allow negative coordinates", () => {
         try {
             const invalidCoordinates: Coordinate = { row: -1, column: 1 };
             const differenceObtained = new Difference(invalidCoordinates);

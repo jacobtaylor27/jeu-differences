@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSliderChange } from '@angular/material/slider';
-import { Tool } from '@app/constant/tool';
+import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';

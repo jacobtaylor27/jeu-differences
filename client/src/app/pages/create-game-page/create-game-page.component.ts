@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
-import { Tool } from '@app/constant/tool';
+import { Tool } from '@app/enums/tool';
 import { Vec2 } from '@app/interfaces/vec2';
 
 @Component({

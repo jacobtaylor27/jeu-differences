@@ -1,4 +1,4 @@
-import { Tool } from '@app/constant/tool';
+import { Tool } from '@app/enums/tool';
 
 export interface Pencil {
     width: number;

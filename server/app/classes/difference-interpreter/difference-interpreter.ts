@@ -4,7 +4,7 @@ import { Pixel } from '@app/interface/pixel';
 export class DifferenceInterpreter {
     static getDifference(bmpDifferentiated: Bmp) {
         if (!this.isBmpDifferentiated(bmpDifferentiated)) {
-            throw new Error('The pixels are not perfectly black or perfectly white');
+            throw new Error('The pixels are not perfectly black or white');
         }
 
         let maxRegion = 0;

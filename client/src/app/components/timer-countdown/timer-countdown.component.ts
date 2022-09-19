@@ -10,7 +10,7 @@ import { Subscription, timer } from 'rxjs';
 export class TimerCountdownComponent implements OnInit, OnDestroy {
     @Input() timerAdmin: string;
     @Input() clueAskedCounter: number;
-    private timer: number = 0;
+    private timer: number;
     secondsDisplay: number;
     minutesDisplay: number;
     secondsLeft: number;
@@ -31,15 +31,16 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     }
 
     private countdownTimer() {
-        const $time = timer(0, 1000);
+        const $time = timer(100, 1000);
+
         this.sub = $time.subscribe((seconds) => {
-            if (seconds === this.timer + 1) {
+            this.calculateTime();
+            if (seconds > this.timer) {
                 this.stopTimer();
                 this.gameOver();
                 return;
             }
-            console.log(seconds);
-            this.calculateTime();
+
             this.calculateSeconds(seconds);
             this.calculateMinutes(seconds);
             this.calculateSecondsLeft(seconds);
@@ -56,6 +57,8 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
 
     private calculateSeconds(totalSeconds: number) {
         this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60);
+        console.log('total ' + this.timer);
+        console.log('DISPLAY ' + this.secondsDisplay);
     }
     private calculateMinutes(totalSeconds: number) {
         this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60);
@@ -66,6 +69,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     }
 
     displayTime(): string {
+        console.log('DISPLAY TIME ' + this.secondsDisplay);
         return (
             (this.minutesDisplay && this.minutesDisplay <= 59 ? this.minutesDisplay : '00') +
             ' : ' +

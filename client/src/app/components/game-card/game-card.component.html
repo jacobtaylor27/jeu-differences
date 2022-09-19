@@ -1,3 +1,30 @@
 <div [ngClass]="favoriteTheme">
-    <p>Card</p>
+    <mat-card>
+        <mat-card-title class="game-name-title">{{ gameCard.gameName }}</mat-card-title>
+        <img mat-card-lg-image [src]="gameCard.imgSource">
+        
+        <mat-card-content class="highscores-content">
+            <h3 class="highscore-title"><b>Meilleurs scores</b></h3>
+            <div class="scores">
+                <ul class="highscores-solo">
+                    <li class="highscores-solo-title"><b>Solo</b></li>
+                    <li *ngFor="let score of gameCard.scoresSolo">
+                        {{ score.getName() }} &mdash; {{ score.getTime() }}
+                    </li>
+                </ul>
+
+                <ul class="highscores-multi">
+                    <li class="highscores-multi-title"><b>1 vs 1</b></li>
+                    <li *ngFor="let score of gameCard.scoresMultiplayer">
+                        {{ score.getName() }} &mdash; {{ score.getTime() }}
+                    </li>
+                </ul>
+            </div>
+        </mat-card-content>
+
+        <mat-card-actions class="game-card-buttons">
+            <button mat-flat-button color="primary" aria-label="Boutton Jouer">Jouer</button>
+            <button mat-flat-button color="primary" aria-label="Boutton Créer">Créer</button>
+        </mat-card-actions>
+    </mat-card>
 </div>

@@ -50,6 +50,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
         this.sub.unsubscribe();
     }
 
+    // TODO : add time when users finds a difference
     private calculateTime() {
         this.timer = Number(this.timerAdmin) - this.clueAskedCounter * 5;
     }

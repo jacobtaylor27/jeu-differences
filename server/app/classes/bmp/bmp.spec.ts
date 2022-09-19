@@ -10,24 +10,22 @@ describe('Bmp', () => {
 
         const pixelsExpected = [
             [
-                { a: 0, b: 1, g: 2, r: 3 },
-                { a: 0, b: 1, g: 2, r: 3 },
+                { a: 0, r: 1, g: 2, b: 3 },
+                { a: 0, r: 1, g: 2, b: 3 },
             ],
             [
-                { a: 0, b: 1, g: 2, r: 3 },
-                { a: 0, b: 1, g: 2, r: 3 },
+                { a: 0, r: 1, g: 2, b: 3 },
+                { a: 0, r: 1, g: 2, b: 3 },
             ],
         ];
 
         const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
-        expect(bmpProduced.width).to.equals(expectedWidth);
-        expect(bmpProduced.height).to.equals(expectedHeight);
-        expect(bmpProduced.pixels).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
+        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
-    // Is it a good practice to throw exception if parameters are bad?
-    // Am I verifying correctly that an exception has been thrown?
     it('An exception should be thrown if the width is less or equal to 0', () => {
         const invalidWidth = -1;
         const validHeight = 1;

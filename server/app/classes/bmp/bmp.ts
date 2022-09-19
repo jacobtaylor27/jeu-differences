@@ -2,15 +2,27 @@ import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PixelOffset } from '@app/enum/pixel-offset';
 import { Pixel } from '@app/interface/pixel';
 export class Bmp {
-    width: number;
-    height: number;
-    pixels: Pixel[][];
+    private width: number;
+    private height: number;
+    private pixels: Pixel[][];
 
     constructor(width: number, height: number, rawData: number[]) {
         this.assertParameters(width, height, rawData);
         this.height = height;
         this.width = width;
         this.pixels = this.convertRawToPixels(rawData);
+    }
+
+    getWidth(): number {
+        return this.width;
+    }
+
+    getHeight(): number {
+        return this.height;
+    }
+
+    getPixels(): Pixel[][] {
+        return this.pixels;
     }
 
     private convertRawToPixels(rawData: number[]): Pixel[][] {
@@ -31,9 +43,9 @@ export class Bmp {
     private getPixel(pixel: number[]): Pixel {
         return {
             a: pixel[PixelOffset.Intensity],
-            b: pixel[PixelOffset.Red],
+            r: pixel[PixelOffset.Red],
             g: pixel[PixelOffset.Green],
-            r: pixel[PixelOffset.Blue],
+            b: pixel[PixelOffset.Blue],
         };
     }
 

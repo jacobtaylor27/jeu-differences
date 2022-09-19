@@ -35,15 +35,14 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
 
         this.sub = $time.subscribe((seconds) => {
             this.calculateTime();
+            this.calculateSeconds(seconds);
+            this.calculateMinutes(seconds);
+            this.calculateSecondsLeft(seconds);
             if (seconds > this.timer) {
                 this.stopTimer();
                 this.gameOver();
                 return;
             }
-
-            this.calculateSeconds(seconds);
-            this.calculateMinutes(seconds);
-            this.calculateSecondsLeft(seconds);
         });
     }
 
@@ -69,7 +68,6 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     }
 
     displayTime(): string {
-        console.log('DISPLAY TIME ' + this.secondsDisplay);
         return (
             (this.minutesDisplay && this.minutesDisplay <= 59 ? this.minutesDisplay : '00') +
             ' : ' +

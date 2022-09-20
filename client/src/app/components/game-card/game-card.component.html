@@ -23,7 +23,7 @@
         </mat-card-content>
         
         <mat-card-actions class="game-card-buttons">
-            <div class="admin-buttons" *ngIf="gameCard.isAdminCard">
+            <div class="admin-buttons" *ngIf="gameCard.isAdminCard; else selectPage">
                 <button  mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickPlayGame()">
                     <mat-icon>delete</mat-icon>
                 </button>
@@ -32,10 +32,10 @@
                 </button>
             </div>
 
-            <div class="play-buttons" *ngIf="!gameCard.isAdminCard">
+            <ng-template #selectPage>
                 <button  mat-flat-button color="primary" aria-label="Boutton Jouer" (click)="onClickPlayGame()">Jouer</button>
                 <button mat-flat-button color="primary" aria-label="Boutton Créer" (click)="onClickCreateGame()">Créer</button>
-            </div>
+            </ng-template>
         </mat-card-actions>
     </mat-card>
 </div>

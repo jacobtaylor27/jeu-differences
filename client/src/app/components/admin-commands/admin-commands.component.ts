@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GameConstantsSettingsComponent } from '../game-constants-settings/game-constants-settings.component';
 
 @Component({
   selector: 'app-admin-commands',
@@ -6,5 +8,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./admin-commands.component.scss']
 })
 export class AdminCommandsComponent {
-  constructor() { }
+  constructor(private readonly matDialog: MatDialog) { }
+
+  favoriteTheme: string = 'deeppurple-amber-theme';
+
+  onClickCreateGame(): void { 
+  }
+
+  onClickModifySettings(): void {
+    this.matDialog.open(GameConstantsSettingsComponent)
+  }
 }

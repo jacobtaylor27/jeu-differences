@@ -26,4 +26,12 @@ export class GameCardComponent {
   onClickCreateGame(): void {
     this.gameCardService.openUseNameInputDialog();
   }
+
+  onClickDeleteGame(): void {
+    this.gameCardService.openUseNameInputDialog();
+  }
+
+  onClickResetHighScores(): void {
+    this.gameCardService.openUseNameInputDialog();
+  }
 }

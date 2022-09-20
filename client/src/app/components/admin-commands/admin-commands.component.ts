@@ -20,10 +20,8 @@ export class AdminCommandsComponent {
   }
 
   onClickDeleteGames(): void {
-
   }
 
   onClickResetHighScores(): void {
-    
   }
 }

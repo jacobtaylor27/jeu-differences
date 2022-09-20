@@ -19,5 +19,8 @@ export class AdminPageComponent implements OnInit {
 
     getGameCards(): void {
         this.gameCards = this.gameSelectionService.getActiveCards();
+        for (let gameCard of this.gameCards) {
+            gameCard.isAdminCard = true;
+        }
     }
 }

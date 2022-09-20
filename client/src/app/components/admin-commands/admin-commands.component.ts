@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { GameConstantsSettingsComponent } from '../game-constants-settings/game-constants-settings.component';
+import { AdminService } from '@app/services/admin.service';
 
 @Component({
   selector: 'app-admin-commands',
@@ -8,7 +7,7 @@ import { GameConstantsSettingsComponent } from '../game-constants-settings/game-
   styleUrls: ['./admin-commands.component.scss']
 })
 export class AdminCommandsComponent {
-  constructor(private readonly matDialog: MatDialog) { }
+  constructor(private readonly adminService: AdminService) { }
 
   favoriteTheme: string = 'deeppurple-amber-theme';
 
@@ -16,7 +15,7 @@ export class AdminCommandsComponent {
   }
 
   onClickModifySettings(): void {
-    this.matDialog.open(GameConstantsSettingsComponent)
+    this.adminService.openGameSettingsDialog();
   }
 
   onClickDeleteGames(): void {

@@ -50,4 +50,25 @@ export class DialogUploadFormComponent {
         this.isSizeImageCorrect = img.width === this.size.y && img.height === this.size.x;
         return this.isSizeImageCorrect;
     }
+
+    onSubmit() {
+        switch (this.form.get('type')?.value) {
+            case 'both': {
+                this.toolService.$uploadImageInDiff.next(this.img);
+                this.toolService.$uploadImageInSource.next(this.img);
+                break;
+            }
+            case 'diff': {
+                this.toolService.$uploadImageInDiff.next(this.img);
+                break;
+            }
+            case 'source': {
+                this.toolService.$uploadImageInSource.next(this.img);
+                break;
+            }
+            default: {
+                return;
+            }
+        }
+    }
 }

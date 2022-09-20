@@ -24,6 +24,10 @@ export class DialogUploadFormComponent {
     }
 
 
+    async isImageCorrect(file: File) {
+        return (await this.isSizeCorrect(file)) && this.isImageTypeCorrect(file);
+    }
+
     async createImage(file: File): Promise<ImageBitmap> {
         return await createImageBitmap(file.slice());
     }

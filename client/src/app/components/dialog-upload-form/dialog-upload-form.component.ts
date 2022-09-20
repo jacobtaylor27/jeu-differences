@@ -26,4 +26,10 @@ export class DialogUploadFormComponent {
         this.isTypeImageCorrect = file.type === 'image/bmp';
         return this.isTypeImageCorrect;
     }
+
+    async isSizeCorrect(file: File): Promise<boolean> {
+        const img = await this.createImage(file);
+        this.isSizeImageCorrect = img.width === this.size.y && img.height === this.size.x;
+        return this.isSizeImageCorrect;
+    }
 }

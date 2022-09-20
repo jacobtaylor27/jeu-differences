@@ -11,4 +11,8 @@ export class AdminService {
   openGameSettingsDialog(): void {
     this.matDialog.open(GameConstantsSettingsComponent);
   }
+
+  deleteAllGames(): void {
+    
+  }
 }

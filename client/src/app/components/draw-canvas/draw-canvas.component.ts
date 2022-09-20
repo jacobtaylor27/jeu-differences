@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
@@ -9,9 +9,9 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     templateUrl: './draw-canvas.component.html',
     styleUrls: ['./draw-canvas.component.scss'],
 })
-export class DrawCanvasComponent {
-    @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('img', { static: false }) img!: ElementRef<HTMLCanvasElement>;
+export class DrawCanvasComponent implements AfterViewInit {
+    @ViewChild('imageDifference', { static: false }) img!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('paint', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
 
     coordDraw: Vec2 = { x: 0, y: 0 };
     isClick: boolean = false;
@@ -20,6 +20,12 @@ export class DrawCanvasComponent {
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
+        });
+    }
+
+    ngAfterViewInit(): void {
+        this.toolBoxService.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
+            this.img.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
         });
     }
 

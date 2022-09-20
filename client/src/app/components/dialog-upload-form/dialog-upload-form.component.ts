@@ -22,6 +22,12 @@ export class DialogUploadFormComponent {
             uploadImage: new FormControl(null, Validators.required),
         });
     }
+
+
+    async createImage(file: File): Promise<ImageBitmap> {
+        return await createImageBitmap(file.slice());
+    }
+
     isImageTypeCorrect(file: File) {
         this.isTypeImageCorrect = file.type === 'image/bmp';
         return this.isTypeImageCorrect;

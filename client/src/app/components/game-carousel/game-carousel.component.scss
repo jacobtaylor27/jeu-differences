@@ -2,11 +2,13 @@
     display: flex;
     justify-content: center;
     margin-bottom: 5vh;
+    max-height: 67vh;
 }
 
 .game-card-container {
     margin-right: 1vw;
     margin-left: 1vw;
+    max-width: 23vw;
 }
 
 .carouesel-actions-container {

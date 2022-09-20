@@ -22,4 +22,8 @@ export class DialogUploadFormComponent {
             uploadImage: new FormControl(null, Validators.required),
         });
     }
+    isImageTypeCorrect(file: File) {
+        this.isTypeImageCorrect = file.type === 'image/bmp';
+        return this.isTypeImageCorrect;
+    }
 }

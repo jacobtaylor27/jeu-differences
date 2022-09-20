@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 import { CreateGamePageComponent } from './create-game-page.component';
 
@@ -11,16 +13,19 @@ describe('CreateGamePageComponent', () => {
     let fixture: ComponentFixture<CreateGamePageComponent>;
     let dialogSpyObj: jasmine.SpyObj<MatDialog>;
     let httpSpyObj: jasmine.SpyObj<HttpClient>;
+    let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
         httpSpyObj = jasmine.createSpyObj('HttpClient', ['post']);
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInSource: new Subject() });
         await TestBed.configureTestingModule({
             declarations: [CreateGamePageComponent],
             imports: [HttpClientModule, MatDialogModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: HttpClient, useValue: httpSpyObj },
+                { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
             ],
         }).compileComponents();
 
@@ -75,5 +80,25 @@ describe('CreateGamePageComponent', () => {
     it('should calculateDifference return the number of difference between two images', () => {
         const expectedDifference = 5;
         expect(component.calculateDifference()).toEqual(expectedDifference);
+    });
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe(() => {
+            expect(spyDrawImage).toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
+    });
+
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component.sourceImg.nativeElement, 'getContext').and.callFake(() => null);
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe(() => {
+            expect(spyDrawImage).not.toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
     });
 });

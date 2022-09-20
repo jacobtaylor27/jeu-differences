@@ -23,6 +23,14 @@ export class DialogUploadFormComponent {
         });
     }
 
+    async uploadImage(event: Event) {
+        const files: FileList = (event.target as HTMLInputElement).files as FileList;
+        this.isFormSubmitted = await this.isImageCorrect(files[0]);
+        if (files === null || !this.isFormSubmitted) {
+            return;
+        }
+        this.img = await this.createImage(files[0]);
+    }
 
     async isImageCorrect(file: File) {
         return (await this.isSizeCorrect(file)) && this.isImageTypeCorrect(file);

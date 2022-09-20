@@ -1,6 +1,0 @@
-<form [formGroup]="form">
-    <input mat-fab formControlName="img" type="file" color="primary" accept=".bmp" (change)="this.selectFile($event)">
-    <img [src]="this.img" *ngIf="!this.img; NoUploadImage">
-    <div #NoUploadImage></div>
-
-</form>

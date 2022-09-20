@@ -52,6 +52,7 @@ describe('CreateGamePageComponent', () => {
 
     it('should post the game settings when the form is valid', () => {
         const formSpyObj = jasmine.createSpyObj('FormGroup', ['get', 'valid']);
+        formSpyObj.get.and.callFake(() => new FormControl());
         const nbTimesFormGetCall = 4;
         component.form = formSpyObj;
         component.onSubmit();

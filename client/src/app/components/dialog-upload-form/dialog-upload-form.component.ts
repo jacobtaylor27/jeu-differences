@@ -32,7 +32,7 @@ export class DialogUploadFormComponent {
         this.img = await this.createImage(files[0]);
     }
 
-    async isImageCorrect(file: File) {
+    async isImageCorrect(file: File): Promise<boolean> {
         return (await this.isSizeCorrect(file)) && this.isImageTypeCorrect(file);
     }
 
@@ -40,7 +40,7 @@ export class DialogUploadFormComponent {
         return await createImageBitmap(file.slice());
     }
 
-    isImageTypeCorrect(file: File) {
+    isImageTypeCorrect(file: File): boolean {
         this.isTypeImageCorrect = file.type === 'image/bmp';
         return this.isTypeImageCorrect;
     }
@@ -51,7 +51,7 @@ export class DialogUploadFormComponent {
         return this.isSizeImageCorrect;
     }
 
-    onSubmit() {
+    onSubmit(): void {
         switch (this.form.get('type')?.value) {
             case 'both': {
                 this.toolService.$uploadImageInDiff.next(this.img);

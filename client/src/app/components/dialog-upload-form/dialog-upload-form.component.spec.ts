@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl } from '@angular/forms';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 import { DialogUploadFormComponent } from './dialog-upload-form.component';
 
@@ -33,6 +36,13 @@ describe('DialogUploadFormComponent', () => {
         const image = await component.createImage({ slice: () => {} } as File);
         expect(createImageSpy).toHaveBeenCalled();
         expect(image).toEqual(expectedImage);
+    });
+
+    it('should return if the type is bmp', () => {
+        const expectedTypeTrue = 'image/bmp';
+        const expectedTypeFalse = 'image/png';
+        expect(component.isImageTypeCorrect({ type: expectedTypeTrue } as File)).toBeTrue();
+        expect(component.isImageTypeCorrect({ type: expectedTypeFalse } as File)).toBeFalse();
     });
 
 });

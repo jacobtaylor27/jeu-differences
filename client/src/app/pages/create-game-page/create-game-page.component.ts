@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
@@ -12,6 +12,7 @@ import { Vec2 } from '@app/interfaces/vec2';
     styleUrls: ['./create-game-page.component.scss'],
 })
 export class CreateGamePageComponent {
+    @ViewChild('sourceImg', { static: false }) sourceImg!: ElementRef<HTMLCanvasElement>;
     form: FormGroup;
     imgSourceLink: string;
     pencil: string = '#0000';
@@ -48,6 +49,34 @@ export class CreateGamePageComponent {
         // remove this line and add the validation function when is done
         const difference = 5;
         return difference;
+    }
+
+    async selectFile(event: Event) {
+        const files: FileList | null = (event.target as HTMLInputElement).files;
+        if (files === null) {
+            return;
+        }
+        const file: File = files[0];
+        if (file.type !== 'image/bmp') {
+            return;
+        }
+        await this.drawImage(file);
+    }
+
+    async drawImage(file: File) {
+        const img = await this.createImage(file);
+        if (!img && !this.sourceImg) {
+            return;
+        }
+        this.sourceImg.nativeElement.getContext('2d')?.drawImage(img as ImageBitmap, 0, 0);
+    }
+
+    async createImage(file: File) {
+        const img: ImageBitmap = await createImageBitmap(file.slice());
+        if (img.height !== this.size.x && img.height !== this.size.y) {
+            return;
+        }
+        return img;
     }
     // set submit function but it will be done with the route
     onSubmit() {

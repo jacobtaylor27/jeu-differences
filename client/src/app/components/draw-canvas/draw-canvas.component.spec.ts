@@ -16,7 +16,7 @@ describe('DrawCanvasComponent', () => {
 
     beforeEach(async () => {
         drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['reposition']);
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $pencil: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $pencil: new Subject(), $uploadImageInDiff: new Subject() });
         await TestBed.configureTestingModule({
             declarations: [DrawCanvasComponent],
             providers: [
@@ -107,5 +107,26 @@ describe('DrawCanvasComponent', () => {
         const expectedPencil = { cap: 'round', width: 3, state: Tool.Eraser, color: '#000100' } as Pencil;
         toolBoxServiceSpyObj.$pencil.next(expectedPencil);
         expect(component.pencil).toEqual(expectedPencil);
+    });
+
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
+            expect(spyDrawImage).toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
+    });
+
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component.img.nativeElement, 'getContext').and.callFake(() => null);
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
+            expect(spyDrawImage).not.toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
     });
 });

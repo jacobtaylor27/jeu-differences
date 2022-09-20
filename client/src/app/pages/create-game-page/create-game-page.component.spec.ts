@@ -101,4 +101,9 @@ describe('CreateGamePageComponent', () => {
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
     });
+
+    it('should open a dialog to upload an image', () => {
+        component.openUploadDialog();
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+    });
 });

@@ -1,17 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
+import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
 import { Tool } from '@app/enums/tool';
 import { Vec2 } from '@app/interfaces/vec2';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 @Component({
     selector: 'app-create-game-page',
     templateUrl: './create-game-page.component.html',
     styleUrls: ['./create-game-page.component.scss'],
 })
-export class CreateGamePageComponent {
+export class CreateGamePageComponent implements AfterViewInit {
     @ViewChild('sourceImg', { static: false }) sourceImg!: ElementRef<HTMLCanvasElement>;
     form: FormGroup;
     imgSourceLink: string;
@@ -19,24 +21,20 @@ export class CreateGamePageComponent {
     tool: Tool = Tool.Pencil;
     size: Vec2 = { x: 480, y: 640 };
 
-    constructor(public dialog: MatDialog, private http: HttpClient) {
+    constructor(private toolBoxService: ToolBoxService, public dialog: MatDialog, private http: HttpClient) {
         this.form = new FormGroup({
             name: new FormControl('', Validators.required),
             expansionRadius: new FormControl(3, Validators.required),
-            img: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y), this.differenceValidator()]),
-            imgDiff: new FormControl(null, [Validators.required, this.sizeImgValidator(this.size.x, this.size.y), this.differenceValidator()]),
+            img: new FormControl(null, [Validators.required, this.differenceValidator()]),
+            imgDiff: new FormControl(null, [Validators.required, this.differenceValidator()]),
         });
     }
 
-    sizeImgValidator(width: number, height: number): ValidatorFn {
-        return (control: AbstractControl): ValidationErrors | null => {
-            if (control.value === null) {
-                return null;
-            }
-            return control.value.height === height && control.value.width === width ? { sizeImg: { value: control.value } } : null;
-        };
+    ngAfterViewInit(): void {
+        this.toolBoxService.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
+            this.sourceImg.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
+        });
     }
-
     differenceValidator(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const numberDifference = this.calculateDifference();
@@ -51,33 +49,10 @@ export class CreateGamePageComponent {
         return difference;
     }
 
-    async selectFile(event: Event) {
-        const files: FileList | null = (event.target as HTMLInputElement).files;
-        if (files === null) {
-            return;
-        }
-        const file: File = files[0];
-        if (file.type !== 'image/bmp') {
-            return;
-        }
-        await this.drawImage(file);
+    openUploadDialog() {
+        this.dialog.open(DialogUploadFormComponent);
     }
 
-    async drawImage(file: File) {
-        const img = await this.createImage(file);
-        if (!img && !this.sourceImg) {
-            return;
-        }
-        this.sourceImg.nativeElement.getContext('2d')?.drawImage(img as ImageBitmap, 0, 0);
-    }
-
-    async createImage(file: File) {
-        const img: ImageBitmap = await createImageBitmap(file.slice());
-        if (img.height !== this.size.x && img.height !== this.size.y) {
-            return;
-        }
-        return img;
-    }
     // set submit function but it will be done with the route
     onSubmit() {
         if (!this.form.valid) {

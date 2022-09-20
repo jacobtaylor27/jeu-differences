@@ -1,7 +1,9 @@
 <div class="main">
     <form [formGroup]="this.form" (ngSubmit)="onSubmit()">
         <div class="img-tools">
-            <input mat-fab formControlName="img" type="file" color="primary" accept=".bmp" (change)="this.selectFile($event)">
+            <button mat-fab color="primary" type="button" (click)="openUploadDialog()">
+                <mat-icon>cloud_upload</mat-icon>
+            </button>
         </div>
         <div class="img-container">
             <div class="drawImg">
@@ -10,13 +12,13 @@
             </div>
 
             <div class="drawImg">
-                <label for="img">Titre: Image Source</label>
+                <label for="sourceImg">Titre: Image Source</label>
                 <canvas
+                    id="sourceImg"
                     class="img"
                     width="640px"
                     height="480px"
                     alt="Image Source"
-                    formControlName="img"
                     #sourceImg
                 ></canvas>
             </div>

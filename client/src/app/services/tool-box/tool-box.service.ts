@@ -9,7 +9,6 @@ export class ToolBoxService {
     $pencil: Subject<Pencil>;
     $uploadImageInSource: Subject<ImageBitmap>;
     $uploadImageInDiff: Subject<ImageBitmap>;
-    $uploadImageInCanvas: Subject<ImageBitmap>;
     constructor() {
         this.$uploadImageInSource = new Subject();
         this.$uploadImageInDiff = new Subject();

@@ -5,6 +5,18 @@
                 <mat-icon>add</mat-icon>
             </button>
         </div>
+
+        <div class="delete-games-button control-button">
+            <button mat-fab color="primary" matTooltip="Supprimer tous les jeux" aria-label="Boutton supprimer" (click)="onClickCreateGame()">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+
+        <div class="reset-highsccore-button control-button">
+            <button mat-fab color="primary" matTooltip="Réinitialiser les temps records" aria-label="Boutton réinitialiser" (click)="onClickCreateGame()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
     
         <div class="edit-settings-button control-button">
             <button mat-fab color="primary" matTooltip="Modifier les paramètres du jeu" aria-label="Boutton Modifier" (click)="onClickModifySettings()">

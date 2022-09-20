@@ -18,4 +18,12 @@ export class AdminCommandsComponent {
   onClickModifySettings(): void {
     this.matDialog.open(GameConstantsSettingsComponent)
   }
+
+  onClickDeleteGames(): void {
+
+  }
+
+  onClickResetHighScores(): void {
+    
+  }
 }

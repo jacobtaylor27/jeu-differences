@@ -63,10 +63,10 @@ export class CreateGamePageComponent implements AfterViewInit {
             return;
         }
         const game = {
-            name: this.form.get('name')?.value,
-            expansionRadius: this.form.get('expansionRadius')?.value,
-            img: this.form.get('img')?.value,
-            imgDiff: this.form.get('imgDiff')?.value,
+            name: (this.form.get('name') as FormControl).value,
+            expansionRadius: (this.form.get('expansionRadius') as FormControl).value,
+            img: (this.form.get('img') as FormControl).value,
+            imgDiff: (this.form.get('imgDiff') as FormControl).value,
         };
 
         this.http.post('', game);

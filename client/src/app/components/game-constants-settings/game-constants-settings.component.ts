@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 })
 export class GameConstantsSettingsComponent {
   constructor() { }
+
+  favoriteTheme: string = 'deeppurple-amber-theme';
 }

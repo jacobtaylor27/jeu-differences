@@ -1,5 +1,5 @@
 <main [ngClass]="favoriteTheme">
-    <mat-toolbar color="primary">Configurez les jeux</mat-toolbar>
+    <mat-toolbar color="primary"><button class="home-button" mat-fab color="primary" routerLink="/"><mat-icon>home</mat-icon></button>Configurez les jeux</mat-toolbar>
     <app-admin-commands></app-admin-commands>
     <app-game-carousel
     [gameCards]="gameCards"></app-game-carousel>

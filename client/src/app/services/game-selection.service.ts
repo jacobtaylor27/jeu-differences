@@ -66,7 +66,7 @@ export class GameSelectionService {
     }
 
     private initialiseGameCard(): void {
-        const DEFAULT_NB_OF_CARDS = 11;
+        const DEFAULT_NB_OF_CARDS = 8;
         const DEFAULT_SCORES = [0, 1, 2];
         const soloScores = this.initialiseScores(DEFAULT_SCORES, GameCategory.Solo);
         const multiplayerScores = this.initialiseScores(DEFAULT_SCORES, GameCategory.Multiplayer);

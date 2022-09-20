@@ -45,4 +45,21 @@ describe('DialogUploadFormComponent', () => {
         expect(component.isImageTypeCorrect({ type: expectedTypeFalse } as File)).toBeFalse();
     });
 
+    it('should check if the image is correct', async () => {
+        const spySize = spyOn(component, 'isSizeCorrect').and.resolveTo(true);
+        const spyType = spyOn(component, 'isImageTypeCorrect').and.returnValue(true);
+        expect(await component.isImageCorrect({} as File)).toBeTrue();
+        expect(spySize).toHaveBeenCalled();
+        expect(spyType).toHaveBeenCalled();
+        spySize.and.resolveTo(false);
+        spyType.and.returnValue(true);
+        expect(await component.isImageCorrect({} as File)).toBeFalse();
+        spySize.and.resolveTo(true);
+        spyType.and.returnValue(false);
+        expect(await component.isImageCorrect({} as File)).toBeFalse();
+        spySize.and.resolveTo(false);
+        spyType.and.returnValue(false);
+        expect(await component.isImageCorrect({} as File)).toBeFalse();
+    });
+    });
 });

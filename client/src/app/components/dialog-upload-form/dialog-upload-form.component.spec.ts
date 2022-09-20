@@ -61,5 +61,20 @@ describe('DialogUploadFormComponent', () => {
         spyType.and.returnValue(false);
         expect(await component.isImageCorrect({} as File)).toBeFalse();
     });
+
+    it('should check the size of the image', async () => {
+        const expectedSize = { height: 480, width: 640 };
+        const spyCreateImage = spyOn(component, 'createImage').and.resolveTo(expectedSize as ImageBitmap);
+        expect(await component.isSizeCorrect({} as File)).toBeTrue();
+        let notExpectedSize = { height: 400, width: 640 };
+        spyCreateImage.and.resolveTo(notExpectedSize as ImageBitmap);
+        expect(await component.isSizeCorrect({} as File)).toBeFalse();
+        notExpectedSize = { height: 400, width: 600 };
+        spyCreateImage.and.resolveTo(notExpectedSize as ImageBitmap);
+        expect(await component.isSizeCorrect({} as File)).toBeFalse();
+        notExpectedSize = { height: 480, width: 600 };
+        spyCreateImage.and.resolveTo(notExpectedSize as ImageBitmap);
+        expect(await component.isSizeCorrect({} as File)).toBeFalse();
     });
+
 });

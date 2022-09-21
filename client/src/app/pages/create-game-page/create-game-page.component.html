@@ -1,4 +1,4 @@
-<div class="main">
+<div class="main" [ngClass]="favoriteTheme">
     <form [formGroup]="this.form" (ngSubmit)="onSubmit()">
         <div class="img-container">
             <div class="drawImg">
@@ -24,16 +24,21 @@
 
         <div class="submission-container">
             <div class="submission-box">
-                <select id="expansionRadius" formControlName="expansionRadius">
-                    <option value="0">0px rayon d'elargissement</option>
-                    <option value="3" selected>3px rayon d'elargissement</option>
-                    <option value="9">9px rayon d'elargissement</option>
-                    <option value="15">15px rayon d'elargissement</option>
-                </select>
-                <input type="text" formControlName="name" placeholder="Nom du jeu">
-                <button type="button">Valider</button>
+                <mat-form-field>
+                    <mat-label>Quelles est le rayon d'elargissement</mat-label>
+                    <select matNativeControl id="expansionRadius" formControlName="expansionRadius">
+                        <option value="0">0px rayon d'elargissement</option>
+                        <option value="3" selected>3px rayon d'elargissement</option>
+                        <option value="9">9px rayon d'elargissement</option>
+                        <option value="15">15px rayon d'elargissement</option>
+                    </select>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="name" placeholder="Nom du jeu">
+                </mat-form-field>
+                <button mat-flat-button color="primary" type="button">Valider</button>
 
-                <button type="submit">Valider et créer</button>
+                <button mat-flat-button color="primary" type="submit">Valider et créer</button>
             </div>
         </div>
     </form>

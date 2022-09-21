@@ -19,6 +19,7 @@ export class CreateGamePageComponent implements AfterViewInit {
     pencil: string = '#0000';
     tool: Tool = Tool.Pencil;
     size: Vec2 = { x: 480, y: 640 };
+    favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(private toolBoxService: ToolBoxService, public dialog: MatDialog, private http: HttpClient) {
         this.form = new FormGroup({

@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-
+import { AppMaterialModule } from '@app/modules/material.module';
 import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
 import { Subject } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DialogResetComponent', () => {
     let component: DialogResetComponent;
@@ -17,6 +18,7 @@ describe('DialogResetComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [DialogResetComponent],
             providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],
+            imports: [AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DialogResetComponent);

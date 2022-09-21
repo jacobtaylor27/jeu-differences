@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
+import { AppMaterialModule } from '@app/modules/material.module';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
@@ -22,6 +24,7 @@ describe('ToolBoxComponent', () => {
                 { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
                 { provide: MatDialog, useValue: dialogSpyObj },
             ],
+            imports: [AppMaterialModule, BrowserAnimationsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ToolBoxComponent);

@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppMaterialModule } from '@app/modules/material.module';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
@@ -14,6 +16,7 @@ describe('DialogUploadFormComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [DialogUploadFormComponent],
             providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],
+            imports: [AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DialogUploadFormComponent);

@@ -1,5 +1,6 @@
 import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT } from '@app/constants/canvas';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -58,6 +59,8 @@ describe('DrawCanvasComponent', () => {
 
     it('should draw when the client is clicking on the canvas', () => {
         component.isClick = false;
+        component.pencil = DEFAULT_PENCIL;
+        component.coordDraw = DEFAULT_POSITION_MOUSE_CLIENT;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(() => {});
         component.draw({} as MouseEvent);

@@ -1,8 +1,12 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
+import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
+import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
+import { AppMaterialModule } from '@app/modules/material.module';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
@@ -18,10 +22,16 @@ describe('CreateGamePageComponent', () => {
     beforeEach(async () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
         httpSpyObj = jasmine.createSpyObj('HttpClient', ['post']);
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInSource: new Subject(), $resetSource: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
+            $uploadImageInSource: new Subject(),
+            $resetSource: new Subject(),
+            $pencil: new Subject(),
+            $uploadImageInDiff: new Subject(),
+            $resetDiff: new Subject(),
+        });
         await TestBed.configureTestingModule({
-            declarations: [CreateGamePageComponent],
-            imports: [HttpClientModule, MatDialogModule],
+            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent],
+            imports: [HttpClientModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: HttpClient, useValue: httpSpyObj },

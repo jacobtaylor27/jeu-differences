@@ -17,14 +17,14 @@ describe(' DifferenceBetween2Images', () => {
                 { a: 0, r: 255, g: 255, b: 255 },
             ],
         ];
-        const filepath1 = './assets/bmp_test_2x2.bmp';
-        const filepath2 = './assets/bmp_test_2x2.bmp';
+        const filepath1 = './assets/test-bmp/bmp_test_2x2.bmp';
+        const filepath2 = './assets/test-bmp/bmp_test_2x2.bmp';
 
         const bmpProduced = await DifferenceBetween2Images.differenceBetween2Images(filepath1, filepath2);
 
-        expect(bmpProduced.width).to.equals(expectedWidth);
-        expect(bmpProduced.height).to.equals(expectedHeight);
-        expect(bmpProduced.pixels).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
+        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
     it('both images should have the same height', async () => {
         const result = false;
@@ -43,21 +43,21 @@ describe(' DifferenceBetween2Images', () => {
         const expectedHeight = 2;
         const pixelsExpected = [
             [
-                { a: 0, b: 0, g: 0, r: 255 },
                 { a: 0, b: 255, g: 0, r: 0 },
+                { a: 0, b: 0, g: 0, r: 255 },
                 { a: 0, b: 128, g: 0, r: 128 },
             ],
             [
                 { a: 0, b: 192, g: 192, r: 192 },
-                { a: 0, b: 255, g: 255, r: 0 },
                 { a: 0, b: 0, g: 255, r: 255 },
+                { a: 0, b: 255, g: 255, r: 0 },
             ],
         ];
-        const filepath = './assets/bmp_test_3x2.bmp';
+        const filepath = './assets/test-bmp/bmp_test_3x2.bmp';
         const bmpProduced = await DifferenceBetween2Images.produceImageBmp(filepath);
-        expect(bmpProduced.width).to.equals(expectedWidth);
-        expect(bmpProduced.height).to.equals(expectedHeight);
-        expect(bmpProduced.pixels).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
+        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
+        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
     it('verifying that 2 pixels have the same properties', async () => {
         const result = true;

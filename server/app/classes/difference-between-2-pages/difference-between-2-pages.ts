@@ -14,11 +14,16 @@ export class DifferenceBetween2Images {
         const originalImage = await this.produceImageBmp(originalImagePath);
         const modifiedImage = await this.produceImageBmp(modifiedImagePath);
         const resultImage = await this.produceImageBmp(modifiedImagePath);
-        if (this.haveSameHeight(originalImage.height, modifiedImage.height) && this.haveSameWidth(originalImage.width, modifiedImage.width)) {
-            for (let i = 0; i < originalImage.pixels.length; i++) {
-                for (let j = 0; j < originalImage.pixels[i].length; j++) {
-                    if (this.equalPixels(originalImage.pixels[i][j], modifiedImage.pixels[i][j])) {
-                        this.whitePixel(resultImage.pixels[i][j]);
+        if (
+            this.haveSameHeight(originalImage.getHeight(), modifiedImage.getWidth()) &&
+            this.haveSameWidth(originalImage.getHeight(), modifiedImage.getWidth())
+        ) {
+            for (let i = 0; i < originalImage.getPixels().length; i++) {
+                for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
+                    if (this.equalPixels(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
+                        this.whitePixel(resultImage.getPixels()[i][j]);
+                    } else {
+                        this.blackPixel(resultImage.getPixels()[i][j]);
                     }
                 }
             }
@@ -48,6 +53,13 @@ export class DifferenceBetween2Images {
         pixel.b = 255;
         pixel.g = 255;
         pixel.r = 255;
+        return pixel;
+    }
+    static blackPixel(pixel: Pixel): Pixel {
+        pixel.a = 0;
+        pixel.b = 0;
+        pixel.g = 0;
+        pixel.r = 0;
         return pixel;
     }
 }

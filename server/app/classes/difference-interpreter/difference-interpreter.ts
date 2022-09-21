@@ -4,7 +4,7 @@ import { MAX_VALUE_PIXEL, MIN_VALUE_PIXEL } from '@app/constants/encoding';
 import { Pixel } from '@app/interface/pixel';
 
 export class DifferenceInterpreter {
-    static getDifference(bmpDifferentiated: Bmp): BmpCoordinate[][] {
+    static getCoordinates(bmpDifferentiated: Bmp): BmpCoordinate[][] {
         if (!this.isBmpDifferentiated(bmpDifferentiated)) throw new Error('The pixels are not perfectly black or white');
         const differences: BmpCoordinate[][] = [];
         const pixels = bmpDifferentiated.getPixels();

@@ -10,11 +10,7 @@ describe('DialogUploadFormComponent', () => {
     let fixture: ComponentFixture<DialogUploadFormComponent>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
     beforeEach(async () => {
-        toolBoxServiceSpyObj = jasmine.createSpyObj(
-            'ToolBoxService',
-            [],
-            [{ $uploadImageInDiff: new Subject(), $uploadImageInSource: new Subject() }],
-        );
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInDiff: new Subject(), $uploadImageInSource: new Subject() });
         await TestBed.configureTestingModule({
             declarations: [DialogUploadFormComponent],
             providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],

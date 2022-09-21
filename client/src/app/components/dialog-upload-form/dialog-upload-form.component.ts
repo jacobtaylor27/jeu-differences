@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Vec2 } from '@app/interfaces/vec2';
+import { IMAGE_TYPE, SIZE } from '@app/constants/canvas';
+import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 @Component({
@@ -9,12 +10,12 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./dialog-upload-form.component.scss'],
 })
 export class DialogUploadFormComponent {
-    size: Vec2 = { x: 480, y: 640 };
     form: FormGroup;
     isSizeImageCorrect: boolean = true;
     isTypeImageCorrect: boolean = true;
     img: ImageBitmap;
     isFormSubmitted: boolean = false;
+    typePropagateCanvasEvent: typeof PropagateCanvasEvent = PropagateCanvasEvent;
 
     constructor(private toolService: ToolBoxService) {
         this.form = new FormGroup({
@@ -41,28 +42,28 @@ export class DialogUploadFormComponent {
     }
 
     isImageTypeCorrect(file: File): boolean {
-        this.isTypeImageCorrect = file.type === 'image/bmp';
+        this.isTypeImageCorrect = file.type === IMAGE_TYPE;
         return this.isTypeImageCorrect;
     }
 
     async isSizeCorrect(file: File): Promise<boolean> {
         const img = await this.createImage(file);
-        this.isSizeImageCorrect = img.width === this.size.y && img.height === this.size.x;
+        this.isSizeImageCorrect = img.width === SIZE.y && img.height === SIZE.x;
         return this.isSizeImageCorrect;
     }
 
     onSubmit(): void {
         switch ((this.form.get('type') as FormControl).value) {
-            case 'both': {
+            case this.typePropagateCanvasEvent.Both: {
                 this.toolService.$uploadImageInDiff.next(this.img);
                 this.toolService.$uploadImageInSource.next(this.img);
                 break;
             }
-            case 'diff': {
+            case this.typePropagateCanvasEvent.Difference: {
                 this.toolService.$uploadImageInDiff.next(this.img);
                 break;
             }
-            case 'source': {
+            case this.typePropagateCanvasEvent.Source: {
                 this.toolService.$uploadImageInSource.next(this.img);
                 break;
             }

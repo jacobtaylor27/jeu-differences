@@ -3,7 +3,8 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
-import { Tool } from '@app/enums/tool';
+import { SIZE } from '@app/constants/canvas';
+import { Theme } from '@app/enums/theme';
 import { Vec2 } from '@app/interfaces/vec2';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
@@ -15,11 +16,7 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 export class CreateGamePageComponent implements AfterViewInit {
     @ViewChild('sourceImg', { static: false }) sourceImg!: ElementRef<HTMLCanvasElement>;
     form: FormGroup;
-    imgSourceLink: string;
-    pencil: string = '#0000';
-    tool: Tool = Tool.Pencil;
-    size: Vec2 = { x: 480, y: 640 };
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    theme: typeof Theme = Theme;
 
     constructor(private toolBoxService: ToolBoxService, public dialog: MatDialog, private http: HttpClient) {
         this.form = new FormGroup({
@@ -35,7 +32,7 @@ export class CreateGamePageComponent implements AfterViewInit {
             this.sourceImg.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
         });
         this.toolBoxService.$resetSource.subscribe(() => {
-            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, this.size.y, this.size.x);
+            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
         });
     }
 

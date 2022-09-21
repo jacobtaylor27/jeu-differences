@@ -5,9 +5,9 @@
         <mat-label>Quelles type d'image doit etre reinitialiser?</mat-label>
         <mat-select formControlName="reset">
             <mat-option value=""></mat-option>
-            <mat-option value="diff">Image des difference</mat-option>
-            <mat-option value="source">Image sources</mat-option>
-            <mat-option value="both">Les deux types</mat-option>
+            <mat-option [value]="typePropagateCanvasEvent.Difference">Image des difference</mat-option>
+            <mat-option [value]="typePropagateCanvasEvent.Source">Image sources</mat-option>
+            <mat-option [value]="typePropagateCanvasEvent.Both">Les deux types</mat-option>
         </mat-select>
         </mat-form-field>
     </mat-dialog-content>

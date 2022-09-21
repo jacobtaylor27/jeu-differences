@@ -1,4 +1,4 @@
-<div class="main" [ngClass]="favoriteTheme">
+<div class="main" [ngClass]="theme.ClassName">
     <form [formGroup]="this.form" (ngSubmit)="onSubmit()">
         <div class="img-container">
             <div class="drawImg">
@@ -21,7 +21,6 @@
         <div class="toolbox-container">
             <app-tool-box></app-tool-box>
         </div>
-
         <div class="submission-container">
             <div class="submission-box">
                 <mat-form-field>

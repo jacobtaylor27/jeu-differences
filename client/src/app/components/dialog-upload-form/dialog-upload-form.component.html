@@ -3,9 +3,9 @@
     <mat-form-field>
         <mat-label>Quelles type d'image</mat-label>
         <mat-select formControlName="type">
-            <mat-option value="diff">Image des difference</mat-option>
-            <mat-option value="source">Image sources</mat-option>
-            <mat-option value="both">Les deux types</mat-option>
+            <mat-option [value]="this.typePropagateCanvasEvent.Difference">Image des difference</mat-option>
+            <mat-option [value]="this.typePropagateCanvasEvent.Source">Image sources</mat-option>
+            <mat-option [value]="this.typePropagateCanvasEvent.Both">Les deux types</mat-option>
         </mat-select>
     </mat-form-field>
     <input mat-fab formControlName="uploadImage" type="file" color="primary" accept=".bmp" (change)="this.uploadImage($event)">

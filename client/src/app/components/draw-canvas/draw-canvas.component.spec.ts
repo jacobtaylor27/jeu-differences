@@ -60,6 +60,7 @@ describe('DrawCanvasComponent', () => {
     it('should draw when the client is clicking on the canvas', () => {
         component.isClick = false;
         component.pencil = DEFAULT_PENCIL;
+        component.pencil.state = Tool.Pencil;
         component.coordDraw = DEFAULT_POSITION_MOUSE_CLIENT;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(() => {});

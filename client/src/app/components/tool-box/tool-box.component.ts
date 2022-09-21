@@ -5,6 +5,7 @@ import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
+import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
 
 @Component({
     selector: 'app-tool-box',
@@ -40,5 +41,8 @@ export class ToolBoxComponent {
 
     openUploadDialog() {
         this.dialog.open(DialogUploadFormComponent);
+    }
+    openResetDialog() {
+        this.dialog.open(DialogResetComponent);
     }
 }

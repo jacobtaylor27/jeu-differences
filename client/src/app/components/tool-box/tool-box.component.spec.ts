@@ -82,4 +82,9 @@ describe('ToolBoxComponent', () => {
         component.openUploadDialog();
         expect(dialogSpyObj.open).toHaveBeenCalled();
     });
+
+    it('should open a dialog to upload an image', () => {
+        component.openResetDialog();
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+    });
 });

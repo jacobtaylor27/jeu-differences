@@ -11,10 +11,10 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     @Input() timerAdmin: string;
     @Input() clueAskedCounter: number;
     private timer: number;
-    secondsDisplay: number;
-    minutesDisplay: number;
+    private secondsDisplay: number;
+    private minutesDisplay: number;
     secondsLeft: number;
-    sub: Subscription;
+    private sub: Subscription;
 
     @ViewChild('gameOverDialog')
     private readonly gameOverDialogRef: TemplateRef<HTMLElement>;

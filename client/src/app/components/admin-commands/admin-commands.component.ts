@@ -11,9 +11,6 @@ export class AdminCommandsComponent {
 
   favoriteTheme: string = 'deeppurple-amber-theme';
 
-  onClickCreateGame(): void { 
-  }
-
   onClickModifySettings(): void {
     this.adminService.openGameSettingsDialog();
   }

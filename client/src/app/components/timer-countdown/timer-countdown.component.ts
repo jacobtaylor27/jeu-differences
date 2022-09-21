@@ -10,6 +10,15 @@ import { Subscription, timer } from 'rxjs';
 export class TimerCountdownComponent implements OnInit, OnDestroy {
     @Input() timerAdmin: string;
     @Input() clueAskedCounter: number;
+
+    // TODO : link timePenalty with input form admin
+    // @Input() timerPenalty: number;
+    private timePenalty: number = 5;
+
+    // TODO : link nbDifferencesFound && bonusTime
+    // @Input() bonusTime: number;
+    // @Input() nbDifferencesFound: number;
+
     private timer: number;
     private secondsDisplay: number;
     private minutesDisplay: number;
@@ -52,13 +61,11 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
 
     // TODO : add time when users finds a difference
     private calculateTime() {
-        this.timer = Number(this.timerAdmin) - this.clueAskedCounter * 5;
+        this.timer = Number(this.timerAdmin) - this.clueAskedCounter * this.timePenalty;
     }
 
     private calculateSeconds(totalSeconds: number) {
         this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60);
-        console.log('total ' + this.timer);
-        console.log('DISPLAY ' + this.secondsDisplay);
     }
     private calculateMinutes(totalSeconds: number) {
         this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60);

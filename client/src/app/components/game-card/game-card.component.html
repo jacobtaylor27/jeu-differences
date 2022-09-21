@@ -10,7 +10,7 @@
                     <li class="highscores-solo-title"><b>Solo</b></li>
                     <div class="highscores-multi-content" *ngIf="hasSinglePlayerScores(); else noSoloScores">
                         <li *ngFor="let score of gameCard.scoresSolo">
-                            {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
+                            {{ score.getName().substring(0, 8) }} &mdash; {{ formatScoreTime(score.getTime()) }}
                         </li>
                     </div>
                     <ng-template #noSoloScores>
@@ -22,7 +22,7 @@
                     <li class="highscores-multi-title"><b>1 vs 1</b></li>
                     <div class="highscores-multi-content" *ngIf="hasMultiplayerScores(); else noMultiplayerScores">
                         <li *ngFor="let score of gameCard.scoresMultiplayer">
-                            {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
+                            {{ score.getName().substring(0, 8) }} &mdash; {{ formatScoreTime(score.getTime()) }}
                         </li>
                     </div>
                     <ng-template #noMultiplayerScores>

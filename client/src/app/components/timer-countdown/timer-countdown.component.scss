@@ -1,18 +1,23 @@
 .timer-red {
     color: red;
-    font-size: x-large;
     animation: breathing 1s ease-out infinite normal;
 }
 
 .clock-icon {
-    display: inline-block;
+    transform: scale(1.3);
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    margin-right: 2vw;
 }
 
 p {
     display: inline-block;
-    margin-left: 5px;
-    font-size: large;
-    vertical-align: middle;
+    margin-left: 7px;
+    font-size: xx-large;
+    vertical-align: baseline;
 }
 
 @keyframes breathing {

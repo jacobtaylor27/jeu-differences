@@ -79,6 +79,14 @@ describe('Difference interpreter', async () => {
         const secondDifference: BmpCoordinate[] = [new BmpCoordinate(0, 5), new BmpCoordinate(1, 4), new BmpCoordinate(1, 5)];
         const expectedCoordinates: BmpCoordinate[][] = [firstDifference, secondDifference];
         expect(interpretedBmp).to.eql(expectedCoordinates);
+        interpretedBmp[0].forEach((coordinate, index) => {
+            expect(coordinate.getRow()).to.equal(firstDifference[index].getRow());
+            expect(coordinate.getColumn()).to.equal(firstDifference[index].getColumn());
+        });
+        interpretedBmp[1].forEach((coordinate, index) => {
+            expect(coordinate.getRow()).to.equal(secondDifference[index].getRow());
+            expect(coordinate.getColumn()).to.equal(secondDifference[index].getColumn());
+        });
     });
     it('The algorithm should also work on a bmp with a large width and height', async () => {
         const filepath = './assets/test-bmp/ten_difference.bmp';

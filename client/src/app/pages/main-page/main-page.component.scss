@@ -3,6 +3,8 @@
     font-size: 40px ;
     margin-bottom: 8rem;
     margin-top: 1em;
+    font-family:'Courier New', Courier, monospace;
+    font-weight: 500;
 }
 
 .grid-container {
@@ -40,4 +42,7 @@
   .gameButton:hover {
     box-shadow: 0 0 15px purple;
     transform: scale(1.3);
+}
+span {
+  font-family:'Courier New', Courier, monospace;
 }

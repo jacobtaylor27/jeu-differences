@@ -69,13 +69,13 @@ describe('Difference interpreter', async () => {
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('An array of difference should contain all of the differences', async () => {
-        // prettier-ignore
-        // eslint-disable-next-line
-        const filepath = './assets/test-bmp/two_difference_appart.bmp'
+        const filepath = './assets/test-bmp/two_difference_appart.bmp';
         const decodedBmp = await BmpDecoder.decode(filepath);
         const interpretedBmp: BmpCoordinate[][] = DifferenceInterpreter.getCoordinates(decodedBmp);
-
+        // prettier-ignore
+        // eslint-disable-next-line
         const firstDifference: BmpCoordinate[] = [new BmpCoordinate(0, 0), new BmpCoordinate(0, 1), new BmpCoordinate(1, 0)];
+        // eslint-disable-next-line
         const secondDifference: BmpCoordinate[] = [new BmpCoordinate(0, 5), new BmpCoordinate(1, 4), new BmpCoordinate(1, 5)];
         const expectedCoordinates: BmpCoordinate[][] = [firstDifference, secondDifference];
         expect(interpretedBmp).to.eql(expectedCoordinates);

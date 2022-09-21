@@ -77,4 +77,67 @@ describe('DialogUploadFormComponent', () => {
         expect(await component.isSizeCorrect({} as File)).toBeFalse();
     });
 
+    it('should not submit a form because the type is not good', async () => {
+        const expectedType = '';
+        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
+        const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
+        const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        component.onSubmit();
+        expect(spyDiff).not.toHaveBeenCalled();
+        expect(spySource).not.toHaveBeenCalled();
+    });
+
+    it('should submit a form because the type is both', async () => {
+        const expectedType = 'both';
+        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
+        const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
+        const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        component.onSubmit();
+        expect(spyDiff).toHaveBeenCalled();
+        expect(spySource).toHaveBeenCalled();
+    });
+
+    it('should submit a form because the type is diff', async () => {
+        const expectedType = 'diff';
+        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
+        const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
+        const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        component.onSubmit();
+        expect(spyDiff).toHaveBeenCalled();
+        expect(spySource).not.toHaveBeenCalled();
+    });
+
+    it('should submit a form because the type is source', async () => {
+        const expectedType = 'source';
+        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
+        const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
+        const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
+            expect(newImage).toEqual(component.img);
+        });
+        component.onSubmit();
+        expect(spyDiff).not.toHaveBeenCalled();
+        expect(spySource).toHaveBeenCalled();
+    });
 });

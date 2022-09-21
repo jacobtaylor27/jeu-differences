@@ -62,6 +62,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     // TODO : add time when users finds a difference
     private calculateTime() {
         this.timer = Number(this.timerAdmin) - this.clueAskedCounter * this.timePenalty;
+        // this.timer = Number(this.timerAdmin) + this. * this.nbDifferencesFound * this.bonusTime;
     }
 
     private calculateSeconds(totalSeconds: number) {

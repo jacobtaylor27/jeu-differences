@@ -1,5 +1,8 @@
 <main [ngClass]="favoriteTheme">
     <mat-toolbar color="primary"><button class="home-button" mat-fab color="primary" routerLink="/"><mat-icon>home</mat-icon></button>Sélectionnez votre jeu</mat-toolbar>
+    <div class="game-number-container">
+        <span class="game-number">{{ gameCards.length }} jeu<span *ngIf="gameCards.length > 0">x</span></span>
+    </div>
     <app-game-carousel
     [gameCards]="gameCards"></app-game-carousel>
 </main>

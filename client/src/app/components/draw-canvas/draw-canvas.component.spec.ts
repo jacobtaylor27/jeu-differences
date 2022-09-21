@@ -16,7 +16,11 @@ describe('DrawCanvasComponent', () => {
 
     beforeEach(async () => {
         drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['reposition']);
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $pencil: new Subject(), $uploadImageInDiff: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
+            $pencil: new Subject(),
+            $uploadImageInDiff: new Subject(),
+            $resetDiff: new Subject(),
+        });
         await TestBed.configureTestingModule({
             declarations: [DrawCanvasComponent],
             providers: [
@@ -112,11 +116,16 @@ describe('DrawCanvasComponent', () => {
     it('should subscribe to get the new image and draw it', async () => {
         const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const spyDrawImage = spyOn(ctx, 'drawImage');
+        const clearImage = spyOn(ctx, 'clearRect');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
             expect(spyDrawImage).toHaveBeenCalled();
         });
+        toolBoxServiceSpyObj.$resetDiff.subscribe(() => {
+            expect(clearImage).toHaveBeenCalled();
+        });
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
+        toolBoxServiceSpyObj.$resetDiff.next();
     });
 
     it('should subscribe to get the new image and draw it', async () => {

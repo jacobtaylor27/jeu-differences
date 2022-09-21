@@ -16,7 +16,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     coordDraw: Vec2 = { x: 0, y: 0 };
     isClick: boolean = false;
     pencil: Pencil = { width: 1, cap: 'round', color: '#000000', state: Tool.Pencil };
-
+    size: Vec2 = { x: 480, y: 640 };
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
@@ -26,6 +26,10 @@ export class DrawCanvasComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.toolBoxService.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
             this.img.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
+        });
+        this.toolBoxService.$resetDiff.subscribe(() => {
+            (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, this.size.y, this.size.x);
+            (this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, this.size.y, this.size.x);
         });
     }
 

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
+import { TimerService } from '../../services/timer.service';
 
 @Component({
     selector: 'app-timer-stopwatch',
@@ -9,11 +10,12 @@ import { Subscription, timer } from 'rxjs';
 export class TimerStopwatchComponent implements OnInit {
     @Input() clueAskedCounter: number;
 
-    minutesDisplay: number = 0;
-    secondsDisplay: number = 0;
-    secondsTotal: number;
+    timerDisplay: string;
 
-    sub: Subscription;
+    private secondsTotal: number;
+    private sub: Subscription;
+
+    constructor(private readonly timerService: TimerService) {}
 
     ngOnInit(): void {
         this.startTimer();
@@ -27,8 +29,7 @@ export class TimerStopwatchComponent implements OnInit {
         const time = timer(1, 1000);
         this.sub = time.subscribe((seconds) => {
             this.calculateTime(seconds);
-            this.secondsDisplay = this.getSeconds(this.secondsTotal);
-            this.minutesDisplay = this.getMinutes(this.secondsTotal);
+            this.timerDisplay = this.timerService.displayTime(this.secondsTotal);
         });
     }
 
@@ -36,27 +37,7 @@ export class TimerStopwatchComponent implements OnInit {
         this.sub.unsubscribe();
     }
 
-    private getSeconds(seconds: number) {
-        return this.pad(seconds % 60);
-    }
-
-    private getMinutes(seconds: number) {
-        return this.pad(Math.floor(seconds / 60) % 60);
-    }
-
-    private pad(digit: any) {
-        return digit <= 9 ? '0' + digit : digit;
-    }
-
     private calculateTime(seconds: number) {
         this.secondsTotal = seconds + this.clueAskedCounter * 5;
-    }
-
-    displayTime(): string {
-        return (
-            (this.minutesDisplay && this.minutesDisplay <= 59 ? this.minutesDisplay : '00') +
-            ' : ' +
-            (this.secondsDisplay && this.secondsDisplay <= 59 ? this.secondsDisplay : '00')
-        );
     }
 }

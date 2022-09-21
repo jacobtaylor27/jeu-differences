@@ -13,3 +13,11 @@
     font-size: medium;
     line-height: normal;
 }
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    // bottom: 10px;
+    // align-content: space-between;
+    gap: 3vh;
+}

@@ -28,7 +28,9 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     @ViewChild('gameOverDialog')
     private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
 
-    constructor(private readonly matDialog: MatDialog, private readonly timerService: TimerService) {}
+    constructor(private readonly matDialog: MatDialog, private readonly timerService: TimerService) {
+        timerService.setCountdown();
+    }
 
     ngOnInit(): void {
         this.setTimer();

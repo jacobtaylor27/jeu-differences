@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class TimerService {
     private timer: number;
+    private isCountdown: boolean = false;
     private secondsDisplay: number;
     private minutesDisplay: number;
 
@@ -14,11 +15,24 @@ export class TimerService {
         this.timer = timer;
     }
 
-    private calculateSeconds(totalSeconds: number) {
-        this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60);
+    setCountdown() {
+        this.isCountdown = true;
     }
+
+    private calculateSeconds(totalSeconds: number) {
+        if (this.isCountdown) {
+            this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60);
+        } else {
+            this.secondsDisplay = this.pad(totalSeconds % 60);
+        }
+    }
+
     private calculateMinutes(totalSeconds: number) {
-        this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60);
+        if (this.isCountdown) {
+            this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60);
+        } else {
+            this.minutesDisplay = this.pad(Math.floor(totalSeconds / 60) % 60);
+        }
     }
 
     calculateSecondsLeft(totalSeconds: number): number {

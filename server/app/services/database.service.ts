@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 import { Service } from 'typedi';
 
 const DB_USERNAME = 'admin';
@@ -9,10 +9,11 @@ const DB_NAME = 'seven-differences';
 
 @Service()
 export class DatabaseService {
-    private client: MongoClient;
-    private db: any;
+    public client: MongoClient;
+    public db: Db;
 
-    constructor() {}
+    constructor() {
+    }
 
     async populateDatabase(collectionName:string, data:any): Promise<void> { 
         const collection = this.client.db(DB_NAME).collection(collectionName);

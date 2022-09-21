@@ -1,9 +1,9 @@
 <section class="timer">
     <div class="timer-clock">
-        <mat-icon class="clock-icon" [ngStyle]="{ color: secondsLeft > 5 ? 'black' : 'red' }">timer</mat-icon>
-        <p *ngIf="secondsLeft > 5; else elseBlock">{{ displayTime() }}</p>
+        <mat-icon class="clock-icon" [ngStyle]="{ color: moreThanFiveSeconds() ? 'black' : 'red' }">timer</mat-icon>
+        <p *ngIf="moreThanFiveSeconds(); else elseBlock">{{ timerDisplay }}</p>
         <ng-template #elseBlock>
-            <p class="timer-red">{{ displayTime() }}</p>
+            <p class="timer-red">{{ timerDisplay }}</p>
         </ng-template>
     </div>
 </section>

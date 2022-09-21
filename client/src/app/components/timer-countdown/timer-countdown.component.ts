@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription, timer } from 'rxjs';
+import { TimerService } from '../../services/timer.service';
 
 @Component({
     selector: 'app-timer-countdown',
@@ -20,18 +21,17 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     // @Input() nbDifferencesFound: number;
 
     private timer: number;
-    private secondsDisplay: number;
-    private minutesDisplay: number;
+    timerDisplay: string;
     secondsLeft: number;
     private sub: Subscription;
 
     @ViewChild('gameOverDialog')
     private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
 
-    constructor(private readonly matDialog: MatDialog) {}
+    constructor(private readonly matDialog: MatDialog, private readonly timerService: TimerService) {}
 
     ngOnInit(): void {
-        this.calculateTime();
+        this.setTimer();
         this.countdownTimer();
     }
 
@@ -40,13 +40,12 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     }
 
     private countdownTimer() {
-        const $time = timer(100, 1000);
+        const $time = timer(10, 1000);
 
         this.sub = $time.subscribe((seconds) => {
-            this.calculateTime();
-            this.calculateSeconds(seconds);
-            this.calculateMinutes(seconds);
-            this.calculateSecondsLeft(seconds);
+            this.setTimer();
+            this.timerDisplay = this.timerService.displayTime(seconds);
+            this.secondsLeft = this.timerService.calculateSecondsLeft(seconds);
             if (seconds > this.timer) {
                 this.stopTimer();
                 this.gameOver();
@@ -65,27 +64,16 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
         // this.timer = Number(this.timerAdmin) + this. * this.nbDifferencesFound * this.bonusTime;
     }
 
-    private calculateSeconds(totalSeconds: number) {
-        this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60);
-    }
-    private calculateMinutes(totalSeconds: number) {
-        this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60);
+    private setTimer() {
+        this.calculateTime();
+        this.timerService.setTimer(this.timer);
     }
 
-    private calculateSecondsLeft(totalSeconds: number) {
-        this.secondsLeft = this.timer - totalSeconds;
-    }
-
-    displayTime(): string {
-        return (
-            (this.minutesDisplay && this.minutesDisplay <= 59 ? this.minutesDisplay : '00') +
-            ' : ' +
-            (this.secondsDisplay && this.secondsDisplay <= 59 ? this.secondsDisplay : '00')
-        );
-    }
-
-    private pad(digit: any) {
-        return digit <= 9 ? '0' + digit : digit;
+    moreThanFiveSeconds() {
+        if (this.secondsLeft < 5) {
+            return false;
+        }
+        return true;
     }
 
     private gameOver() {

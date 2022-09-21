@@ -18,7 +18,7 @@ describe('CreateGamePageComponent', () => {
     beforeEach(async () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
         httpSpyObj = jasmine.createSpyObj('HttpClient', ['post']);
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInSource: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInSource: new Subject(), $resetSource: new Subject() });
         await TestBed.configureTestingModule({
             declarations: [CreateGamePageComponent],
             imports: [HttpClientModule, MatDialogModule],
@@ -101,5 +101,15 @@ describe('CreateGamePageComponent', () => {
         });
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
+    });
+
+    it('should clear an image', () => {
+        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const clearImage = spyOn(ctx, 'clearRect');
+        toolBoxServiceSpyObj.$resetSource.subscribe(() => {
+            expect(clearImage).toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$resetSource.next();
     });
 });

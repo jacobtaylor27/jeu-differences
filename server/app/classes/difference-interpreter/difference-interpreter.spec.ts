@@ -68,7 +68,19 @@ describe('Difference interpreter', async () => {
         const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getCoordinates(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
+    it('An array of difference should contain all of the differences', async () => {
+        // prettier-ignore
+        // eslint-disable-next-line
+        const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0];
+        const width = 2;
+        const height = 2;
+        const bmpDifferentiated = new Bmp(width, height, rawData);
+        const differences: BmpCoordinate[][] = DifferenceInterpreter.getCoordinates(bmpDifferentiated);
 
+        const indexFirstDiff = 0;
+        const expectedCoordinates: BmpCoordinate[][] = [[new BmpCoordinate(0, 0), new BmpCoordinate(1, 0)]];
+        expect(differences[indexFirstDiff]).to.equal(expectedCoordinates);
+    });
     it('The algorithm should also work on a bmp with a large width and height', async () => {
         const filepath = './assets/test-bmp/ten_difference.bmp';
         const bmpDecoded = await BmpDecoder.decode(filepath);

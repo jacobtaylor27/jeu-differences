@@ -12,4 +12,10 @@ export class GameCardHandlerService {
 
   fetchGamesInformation(): void {}
   generateGameCards(): void {}
+  deleteGame(game: GameCard): void {
+    const index = this.gameCards.indexOf(game);
+    if (index > -1) {
+      this.gameCards.splice(index, 1);
+    }
+  }
 }

@@ -34,7 +34,7 @@
         
         <mat-card-actions class="game-card-buttons">
             <div class="admin-buttons" *ngIf="gameCard.isAdminCard; else selectPage">
-                <button  mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickPlayGame()">
+                <button  mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickDeleteGame(gameCard)">
                     <mat-icon>delete</mat-icon>
                 </button>
                 <button mat-fab color="primary" matTooltip="Réinitialiser les records" aria-label="Boutton réinitialiser" (click)="onClickCreateGame()">

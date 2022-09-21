@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlayerScore } from '@app/classes/player-score';
 import { GameCategory } from '@app/enums/game-category';
 import { GameCard } from '@app/interfaces/game-card';
+import { GameCardHandlerService } from './game-card-handler.service';
 
 @Injectable({
     providedIn: 'root',
@@ -10,13 +11,17 @@ export class GameSelectionService {
     activeCardsRange = { start: 0, end: 3 };
     gameCards: GameCard[] = [];
 
-    constructor() {
+    constructor(private readonly gameCardHandlerService: GameCardHandlerService) {
         this.initialiseGameCard();
         this.setActiveCards(this.activeCardsRange.start, this.activeCardsRange.end);
     }
 
     hasPreviousCards(): boolean {
         return this.activeCardsRange.start > 0;
+    }
+
+    yo(): void {
+        this.gameCardHandlerService.fetchGamesInformation();
     }
 
     hasNextCards(): boolean {

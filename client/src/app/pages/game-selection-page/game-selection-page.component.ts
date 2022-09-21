@@ -37,6 +37,10 @@ export class GameSelectionPageComponent implements OnInit {
         this.gameCards = this.gameSelectionService.getActiveCards();
     }
 
+    getShownGameCards(): GameCard[] {
+        return this.gameCards.filter((gameCard) => gameCard.isShown);
+    }
+
     onClickPrevious(): void {
         this.gameSelectionService.showPreviousFour();
         this.getGameCards();

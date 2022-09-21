@@ -52,7 +52,7 @@ export class DialogUploadFormComponent {
     }
 
     onSubmit(): void {
-        switch (this.form.get('type')?.value) {
+        switch ((this.form.get('type') as FormControl).value) {
             case 'both': {
                 this.toolService.$uploadImageInDiff.next(this.img);
                 this.toolService.$uploadImageInSource.next(this.img);

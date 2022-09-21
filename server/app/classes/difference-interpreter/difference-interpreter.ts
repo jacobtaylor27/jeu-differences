@@ -5,16 +5,17 @@ import { Pixel } from '@app/interface/pixel';
 export class DifferenceInterpreter {
     static getDifference(bmpDifferentiated: Bmp): number {
         if (!this.isBmpDifferentiated(bmpDifferentiated)) throw new Error('The pixels are not perfectly black or white');
-        let size = 0;
+        let maxRegion = 0;
         const pixels = bmpDifferentiated.getPixels();
         for (let row = 0; row < bmpDifferentiated.getWidth(); row++) {
             for (let column = 0; column < bmpDifferentiated.getHeight(); column++) {
                 if (this.isPixelBlack(pixels[row][column])) {
-                    size = this.getRegion(pixels, row, column);
+                    const size = this.getRegion(pixels, row, column);
+                    maxRegion = Math.max(size, maxRegion);
                 }
             }
         }
-        return size;
+        return maxRegion;
     }
 
     private static getRegion(pixels: Pixel[][], row: number, column: number): number {
@@ -28,8 +29,8 @@ export class DifferenceInterpreter {
         this.setPixelWhite(pixels[row][column]);
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = column - 1; c <= column + 1; c++) {
-                if (r !== row && c !== column) {
-                    size = Math.max(size, this.getRegion(pixels, r, c));
+                if (r !== row || c !== column) {
+                    size += this.getRegion(pixels, r, c);
                 }
             }
         }
@@ -45,10 +46,9 @@ export class DifferenceInterpreter {
     }
 
     private static setPixelWhite(pixel: Pixel) {
-        pixel.a = 0;
-        pixel.b = 0;
-        pixel.g = 0;
-        pixel.r = 0;
+        pixel.b = MAX_VALUE_PIXEL;
+        pixel.g = MAX_VALUE_PIXEL;
+        pixel.r = MAX_VALUE_PIXEL;
     }
 
     private static isBmpDifferentiated(bmp: Bmp): boolean {

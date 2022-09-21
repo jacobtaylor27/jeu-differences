@@ -67,4 +67,17 @@ describe('Difference interpreter', () => {
         const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getCoordinates(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
+
+    it('The algorithm should also work on a bmp with a large width and height', () => {
+        // prettier-ignore
+        // eslint-disable-next-line
+        const rawData = [0, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0];
+        const width = 2;
+        const height = 2;
+        const bmpWithColors = new Bmp(width, height, rawData);
+        const nbOfDifference = 1;
+
+        const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getCoordinates(bmpWithColors);
+        expect(coordinates.length).to.equal(nbOfDifference);
+    });
 });

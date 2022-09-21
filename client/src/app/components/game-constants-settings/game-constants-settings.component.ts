@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AdminService } from '@app/services/admin.service';
 
 @Component({
   selector: 'app-game-constants-settings',
@@ -6,7 +7,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./game-constants-settings.component.scss']
 })
 export class GameConstantsSettingsComponent {
-  constructor() { }
+  constructor(private readonly adminService: AdminService) { }
 
   favoriteTheme: string = 'deeppurple-amber-theme';
+  hintPenaltyTime: number;
+  successfulGuessBonusTime: number;
+  timerTime: number;
+
+  resetGameConstants(): void {
+    this.hintPenaltyTime = this.adminService.gameConstants.hintPenaltyTime;
+    this.successfulGuessBonusTime = this.adminService.gameConstants.successfulAttemptTime;
+    this.timerTime = this.adminService.gameConstants.defaultTime;
+  }
+
+  onClickRestoreDefaults(): void {}
 }

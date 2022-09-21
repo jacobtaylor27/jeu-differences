@@ -20,6 +20,9 @@ export class GameSelectionPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.getGameCards();
+        for (let i = 0; i < this.gameCards.length; i++) {
+            this.gameCards[i].isAdminCard = false;
+        }
     }
 
     hasCardsBefore(): boolean {

@@ -1,6 +1,6 @@
+import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { DifferenceInterpreter } from '@app/classes/difference-interpreter/difference-interpreter';
-import { Coordinate } from '@app/classes/difference/difference';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
@@ -28,7 +28,7 @@ describe('Difference interpreter', () => {
         const bmpWithColors = new Bmp(width, height, rawData);
         const nbOfDifference = 0;
 
-        const coordinates: Coordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
+        const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('A black image should have one difference', () => {
@@ -40,7 +40,7 @@ describe('Difference interpreter', () => {
         const bmpWithColors = new Bmp(width, height, rawData);
         const nbOfDifference = 1;
 
-        const coordinates: Coordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
+        const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels side by side should be considered as one difference', () => {
@@ -52,7 +52,7 @@ describe('Difference interpreter', () => {
         const bmpWithColors = new Bmp(width, height, rawData);
         const nbOfDifference = 1;
 
-        const coordinates: Coordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
+        const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels in diagonal should be considered as one difference', () => {
@@ -64,7 +64,7 @@ describe('Difference interpreter', () => {
         const bmpWithColors = new Bmp(width, height, rawData);
         const nbOfDifference = 1;
 
-        const coordinates: Coordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
+        const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
 });

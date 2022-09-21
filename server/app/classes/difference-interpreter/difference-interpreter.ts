@@ -1,40 +1,41 @@
+import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { MAX_VALUE_PIXEL, MIN_VALUE_PIXEL } from '@app/constants/encoding';
 import { Pixel } from '@app/interface/pixel';
 
 export class DifferenceInterpreter {
-    static getDifference(bmpDifferentiated: Bmp): number {
+    static getDifference(bmpDifferentiated: Bmp): BmpCoordinate[][] {
         if (!this.isBmpDifferentiated(bmpDifferentiated)) throw new Error('The pixels are not perfectly black or white');
-        let maxRegion = 0;
+        const differences: BmpCoordinate[][] = [];
         const pixels = bmpDifferentiated.getPixels();
         for (let row = 0; row < bmpDifferentiated.getWidth(); row++) {
             for (let column = 0; column < bmpDifferentiated.getHeight(); column++) {
                 if (this.isPixelBlack(pixels[row][column])) {
-                    const size = this.getRegion(pixels, row, column);
-                    maxRegion = Math.max(size, maxRegion);
+                    const difference = this.getRegion(pixels, row, column);
+                    differences.push(difference);
                 }
             }
         }
-        return maxRegion;
+        return differences;
     }
 
-    private static getRegion(pixels: Pixel[][], row: number, column: number): number {
+    private static getRegion(pixels: Pixel[][], row: number, column: number): BmpCoordinate[] {
         if (row < 0 || column < 0 || row >= pixels.length || column >= pixels[row].length) {
-            return 0;
+            return [];
         }
         if (this.isPixelWhite(pixels[row][column])) {
-            return 0;
+            return [];
         }
-        let size = 1;
+        const differences: BmpCoordinate[] = [new BmpCoordinate(row, column)];
         this.setPixelWhite(pixels[row][column]);
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = column - 1; c <= column + 1; c++) {
                 if (r !== row || c !== column) {
-                    size += this.getRegion(pixels, r, c);
+                    differences.concat(this.getRegion(pixels, r, c));
                 }
             }
         }
-        return size;
+        return differences;
     }
 
     private static isPixelWhite(pixel: Pixel) {

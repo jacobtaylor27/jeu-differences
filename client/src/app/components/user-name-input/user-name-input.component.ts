@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output } from '@angular/core';
 
 @Component({
   selector: 'app-user-name-input',
@@ -9,5 +9,6 @@ export class UserNameInputComponent {
   constructor() { }
 
   favoriteTheme: string = 'deeppurple-amber-theme';
-  name:string;
+  
+  @Output() name:string;
 }

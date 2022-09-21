@@ -73,6 +73,12 @@ export class GameSelectionService {
 
         for (let i = 0; i < DEFAULT_NB_OF_CARDS; i++) {
             const newCard: GameCard = {
+                gameInformation: {
+                    gameName: 'Game ' + i,
+                    imgName: 'game' + i,
+                    scoresSolo: soloScores,
+                    scoresMultiplayer: multiplayerScores,
+                },
                 isAdminCard: false,
                 isCreated: false,
                 isShown: false,

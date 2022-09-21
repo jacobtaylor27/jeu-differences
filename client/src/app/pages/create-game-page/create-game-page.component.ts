@@ -3,7 +3,6 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
-import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
 import { Tool } from '@app/enums/tool';
 import { Vec2 } from '@app/interfaces/vec2';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
@@ -47,10 +46,6 @@ export class CreateGamePageComponent implements AfterViewInit {
         // remove this line and add the validation function when is done
         const difference = 5;
         return difference;
-    }
-
-    openUploadDialog() {
-        this.dialog.open(DialogUploadFormComponent);
     }
 
     // set submit function but it will be done with the route

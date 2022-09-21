@@ -14,9 +14,7 @@ export class DifferenceInterpreter {
             for (let column = 0; column < pixels[row].length; column++) {
                 if (this.isPixelBlack(pixels[row][column])) {
                     const difference = this.getRegion(pixels, row, column);
-                    if (difference.length > 0) {
-                        differences.push(difference);
-                    }
+                    differences.push(difference);
                 }
             }
         }

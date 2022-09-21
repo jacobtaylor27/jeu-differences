@@ -18,7 +18,7 @@ export class DialogUploadFormComponent {
 
     constructor(private toolService: ToolBoxService) {
         this.form = new FormGroup({
-            type: new FormControl(null, Validators.required),
+            type: new FormControl('', Validators.required),
             uploadImage: new FormControl(null, Validators.required),
         });
     }

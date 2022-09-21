@@ -13,7 +13,7 @@
     <mat-error *ngIf="!this.isSizeImageCorrect">La taille d'image doit etre 640*480</mat-error>
     <mat-dialog-actions align="end">
         <button type="button" mat-button mat-dialog-close>Cancel</button>
-        <button mat-button [mat-dialog-close]="true" [disabled]="this.isFormSubmitted ? null: 'disabled'" type="submit">Upload</button>
+        <button mat-button [mat-dialog-close]="true" [disabled]="this.isFormSubmitted && this.form.valid ? null: 'disabled'" type="submit">Upload</button>
     </mat-dialog-actions>
 
 </form>

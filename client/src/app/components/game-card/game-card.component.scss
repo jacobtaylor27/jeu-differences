@@ -45,3 +45,7 @@ ul.highscores-solo, ul.highscores-multi {
     display: flex;
     justify-content: center;
 }
+
+.empty-solo-scores, .empty-multi-scores{
+    color: gray;
+}

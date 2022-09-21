@@ -19,6 +19,14 @@ export class GameCardComponent {
     return TimeFormatter.getMMSSFormat(scoreTime);
   }
 
+  hasMultiplayerScores(): boolean {
+    return this.gameCard.scoresMultiplayer.length > 0;
+  }
+
+  hasSinglePlayerScores(): boolean {
+    return this.gameCard.scoresSolo.length > 0;
+  }
+
   onClickPlayGame(): void {
     this.gameCardService.openUseNameInputDialog();
   }

@@ -8,16 +8,26 @@
             <div class="scores">
                 <ul class="highscores-solo">
                     <li class="highscores-solo-title"><b>Solo</b></li>
-                    <li *ngFor="let score of gameCard.scoresSolo">
-                        {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
-                    </li>
+                    <div class="highscores-multi-content" *ngIf="hasSinglePlayerScores(); else noSoloScores">
+                        <li *ngFor="let score of gameCard.scoresSolo">
+                            {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
+                        </li>
+                    </div>
+                    <ng-template #noSoloScores>
+                        <li class="empty-solo-scores" *ngFor="let i of [1, 2, 3]"><em>{{ 'Joueur ' + i }} &mdash; 00:00</em></li>
+                    </ng-template>
                 </ul>
 
                 <ul class="highscores-multi">
                     <li class="highscores-multi-title"><b>1 vs 1</b></li>
-                    <li *ngFor="let score of gameCard.scoresMultiplayer">
-                        {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
-                    </li>
+                    <div class="highscores-multi-content" *ngIf="hasMultiplayerScores(); else noMultiplayerScores">
+                        <li *ngFor="let score of gameCard.scoresMultiplayer">
+                            {{ score.getName() }} &mdash; {{ formatScoreTime(score.getTime()) }}
+                        </li>
+                    </div>
+                    <ng-template #noMultiplayerScores>
+                        <li class="empty-multi-scores" *ngFor="let i of [1, 2, 3]"><em>{{ 'Joueur ' + i }} &mdash; 00:00</em></li>
+                    </ng-template>
                 </ul>
             </div>
         </mat-card-content>

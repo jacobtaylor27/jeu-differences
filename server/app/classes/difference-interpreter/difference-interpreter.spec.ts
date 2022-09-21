@@ -3,6 +3,7 @@ import { Bmp } from '@app/classes/bmp/bmp';
 import { DifferenceInterpreter } from '@app/classes/difference-interpreter/difference-interpreter';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { BmpDecoder } from '../bmp-decoder/bmp-decoder';
 
 describe('Difference interpreter', () => {
     it('Should throw an exception if given a bmp with pixels other than black or white', () => {
@@ -66,5 +67,13 @@ describe('Difference interpreter', () => {
 
         const coordinates: BmpCoordinate[][] = DifferenceInterpreter.getDifference(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
+    });
+
+    it('The interpreter should work on bmp with important width and height', async () => {
+        const filepath = './assets/test-bmp/ten_difference.bmp';
+        const bmp: Bmp = await BmpDecoder.decode(filepath);
+        const differences: BmpCoordinate[][] = DifferenceInterpreter.getDifference(bmp);
+        const nbOfDifference = 10;
+        expect(differences.length).to.equal(nbOfDifference);
     });
 });

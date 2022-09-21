@@ -10,9 +10,11 @@ export class DifferenceInterpreter {
         const pixels = bmpDifferentiated.getPixels();
         for (let row = 0; row < bmpDifferentiated.getWidth(); row++) {
             for (let column = 0; column < bmpDifferentiated.getHeight(); column++) {
-                if (this.isPixelBlack(pixels[row][column])) {
+                if (this.isPixelBlack(pixels[column][row])) {
                     const difference = this.getRegion(pixels, row, column);
-                    differences.push(difference);
+                    if (difference.length !== 0) {
+                        differences.push(difference);
+                    }
                 }
             }
         }
@@ -23,11 +25,11 @@ export class DifferenceInterpreter {
         if (row < 0 || column < 0 || row >= pixels.length || column >= pixels[row].length) {
             return [];
         }
-        if (this.isPixelWhite(pixels[row][column])) {
+        if (this.isPixelWhite(pixels[column][row])) {
             return [];
         }
         const differences: BmpCoordinate[] = [new BmpCoordinate(row, column)];
-        this.setPixelWhite(pixels[row][column]);
+        this.setPixelWhite(pixels[column][row]);
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = column - 1; c <= column + 1; c++) {
                 if (r !== row || c !== column) {

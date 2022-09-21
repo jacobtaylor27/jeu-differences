@@ -18,7 +18,7 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
-import { DialogResetComponent } from './dialog-reset/dialog-reset.component';
+import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.

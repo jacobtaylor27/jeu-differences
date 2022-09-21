@@ -14,5 +14,24 @@ export class DialogResetComponent {
             reset: new FormControl('', Validators.required),
         });
     }
-
+    onSubmit() {
+        switch ((this.form.get('reset') as FormControl).value) {
+            case 'both': {
+                this.toolService.$resetDiff.next();
+                this.toolService.$resetSource.next();
+                break;
+            }
+            case 'diff': {
+                this.toolService.$resetDiff.next();
+                break;
+            }
+            case 'source': {
+                this.toolService.$resetSource.next();
+                break;
+            }
+            default: {
+                return;
+            }
+        }
+    }
 }

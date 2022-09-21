@@ -90,6 +90,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     private gameOver() {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
+        dialogConfig.minWidth = '50%';
         this.matDialog.open(this.gameOverDialogRef, dialogConfig);
     }
 }

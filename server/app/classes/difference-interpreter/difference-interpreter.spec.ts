@@ -78,7 +78,8 @@ describe('Difference interpreter', async () => {
         const differences: BmpCoordinate[][] = DifferenceInterpreter.getCoordinates(bmpDifferentiated);
 
         const indexFirstDiff = 0;
-        const expectedCoordinates: BmpCoordinate[][] = [[new BmpCoordinate(0, 0), new BmpCoordinate(1, 0)]];
+        const difference: BmpCoordinate[] = [new BmpCoordinate(0, 1), new BmpCoordinate(1, 1)];
+        const expectedCoordinates: BmpCoordinate[][] = [difference];
         expect(differences[indexFirstDiff]).to.equal(expectedCoordinates);
     });
     it('The algorithm should also work on a bmp with a large width and height', async () => {

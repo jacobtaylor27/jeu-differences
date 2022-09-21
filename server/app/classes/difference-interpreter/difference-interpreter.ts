@@ -14,7 +14,7 @@ export class DifferenceInterpreter {
             for (let column = 0; column < pixels[row].length; column++) {
                 if (this.isPixelBlack(pixels[row][column])) {
                     const difference = this.getRegion(pixels, row, column);
-                    if (difference.length !== 0) {
+                    if (difference.length > 0) {
                         differences.push(difference);
                     }
                 }
@@ -30,18 +30,29 @@ export class DifferenceInterpreter {
         if (this.isPixelWhite(pixels[row][column])) {
             return [];
         }
-        const differences: BmpCoordinate[] = [new BmpCoordinate(row, column)];
+        let differences: BmpCoordinate[] = [new BmpCoordinate(row, column)];
         this.setPixelWhite(pixels[row][column]);
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = column - 1; c <= column + 1; c++) {
                 if (r !== row || c !== column) {
-                    differences.concat(this.getRegion(pixels, r, c));
+                    const newElement: BmpCoordinate[] = this.getRegion(pixels, r, c);
+                    differences = this.insertElement(differences, newElement);
                 }
             }
         }
         return differences;
     }
 
+    private static insertElement(oldArray: BmpCoordinate[], newElement: BmpCoordinate[]): BmpCoordinate[] {
+        const bmpCoordinates: BmpCoordinate[] = [];
+        oldArray.forEach((coordinate) => {
+            bmpCoordinates.push(coordinate);
+        });
+        newElement.forEach((coordinate) => {
+            bmpCoordinates.push(coordinate);
+        });
+        return bmpCoordinates;
+    }
     private static isPixelWhite(pixel: Pixel) {
         return pixel.r === MAX_VALUE_PIXEL && pixel.g === MAX_VALUE_PIXEL && pixel.b === MAX_VALUE_PIXEL;
     }

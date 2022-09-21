@@ -39,7 +39,7 @@ describe('DialogResetComponent', () => {
     });
 
     it('should submit a form and propagate event to reset difference image', () => {
-        const expectedType = 'diff';
+        const expectedType = 'difference';
         const resetDiffSpy = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
         const resetSourceSpy = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
         spyOn(component.form, 'get').and.returnValue({ value: expectedType } as FormControl);

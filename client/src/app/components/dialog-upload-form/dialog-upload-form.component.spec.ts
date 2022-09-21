@@ -141,8 +141,8 @@ describe('DialogUploadFormComponent', () => {
         expect(spySource).toHaveBeenCalled();
     });
 
-    it('should submit a form because the type is diff', async () => {
-        const expectedType = 'diff';
+    it('should submit a form because the type is difference', async () => {
+        const expectedType = 'difference';
         spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');

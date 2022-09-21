@@ -58,7 +58,8 @@ describe('DrawCanvasComponent', () => {
 
     it('should draw when the client is clicking on the canvas', () => {
         component.isClick = false;
-        const drawPointSpy = spyOn(component, 'drawPoint');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(() => {});
         component.draw({} as MouseEvent);
         expect(drawPointSpy).not.toHaveBeenCalled();
         component.isClick = true;

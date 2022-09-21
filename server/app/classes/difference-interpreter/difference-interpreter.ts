@@ -12,7 +12,7 @@ export class DifferenceInterpreter {
 
         for (let row = 0; row < bmpDifferentiated.getWidth(); row++) {
             for (let column = 0; column < bmpDifferentiated.getHeight(); column++) {
-                if (this.isPixelWhite(pixels[row][column])) {
+                if (this.isPixelBlack(pixels[row][column])) {
                     const region: Difference[] = this.getRegion(pixels, row, column);
                     if (region.length !== 0) regions.push(region);
                 }
@@ -25,13 +25,16 @@ export class DifferenceInterpreter {
         if (row < 0 || column < 0 || row >= pixels.length || column >= pixels[row].length) {
             return [];
         }
-        if (this.isPixelBlack(pixels[row][column])) {
+        if (this.isPixelWhite(pixels[row][column])) {
             return [];
         }
-        const region: Difference[] = [];
+        this.setPixelWhite(pixels[row][column]);
+        const region: Difference[] = [new Difference({ row, column })];
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = column - 1; c <= column + 1; c++) {
-                region.concat(this.getRegion(pixels, r, c));
+                if (r !== row && c !== column) {
+                    region.concat(this.getRegion(pixels, r, c));
+                }
             }
         }
         return region;
@@ -43,6 +46,13 @@ export class DifferenceInterpreter {
 
     private static isPixelBlack(pixel: Pixel) {
         return pixel.r === MIN_VALUE_PIXEL && pixel.g === MIN_VALUE_PIXEL && pixel.b === MIN_VALUE_PIXEL;
+    }
+
+    private static setPixelWhite(pixel: Pixel) {
+        pixel.a = 0;
+        pixel.b = 0;
+        pixel.g = 0;
+        pixel.r = 0;
     }
 
     private static isBmpDifferentiated(bmp: Bmp): boolean {

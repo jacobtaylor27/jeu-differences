@@ -1,6 +1,6 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
-import { MAX_VALUE_PIXEL, MIN_VALUE_PIXEL } from '@app/constants/encoding';
+import { PixelColor } from '@app/enum/pixel-color';
 import { Pixel } from '@app/interface/pixel';
 
 export class DifferenceInterpreter {
@@ -41,18 +41,26 @@ export class DifferenceInterpreter {
         return differences;
     }
 
+    private static isPixelColorMatch(pixel: Pixel, color: number) {
+        return pixel.r === color && pixel.g === color && pixel.b === color;
+    }
+
     private static isPixelWhite(pixel: Pixel) {
-        return pixel.r === MAX_VALUE_PIXEL && pixel.g === MAX_VALUE_PIXEL && pixel.b === MAX_VALUE_PIXEL;
+        return this.isPixelColorMatch(pixel, PixelColor.WHITE);
     }
 
     private static isPixelBlack(pixel: Pixel) {
-        return pixel.r === MIN_VALUE_PIXEL && pixel.g === MIN_VALUE_PIXEL && pixel.b === MIN_VALUE_PIXEL;
+        return this.isPixelColorMatch(pixel, PixelColor.BLACK);
     }
 
     private static setPixelWhite(pixel: Pixel) {
-        pixel.b = MAX_VALUE_PIXEL;
-        pixel.g = MAX_VALUE_PIXEL;
-        pixel.r = MAX_VALUE_PIXEL;
+        this.setPixelColor(pixel, PixelColor.WHITE);
+    }
+
+    private static setPixelColor(pixel: Pixel, color: number) {
+        pixel.b = color;
+        pixel.g = color;
+        pixel.r = color;
     }
 
     private static isBmpDifferentiated(bmp: Bmp): boolean {

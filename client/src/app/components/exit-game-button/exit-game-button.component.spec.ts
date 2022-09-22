@@ -23,4 +23,10 @@ describe('ExitGameButtonComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('dialog should open when exit button is clicked', () => {
+        const openDialogSpy = spyOn(component.matDialog, 'open');
+        component.onExit();
+        expect(openDialogSpy).toHaveBeenCalled();
+    });
 });

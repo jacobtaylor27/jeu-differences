@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class ExitGameButtonComponent {
     @ViewChild('exitDialogContent')
     private readonly exitDialogContentRef: TemplateRef<HTMLElement>;
-    constructor(private readonly matDialog: MatDialog) {}
+    constructor(readonly matDialog: MatDialog) {}
 
     onExit(): void {
         this.matDialog.open(this.exitDialogContentRef);

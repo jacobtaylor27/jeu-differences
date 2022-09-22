@@ -34,23 +34,13 @@ export class DifferenceInterpreter {
             for (let c = column - 1; c <= column + 1; c++) {
                 if (r !== row || c !== column) {
                     const newElement: BmpCoordinate[] = this.getRegion(pixels, r, c);
-                    differences = this.insertElement(differences, newElement);
+                    differences = differences.concat(newElement);
                 }
             }
         }
         return differences;
     }
 
-    private static insertElement(oldArray: BmpCoordinate[], newElement: BmpCoordinate[]): BmpCoordinate[] {
-        const bmpCoordinates: BmpCoordinate[] = [];
-        oldArray.forEach((coordinate) => {
-            bmpCoordinates.push(coordinate);
-        });
-        newElement.forEach((coordinate) => {
-            bmpCoordinates.push(coordinate);
-        });
-        return bmpCoordinates;
-    }
     private static isPixelWhite(pixel: Pixel) {
         return pixel.r === MAX_VALUE_PIXEL && pixel.g === MAX_VALUE_PIXEL && pixel.b === MAX_VALUE_PIXEL;
     }

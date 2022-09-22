@@ -14,10 +14,17 @@
     line-height: normal;
 }
 
-.flex-col {
+.middle-col {
     display: flex;
     flex-direction: column;
     // bottom: 10px;
     // align-content: space-between;
+    gap: 3vh;
+}
+
+.differences-area {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1vh;
     gap: 3vh;
 }

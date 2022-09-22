@@ -23,6 +23,8 @@ import { UserNameInputComponent } from './components/user-name-input/user-name-i
 import { GameCarouselComponent } from './components/game-carousel/game-carousel.component';
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 
+import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
+import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -43,6 +45,8 @@ import { AdminCommandsComponent } from './components/admin-commands/admin-comman
         DialogFormsErrorComponent,
         GameSelectionPageComponent,
         AdminPageComponent,
+        DialogUploadFormComponent,
+        DialogResetComponent,
         GameCardComponent,
         GameConstantsSettingsComponent,
         UserNameInputComponent,

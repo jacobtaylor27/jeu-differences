@@ -1,5 +1,6 @@
 import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT } from '@app/constants/canvas';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -16,7 +17,11 @@ describe('DrawCanvasComponent', () => {
 
     beforeEach(async () => {
         drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['reposition']);
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $pencil: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
+            $pencil: new Subject(),
+            $uploadImageInDiff: new Subject(),
+            $resetDiff: new Subject(),
+        });
         await TestBed.configureTestingModule({
             declarations: [DrawCanvasComponent],
             providers: [
@@ -54,7 +59,11 @@ describe('DrawCanvasComponent', () => {
 
     it('should draw when the client is clicking on the canvas', () => {
         component.isClick = false;
-        const drawPointSpy = spyOn(component, 'drawPoint');
+        component.pencil = DEFAULT_PENCIL;
+        component.pencil.state = Tool.Pencil;
+        component.coordDraw = DEFAULT_POSITION_MOUSE_CLIENT;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(() => {});
         component.draw({} as MouseEvent);
         expect(drawPointSpy).not.toHaveBeenCalled();
         component.isClick = true;
@@ -107,5 +116,31 @@ describe('DrawCanvasComponent', () => {
         const expectedPencil = { cap: 'round', width: 3, state: Tool.Eraser, color: '#000100' } as Pencil;
         toolBoxServiceSpyObj.$pencil.next(expectedPencil);
         expect(component.pencil).toEqual(expectedPencil);
+    });
+
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        const clearImage = spyOn(ctx, 'clearRect');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
+            expect(spyDrawImage).toHaveBeenCalled();
+        });
+        toolBoxServiceSpyObj.$resetDiff.subscribe(() => {
+            expect(clearImage).toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
+        toolBoxServiceSpyObj.$resetDiff.next();
+    });
+
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component.img.nativeElement, 'getContext').and.callFake(() => null);
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
+            expect(spyDrawImage).not.toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
     });
 });

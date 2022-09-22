@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
+import { AppMaterialModule } from '@app/modules/material.module';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
@@ -11,11 +14,17 @@ describe('ToolBoxComponent', () => {
     let component: ToolBoxComponent;
     let fixture: ComponentFixture<ToolBoxComponent>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
+    let dialogSpyObj: jasmine.SpyObj<MatDialog>;
     beforeEach(async () => {
+        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $pencil: new Subject() });
         await TestBed.configureTestingModule({
             declarations: [ToolBoxComponent],
-            providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],
+            providers: [
+                { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
+                { provide: MatDialog, useValue: dialogSpyObj },
+            ],
+            imports: [AppMaterialModule, BrowserAnimationsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ToolBoxComponent);
@@ -70,5 +79,15 @@ describe('ToolBoxComponent', () => {
 
     it('should return 0 if the value is null', () => {
         expect(component.formatLabel(null)).toEqual(0);
+    });
+
+    it('should open a dialog to upload an image', () => {
+        component.openUploadDialog();
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+    });
+
+    it('should open a dialog to upload an image', () => {
+        component.openResetDialog();
+        expect(dialogSpyObj.open).toHaveBeenCalled();
     });
 });

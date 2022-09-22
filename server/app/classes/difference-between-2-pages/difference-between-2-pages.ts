@@ -1,26 +1,18 @@
 import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/interface/pixel';
-export class DifferenceBetween2Images {
-    originalImagePath: string;
-    modifiedImagePath: string;
-
-    constructor(originalImagePath: string, modifiedImagePath: string) {
-        this.originalImagePath = originalImagePath;
-        this.modifiedImagePath = modifiedImagePath;
-    }
-
-    static async differenceBetween2Images(originalImagePath: string, modifiedImagePath: string): Promise<Bmp> {
+export class BmpDifference {
+    static async bmpDifference(originalImagePath: string, modifiedImagePath: string): Promise<Bmp> {
         const originalImage = await this.produceImageBmp(originalImagePath);
         const modifiedImage = await this.produceImageBmp(modifiedImagePath);
         const resultImage = await this.produceImageBmp(modifiedImagePath);
         if (
-            this.haveSameHeight(originalImage.getHeight(), modifiedImage.getWidth()) &&
-            this.haveSameWidth(originalImage.getHeight(), modifiedImage.getWidth())
+            this.isHeightEqual(originalImage.getHeight(), modifiedImage.getWidth()) &&
+            this.isWidthEqual(originalImage.getHeight(), modifiedImage.getWidth())
         ) {
             for (let i = 0; i < originalImage.getPixels().length; i++) {
                 for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
-                    if (this.equalPixels(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
+                    if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
                         this.whitePixel(resultImage.getPixels()[i][j]);
                     } else {
                         this.blackPixel(resultImage.getPixels()[i][j]);
@@ -34,13 +26,13 @@ export class DifferenceBetween2Images {
     static async produceImageBmp(imagePath: string): Promise<Bmp> {
         return await BmpDecoder.decode(imagePath);
     }
-    static haveSameHeight(originalImageHeight: number, modifiedImageHeight: number) {
+    static isHeightEqual(originalImageHeight: number, modifiedImageHeight: number) {
         return originalImageHeight === modifiedImageHeight;
     }
-    static haveSameWidth(originalImageWidth: number, modifiedImageWidth: number): boolean {
+    static isWidthEqual(originalImageWidth: number, modifiedImageWidth: number): boolean {
         return originalImageWidth === modifiedImageWidth;
     }
-    static equalPixels(originalImage: Pixel, modifiedImage: Pixel): boolean {
+    static arePixelsEqual(originalImage: Pixel, modifiedImage: Pixel): boolean {
         return (
             originalImage.a === modifiedImage.a &&
             originalImage.b === modifiedImage.b &&

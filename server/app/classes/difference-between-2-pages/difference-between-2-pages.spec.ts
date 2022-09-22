@@ -1,7 +1,7 @@
 import { Pixel } from '@app/interface/pixel';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { DifferenceBetween2Images } from './difference-between-2-pages';
+import { BmpDifference } from './difference-between-2-pages';
 
 describe(' DifferenceBetween2Images', () => {
     it('Should transform the second image to the result of the difference between the first and the second', async () => {
@@ -20,7 +20,7 @@ describe(' DifferenceBetween2Images', () => {
         const filepath1 = './assets/test-bmp/bmp_test_2x2.bmp';
         const filepath2 = './assets/test-bmp/bmp_test_2x2.bmp';
 
-        const bmpProduced = await DifferenceBetween2Images.differenceBetween2Images(filepath1, filepath2);
+        const bmpProduced = await BmpDifference.bmpDifference(filepath1, filepath2);
 
         expect(bmpProduced.getWidth()).to.equals(expectedWidth);
         expect(bmpProduced.getHeight()).to.equals(expectedHeight);
@@ -30,13 +30,13 @@ describe(' DifferenceBetween2Images', () => {
         const result = false;
         const originalImageHeight = 3;
         const modifiedImageHeight = 2;
-        expect(DifferenceBetween2Images.haveSameHeight(originalImageHeight, modifiedImageHeight)).to.equal(result);
+        expect(BmpDifference.isHeightEqual(originalImageHeight, modifiedImageHeight)).to.equal(result);
     });
     it('both images should have the same Width', async () => {
         const result = false;
         const originalImageWidth = 3;
         const modifiedImageWidth = 2;
-        expect(DifferenceBetween2Images.haveSameWidth(originalImageWidth, modifiedImageWidth)).to.equal(result);
+        expect(BmpDifference.isWidthEqual(originalImageWidth, modifiedImageWidth)).to.equal(result);
     });
     it('Should create a Bmp object using the image path', async () => {
         const expectedWidth = 3;
@@ -54,7 +54,7 @@ describe(' DifferenceBetween2Images', () => {
             ],
         ];
         const filepath = './assets/test-bmp/bmp_test_3x2.bmp';
-        const bmpProduced = await DifferenceBetween2Images.produceImageBmp(filepath);
+        const bmpProduced = await BmpDifference.produceImageBmp(filepath);
         expect(bmpProduced.getWidth()).to.equals(expectedWidth);
         expect(bmpProduced.getHeight()).to.equals(expectedHeight);
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
@@ -63,11 +63,11 @@ describe(' DifferenceBetween2Images', () => {
         const result = true;
         const originalPixel: Pixel = { a: 0, r: 255, g: 255, b: 255 };
         const modifiedPixel: Pixel = { a: 0, r: 255, g: 255, b: 255 };
-        expect(DifferenceBetween2Images.equalPixels(originalPixel, modifiedPixel)).to.equal(result);
+        expect(BmpDifference.arePixelsEqual(originalPixel, modifiedPixel)).to.equal(result);
     });
     it('transforming a random pixel into a white one', async () => {
         const result: Pixel = { a: 0, r: 255, g: 255, b: 255 };
         const originalPixel: Pixel = { a: 0, r: 128, g: 0, b: 128 };
-        expect(DifferenceBetween2Images.whitePixel(originalPixel)).to.eql(result);
+        expect(BmpDifference.whitePixel(originalPixel)).to.eql(result);
     });
 });

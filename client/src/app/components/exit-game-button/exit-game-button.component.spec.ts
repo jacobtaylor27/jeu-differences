@@ -1,23 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ExitGameButtonComponent } from './exit-game-button.component';
 
 describe('ExitGameButtonComponent', () => {
-  let component: ExitGameButtonComponent;
-  let fixture: ComponentFixture<ExitGameButtonComponent>;
+    let component: ExitGameButtonComponent;
+    let fixture: ComponentFixture<ExitGameButtonComponent>;
+    const model = { formTitle: 'form', errorMessages: ['test error'] };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ExitGameButtonComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [ExitGameButtonComponent],
+            imports: [MatDialogModule],
+            providers: [{ provide: MAT_DIALOG_DATA, useValue: model }],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(ExitGameButtonComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(ExitGameButtonComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

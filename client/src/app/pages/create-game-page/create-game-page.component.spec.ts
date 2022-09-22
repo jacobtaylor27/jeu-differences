@@ -1,8 +1,14 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
+import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
+import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 import { CreateGamePageComponent } from './create-game-page.component';
 
@@ -11,16 +17,25 @@ describe('CreateGamePageComponent', () => {
     let fixture: ComponentFixture<CreateGamePageComponent>;
     let dialogSpyObj: jasmine.SpyObj<MatDialog>;
     let httpSpyObj: jasmine.SpyObj<HttpClient>;
+    let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
         httpSpyObj = jasmine.createSpyObj('HttpClient', ['post']);
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
+            $uploadImageInSource: new Subject(),
+            $resetSource: new Subject(),
+            $pencil: new Subject(),
+            $uploadImageInDiff: new Subject(),
+            $resetDiff: new Subject(),
+        });
         await TestBed.configureTestingModule({
-            declarations: [CreateGamePageComponent],
-            imports: [HttpClientModule, MatDialogModule],
+            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent],
+            imports: [HttpClientModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: HttpClient, useValue: httpSpyObj },
+                { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
             ],
         }).compileComponents();
 
@@ -47,31 +62,12 @@ describe('CreateGamePageComponent', () => {
 
     it('should post the game settings when the form is valid', () => {
         const formSpyObj = jasmine.createSpyObj('FormGroup', ['get', 'valid']);
+        formSpyObj.get.and.callFake(() => new FormControl());
         const nbTimesFormGetCall = 4;
         component.form = formSpyObj;
         component.onSubmit();
         expect(httpSpyObj.post).toHaveBeenCalled();
         expect(formSpyObj.get).toHaveBeenCalledTimes(nbTimesFormGetCall);
-    });
-
-    it('should sizeImgValidator return null if the value of control is null', () => {
-        const mockControl = { value: null } as FormControl;
-        const mockSize = { x: 0, y: 0 };
-        expect(component.sizeImgValidator(mockSize.x, mockSize.y)(mockControl)).toEqual(null);
-    });
-
-    it('should sizeImgValidator return null if the size of the img is not the size of the canvas', () => {
-        const mockControl = { value: { height: 1, width: 1 } } as FormControl;
-        const mockSize = { x: 0, y: 0 };
-        expect(component.sizeImgValidator(mockSize.x, mockSize.y)(mockControl)).toEqual(null);
-    });
-
-    it('should sizeImgValidator return not null if the size of the image is the size of the canvas', () => {
-        const mockControl = { value: { height: 1, width: 1 } } as FormControl;
-        const mockSize = { x: 1, y: 1 };
-        const validator = component.sizeImgValidator(mockSize.x, mockSize.y)(mockControl);
-        expect(validator).not.toEqual(null);
-        expect(validator?.sizeImg.value).toEqual(mockControl.value);
     });
 
     it('should differenceValidator return null if the number of difference is not < 10 and > 2 ', () => {
@@ -95,5 +91,35 @@ describe('CreateGamePageComponent', () => {
     it('should calculateDifference return the number of difference between two images', () => {
         const expectedDifference = 5;
         expect(component.calculateDifference()).toEqual(expectedDifference);
+    });
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe(() => {
+            expect(spyDrawImage).toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
+    });
+
+    it('should subscribe to get the new image and draw it', async () => {
+        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component.sourceImg.nativeElement, 'getContext').and.callFake(() => null);
+        const spyDrawImage = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInSource.subscribe(() => {
+            expect(spyDrawImage).not.toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
+    });
+
+    it('should clear an image', () => {
+        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const clearImage = spyOn(ctx, 'clearRect');
+        toolBoxServiceSpyObj.$resetSource.subscribe(() => {
+            expect(clearImage).toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$resetSource.next();
     });
 });

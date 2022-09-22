@@ -1,7 +1,7 @@
 import { Pixel } from '@app/interface/pixel';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { BmpDifference } from './difference-between-2-pages';
+import { BmpDifference } from './bmp-difference';
 
 describe(' DifferenceBetween2Images', () => {
     it('Should transform the second image to the result of the difference between the first and the second', async () => {

@@ -1,23 +1,16 @@
 .game-cards-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 5vh;
-    max-height: 80vh;
+    margin-bottom: 2vh;
 }
 
-.game-card-container {
-    margin-right: 1vw;
-    margin-left: 1vw;
-    max-width: 23vw;
-}
-
-.carouesel-actions-container {
+.carousel-actions-container {
     display: flex;
     justify-content: center;
 }
 
-.carouesel-actions-container > button {
+.carousel-actions-container > button {
     margin-right: 1vw;
     margin-left: 1vw;
-    margin-bottom: 5vh;
-}
+    margin-bottom: 2vh;
+} 

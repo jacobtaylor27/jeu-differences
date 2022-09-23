@@ -20,8 +20,8 @@ describe('Score', () => {
         const time = 3;
         const name = 'Arthur';
         const playerScore = new PlayerScore(name, time, GameCategory.Solo);
-        expect(playerScore.getName()).toEqual(name);
-        expect(playerScore.getCategory()).toBe(GameCategory.Solo);
-        expect(playerScore.getTime()).toEqual(time);
+        expect(playerScore.playerName).toEqual(name);
+        expect(playerScore.category).toBe(GameCategory.Solo);
+        expect(playerScore.time).toEqual(time);
     });
 });

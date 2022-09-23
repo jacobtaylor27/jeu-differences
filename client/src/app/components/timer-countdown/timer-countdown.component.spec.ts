@@ -38,8 +38,27 @@ describe('TimerCountdownComponent', () => {
         const componentInstance = fixture.componentInstance;
         const stopTimerSpy = spyOn<any>(componentInstance, 'stopTimer');
         componentInstance.ngOnInit();
-        tick(10);
         componentInstance.ngOnDestroy();
+        expect(stopTimerSpy).toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
+
+    it('moreThanFiveSeconds should return true is value is more than 5 seconds', () => {
+        component['secondsLeft'] = 6;
+        expect(component.moreThanFiveSeconds()).toBeTrue();
+    });
+
+    it('moreThanFiveSeconds should return false is value is less than 5 seconds', () => {
+        component['secondsLeft'] = 2;
+        expect(component.moreThanFiveSeconds()).toBeFalse();
+    });
+
+    it('gameover should be called when the countdown is done', fakeAsync(() => {
+        const componentInstance = fixture.componentInstance;
+        componentInstance['timerAdmin'] = '18';
+        componentInstance['countdownTimer']();
+        const stopTimerSpy = spyOn<any>(componentInstance, 'gameOver');
+        tick(20000);
         expect(stopTimerSpy).toHaveBeenCalled();
         discardPeriodicTasks();
     }));

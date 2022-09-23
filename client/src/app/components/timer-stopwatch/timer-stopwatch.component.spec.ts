@@ -29,7 +29,7 @@ describe('TimerStopwatchComponent', () => {
 
     it('should increment every second', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        const calculateTimeSpy = spyOn<any>(componentInstance, 'calculateTime');
+        const calculateTimeSpy = spyOn<unknown>(componentInstance, 'calculateTime');
         componentInstance.ngOnInit();
         tick(0);
         expect(calculateTimeSpy).toHaveBeenCalledTimes(0);
@@ -42,7 +42,7 @@ describe('TimerStopwatchComponent', () => {
 
     it('should increment every second', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        const stopTimerSpy = spyOn<any>(componentInstance, 'stopTimer');
+        const stopTimerSpy = spyOn<unknown>(componentInstance, 'stopTimer');
         componentInstance.ngOnInit();
         tick(1000);
         component.ngOnDestroy();

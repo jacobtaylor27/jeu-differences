@@ -27,7 +27,7 @@ describe('TimerCountdownComponent', () => {
 
     it('init should start timer', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        const countdownTimerSpy = spyOn<any>(componentInstance, 'countdownTimer');
+        const countdownTimerSpy = spyOn<unknown>(componentInstance, 'countdownTimer');
         componentInstance.ngOnInit();
         tick(10);
         expect(countdownTimerSpy).toHaveBeenCalled();
@@ -36,7 +36,7 @@ describe('TimerCountdownComponent', () => {
 
     it('onDestroy should stopTimer', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        const stopTimerSpy = spyOn<any>(componentInstance, 'stopTimer');
+        const stopTimerSpy = spyOn<unknown>(componentInstance, 'stopTimer');
         componentInstance.ngOnInit();
         componentInstance.ngOnDestroy();
         expect(stopTimerSpy).toHaveBeenCalled();
@@ -57,7 +57,7 @@ describe('TimerCountdownComponent', () => {
         const componentInstance = fixture.componentInstance;
         componentInstance['timerAdmin'] = '18';
         componentInstance['countdownTimer']();
-        const stopTimerSpy = spyOn<any>(componentInstance, 'gameOver');
+        const stopTimerSpy = spyOn<unknown>(componentInstance, 'gameOver');
         tick(20000);
         expect(stopTimerSpy).toHaveBeenCalled();
         discardPeriodicTasks();

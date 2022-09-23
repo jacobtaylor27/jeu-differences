@@ -1,9 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCardService } from '@app/services/game-card.service';
-import { UserNameInputComponent } from '../user-name-input/user-name-input.component';
 
 @Component({
     selector: 'app-game-card',
@@ -11,11 +9,10 @@ import { UserNameInputComponent } from '../user-name-input/user-name-input.compo
     styleUrls: ['./game-card.component.scss'],
 })
 export class GameCardComponent {
-    constructor(private readonly matDialog: MatDialog, private readonly gameCardService: GameCardService) {}
-
     @Input() gameCard: GameCard;
-
     favoriteTheme: string = 'deeppurple-amber-theme';
+
+    constructor(private readonly gameCardService: GameCardService) {}
 
     formatScoreTime(scoreTime: number): string {
         return TimeFormatter.getMMSSFormat(scoreTime);
@@ -30,7 +27,7 @@ export class GameCardComponent {
     }
 
     onClickPlayGame(): void {
-        this.matDialog.open(UserNameInputComponent);
+        this.gameCardService.openNameDialog();
     }
 
     onClickCreateGame(): void {

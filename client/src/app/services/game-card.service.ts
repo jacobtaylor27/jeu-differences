@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCardHandlerService } from './game-card-handler.service';
 
@@ -6,7 +8,11 @@ import { GameCardHandlerService } from './game-card-handler.service';
     providedIn: 'root',
 })
 export class GameCardService {
-    constructor(private readonly gameCardHandlerService: GameCardHandlerService) {}
+    constructor(private readonly matDialog: MatDialog, private readonly gameCardHandlerService: GameCardHandlerService) {}
+
+    openNameDialog() {
+        this.matDialog.open(UserNameInputComponent);
+    }
 
     deleteGame(game: GameCard) {
         this.gameCardHandlerService.deleteGame(game);

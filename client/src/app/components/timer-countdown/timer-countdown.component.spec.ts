@@ -27,8 +27,7 @@ describe('TimerCountdownComponent', () => {
 
     it('init should start timer', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        /* eslint-disable @typescript-eslint/no-explicit-any  */
-        const countdownTimerSpy = spyOn<any>(componentInstance, 'countdownTimer');
+        const countdownTimerSpy = spyOn(Object.getPrototypeOf(componentInstance), 'countdownTimer');
         componentInstance.ngOnInit();
         /* eslint-disable @typescript-eslint/no-magic-numbers -- timer needs time to start */
         tick(10);
@@ -38,8 +37,7 @@ describe('TimerCountdownComponent', () => {
 
     it('onDestroy should stopTimer', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        /* eslint-disable @typescript-eslint/no-explicit-any  */
-        const stopTimerSpy = spyOn<any>(componentInstance, 'stopTimer');
+        const stopTimerSpy = spyOn(Object.getPrototypeOf(componentInstance), 'stopTimer');
         componentInstance.ngOnInit();
         componentInstance.ngOnDestroy();
         expect(stopTimerSpy).toHaveBeenCalled();
@@ -60,8 +58,7 @@ describe('TimerCountdownComponent', () => {
         const componentInstance = fixture.componentInstance;
         componentInstance['timerAdmin'] = '18';
         componentInstance['countdownTimer']();
-        /* eslint-disable @typescript-eslint/no-explicit-any  */
-        const stopTimerSpy = spyOn<any>(componentInstance, 'gameOver');
+        const stopTimerSpy = spyOn(Object.getPrototypeOf(componentInstance), 'gameOver');
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 20 seconds */
         tick(20000);
         expect(stopTimerSpy).toHaveBeenCalled();

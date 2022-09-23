@@ -1,16 +1,17 @@
-<section [ngClass]="favoriteTheme">
+<section class="carousel" [ngClass]="favoriteTheme">
     <div class="game-cards-container">
         <div class="game-card-container" *ngFor="let gameCard of gameCards">
             <app-game-card
-            [gameCard]="gameCard"></app-game-card>
+            [gameCard]="gameCard"
+            *ngIf="gameCard.isShown"></app-game-card>
         </div>
     </div>
 
-    <div class="carouesel-actions-container" *ngIf="gameCards.length > 0">
-        <button mat-icon-button color="primary">
+    <div class="carousel-actions-container" *ngIf="gameCards.length > 0">
+        <button mat-fab color="primary" [disabled]="!hasCardsBefore()" (click)="onClickPrevious()">
             <mat-icon><b>chevron_left</b></mat-icon>
         </button>
-        <button mat-icon-button color="primary">
+        <button mat-fab color="primary" [disabled]="!hasCardsAfter()" (click)="onClickNext()">
             <mat-icon><b>chevron_right</b></mat-icon>
         </button>
     </div>

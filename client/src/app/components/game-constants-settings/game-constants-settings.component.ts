@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HINT_PENALTY_TIME, SUCCESSFUL_ANSWER_TIME_BONUS, TIMER_TIME } from '@app/constants/game-constants';
-import { AdminService } from '@app/services/admin.service';
+// import { HINT_PENALTY_TIME, SUCCESSFUL_ANSWER_TIME_BONUS, TIMER_TIME } from '@app/constants/game-constants';
+// import { AdminService } from '@app/services/admin.service';
 
 @Component({
     selector: 'app-game-constants-settings',
@@ -13,17 +13,17 @@ export class GameConstantsSettingsComponent {
     successfulGuessBonusTime: number;
     timerTime: number;
 
-    constructor(private readonly adminService: AdminService) {}
+    // constructor(private readonly adminService: AdminService) {}
 
-    resetGameConstants(): void {
-        this.hintPenaltyTime = this.adminService.gameConstants.hintPenaltyTime;
-        this.successfulGuessBonusTime = this.adminService.gameConstants.successfulAttemptTime;
-        this.timerTime = this.adminService.gameConstants.defaultTime;
-    }
+    // resetGameConstants(): void {
+    //     this.hintPenaltyTime = this.adminService.gameConstants.hintPenaltyTime;
+    //     this.successfulGuessBonusTime = this.adminService.gameConstants.successfulAttemptTime;
+    //     this.timerTime = this.adminService.gameConstants.defaultTime;
+    // }
 
-    onClickRestoreDefaults(): void {
-        this.hintPenaltyTime = HINT_PENALTY_TIME;
-        this.successfulGuessBonusTime = SUCCESSFUL_ANSWER_TIME_BONUS;
-        this.timerTime = TIMER_TIME;
-    }
+    // onClickRestoreDefaults(): void {
+    //     this.hintPenaltyTime = HINT_PENALTY_TIME;
+    //     this.successfulGuessBonusTime = SUCCESSFUL_ANSWER_TIME_BONUS;
+    //     this.timerTime = TIMER_TIME;
+    // }
 }

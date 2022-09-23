@@ -10,7 +10,7 @@ import { TimerService } from '../../services/timer.service';
 })
 export class TimerCountdownComponent implements OnInit, OnDestroy {
     @Input() timerAdmin: string;
-    @Input() clueAskedCounter: number;
+    @Input() clueAskedCounter: number = 0;
 
     // TODO : link timePenalty with input form admin
     // @Input() timerPenalty: number;
@@ -43,7 +43,6 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
 
     private countdownTimer() {
         const $time = timer(10, 1000);
-
         this.sub = $time.subscribe((seconds) => {
             this.setTimerService();
             this.timerDisplay = this.timerService.displayTime(seconds);

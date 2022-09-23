@@ -16,6 +16,7 @@ describe('TimerStopwatchComponent', () => {
     });
 
     it('should create', () => {
+        component.ngOnInit();
         expect(component).toBeTruthy();
     });
 

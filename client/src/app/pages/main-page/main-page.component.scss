@@ -4,21 +4,18 @@
     margin-top: 1em;
     text-align: right;
 }
-
 .grid-container {
     display: grid;
     grid-template-columns: auto auto;
     padding: 1em;
-    text-align: right;
 }
 .game-logo {
-  width: 50px;
-  font-size: 50px;
-  height: 50px;
+    width: 50px;
+    font-size: 50px;
+    height: 50px;
 }
 .grid-item {
     text-align: center;
-    padding: 2rem;
     font-size: 3rem;
 }
 ul {
@@ -42,9 +39,9 @@ button {
     font-size: 1, 5rem;
     width: 15em;
 }
-img {
-    height: 80%;
-    width: 70%;
+.grid-item > img {
+    max-height: 90vh;
+    max-width: 40vw;
 }
 .team-number {
     font-weight: 400;

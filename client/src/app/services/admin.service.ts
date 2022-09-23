@@ -1,19 +1,30 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { GameConstantsSettingsComponent } from '@app/components/game-constants-settings/game-constants-settings.component';
+import { GameCard } from '@app/interfaces/game-card';
 import { GameConstants } from '@app/interfaces/game-constants';
+import { GameCardHandlerService } from './game-card-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  constructor(private readonly matDialog: MatDialog) { }
+  private gameCards: GameCard[] = [];
+  private gameConstants: GameConstants;
 
-  gameConstants: GameConstants;
-
-  openGameSettingsDialog(): void {
-    this.matDialog.open(GameConstantsSettingsComponent);
+  constructor(private readonly gameCardHandlerService: GameCardHandlerService) {
+    this.gameCards = this.gameCardHandlerService.GameCards;
   }
 
-  deleteAllGames(): void {}
+  get GameConstants(): GameConstants {
+    return this.gameConstants;
+  }
+
+  get GameCards(): GameCard[] {
+    return this.gameCards;
+  }
+
+  deleteAllGames(): void {
+    this.gameCardHandlerService.deleteGames();
+  }
+
+  resetAllHighScores(): void {}
 }

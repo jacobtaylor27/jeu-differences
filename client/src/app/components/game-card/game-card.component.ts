@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCardService } from '@app/services/game-card.service';
+import { UserNameInputComponent } from '../user-name-input/user-name-input.component';
 
 @Component({
   selector: 'app-game-card',
@@ -9,7 +11,7 @@ import { GameCardService } from '@app/services/game-card.service';
   styleUrls: ['./game-card.component.scss']
 })
 export class GameCardComponent {
-  constructor(private readonly gameCardService: GameCardService) { }
+  constructor(private readonly matDialog: MatDialog, private readonly gameCardService: GameCardService) { }
 
   @Input() gameCard: GameCard;
 
@@ -20,15 +22,15 @@ export class GameCardComponent {
   }
 
   hasMultiplayerScores(): boolean {
-    return this.gameCard.scoresMultiplayer.length > 0;
+    return this.gameCard.gameInformation.scoresMultiplayer.length > 0;
   }
 
   hasSinglePlayerScores(): boolean {
-    return this.gameCard.scoresSolo.length > 0;
+    return this.gameCard.gameInformation.scoresSolo.length > 0;
   }
 
   onClickPlayGame(): void {
-    this.gameCardService.openUseNameInputDialog();
+    this.matDialog.open(UserNameInputComponent);
   }
 
   onClickCreateGame(): void {
@@ -36,10 +38,12 @@ export class GameCardComponent {
   }
 
   onClickDeleteGame(game: GameCard): void {
+    this.gameCardService.deleteGame(game);
     // delete game
   }
 
-  onClickResetHighScores(): void {
+  onClickResetHighScores(game: GameCard): void {
     // reset highscores
+    this.gameCardService.resetHighScores(game);
   }
 }

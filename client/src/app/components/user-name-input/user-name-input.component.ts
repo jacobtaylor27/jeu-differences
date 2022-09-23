@@ -6,9 +6,6 @@ import { Component, Output } from '@angular/core';
     styleUrls: ['./user-name-input.component.scss'],
 })
 export class UserNameInputComponent {
-    constructor() {}
-
-    favoriteTheme: string = 'deeppurple-amber-theme';
-
     @Output() name: string;
+    favoriteTheme: string = 'deeppurple-amber-theme';
 }

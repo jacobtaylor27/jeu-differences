@@ -8,8 +8,8 @@ import { GameCarouselService } from '@app/services/game-carousel.service';
     styleUrls: ['./game-carousel.component.scss'],
 })
 export class GameCarouselComponent implements OnInit {
-    favoriteTheme: string = 'deeppurple-amber-theme';
     @Input() gameCards: GameCard[] = [];
+    favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(private readonly gameCarouselService: GameCarouselService) {}
 

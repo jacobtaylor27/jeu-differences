@@ -8,85 +8,85 @@ import { CardRange } from '@app/interfaces/range';
     providedIn: 'root',
 })
 export class GameCardHandlerService {
-    private activeCardsRange: CardRange = { start: 0, end: 3 };
-    private gameCards: GameCard[] = [];
+    private ActiveCardsRange: CardRange = { start: 0, end: 3 };
+    private GameCards: GameCard[] = [];
 
     constructor() {
         this.fetchGameCards();
-        this.setActiveCards(this.activeCardsRange);
+        this.setActiveCards(this.ActiveCardsRange);
     }
 
-    get ActiveCardsRange(): { start: number; end: number } {
-        return this.activeCardsRange;
+    get activeCardsRange(): { start: number; end: number } {
+        return this.ActiveCardsRange;
     }
 
-    get GameCards(): GameCard[] {
-        return this.gameCards;
+    get gameCards(): GameCard[] {
+        return this.GameCards;
     }
 
     fetchGameCards(): void {
         // generate fake cards until we have a proper database access
-        this.gameCards = this.generateFakeCards();
+        this.GameCards = this.generateFakeCards();
     }
 
     hideAllCards(): void {
-        for (const gameCard of this.gameCards) {
+        for (const gameCard of this.GameCards) {
             gameCard.isShown = false;
         }
     }
 
     increaseActiveRange(): void {
-        this.activeCardsRange.start += 4;
-        this.activeCardsRange.end += 4;
+        this.ActiveCardsRange.start += 4;
+        this.ActiveCardsRange.end += 4;
     }
 
     decreaseActiveRange(): void {
-        this.activeCardsRange.start -= 4;
-        this.activeCardsRange.end -= 4;
+        this.ActiveCardsRange.start -= 4;
+        this.ActiveCardsRange.end -= 4;
     }
 
     getActiveCards(): GameCard[] {
-        return this.gameCards.filter((gameCard) => gameCard.isShown === true);
+        return this.GameCards.filter((gameCard) => gameCard.isShown === true);
     }
 
     setActiveCards(range: CardRange): void {
         this.hideAllCards();
 
-        if (this.gameCards.length <= range.end) {
-            range.end = this.gameCards.length - 1;
+        if (this.GameCards.length <= range.end) {
+            range.end = this.GameCards.length - 1;
         }
 
         for (let i = range.start; i <= range.end; i++) {
-            this.gameCards[i].isShown = true;
+            this.GameCards[i].isShown = true;
         }
     }
 
     resetActiveRange(): void {
-        this.activeCardsRange.start = 0;
-        this.activeCardsRange.end = 3;
-        this.setActiveCards(this.activeCardsRange);
+        this.ActiveCardsRange.start = 0;
+        this.ActiveCardsRange.end = 3;
+        this.setActiveCards(this.ActiveCardsRange);
     }
 
     deleteGames(): void {
-        for (const card of this.gameCards) {
+        for (const card of this.GameCards) {
             this.deleteGame(card);
         }
     }
 
     deleteGame(game: GameCard): void {
-        const index = this.gameCards.indexOf(game);
-        this.gameCards.splice(index, 1);
+        const index = this.GameCards.indexOf(game);
+        this.GameCards.splice(index, 1);
         this.resetActiveRange();
     }
 
     resetHighScores(game: GameCard) {
-        const index = this.gameCards.indexOf(game);
-        this.gameCards[index].gameInformation.scoresMultiplayer = [];
-        this.gameCards[index].gameInformation.scoresSolo = [];
+        const index = this.GameCards.indexOf(game);
+        this.GameCards[index].gameInformation.scoresMultiplayer = [];
+        this.GameCards[index].gameInformation.scoresSolo = [];
     }
 
     resetAllHighScores(): void {
-        for (const card of this.gameCards) {
+        for (const card of this.GameCards) {
             this.resetHighScores(card);
         }
     }

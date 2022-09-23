@@ -9,7 +9,7 @@ export class GameCarouselService {
     constructor(private readonly gameCardHandlerService: GameCardHandlerService) {}
 
     getCards(): GameCard[] {
-        return this.gameCardHandlerService.GameCards;
+        return this.gameCardHandlerService.gameCards;
     }
 
     resetRange(): void {
@@ -17,26 +17,26 @@ export class GameCarouselService {
     }
 
     setCardMode(makeAdmin: boolean = false): void {
-        this.gameCardHandlerService.GameCards.forEach((gameCard) => {
+        this.gameCardHandlerService.gameCards.forEach((gameCard) => {
             gameCard.isAdminCard = makeAdmin;
         });
     }
 
     hasPreviousCards(): boolean {
-        return this.gameCardHandlerService.ActiveCardsRange.start > 0;
+        return this.gameCardHandlerService.activeCardsRange.start > 0;
     }
 
     hasNextCards(): boolean {
-        return this.gameCardHandlerService.ActiveCardsRange.end < this.gameCardHandlerService.GameCards.length - 1;
+        return this.gameCardHandlerService.activeCardsRange.end < this.gameCardHandlerService.gameCards.length - 1;
     }
 
     showPreviousFour(): void {
         this.gameCardHandlerService.decreaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.ActiveCardsRange);
+        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.activeCardsRange);
     }
 
     showNextFour(): void {
         this.gameCardHandlerService.increaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.ActiveCardsRange);
+        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.activeCardsRange);
     }
 }

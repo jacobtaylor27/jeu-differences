@@ -6,13 +6,13 @@ import { GameCardHandlerService } from './game-card-handler.service';
     providedIn: 'root',
 })
 export class GameSelectionService {
-    gameCards: GameCard[] = [];
+    private GameCards: GameCard[] = [];
 
     constructor(private readonly gameCardHandlerService: GameCardHandlerService) {
-        this.gameCards = this.gameCardHandlerService.GameCards;
+        this.GameCards = this.gameCardHandlerService.gameCards;
     }
 
-    playGame(): void {}
-    createGame(): void {}
-    // joinGame(): void {}
+    get gameCards(): GameCard[] {
+        return this.GameCards;
+    }
 }

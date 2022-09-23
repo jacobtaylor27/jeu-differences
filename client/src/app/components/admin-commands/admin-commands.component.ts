@@ -13,7 +13,7 @@ export class AdminCommandsComponent {
     constructor(private readonly adminService: AdminService) {}
 
     getGameCards(): GameCard[] {
-        return this.adminService.GameCards;
+        return this.adminService.gameCards;
     }
 
     onClickModifySettings(): void {

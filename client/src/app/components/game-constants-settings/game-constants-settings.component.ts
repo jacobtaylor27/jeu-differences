@@ -8,17 +8,17 @@ import { AdminService } from '@app/services/admin.service';
     styleUrls: ['./game-constants-settings.component.scss'],
 })
 export class GameConstantsSettingsComponent {
-    constructor(private readonly adminService: AdminService) {}
-
     favoriteTheme: string = 'deeppurple-amber-theme';
     hintPenaltyTime: number;
     successfulGuessBonusTime: number;
     timerTime: number;
 
+    constructor(private readonly adminService: AdminService) {}
+
     resetGameConstants(): void {
-        this.hintPenaltyTime = this.adminService.GameConstants.hintPenaltyTime;
-        this.successfulGuessBonusTime = this.adminService.GameConstants.successfulAttemptTime;
-        this.timerTime = this.adminService.GameConstants.defaultTime;
+        this.hintPenaltyTime = this.adminService.gameConstants.hintPenaltyTime;
+        this.successfulGuessBonusTime = this.adminService.gameConstants.successfulAttemptTime;
+        this.timerTime = this.adminService.gameConstants.defaultTime;
     }
 
     onClickRestoreDefaults(): void {

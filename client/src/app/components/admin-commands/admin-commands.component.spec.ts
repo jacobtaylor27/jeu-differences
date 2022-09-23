@@ -3,21 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminCommandsComponent } from './admin-commands.component';
 
 describe('AdminCommandsComponent', () => {
-  let component: AdminCommandsComponent;
-  let fixture: ComponentFixture<AdminCommandsComponent>;
+    let component: AdminCommandsComponent;
+    let fixture: ComponentFixture<AdminCommandsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ AdminCommandsComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [AdminCommandsComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(AdminCommandsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(AdminCommandsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

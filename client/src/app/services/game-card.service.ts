@@ -3,16 +3,16 @@ import { GameCard } from '@app/interfaces/game-card';
 import { GameCardHandlerService } from './game-card-handler.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class GameCardService {
-  constructor(private readonly gameCardHandlerService: GameCardHandlerService) { }
+    constructor(private readonly gameCardHandlerService: GameCardHandlerService) {}
 
-  deleteGame(game: GameCard) {
-    this.gameCardHandlerService.deleteGame(game);
-  }
+    deleteGame(game: GameCard) {
+        this.gameCardHandlerService.deleteGame(game);
+    }
 
-  resetHighScores(game: GameCard) {
-    this.gameCardHandlerService.resetHighScores(game);
-  }
+    resetHighScores(game: GameCard) {
+        this.gameCardHandlerService.resetHighScores(game);
+    }
 }

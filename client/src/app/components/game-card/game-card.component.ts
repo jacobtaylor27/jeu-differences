@@ -6,44 +6,44 @@ import { GameCardService } from '@app/services/game-card.service';
 import { UserNameInputComponent } from '../user-name-input/user-name-input.component';
 
 @Component({
-  selector: 'app-game-card',
-  templateUrl: './game-card.component.html',
-  styleUrls: ['./game-card.component.scss']
+    selector: 'app-game-card',
+    templateUrl: './game-card.component.html',
+    styleUrls: ['./game-card.component.scss'],
 })
 export class GameCardComponent {
-  constructor(private readonly matDialog: MatDialog, private readonly gameCardService: GameCardService) { }
+    constructor(private readonly matDialog: MatDialog, private readonly gameCardService: GameCardService) {}
 
-  @Input() gameCard: GameCard;
+    @Input() gameCard: GameCard;
 
-  favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = 'deeppurple-amber-theme';
 
-  formatScoreTime(scoreTime: number): string {
-    return TimeFormatter.getMMSSFormat(scoreTime);
-  }
+    formatScoreTime(scoreTime: number): string {
+        return TimeFormatter.getMMSSFormat(scoreTime);
+    }
 
-  hasMultiplayerScores(): boolean {
-    return this.gameCard.gameInformation.scoresMultiplayer.length > 0;
-  }
+    hasMultiplayerScores(): boolean {
+        return this.gameCard.gameInformation.scoresMultiplayer.length > 0;
+    }
 
-  hasSinglePlayerScores(): boolean {
-    return this.gameCard.gameInformation.scoresSolo.length > 0;
-  }
+    hasSinglePlayerScores(): boolean {
+        return this.gameCard.gameInformation.scoresSolo.length > 0;
+    }
 
-  onClickPlayGame(): void {
-    this.matDialog.open(UserNameInputComponent);
-  }
+    onClickPlayGame(): void {
+        this.matDialog.open(UserNameInputComponent);
+    }
 
-  onClickCreateGame(): void {
-    // create new game lobby
-  }
+    onClickCreateGame(): void {
+        // create new game lobby
+    }
 
-  onClickDeleteGame(game: GameCard): void {
-    this.gameCardService.deleteGame(game);
-    // delete game
-  }
+    onClickDeleteGame(game: GameCard): void {
+        this.gameCardService.deleteGame(game);
+        // delete game
+    }
 
-  onClickResetHighScores(game: GameCard): void {
-    // reset highscores
-    this.gameCardService.resetHighScores(game);
-  }
+    onClickResetHighScores(game: GameCard): void {
+        // reset highscores
+        this.gameCardService.resetHighScores(game);
+    }
 }

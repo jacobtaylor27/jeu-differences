@@ -1,4 +1,4 @@
-import { PlayerScore } from "@app/classes/player-score";
+import { PlayerScore } from '@app/classes/player-score';
 
 export interface GameInformation {
     imgName: string;

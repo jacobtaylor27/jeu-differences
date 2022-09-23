@@ -11,13 +11,13 @@ export class PlayerScore {
         this.category = category;
     }
 
-    getName(): string {
+    get Name(): string {
         return this.playersName;
     }
-    getTime(): number {
+    get Time(): number {
         return this.time;
     }
-    getCategory(): GameCategory {
+    get Category(): GameCategory {
         return this.category;
     }
 }

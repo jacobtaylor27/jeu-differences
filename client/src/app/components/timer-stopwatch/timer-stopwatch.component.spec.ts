@@ -1,4 +1,6 @@
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { CluesAreaComponent } from '../clues-area/clues-area.component';
 import { TimerStopwatchComponent } from './timer-stopwatch.component';
 
 describe('TimerStopwatchComponent', () => {
@@ -7,7 +9,8 @@ describe('TimerStopwatchComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TimerStopwatchComponent],
+            declarations: [CluesAreaComponent],
+            imports: [AppMaterialModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TimerStopwatchComponent);

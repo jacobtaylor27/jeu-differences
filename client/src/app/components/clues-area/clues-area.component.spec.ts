@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { TimerCountdownComponent } from '../timer-countdown/timer-countdown.component';
 
 import { CluesAreaComponent } from './clues-area.component';
 
@@ -8,7 +10,8 @@ describe('CluesAreaComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CluesAreaComponent],
+            declarations: [CluesAreaComponent, TimerCountdownComponent],
+            imports: [AppMaterialModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CluesAreaComponent);

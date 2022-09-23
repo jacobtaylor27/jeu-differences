@@ -2,7 +2,7 @@ import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { Pixel } from '@app/interface/pixel';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { BmpEncoder } from '../bmp-encoder/bmp-encoder';
+import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
 import { BmpDifference } from './bmp-difference';
 describe(' DifferenceBetween2Images', () => {
     it('Should produce a white bmp if two images are similar', async () => {

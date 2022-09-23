@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 export class TimerService {
     private timer: number;
     private isCountdown: boolean = false;
-    private secondsDisplay: number;
-    private minutesDisplay: number;
+    private secondsDisplay: string;
+    private minutesDisplay: string;
 
     constructor() {}
 
@@ -21,17 +21,17 @@ export class TimerService {
 
     private calculateSeconds(totalSeconds: number) {
         if (this.isCountdown) {
-            this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60);
+            this.secondsDisplay = this.pad((this.timer - totalSeconds) % 60).toString();
         } else {
-            this.secondsDisplay = this.pad(totalSeconds % 60);
+            this.secondsDisplay = this.pad(totalSeconds % 60).toString();
         }
     }
 
     private calculateMinutes(totalSeconds: number) {
         if (this.isCountdown) {
-            this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60);
+            this.minutesDisplay = this.pad(Math.floor((this.timer - totalSeconds) / 60) % 60).toString();
         } else {
-            this.minutesDisplay = this.pad(Math.floor(totalSeconds / 60) % 60);
+            this.minutesDisplay = this.pad(Math.floor(totalSeconds / 60) % 60).toString();
         }
     }
 
@@ -43,13 +43,13 @@ export class TimerService {
         this.calculateSeconds(totalSeconds);
         this.calculateMinutes(totalSeconds);
         return (
-            (this.minutesDisplay && this.minutesDisplay <= 59 ? this.minutesDisplay : '00') +
+            (this.minutesDisplay && Number(this.minutesDisplay) <= 59 ? this.minutesDisplay : '00') +
             ' : ' +
-            (this.secondsDisplay && this.secondsDisplay <= 59 ? this.secondsDisplay : '00')
+            (this.secondsDisplay && Number(this.secondsDisplay) <= 59 ? this.secondsDisplay : '00')
         );
     }
 
-    private pad(digit: any) {
+    private pad(digit: number) {
         return digit <= 9 ? '0' + digit : digit;
     }
 }

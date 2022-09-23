@@ -31,7 +31,7 @@ describe('Countdown timer Service', () => {
     it('checkBoundaryTime should set seconds and minutes correctly', () => {
         const countdownTimerServiceTest = new CountdownTimerService(61, 1);
         countdownTimerServiceTest['checkBoundaryTime']();
-        expect(countdownTimerService['valueTimer']).to.equal(120);
-        expect(countdownTimerService['seconds']).to.equal(0);
+        expect(countdownTimerServiceTest['valueTimer']).to.equal(120);
+        expect(countdownTimerServiceTest['seconds']).to.equal(0);
     });
 });

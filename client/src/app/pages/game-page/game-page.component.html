@@ -1,6 +1,21 @@
-<div class="container">
-    <app-sidebar></app-sidebar>
-    <section class="play-area-container">
-        <app-play-area class="play-area" tabindex="0"></app-play-area>
-    </section>
-</div>
+<main [ngClass]="favoriteTheme" class="mat-app-background">
+    <mat-toolbar color="primary">
+        <span>MODE CLASSIQUE SOLO</span>
+        <span class="filler"></span>
+        <app-exit-game-button></app-exit-game-button>
+    </mat-toolbar>
+
+    <div class="game-section">
+        <app-sidebar [timer]="message.getValue()"> </app-sidebar>
+
+        <section class="container">
+            <section class="play-area-container">
+                <app-play-area class="play-area" tabindex="0"></app-play-area>
+            </section>
+            <section class="play-area-container">
+                <app-play-area class="play-area" tabindex="0"></app-play-area>
+            </section>
+            <!-- <img class="image" src="https://picsum.photos/500" alt="" width="500" height="500" /> -->
+        </section>
+    </div>
+</main>

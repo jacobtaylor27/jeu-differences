@@ -1,44 +1,52 @@
-.container {
-    min-height: 100vh;
-    height: auto;
+.game-title {
+    font-size: 40px;
+    margin-bottom: 8rem;
+    margin-top: 1em;
+    text-align: right;
 }
-
-.justified {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 1em;
 }
-
-.button {
-    margin-top: 10px;
+.game-logo {
+    width: 100px;
+    font-size: 100px;
+    height: 100px;
+}
+.grid-item {
     text-align: center;
+    font-size: 3rem;
 }
-
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
+ul {
+    list-style-type: none;
 }
-
-.game-section-item {
-    justify-content: center;
+span {
+    font-size: large;
+    text-align: right;
+}
+p {
+    text-align: right;
+}
+button {
+    margin-top: 2vh;
+    border: none;
+    color: white;
+    padding: 12px 32px;
     text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1, 5rem;
+    width: 15em;
 }
-
-.footer-item {
-    text-align: center;
+.grid-item > img {
+    max-height: 90vh;
+    max-width: 50vw;
 }
-
-.footer-item p :nth-child(even) {
-    color: orange;
+.team-number {
+    font-weight: 500;
+    text-align: right;
 }
-.footer-item p :nth-child(odd) {
-    color: blue;
-}
-
-.server-message {
-    justify-content: center;
-    width: 20%;
-    min-width: min-content;
+li {
+    text-align: right;
 }

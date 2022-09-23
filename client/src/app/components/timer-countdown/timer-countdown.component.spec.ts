@@ -31,5 +31,6 @@ describe('TimerCountdownComponent', () => {
         componentInstance.ngOnInit();
         tick(10);
         expect(countdownTimerSpy).toHaveBeenCalled();
+        discardPeriodicTasks();
     }));
 });

@@ -58,7 +58,7 @@ export class BmpDifference {
         return resultCoordinates;
     }
 
-    static pixelEnlargement(originalImage: Bmp, radius: number): Bmp {
+    static enlargePixelArea(originalImage: Bmp, radius: number): Bmp {
         const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         originalImage.getPixels().forEach((lineOfPixel, i) => {
             lineOfPixel.forEach((pixel, j) => {

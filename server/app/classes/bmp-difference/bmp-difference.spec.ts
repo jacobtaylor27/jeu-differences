@@ -1,7 +1,8 @@
+import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { Pixel } from '@app/interface/pixel';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
+import { BmpEncoder } from '../bmp-encoder/bmp-encoder';
 import { BmpDifference } from './bmp-difference';
 describe(' DifferenceBetween2Images', () => {
     it('Should produce a white bmp if two images are similar', async () => {
@@ -79,5 +80,19 @@ describe(' DifferenceBetween2Images', () => {
         const difference = await BmpDifference.getDifference(filePathOriginalBmp, filePathModifiedBmp);
         const expectedDifference = await BmpDecoder.decode(filePathExpectedBmp);
         expect(difference).to.be.eql(expectedDifference);
+    });
+    it('Should produce an enlargement of 3px  ', async () => {
+        const filePathBmp = './assets/test-bmp/test-expected-difference-0px.bmp';
+        const originalImage = await BmpDecoder.decode(filePathBmp);
+        const radius = 6;
+        const bmpResult = BmpDifference.enlargePixelArea(originalImage, radius);
+        BmpEncoder.encode('./assets/test-bmp/test-expected-difference-3px.bmp', bmpResult);
+    });
+    it('Should produce an enlargement of 6px  ', async () => {
+        const filePathBmp = './assets/test-bmp/test-expected-difference-0px.bmp';
+        const originalImage = await BmpDecoder.decode(filePathBmp);
+        const radius = 6;
+        const bmpResult = BmpDifference.enlargePixelArea(originalImage, radius);
+        BmpEncoder.encode('./assets/test-bmp/test-expected-difference-6px.bmp', bmpResult);
     });
 });

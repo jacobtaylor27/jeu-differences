@@ -1,27 +1,23 @@
 <div class="grid-container">
-<div class="grid-item"  [ngClass]="favoriteTheme">   
-<h1 class="game-title">{{title}}</h1>
-<ul>
-    <li>
-        <button mat-flat-button color="primary" routerLink="/select">Classique</button>
-    </li>
-    <li>
-        <button mat-flat-button color="primary" routerLink="/select">Temps limité</button>  
-    </li>
-    <li>
-        <button mat-flat-button color="primary" routerLink="/admin">Administration</button>
-    </li>
-</ul>
-<h2 class="team-number"> Equipe 106 : </h2>
-<p>
-    <span>Jacob Taylor,</span> <span>Karim El Hosni,</span> <span>Thierry Beaulieu,</span>
-</p>
-<p>
-    <span>Laurie Bédard-Côté,</span> <span>Xavier Jouslin.</span>
-</div>
+    <div class="grid-item" [ngClass]="favoriteTheme">
+        <h1 class="game-title">{{ title }}</h1>
+        <ul>
+            <li>
+                <button mat-flat-button color="primary" routerLink="/select">Classique</button>
+            </li>
+            <li>
+                <button mat-flat-button color="primary" routerLink="/select">Temps limité</button>
+            </li>
+            <li>
+                <button mat-flat-button color="primary" routerLink="/admin">Administration</button>
+            </li>
+        </ul>
+        <h2 class="team-number">Equipe 106 :</h2>
+        <p><span>Jacob Taylor,</span> <span>Karim El Hosni,</span> <span>Thierry Beaulieu,</span></p>
+        <p><span>Laurie Bédard-Côté,</span> <span>Xavier Jouslin.</span></p>
+    </div>
 
-
-<div class = "grid-item">
-<img src="../../../assets/img/mer.jpg" alt="photo pour jeu de différences">
-</div>
+    <div class="grid-item">
+        <img src="../../../assets/img/mer.jpg" alt="photo pour jeu de différences" />
+    </div>
 </div>

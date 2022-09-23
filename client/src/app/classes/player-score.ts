@@ -1,23 +1,23 @@
 import { GameCategory } from '@app/enums/game-category';
 
 export class PlayerScore {
-    private time: number;
-    private playersName: string;
-    private category: GameCategory;
+    private _time: number;
+    private _playerName: string;
+    private _category: GameCategory;
 
     constructor(playersName: string, time: number, category: GameCategory) {
-        this.playersName = playersName;
-        this.time = time;
-        this.category = category;
+        this._playerName = playersName;
+        this._time = time;
+        this._category = category;
     }
 
-    get Name(): string {
-        return this.playersName;
+    get name(): string {
+        return this._playerName;
     }
-    get Time(): number {
-        return this.time;
+    get time(): number {
+        return this._time;
     }
-    get Category(): GameCategory {
-        return this.category;
+    get category(): GameCategory {
+        return this._category;
     }
 }

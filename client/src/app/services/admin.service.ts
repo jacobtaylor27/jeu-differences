@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GameConstantsSettingsComponent } from '@app/components/game-constants-settings/game-constants-settings.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameConstants } from '@app/interfaces/game-constants';
 import { GameCardHandlerService } from './game-card-handler.service';
@@ -10,7 +12,7 @@ export class AdminService {
     private gameCards: GameCard[] = [];
     private gameConstants: GameConstants;
 
-    constructor(private readonly gameCardHandlerService: GameCardHandlerService) {
+    constructor(private readonly gameCardHandlerService: GameCardHandlerService, private readonly matDialog: MatDialog) {
         this.gameCards = this.gameCardHandlerService.GameCards;
     }
 
@@ -24,6 +26,10 @@ export class AdminService {
 
     deleteAllGames(): void {
         this.gameCardHandlerService.deleteGames();
+    }
+
+    openSettings(): void {
+        this.matDialog.open(GameConstantsSettingsComponent);
     }
 
     resetAllHighScores(): void {

@@ -23,6 +23,19 @@ describe('TimerStopwatchComponent', () => {
         component.ngOnInit();
         tick(1);
         expect(component.timerDisplay).toEqual('00 : 00');
+        discardPeriodicTasks();
     }));
 
+    it('should increment every second', fakeAsync(() => {
+        const componentInstance = fixture.componentInstance;
+        const calculateTimeSpy = spyOn<any>(componentInstance, 'calculateTime');
+        componentInstance.ngOnInit();
+        tick(0);
+        expect(calculateTimeSpy).toHaveBeenCalledTimes(0);
+        tick(1000);
+        expect(calculateTimeSpy).toHaveBeenCalledTimes(1);
+        tick(1000);
+        expect(calculateTimeSpy).toHaveBeenCalledTimes(2);
+        discardPeriodicTasks();
+    }));
 });

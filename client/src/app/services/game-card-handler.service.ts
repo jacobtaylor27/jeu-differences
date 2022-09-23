@@ -2,18 +2,22 @@ import { Injectable } from '@angular/core';
 import { PlayerScore } from '@app/classes/player-score';
 import { GameCategory } from '@app/enums/game-category';
 import { GameCard } from '@app/interfaces/game-card';
+import { CardRange } from '@app/interfaces/range';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameCardHandlerService {
-  gamesInformation: any[] = [];
-  activeCardsRange = { start: 0, end: 3 };
+  private activeCardsRange: CardRange = { start: 0, end: 3 };
   private gameCards: GameCard[] = [];
   
   constructor() {
     this.fetchGameCards();
-    this.setActiveCards(this.activeCardsRange.start, this.activeCardsRange.end);
+    this.setActiveCards(this.activeCardsRange);
+  }
+
+  get ActiveCardsRange(): { start: number; end: number } {
+    return this.activeCardsRange;
   }
 
   get GameCards(): GameCard[] {
@@ -45,14 +49,14 @@ export class GameCardHandlerService {
     return this.gameCards.filter((gameCard) => gameCard.isShown === true);
   }
 
-  setActiveCards(start: number, end: number): void {
+  setActiveCards(range: CardRange): void {
     this.hideAllCards();
 
-    if (this.gameCards.length <= end) {
-      end = this.gameCards.length - 1;
+    if (this.gameCards.length <= range.end) {
+      range.end = this.gameCards.length - 1;
     }
 
-    for (let i = start; i <= end; i++) {
+    for (let i = range.start; i <= range.end; i++) {
       this.gameCards[i].isShown = true;
     }
   }
@@ -60,7 +64,7 @@ export class GameCardHandlerService {
   resetActiveRange(): void {
     this.activeCardsRange.start = 0;
     this.activeCardsRange.end = 3;
-    this.setActiveCards(this.activeCardsRange.start, this.activeCardsRange.end);
+    this.setActiveCards(this.activeCardsRange);
   }
 
   deleteGames(): void {

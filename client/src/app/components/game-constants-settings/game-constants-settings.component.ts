@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HINT_PENALTY_TIME, SUCCESSFUL_ANSWER_TIME_BONUS, TIMER_TIME } from '@app/constants/game-constants';
 import { AdminService } from '@app/services/admin.service';
 
 @Component({
@@ -20,5 +21,9 @@ export class GameConstantsSettingsComponent {
     this.timerTime = this.adminService.GameConstants.defaultTime;
   }
 
-  onClickRestoreDefaults(): void {}
+  onClickRestoreDefaults(): void {
+    this.hintPenaltyTime = HINT_PENALTY_TIME;
+    this.successfulGuessBonusTime = SUCCESSFUL_ANSWER_TIME_BONUS;
+    this.timerTime = TIMER_TIME;
+  }
 }

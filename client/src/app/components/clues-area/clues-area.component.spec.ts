@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { TimerCountdownComponent } from '../timer-countdown/timer-countdown.component';
 
 import { CluesAreaComponent } from './clues-area.component';
 

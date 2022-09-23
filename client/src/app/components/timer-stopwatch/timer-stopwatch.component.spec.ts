@@ -1,6 +1,6 @@
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { CluesAreaComponent } from '../clues-area/clues-area.component';
 import { TimerStopwatchComponent } from './timer-stopwatch.component';
 
 describe('TimerStopwatchComponent', () => {

@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
+import { DifferencesAreaComponent } from '@app/components/differences-area/differences-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
+import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
+import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { CluesAreaComponent } from '../clues-area/clues-area.component';
-import { DifferencesAreaComponent } from '../differences-area/differences-area.component';
-import { TimerCountdownComponent } from '../timer-countdown/timer-countdown.component';
-import { TimerStopwatchComponent } from '../timer-stopwatch/timer-stopwatch.component';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;

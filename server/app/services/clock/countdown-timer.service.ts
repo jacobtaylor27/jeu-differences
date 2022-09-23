@@ -8,13 +8,22 @@ export class CountdownTimerService {
     private valueTimer: number = 0;
 
     // TODO : add admin inputs for both minutes and seconds
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- 20 seconds set for the demo WILL BE REMOVED LATER */
     constructor(secondsAdmin: number = 20, minutesAdmin: number = 0) {
         this.seconds = secondsAdmin;
         this.minutes = minutesAdmin;
         this.setValueTimer();
     }
 
+    sendTimerValue(): Message {
+        return {
+            title: 'Timervalue',
+            body: this.valueTimer.toString(),
+        };
+    }
+
     private checkBoundarySeconds() {
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1 minute is 60 seconds */
         if (this.seconds > 60) {
             const tempSeconds = this.seconds;
             this.seconds = tempSeconds % 60;
@@ -28,12 +37,13 @@ export class CountdownTimerService {
             this.seconds = 0;
         }
     }
-
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- 1 minute is 60 seconds */
     private calculateTimeValue() {
         this.valueTimer = this.minutes * 60 + this.seconds;
     }
 
     private checkBoundaryTime() {
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 2 minutes is 120 seconds */
         if (this.valueTimer > 120) {
             this.valueTimer = 120;
             this.seconds = 0;
@@ -45,12 +55,5 @@ export class CountdownTimerService {
         this.checkBoundaryMinutes();
         this.calculateTimeValue();
         this.checkBoundaryTime();
-    }
-
-    sendTimerValue(): Message {
-        return {
-            title: 'Timervalue',
-            body: this.valueTimer.toString(),
-        };
     }
 }

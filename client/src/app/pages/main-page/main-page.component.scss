@@ -1,6 +1,5 @@
-
-.game-title { 
-    font-size: 40px ;
+.game-title {
+    font-size: 40px;
     margin-bottom: 8rem;
     margin-top: 1em;
     text-align: right;
@@ -8,27 +7,31 @@
 
 .grid-container {
     display: grid;
-    grid-template-columns: auto auto ;
+    grid-template-columns: auto auto;
     padding: 1em;
     text-align: right;
-  }
-
-  .grid-item {
+}
+.game-logo {
+  width: 50px;
+  font-size: 50px;
+  height: 50px;
+}
+.grid-item {
     text-align: center;
     padding: 2rem;
     font-size: 3rem;
-  }
-  ul {
-    list-style-type:none ; 
-  }
-  span {
+}
+ul {
+    list-style-type: none;
+}
+span {
     font-size: large;
     text-align: right;
-  }
-  p{
+}
+p {
     text-align: right;
-  }
-  button { 
+}
+button {
     margin-top: 2vh;
     border: none;
     color: white;
@@ -36,17 +39,17 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1,5rem;
+    font-size: 1, 5rem;
     width: 15em;
-  }
-  img { 
+}
+img {
     height: 80%;
     width: 70%;
-  }
-.team-number {
-  font-weight:400 ;
-  text-align: right;
 }
-li { 
-  text-align: right;
+.team-number {
+    font-weight: 400;
+    text-align: right;
+}
+li {
+    text-align: right;
 }

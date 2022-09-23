@@ -1,6 +1,9 @@
 <div class="grid-container">
     <div class="grid-item" [ngClass]="favoriteTheme">
-        <h1 class="game-title">{{ title }}</h1>
+        <h1 class="game-title">
+            {{ title }}
+            <mat-icon class="game-logo">search</mat-icon>
+        </h1>
         <ul>
             <li>
                 <button mat-flat-button color="primary" routerLink="/select">Classique</button>

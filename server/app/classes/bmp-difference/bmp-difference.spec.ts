@@ -1,10 +1,10 @@
 import { Pixel } from '@app/interface/pixel';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { BmpDifference } from './bmp-difference';
-
 describe(' DifferenceBetween2Images', () => {
-    it('Should transform the second image to the result of the difference between the first and the second', async () => {
+    it('Should produce a white bmp if two images are similar', async () => {
         const expectedWidth = 2;
         const expectedHeight = 2;
         const pixelsExpected = [
@@ -20,7 +20,7 @@ describe(' DifferenceBetween2Images', () => {
         const filepath1 = './assets/test-bmp/bmp_test_2x2.bmp';
         const filepath2 = './assets/test-bmp/bmp_test_2x2.bmp';
 
-        const bmpProduced = await BmpDifference.bmpDifference(filepath1, filepath2);
+        const bmpProduced = await BmpDifference.getDifference(filepath1, filepath2);
 
         expect(bmpProduced.getWidth()).to.equals(expectedWidth);
         expect(bmpProduced.getHeight()).to.equals(expectedHeight);
@@ -38,6 +38,8 @@ describe(' DifferenceBetween2Images', () => {
         const modifiedImageWidth = 2;
         expect(BmpDifference.isWidthEqual(originalImageWidth, modifiedImageWidth)).to.equal(result);
     });
+    // should throw an exeption is height isnt the same
+    // should throw an exeption if width isnt the same
     it('Should create a Bmp object using the image path', async () => {
         const expectedWidth = 3;
         const expectedHeight = 2;
@@ -68,6 +70,14 @@ describe(' DifferenceBetween2Images', () => {
     it('transforming a random pixel into a white one', async () => {
         const result: Pixel = { a: 0, r: 255, g: 255, b: 255 };
         const originalPixel: Pixel = { a: 0, r: 128, g: 0, b: 128 };
-        expect(BmpDifference.whitePixel(originalPixel)).to.eql(result);
+        expect(BmpDifference.setPixelWhite(originalPixel)).to.eql(result);
+    });
+    it('Should produce a difference between two normal size images ', async () => {
+        const filePathOriginalBmp = './assets/test-bmp/test_bmp_original.bmp';
+        const filePathModifiedBmp = './assets/test-bmp/test_bmp_modified.bmp';
+        const filePathExpectedBmp = './assets/test-bmp/test-expected-difference-0px.bmp';
+        const difference = await BmpDifference.getDifference(filePathOriginalBmp, filePathModifiedBmp);
+        const expectedDifference = await BmpDecoder.decode(filePathExpectedBmp);
+        expect(difference).to.be.eql(expectedDifference);
     });
 });

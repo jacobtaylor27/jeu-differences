@@ -22,6 +22,7 @@ describe('CountdownTimerController', () => {
     });
 
     it('should return time from countdownTimerService on get request', async () => {
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- body value for test */
         const expectedMessage: Message = { title: 'Timervalue', body: '20' };
         countdownTimerService.sendTimerValue();
 

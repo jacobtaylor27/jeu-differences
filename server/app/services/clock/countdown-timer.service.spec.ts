@@ -18,10 +18,12 @@ describe('Countdown timer Service', () => {
     it('should not send timer bigger than two minutes', () => {
         const countdownTimerServiceTest = new CountdownTimerService(0, 3);
         const result = countdownTimerServiceTest.sendTimerValue();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- magic number for test */
         expect(result.body).to.equal('120');
     });
 
     it('checkBoundarySeconds should set seconds and minutes correctly when seconds is bigger than 60 seconds', () => {
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- magic number for test */
         countdownTimerService['seconds'] = 66;
         countdownTimerService['checkBoundarySeconds']();
         expect(countdownTimerService['seconds']).to.equal(6);

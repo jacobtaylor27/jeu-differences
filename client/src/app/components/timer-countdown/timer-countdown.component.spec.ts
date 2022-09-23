@@ -33,4 +33,14 @@ describe('TimerCountdownComponent', () => {
         expect(countdownTimerSpy).toHaveBeenCalled();
         discardPeriodicTasks();
     }));
+
+    it('onDestroy should stopTimer', fakeAsync(() => {
+        const componentInstance = fixture.componentInstance;
+        const stopTimerSpy = spyOn<any>(componentInstance, 'stopTimer');
+        componentInstance.ngOnInit();
+        tick(10);
+        componentInstance.ngOnDestroy();
+        expect(stopTimerSpy).toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 });

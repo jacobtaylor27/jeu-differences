@@ -20,4 +20,10 @@ describe('SidebarComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should set askedClue variable', () => {
+        const expectedClueValue = 3;
+        component.onClueAsked(3);
+        expect(component.askedClue).toEqual(expectedClueValue);
+    });
 });

@@ -38,4 +38,14 @@ describe('TimerStopwatchComponent', () => {
         expect(calculateTimeSpy).toHaveBeenCalledTimes(2);
         discardPeriodicTasks();
     }));
+
+    it('should increment every second', fakeAsync(() => {
+        const componentInstance = fixture.componentInstance;
+        const stopTimerSpy = spyOn<any>(componentInstance, 'stopTimer');
+        componentInstance.ngOnInit();
+        tick(1000);
+        component.ngOnDestroy();
+        expect(stopTimerSpy).toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 });

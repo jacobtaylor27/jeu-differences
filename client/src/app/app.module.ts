@@ -16,6 +16,11 @@ import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
+import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
+import { CluesAreaComponent } from './components/clues-area/clues-area.component';
+import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
+import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
+import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
 import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
@@ -40,8 +45,8 @@ import { DialogResetComponent } from './components/dialog-reset/dialog-reset.com
         PlayAreaComponent,
         SidebarComponent,
         CreateGamePageComponent,
-        ToolBoxComponent,
         DrawCanvasComponent,
+        ToolBoxComponent,
         DialogFormsErrorComponent,
         GameSelectionPageComponent,
         AdminPageComponent,
@@ -52,6 +57,12 @@ import { DialogResetComponent } from './components/dialog-reset/dialog-reset.com
         UserNameInputComponent,
         GameCarouselComponent,
         AdminCommandsComponent,
+        PlayAreaComponent,
+        ExitGameButtonComponent,
+        CluesAreaComponent,
+        TimerCountdownComponent,
+        TimerStopwatchComponent,
+        DifferencesAreaComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

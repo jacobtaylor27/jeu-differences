@@ -1,4 +1,4 @@
-import { CountdownTimerService } from '@app/services/clock/countdownTimer.service';
+import { CountdownTimerService } from '@app/services/clock/countdown-timer.service';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 

@@ -41,4 +41,10 @@ describe('CluesAreaComponent', () => {
         componentInstance.buttonDetect(buttonEvent);
         expect(getClueSpy).not.toHaveBeenCalled();
     });
+
+    it('should increment clue counter when clue is asked', () => {
+        const expectedCount = 1;
+        component.getClue();
+        expect(component.clueAskedCounter).toEqual(expectedCount);
+    });
 });

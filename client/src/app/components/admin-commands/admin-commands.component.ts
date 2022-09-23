@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { GameCard } from '@app/interfaces/game-card';
 import { AdminService } from '@app/services/admin.service';
 
 @Component({
@@ -12,8 +11,8 @@ export class AdminCommandsComponent {
 
     constructor(private readonly adminService: AdminService) {}
 
-    getGameCards(): GameCard[] {
-        return this.adminService.gameCards;
+    hasCards(): boolean {
+        return this.adminService.hasGameCards();
     }
 
     onClickModifySettings(): void {

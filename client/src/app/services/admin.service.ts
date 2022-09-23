@@ -16,6 +16,10 @@ export class AdminService {
         this.gameCards = this.gameCardHandlerService.gameCards;
     }
 
+    hasGameCards(): boolean {
+        return this.gameCards.length > 0;
+    }
+
     deleteAllGames(): void {
         this.gameCardHandlerService.deleteGames();
     }

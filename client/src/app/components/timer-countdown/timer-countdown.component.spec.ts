@@ -53,7 +53,7 @@ describe('TimerCountdownComponent', () => {
         expect(component.moreThanFiveSeconds()).toBeFalse();
     });
 
-    it('gameover should be called when the countdown is done', fakeAsync(() => {
+    it('gameOver should be called when the countdown is done', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
         componentInstance['timerAdmin'] = '18';
         componentInstance['countdownTimer']();
@@ -62,4 +62,10 @@ describe('TimerCountdownComponent', () => {
         expect(stopTimerSpy).toHaveBeenCalled();
         discardPeriodicTasks();
     }));
+
+    it('gameOver should open dialog', () => {
+        const openDialogSpy = spyOn(component['matDialog'], 'open');
+        component['gameOver']();
+        expect(openDialogSpy).toHaveBeenCalled();
+    });
 });

@@ -24,6 +24,7 @@ import { DifferencesAreaComponent } from './components/differences-area/differen
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
+import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -52,6 +53,7 @@ import { DialogResetComponent } from './components/dialog-reset/dialog-reset.com
         TimerCountdownComponent,
         TimerStopwatchComponent,
         DifferencesAreaComponent,
+        DialogCreateGameComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

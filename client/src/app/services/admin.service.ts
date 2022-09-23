@@ -9,19 +9,11 @@ import { GameCardHandlerService } from './game-card-handler.service';
     providedIn: 'root',
 })
 export class AdminService {
-    private GameCards: GameCard[] = [];
-    private GameConstants: GameConstants;
+    gameCards: GameCard[] = [];
+    gameConstants: GameConstants;
 
     constructor(private readonly gameCardHandlerService: GameCardHandlerService, private readonly matDialog: MatDialog) {
-        this.GameCards = this.gameCardHandlerService.gameCards;
-    }
-
-    get gameConstants(): GameConstants {
-        return this.GameConstants;
-    }
-
-    get gameCards(): GameCard[] {
-        return this.GameCards;
+        this.gameCards = this.gameCardHandlerService.gameCards;
     }
 
     deleteAllGames(): void {

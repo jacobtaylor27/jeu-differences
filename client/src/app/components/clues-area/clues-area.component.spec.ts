@@ -30,4 +30,15 @@ describe('CluesAreaComponent', () => {
         expect(getClueSpy).toHaveBeenCalled();
     });
 
+    it('should not call clue when 3 clues have already been asked', () => {
+        const componentInstance = fixture.componentInstance;
+        const getClueSpy = spyOn(componentInstance, 'getClue');
+        componentInstance.isDisabled = true;
+        const expectedKey = 'i';
+        const buttonEvent = {
+            key: expectedKey,
+        } as KeyboardEvent;
+        componentInstance.buttonDetect(buttonEvent);
+        expect(getClueSpy).not.toHaveBeenCalled();
+    });
 });

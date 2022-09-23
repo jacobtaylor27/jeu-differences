@@ -26,5 +26,7 @@ export class AdminService {
     this.gameCardHandlerService.deleteGames();
   }
 
-  resetAllHighScores(): void {}
+  resetAllHighScores(): void {
+    this.gameCardHandlerService.resetAllHighScores();
+  }
 }

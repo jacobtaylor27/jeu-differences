@@ -81,6 +81,12 @@ export class GameCardHandlerService {
     this.gameCards[index].gameInformation.scoresSolo = [];
   }
 
+  resetAllHighScores(): void {
+    for (const card of this.gameCards) {
+      this.resetHighScores(card);
+    }
+  }
+
   generateFakeCards(): GameCard[] {
     const DEFAULT_NB_OF_CARDS = 18;
     const DEFAULT_SCORES: number[] = [1, 2, 3];

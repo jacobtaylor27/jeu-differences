@@ -58,3 +58,10 @@ describe('CluesAreaComponent', () => {
         component.buttonDetect(buttonEvent);
         expect(component.clueAskedCounter).toEqual(expectedCount);
     });
+
+    it('should disable clue function on third clue asked', () => {
+        component.clueAskedCounter = 2;
+        component.getClue();
+        expect(component.isDisabled).toBeTrue();
+    });
+});

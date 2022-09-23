@@ -9,7 +9,7 @@ import { Container } from 'typedi';
 
 const HTTP_STATUS_OK = StatusCodes.OK;
 
-describe('CountdownTimerContoller', () => {
+describe('CountdownTimerController', () => {
     let countdownTimerService: SinonStubbedInstance<CountdownTimerService>;
     let expressApp: Express.Application;
 
@@ -23,7 +23,7 @@ describe('CountdownTimerContoller', () => {
 
     it('should return timer from CountdownTimerService on get request', async () => {
         const expectedMessage: Message = { title: 'Timer', body: '00 : 00' };
-        countdownTimerService.sendTimerValue.resolves(expectedMessage);
+        countdownTimerService.sendTimerValue();
 
         return supertest(expressApp)
             .get('/api/game')
@@ -37,7 +37,7 @@ describe('CountdownTimerContoller', () => {
         countdownTimerService.sendTimerValue.rejects(new Error('service error'));
 
         return supertest(expressApp)
-            .get('/api/date')
+            .get('/api/game')
             .expect(HTTP_STATUS_OK)
             .then((response) => {
                 chai.expect(response.body.title).to.equal('Error');

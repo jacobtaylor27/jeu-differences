@@ -15,9 +15,9 @@ export class GameConstantsSettingsComponent {
   timerTime: number;
 
   resetGameConstants(): void {
-    this.hintPenaltyTime = this.adminService.gameConstants.hintPenaltyTime;
-    this.successfulGuessBonusTime = this.adminService.gameConstants.successfulAttemptTime;
-    this.timerTime = this.adminService.gameConstants.defaultTime;
+    this.hintPenaltyTime = this.adminService.GameConstants.hintPenaltyTime;
+    this.successfulGuessBonusTime = this.adminService.GameConstants.successfulAttemptTime;
+    this.timerTime = this.adminService.GameConstants.defaultTime;
   }
 
   onClickRestoreDefaults(): void {}

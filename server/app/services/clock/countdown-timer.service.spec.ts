@@ -21,10 +21,12 @@ describe('Countdown timer Service', () => {
         expect(result.body).to.equal('120');
     });
 
-    it('checkBoundary should set 2 minutes if admin enters more than that', () => {
-        const countdownTimerServiceTest = new CountdownTimerService(122, 0);
-        countdownTimerService['checkBoundaryTime']();
-        expect(countdownTimerServiceTest['seconds']).to.equal(0);
-        expect(countdownTimerServiceTest['minutes']).to.equal(2);
+    it('checkBoundarySeconds should set seconds and minutes correctly when seconds is bigger than 60 seconds', () => {
+        countdownTimerService['seconds'] = 66;
+        countdownTimerService['checkBoundarySeconds']();
+        expect(countdownTimerService['seconds']).to.equal(6);
+        expect(countdownTimerService['minutes']).to.equal(1);
+    });
+
     });
 });

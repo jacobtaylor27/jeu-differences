@@ -12,9 +12,12 @@ import { map } from 'rxjs/operators';
 export class GamePageComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
     message: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    gameModeLimitedTime: boolean = false;
 
     constructor(private readonly communicationService: CommunicationService) {
-        this.getTimerValue();
+        if (this.gameModeLimitedTime) {
+            this.getTimerValue();
+        }
     }
 
     getTimerValue(): void {

@@ -33,7 +33,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.setTimer();
+        this.setTimerService();
         this.countdownTimer();
     }
 
@@ -45,7 +45,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
         const $time = timer(10, 1000);
 
         this.sub = $time.subscribe((seconds) => {
-            this.setTimer();
+            this.setTimerService();
             this.timerDisplay = this.timerService.displayTime(seconds);
             this.secondsLeft = this.timerService.calculateSecondsLeft(seconds);
             if (seconds > this.timer) {
@@ -66,7 +66,7 @@ export class TimerCountdownComponent implements OnInit, OnDestroy {
         // this.timer = Number(this.timerAdmin) + this. * this.nbDifferencesFound * this.bonusTime;
     }
 
-    private setTimer() {
+    private setTimerService() {
         this.calculateTime();
         this.timerService.setTimer(this.timer);
     }

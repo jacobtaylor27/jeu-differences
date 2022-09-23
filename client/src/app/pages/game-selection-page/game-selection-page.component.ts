@@ -1,8 +1,8 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameSelectionService } from '@app/services/game-selection.service';
+import { GameCarouselService } from '@app/services/game-carousel.service';
 
 @Component({
     selector: 'app-game-selection-page',
@@ -10,53 +10,22 @@ import { GameSelectionService } from '@app/services/game-selection.service';
     styleUrls: ['./game-selection-page.component.scss'],
 })
 export class GameSelectionPageComponent implements OnInit {
-    @ViewChild('enterNameDialogContentRef')
-    private readonly enterNameDialogContentRef: TemplateRef<HTMLElement>;
-
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(readonly gameSelectionService: GameSelectionService, private readonly matDialog: MatDialog) {}
+    constructor(readonly gameCarouselService: GameCarouselService, private readonly matDialog: MatDialog) {}
 
     ngOnInit(): void {
-        this.getGameCards();
-        for (let i = 0; i < this.gameCards.length; i++) {
-            this.gameCards[i].isAdminCard = false;
-        }
+        this.gameCards = this.gameCarouselService.getCards();
+        this.makeCardsSelectMode();
     }
 
-    hasCardsBefore(): boolean {
-        return this.gameSelectionService.hasPreviousCards();
+    makeCardsSelectMode(): void {
+        this.gameCarouselService.setCardMode();
     }
 
-    hasCardsAfter(): boolean {
-        return this.gameSelectionService.hasNextCards();
-    }
-
-    getGameCards(): void {
-        this.gameCards = this.gameSelectionService.getActiveCards();
-    }
-
-    getShownGameCards(): GameCard[] {
-        return this.gameCards.filter((gameCard) => gameCard.isShown);
-    }
-
-    onClickPrevious(): void {
-        this.gameSelectionService.showPreviousFour();
-        this.getGameCards();
-    }
-
-    onClickNext(): void {
-        this.gameSelectionService.showNextFour();
-        this.getGameCards();
-    }
-
-    onSelectPlayGame(): void {
-        this.matDialog.open(this.enterNameDialogContentRef);
-    }
-
-    onSelectCreateGame(): void {
-        this.matDialog.open(this.enterNameDialogContentRef);
+    yo() {
+        this.matDialog.open(GameSelectionPageComponent);
     }
 
     formatScoreTime(scoreTime: number): string {

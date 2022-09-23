@@ -27,7 +27,7 @@ export class CountdownTimerService {
         if (this.seconds > 60) {
             const tempSeconds = this.seconds;
             this.seconds = tempSeconds % 60;
-            this.minutes += tempSeconds / 60;
+            this.minutes += Math.floor(tempSeconds / 60);
         }
     }
 

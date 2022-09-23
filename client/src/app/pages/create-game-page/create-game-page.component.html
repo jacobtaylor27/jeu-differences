@@ -1,8 +1,5 @@
-<div class="main">
+<div class="main" [ngClass]="theme.ClassName">
     <form [formGroup]="this.form" (ngSubmit)="onSubmit()">
-        <div class="img-tools">
-            <button type="button">Televerser une image</button>
-        </div>
         <div class="img-container">
             <div class="drawImg">
                 <label for="imgDiff">Titre: Canvas éditeur </label>
@@ -10,35 +7,37 @@
             </div>
 
             <div class="drawImg">
-                <label for="img">Titre: Image Source</label>
-                <img
-                    id="img"
+                <label for="sourceImg">Titre: Image Source</label>
+                <canvas
+                    id="sourceImg"
+                    class="img"
                     width="640px"
                     height="480px"
-                    src="imgSourceLink"
                     alt="Image Source"
-                    formControlName="img"
-                    *ngIf="imgSourceLink !== undefined; blankTemplate"
-                />
-                <div class="img" width="640px" height="480px" #blankTemplate></div>
+                    #sourceImg
+                ></canvas>
             </div>
         </div>
         <div class="toolbox-container">
             <app-tool-box></app-tool-box>
         </div>
-
         <div class="submission-container">
             <div class="submission-box">
-                <select id="expansionRadius" formControlName="expansionRadius">
-                    <option value="0">0px rayon d'elargissement</option>
-                    <option value="3" selected>3px rayon d'elargissement</option>
-                    <option value="9">9px rayon d'elargissement</option>
-                    <option value="15">15px rayon d'elargissement</option>
-                </select>
+                <mat-form-field>
+                    <mat-label>Quelles est le rayon d'elargissement</mat-label>
+                    <select matNativeControl id="expansionRadius" formControlName="expansionRadius">
+                        <option value="0">0px rayon d'elargissement</option>
+                        <option value="3" selected>3px rayon d'elargissement</option>
+                        <option value="9">9px rayon d'elargissement</option>
+                        <option value="15">15px rayon d'elargissement</option>
+                    </select>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="name" placeholder="Nom du jeu">
+                </mat-form-field>
+                <button mat-flat-button color="primary" type="button">Valider</button>
 
-                <button type="button">Valider</button>
-
-                <button type="submit">Valider et créer</button>
+                <button mat-flat-button color="primary" type="submit">Valider et créer</button>
             </div>
         </div>
     </form>

@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
+import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
+import { DEFAULT_PENCIL } from '@app/constants/canvas';
 
 @Component({
     selector: 'app-tool-box',
@@ -10,11 +14,12 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./tool-box.component.scss'],
 })
 export class ToolBoxComponent {
-    pencil: Pencil = { width: 1, cap: 'round', color: '#00000', state: Tool.Pencil };
-    toolEnum: typeof Tool = Tool;
-    constructor(public toolService: ToolBoxService) {}
+    pencil: Pencil = DEFAULT_PENCIL;
+    tool: typeof Tool = Tool;
 
-    changePencilState(tool: Tool) {
+    constructor(public dialog: MatDialog, public toolService: ToolBoxService) {}
+
+    changePencilState(tool: Tool): void {
         this.pencil.state = tool;
         this.toolService.$pencil.next(this.pencil);
     }
@@ -26,13 +31,21 @@ export class ToolBoxComponent {
         return value.toString() + 'px';
     }
 
-    changePencilColor(color: string) {
+    changePencilColor(color: string): void {
         this.pencil.color = color;
         this.toolService.$pencil.next(this.pencil);
     }
 
-    changePencilWith(event: MatSliderChange) {
+    changePencilWith(event: MatSliderChange): void {
         this.pencil.width = event.value !== null ? event.value : 0;
         this.toolService.$pencil.next(this.pencil);
+    }
+
+    openUploadDialog(): void {
+        this.dialog.open(DialogUploadFormComponent);
+    }
+
+    openResetDialog(): void {
+        this.dialog.open(DialogResetComponent);
     }
 }

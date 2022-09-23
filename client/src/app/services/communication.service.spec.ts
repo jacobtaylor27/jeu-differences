@@ -44,6 +44,21 @@ describe('CommunicationService', () => {
         req.flush(expectedMessage);
     });
 
+    it('should return expected message (timer) when game page is loaded', () => {
+        const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
+        service.getTimeValue().subscribe({
+            next: (response: Message) => {
+                expect(response.title).toEqual(expectedMessage.title);
+                expect(response.body).toEqual(expectedMessage.body);
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game`);
+        expect(req.request.method).toBe('GET');
+        req.flush(expectedMessage);
+    });
+
     it('should not return any message when sending a POST request (HttpClient called once)', () => {
         const sentMessage: Message = { body: 'Hello', title: 'World' };
         // subscribe to the mocked call

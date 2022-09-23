@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/game-carousel.service';
@@ -13,7 +12,7 @@ export class GameSelectionPageComponent implements OnInit {
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(readonly gameCarouselService: GameCarouselService, private readonly matDialog: MatDialog) {}
+    constructor(readonly gameCarouselService: GameCarouselService) {}
 
     ngOnInit(): void {
         this.gameCards = this.gameCarouselService.getCards();
@@ -22,10 +21,6 @@ export class GameSelectionPageComponent implements OnInit {
 
     makeCardsSelectMode(): void {
         this.gameCarouselService.setCardMode();
-    }
-
-    yo() {
-        this.matDialog.open(GameSelectionPageComponent);
     }
 
     formatScoreTime(scoreTime: number): string {

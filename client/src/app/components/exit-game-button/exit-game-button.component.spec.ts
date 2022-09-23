@@ -6,7 +6,7 @@ import { ExitGameButtonComponent } from './exit-game-button.component';
 describe('ExitGameButtonComponent', () => {
     let component: ExitGameButtonComponent;
     let fixture: ComponentFixture<ExitGameButtonComponent>;
-    const model = { formTitle: 'form', errorMessages: ['test error'] };
+    const model = {};
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({

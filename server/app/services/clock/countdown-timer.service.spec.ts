@@ -2,7 +2,7 @@ import { CountdownTimerService } from '@app/services/clock/countdown-timer.servi
 import { expect } from 'chai';
 import { Container } from 'typedi';
 
-describe('Date Service', () => {
+describe('Countdown timer Service', () => {
     let countdownTimerService: CountdownTimerService;
 
     beforeEach(async () => {
@@ -12,11 +12,11 @@ describe('Date Service', () => {
     it('sendTimerValue should return a valid message', () => {
         const result = countdownTimerService.sendTimerValue();
         expect(result.title).to.equal('Timervalue');
-        expect(result.body).to.equal('0');
+        expect(result.body).to.equal(countdownTimerService['valueTimer'].toString());
     });
 
     it('should not send timer bigger than two minutes', () => {
-        const countdownTimerServiceTest = new CountdownTimerService(3, 0);
+        const countdownTimerServiceTest = new CountdownTimerService(0, 3);
         const result = countdownTimerServiceTest.sendTimerValue();
         expect(result.body).to.equal('120');
     });

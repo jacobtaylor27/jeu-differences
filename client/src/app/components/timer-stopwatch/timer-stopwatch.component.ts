@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TimerService } from '@app/services/timer.service';
 import { Subscription, timer } from 'rxjs';
-import { TimerService } from '../../services/timer.service';
 
 @Component({
     selector: 'app-timer-stopwatch',
@@ -26,6 +26,7 @@ export class TimerStopwatchComponent implements OnInit, OnDestroy {
     }
 
     private startTimer() {
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 for 1second */
         const time = timer(1, 1000);
         this.sub = time.subscribe((seconds) => {
             this.calculateTime(seconds);
@@ -38,6 +39,7 @@ export class TimerStopwatchComponent implements OnInit, OnDestroy {
     }
 
     private calculateTime(seconds: number) {
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- fixed value for now but will change later on */
         this.secondsTotal = seconds + this.clueAskedCounter * 5;
     }
 }

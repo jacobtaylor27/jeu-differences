@@ -6,10 +6,12 @@ import { Component, EventEmitter, HostListener, Output } from '@angular/core';
     styleUrls: ['./clues-area.component.scss'],
 })
 export class CluesAreaComponent {
-    private numberOfClues: number = 3;
-    clueAskedCounter: number = 0;
     @Output() clueCounter = new EventEmitter<number>();
+
+    clueAskedCounter: number = 0;
+
     isDisabled: boolean = false;
+    private numberOfClues: number = 3;
 
     @HostListener('window: keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {

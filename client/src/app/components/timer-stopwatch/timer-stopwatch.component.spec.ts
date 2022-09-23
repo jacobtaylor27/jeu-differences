@@ -29,12 +29,15 @@ describe('TimerStopwatchComponent', () => {
 
     it('should increment every second', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        const calculateTimeSpy = spyOn<unknown>(componentInstance, 'calculateTime');
+        /* eslint-disable @typescript-eslint/no-explicit-any  */
+        const calculateTimeSpy = spyOn<any>(componentInstance, 'calculateTime');
         componentInstance.ngOnInit();
         tick(0);
         expect(calculateTimeSpy).toHaveBeenCalledTimes(0);
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
         tick(1000);
         expect(calculateTimeSpy).toHaveBeenCalledTimes(1);
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
         tick(1000);
         expect(calculateTimeSpy).toHaveBeenCalledTimes(2);
         discardPeriodicTasks();
@@ -42,8 +45,10 @@ describe('TimerStopwatchComponent', () => {
 
     it('should increment every second', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
-        const stopTimerSpy = spyOn<unknown>(componentInstance, 'stopTimer');
+        /* eslint-disable @typescript-eslint/no-explicit-any  */
+        const stopTimerSpy = spyOn<any>(componentInstance, 'stopTimer');
         componentInstance.ngOnInit();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
         tick(1000);
         component.ngOnDestroy();
         expect(stopTimerSpy).toHaveBeenCalled();

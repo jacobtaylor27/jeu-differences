@@ -1,4 +1,4 @@
-import { HttpException } from '@app/classes/http.exception';
+import { HttpException } from '@app/classes/http/http.exception';
 import { CountdownTimerController } from '@app/controllers/countdownTimer.controller';
 import { DateController } from '@app/controllers/date.controller';
 import { ExampleController } from '@app/controllers/example.controller';

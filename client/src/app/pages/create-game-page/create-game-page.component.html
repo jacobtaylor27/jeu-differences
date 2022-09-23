@@ -1,0 +1,44 @@
+<div class="main" [ngClass]="theme.ClassName">
+    <form [formGroup]="this.form" (ngSubmit)="onSubmit()">
+        <div class="img-container">
+            <div class="drawImg">
+                <label for="imgDiff">Titre: Canvas éditeur </label>
+                <app-draw-canvas id="imgDiff"></app-draw-canvas>
+            </div>
+
+            <div class="drawImg">
+                <label for="sourceImg">Titre: Image Source</label>
+                <canvas
+                    id="sourceImg"
+                    class="img"
+                    width="640px"
+                    height="480px"
+                    alt="Image Source"
+                    #sourceImg
+                ></canvas>
+            </div>
+        </div>
+        <div class="toolbox-container">
+            <app-tool-box></app-tool-box>
+        </div>
+        <div class="submission-container">
+            <div class="submission-box">
+                <mat-form-field>
+                    <mat-label>Quelles est le rayon d'elargissement</mat-label>
+                    <select matNativeControl id="expansionRadius" formControlName="expansionRadius">
+                        <option value="0">0px rayon d'elargissement</option>
+                        <option value="3" selected>3px rayon d'elargissement</option>
+                        <option value="9">9px rayon d'elargissement</option>
+                        <option value="15">15px rayon d'elargissement</option>
+                    </select>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="name" placeholder="Nom du jeu">
+                </mat-form-field>
+                <button mat-flat-button color="primary" type="button">Valider</button>
+
+                <button mat-flat-button color="primary" type="submit">Valider et créer</button>
+            </div>
+        </div>
+    </form>
+</div>

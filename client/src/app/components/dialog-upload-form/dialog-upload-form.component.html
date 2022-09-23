@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Televerser une image</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <mat-label>Quelles type d'image</mat-label>
+        <mat-select formControlName="type">
+            <mat-option [value]="this.typePropagateCanvasEvent.Difference">Image des difference</mat-option>
+            <mat-option [value]="this.typePropagateCanvasEvent.Source">Image sources</mat-option>
+            <mat-option [value]="this.typePropagateCanvasEvent.Both">Les deux types</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <input mat-fab formControlName="uploadImage" type="file" color="primary" accept=".bmp" (change)="this.uploadImage($event)">
+    <mat-error *ngIf="!this.isTypeImageCorrect">Le type d'image doit etre un bitmap</mat-error>
+    <mat-error *ngIf="!this.isSizeImageCorrect">La taille d'image doit etre 640*480</mat-error>
+    <mat-dialog-actions align="end">
+        <button type="button" mat-button mat-dialog-close>Cancel</button>
+        <button mat-button [mat-dialog-close]="true" [disabled]="this.isFormSubmitted && this.form.valid ? null: 'disabled'" type="submit">Upload</button>
+    </mat-dialog-actions>
+
+</form>

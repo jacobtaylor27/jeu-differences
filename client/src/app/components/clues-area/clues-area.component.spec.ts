@@ -47,4 +47,14 @@ describe('CluesAreaComponent', () => {
         component.getClue();
         expect(component.clueAskedCounter).toEqual(expectedCount);
     });
-});
+
+    it('should not increment clue counter when 3 clues have been asked', () => {
+        const expectedCount = 3;
+        component.clueAskedCounter = 3;
+        component.isDisabled = true;
+        const buttonEvent = {
+            key: 'i',
+        } as KeyboardEvent;
+        component.buttonDetect(buttonEvent);
+        expect(component.clueAskedCounter).toEqual(expectedCount);
+    });

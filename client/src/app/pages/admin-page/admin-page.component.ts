@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameSelectionService } from '@app/services/game-selection.service';
+import { GameCarouselService } from '@app/services/game-carousel.service';
 
 @Component({
     selector: 'app-admin-page',
@@ -8,19 +8,22 @@ import { GameSelectionService } from '@app/services/game-selection.service';
     styleUrls: ['./admin-page.component.scss'],
 })
 export class AdminPageComponent implements OnInit {
-    constructor(readonly gameSelectionService: GameSelectionService) {}
-
     favoriteTheme: string = 'deeppurple-amber-theme';
     gameCards: GameCard[] = [];
 
+    constructor(private readonly gameCarouselService: GameCarouselService) {}
+
     ngOnInit(): void {
-        this.getGameCards();
+        this.gameCards = this.gameCarouselService.getCards();
+        this.resetStartingRange();
+        this.makeCardsAdminMode();
     }
 
-    getGameCards(): void {
-        this.gameCards = this.gameSelectionService.getActiveCards();
-        for (let gameCard of this.gameCards) {
-            gameCard.isAdminCard = true;
-        }
+    makeCardsAdminMode(): void {
+        this.gameCarouselService.setCardMode(true);
+    }
+
+    resetStartingRange(): void {
+        this.gameCarouselService.resetRange();
     }
 }

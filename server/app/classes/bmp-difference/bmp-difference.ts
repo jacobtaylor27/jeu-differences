@@ -4,11 +4,11 @@ import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
 export class BmpDifference {
     static async getDifference(originalImagePath: string, modifiedImagePath: string): Promise<Bmp> {
-        const originalImage = await BmpDecoder.decode(originalImagePath);
-        const modifiedImage = await BmpDecoder.decode(modifiedImagePath);
+        const originalImage: Bmp = await BmpDecoder.decode(originalImagePath);
+        const modifiedImage: Bmp = await BmpDecoder.decode(modifiedImagePath);
         if (!this.areBmpCompatible(originalImage, modifiedImage)) throw new Error('Both images do not have the same height or width');
 
-        const resultImage = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Bmp.convertPixelsToRaw(modifiedImage.getPixels()));
+        const resultImage: Bmp = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Bmp.convertPixelsToRaw(modifiedImage.getPixels()));
         for (let i = 0; i < originalImage.getPixels().length; i++) {
             for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
                 if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
@@ -66,7 +66,7 @@ export class BmpDifference {
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
-    static isHeightEqual(originalImageHeight: number, modifiedImageHeight: number) {
+    static isHeightEqual(originalImageHeight: number, modifiedImageHeight: number): boolean {
         return originalImageHeight === modifiedImageHeight;
     }
     static isWidthEqual(originalImageWidth: number, modifiedImageWidth: number): boolean {
@@ -97,7 +97,7 @@ export class BmpDifference {
     static isBlackPixel(pixel: Pixel): boolean {
         return pixel.a === 0 && pixel.b === 0 && pixel.g === 0 && pixel.r === 0;
     }
-    private static areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp) {
+    private static areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {
         return originalImage.getHeight() === modifiedImage.getHeight() && originalImage.getWidth() === modifiedImage.getWidth();
     }
 }

@@ -12,6 +12,10 @@ export class GameCarouselService {
         return this.gameCardHandlerService.gameCards;
     }
 
+    getCarouselLength(): number {
+        return this.gameCardHandlerService.gameCards.length;
+    }
+
     resetRange(): void {
         this.gameCardHandlerService.resetActiveRange();
     }

@@ -19,6 +19,14 @@ export class GameSelectionPageComponent implements OnInit {
         this.makeCardsSelectMode();
     }
 
+    getNumberOfGames(): number {
+        return this.gameCarouselService.getCarouselLength();
+    }
+
+    hasGames(): boolean {
+        return this.gameCarouselService.hasCards();
+    }
+
     makeCardsSelectMode(): void {
         this.gameCarouselService.setCardMode();
     }

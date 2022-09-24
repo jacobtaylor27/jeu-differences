@@ -99,7 +99,6 @@ export class GameCardHandlerService {
                     scoresMultiplayer: multiplayerScores,
                 },
                 isAdminCard: false,
-                isCreated: false,
                 isShown: false,
             };
             cards.push(newCard);

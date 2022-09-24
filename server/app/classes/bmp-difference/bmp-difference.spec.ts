@@ -1,8 +1,10 @@
 import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
+//import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
+//import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/interface/pixel';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
+// import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
 import { BmpDifference } from './bmp-difference';
 describe(' DifferenceBetween2Images', () => {
     it('Should produce a white bmp if two images are similar', async () => {
@@ -39,8 +41,26 @@ describe(' DifferenceBetween2Images', () => {
         const modifiedImageWidth = 2;
         expect(BmpDifference.isWidthEqual(originalImageWidth, modifiedImageWidth)).to.equal(result);
     });
-    // should throw an exeption is height isnt the same
-    // should throw an exeption if width isnt the same
+    it('Should throw an error if the height of the two images is not the same', async () => {
+        const filePathOriginalBmp = './assets/test-bmp/bmp-test_2x3.bmp';
+        const filePathModifiedBmp = './assets/test-bmp/bmp-test_2x2.bmp';
+        try {
+            const bmpProduced = await BmpDifference.getDifference(filePathOriginalBmp, filePathModifiedBmp);
+            expect(bmpProduced).to.equals(undefined);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
+    });
+    it('Should throw an error if the width of the two images is not the same', async () => {
+        const filePathOriginalBmp = './assets/test-bmp/bmp-test_3x2.bmp';
+        const filePathModifiedBmp = './assets/test-bmp/bmp-test_2x2.bmp';
+        try {
+            const bmpProduced = await BmpDifference.getDifference(filePathOriginalBmp, filePathModifiedBmp);
+            expect(bmpProduced).to.equals(undefined);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
+    });
     it('Should create a Bmp object using the image path', async () => {
         const expectedWidth = 3;
         const expectedHeight = 2;
@@ -73,6 +93,11 @@ describe(' DifferenceBetween2Images', () => {
         const originalPixel: Pixel = { a: 0, r: 128, g: 0, b: 128 };
         expect(BmpDifference.setPixelWhite(originalPixel)).to.eql(result);
     });
+    it('transforming a random pixel into a black one', async () => {
+        const result: Pixel = { a: 0, r: 0, g: 0, b: 0 };
+        const originalPixel: Pixel = { a: 0, r: 128, g: 0, b: 128 };
+        expect(BmpDifference.setPixelBlack(originalPixel)).to.eql(result);
+    });
     it('Should produce a difference between two normal size images ', async () => {
         const filePathOriginalBmp = './assets/test-bmp/test_bmp_original.bmp';
         const filePathModifiedBmp = './assets/test-bmp/test_bmp_modified.bmp';
@@ -81,18 +106,12 @@ describe(' DifferenceBetween2Images', () => {
         const expectedDifference = await BmpDecoder.decode(filePathExpectedBmp);
         expect(difference).to.be.eql(expectedDifference);
     });
-    it('Should produce an enlargement of 3px  ', async () => {
-        const filePathBmp = './assets/test-bmp/test-expected-difference-0px.bmp';
-        const originalImage = await BmpDecoder.decode(filePathBmp);
-        const radius = 6;
-        const bmpResult = BmpDifference.enlargePixelArea(originalImage, radius);
-        BmpEncoder.encode('./assets/test-bmp/test-expected-difference-3px.bmp', bmpResult);
-    });
-    it('Should produce an enlargement of 6px  ', async () => {
-        const filePathBmp = './assets/test-bmp/test-expected-difference-0px.bmp';
-        const originalImage = await BmpDecoder.decode(filePathBmp);
-        const radius = 6;
-        const bmpResult = BmpDifference.enlargePixelArea(originalImage, radius);
-        BmpEncoder.encode('./assets/test-bmp/test-expected-difference-6px.bmp', bmpResult);
-    });
+    // it('Should apply pixel enlargement for a given image ', async () => {
+    //     const radius = 15;
+    //     const filePathBmp = './assets/test-bmp/test-elargissement.bmp';
+    //     const filePathOfTheResultBmp = './assets/test-bmp/test-elargissement-15px.bmp';
+    //     const bmpImage = await BmpDecoder.decode(filePathBmp);
+    //     const result: Bmp = BmpDifference.enlargePixelsArea(bmpImage, radius);
+    //     BmpEncoder.encode(filePathOfTheResultBmp, result);
+    // });
 });

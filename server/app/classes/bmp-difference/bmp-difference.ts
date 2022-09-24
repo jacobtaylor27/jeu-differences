@@ -8,7 +8,7 @@ export class BmpDifference {
         const modifiedImage = await BmpDecoder.decode(modifiedImagePath);
         if (!this.areBmpCompatible(originalImage, modifiedImage)) throw new Error('Both images do not have the same height or width');
 
-        const resultImage = await BmpDecoder.decode(modifiedImagePath);
+        const resultImage = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Bmp.convertPixelsToRaw(modifiedImage.getPixels()));
         for (let i = 0; i < originalImage.getPixels().length; i++) {
             for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
                 if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {

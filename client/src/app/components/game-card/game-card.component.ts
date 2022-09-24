@@ -51,17 +51,11 @@ export class GameCardComponent {
         this.gameCardService.openNameDialog();
     }
 
-    onClickCreateGame(): void {
-        // create new game lobby
-    }
-
     onClickDeleteGame(game: GameCard): void {
         this.gameCardService.deleteGame(game);
-        // delete game
     }
 
     onClickResetHighScores(game: GameCard): void {
-        // reset highscores
         this.gameCardService.resetHighScores(game);
     }
 }

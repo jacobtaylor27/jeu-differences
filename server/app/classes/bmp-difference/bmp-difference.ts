@@ -58,18 +58,13 @@ export class BmpDifference {
         return resultCoordinates;
     }
 
-    static enlargePixelArea(originalImage: Bmp, radius: number): Bmp {
+    static enlargePixelsArea(originalImage: Bmp, radius: number): Bmp {
         const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
-        originalImage.getPixels().forEach((lineOfPixel, i) => {
-            lineOfPixel.forEach((pixel, j) => {
-                resultCoordinates.forEach((coordinate) => {
-                    if (i === coordinate.x && j === coordinate.y) {
-                        this.setPixelBlack(pixel);
-                    }
-                });
-            });
+        const pixelResult: Pixel[][] = originalImage.getPixels();
+        resultCoordinates.forEach((coordinate) => {
+            this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
         });
-        return originalImage;
+        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
 
     static async produceImageBmp(imagePath: string): Promise<Bmp> {

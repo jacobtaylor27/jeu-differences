@@ -21,6 +21,14 @@ export class GameCardHandlerService {
         this.gameCards = this.generateFakeCards();
     }
 
+    getGameCards(): GameCard[] {
+        return this.gameCards;
+    }
+
+    hasCards(): boolean {
+        return this.gameCards.length > 0;
+    }
+
     hideAllCards(): void {
         for (const gameCard of this.gameCards) {
             gameCard.isShown = false;

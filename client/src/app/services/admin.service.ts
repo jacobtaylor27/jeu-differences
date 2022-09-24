@@ -13,11 +13,11 @@ export class AdminService {
     gameConstants: GameConstants;
 
     constructor(private readonly gameCardHandlerService: GameCardHandlerService, private readonly matDialog: MatDialog) {
-        this.gameCards = this.gameCardHandlerService.gameCards;
+        this.gameCards = this.gameCardHandlerService.getGameCards();
     }
 
     hasGameCards(): boolean {
-        return this.gameCards.length > 0;
+        return this.gameCardHandlerService.hasCards();
     }
 
     deleteAllGames(): void {

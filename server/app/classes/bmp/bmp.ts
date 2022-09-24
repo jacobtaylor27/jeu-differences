@@ -12,7 +12,18 @@ export class Bmp {
         this.width = width;
         this.pixels = this.convertRawToPixels(rawData);
     }
-
+    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
+        const raw: number[] = [];
+        pixelMatrix.forEach((lineOfPixels) => {
+            lineOfPixels.forEach((pixel) => {
+                raw.push(pixel.a);
+                raw.push(pixel.b);
+                raw.push(pixel.g);
+                raw.push(pixel.r);
+            });
+        });
+        return raw;
+    }
     getWidth(): number {
         return this.width;
     }

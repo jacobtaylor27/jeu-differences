@@ -22,6 +22,10 @@ export class GameCarouselService {
         });
     }
 
+    hasCards(): boolean {
+        return this.gameCardHandlerService.gameCards.length > 0;
+    }
+
     hasPreviousCards(): boolean {
         return this.gameCardHandlerService.activeCardsRange.start > 0;
     }

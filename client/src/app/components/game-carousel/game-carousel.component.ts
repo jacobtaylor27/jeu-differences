@@ -18,6 +18,10 @@ export class GameCarouselComponent implements OnInit {
         this.resetStartingRange();
     }
 
+    hasCards(): boolean {
+        return this.gameCarouselService.hasCards();
+    }
+
     resetStartingRange(): void {
         this.gameCarouselService.resetRange();
     }

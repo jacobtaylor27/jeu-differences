@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div class="carousel-actions-container" *ngIf="gameCards.length > 0">
+    <div class="carousel-actions-container" *ngIf="hasCards()">
         <button mat-fab color="primary" [disabled]="!hasCardsBefore()" (click)="onClickPrevious()">
             <mat-icon><b>chevron_left</b></mat-icon>
         </button>

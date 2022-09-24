@@ -4,11 +4,11 @@ import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
 export class BmpDifference {
     static async getDifference(originalImagePath: string, modifiedImagePath: string): Promise<Bmp> {
-        const originalImage = await this.produceImageBmp(originalImagePath);
-        const modifiedImage = await this.produceImageBmp(modifiedImagePath);
+        const originalImage = await BmpDecoder.decode(originalImagePath);
+        const modifiedImage = await BmpDecoder.decode(modifiedImagePath);
         if (!this.areBmpCompatible(originalImage, modifiedImage)) throw new Error('Both images do not have the same height or width');
 
-        const resultImage = await this.produceImageBmp(modifiedImagePath);
+        const resultImage = await BmpDecoder.decode(modifiedImagePath);
         for (let i = 0; i < originalImage.getPixels().length; i++) {
             for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
                 if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
@@ -65,10 +65,6 @@ export class BmpDifference {
             this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
-    }
-
-    static async produceImageBmp(imagePath: string): Promise<Bmp> {
-        return await BmpDecoder.decode(imagePath);
     }
     static isHeightEqual(originalImageHeight: number, modifiedImageHeight: number) {
         return originalImageHeight === modifiedImageHeight;

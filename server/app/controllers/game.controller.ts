@@ -1,3 +1,4 @@
+import { BmpService } from '@app/services/bmp.service';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 
@@ -5,15 +6,52 @@ import { Service } from 'typedi';
 export class GameController {
     router: Router;
 
-    constructor() {
+    constructor(private readonly bmpService: BmpService) {
         this.configureRouter();
     }
 
     private configureRouter(): void {
         this.router = Router();
+        /**
+         * @swagger
+         *
+         * definitions:
+         *   Message:
+         *     type: object
+         *     properties:
+         *       title:
+         *         type: string
+         *       body:
+         *         type: string
+         */
 
+        /**
+         * @swagger
+         * tags:
+         *   - name: GameController
+         *     description: Responsable de s'occuper du déroulement d'une partie
+         */
+
+        /**
+         * @swagger
+         *
+         * /bmp/original/:id:
+         *   get:
+         *     description: Returns an unmodified bmp according to it's id
+         *     tags:
+         *       - GameController
+         *     produces:
+         *       - application/json
+         *     responses:
+         *       200:
+         *         schema:
+         *           $ref: '#/definitions/Message'
+         *
+         */
         this.router.get('/bmp/original/:id', (req: Request, res: Response) => {
-            // TODO: retourne un bmp original
+            const httpStatus = 404;
+            console.log(this.bmpService.getBmp());
+            res.send(httpStatus);
         });
         /*
         this.router.get('/bmp/modified/:id', (req: Request, res: Response) => {

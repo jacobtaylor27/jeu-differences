@@ -12,26 +12,30 @@ export class GameController {
     private configureRouter(): void {
         this.router = Router();
 
-        this.router.get('/', (req: Request, res: Response) => {
-            console.log(req);
-            console.log(res);
+        this.router.get('/bmp/original/:id', (req: Request, res: Response) => {
+            // TODO: retourne un bmp original
         });
-
-        // TODO: routing
-        // Pour démarer une partie
-        // get(game/bmp/src/:id); // maybe utiliser original à la place de src
-        // get(game/bmp/modified/:id);
-        // Durant le jeux: validation des coordonnées
-        // get(game/validate/:id/coord?)
-
-        // Validation des différences entre les bmps
-        // post(game/validate/bmp);
-        // Créer un jeux
-        // post(game)
-
-        // carouselle
-        // get(game/cards);
-        // get(game/card/:id);
-        // delete(game/:id);
+        /*
+        this.router.get('/bmp/modified/:id', (req: Request, res: Response) => {
+            // TODO: retourne un bmp modifié
+        });
+        this.router.get('/validate/bmp', (req: Request, res: Response) => {
+            // TODO: retourne le nommbre de différences et un image de différence
+        });
+        this.router.get('/validate/:id/coord?', (req: Request, res: Response) => {
+            // TODO: 
+            // HTTP_STATUS.ACCEPTED (202)
+            //      return differenceArea = [{pixel, coordonnées},...]
+            // HTTP_STATUS.NOT_ACCEPTED (406)
+        });
+        this.router.post('/', (req: Request, res: Response) => {
+        });
+        this.router.get('cards', (req: Request, res: Response) => {
+        });
+        this.router.get('card/:id', (req: Request, res: Response) => {
+        });
+        this.router.delete('/:id', (req: Request, res: Response) => {
+        });
+        */
     }
 }

@@ -1,7 +1,7 @@
 import { HttpException } from '@app/classes/http/http.exception';
-import { BmpController } from '@app/controllers/bmp.controller';
 import { DateController } from '@app/controllers/date.controller';
 import { ExampleController } from '@app/controllers/example.controller';
+import { GameController } from '@app/controllers/game.controller';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
@@ -19,7 +19,7 @@ export class Application {
     constructor(
         private readonly exampleController: ExampleController,
         private readonly dateController: DateController,
-        private readonly bmpController: BmpController,
+        private readonly gameController: GameController,
     ) {
         this.app = express();
 
@@ -40,7 +40,7 @@ export class Application {
     }
 
     bindRoutes(): void {
-        this.app.use('/api/bmp', this.bmpController.router);
+        this.app.use('/api/game', this.gameController.router);
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/api/example', this.exampleController.router);
         this.app.use('/api/date', this.dateController.router);

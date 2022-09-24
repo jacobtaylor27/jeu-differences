@@ -3,7 +3,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselService } from '@app/services/game-carousel.service';
 import { GameCarouselComponent } from './game-carousel.component';
 
-fdescribe('GameCarouselComponent', () => {
+describe('GameCarouselComponent', () => {
     let component: GameCarouselComponent;
     let fixture: ComponentFixture<GameCarouselComponent>;
     let spyGameCarouselService: GameCarouselService;

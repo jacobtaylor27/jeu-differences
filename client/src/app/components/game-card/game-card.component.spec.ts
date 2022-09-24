@@ -22,7 +22,7 @@ const GAME_CARD: GameCard = {
     isAdminCard: true,
 };
 
-fdescribe('GameCardComponent', () => {
+describe('GameCardComponent', () => {
     let component: GameCardComponent;
     let fixture: ComponentFixture<GameCardComponent>;
     let spyGameCardService: jasmine.SpyObj<GameCardService>;

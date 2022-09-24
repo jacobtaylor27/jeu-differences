@@ -1,6 +1,6 @@
-<mat-card *ngIf="gameCard.isShown" [ngClass]="favoriteTheme" class="card-container">
-    <mat-card-title class="game-name-title">{{ gameCard.gameInformation.gameName }}</mat-card-title>
-    <img class="game-image" mat-card-lg-image [src]="gameCard.gameInformation.imgName">
+<mat-card [ngClass]="favoriteTheme" class="card-container">
+    <mat-card-title class="game-name-title">{{ getGameName() }}</mat-card-title>
+    <img class="game-image" mat-card-lg-image [src]="getImageName()">
     
     <mat-card-content class="highscores-content">
         <h3 class="highscore-title"><b>Meilleurs scores</b></h3>
@@ -8,7 +8,7 @@
             <ul class="highscores-solo">
                 <li class="highscores-solo-title"><b>Solo</b></li>
                 <div class="highscores-multi-content" *ngIf="hasSinglePlayerScores(); else noSoloScores">
-                    <li *ngFor="let score of gameCard.gameInformation.scoresSolo">
+                    <li *ngFor="let score of getSinglePlayerScores()">
                         {{ score.playerName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
                     </li>
                 </div>
@@ -20,7 +20,7 @@
             <ul class="highscores-multi">
                 <li class="highscores-multi-title"><b>1 vs 1</b></li>
                 <div class="highscores-multi-content" *ngIf="hasMultiplayerScores(); else noMultiplayerScores">
-                    <li *ngFor="let score of gameCard.gameInformation.scoresMultiplayer">
+                    <li *ngFor="let score of getMultiplayerScores()">
                         {{ score.playerName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
                     </li>
                 </div>
@@ -32,7 +32,7 @@
     </mat-card-content>
     
     <mat-card-actions class="game-card-buttons">
-        <div class="admin-buttons" *ngIf="gameCard.isAdminCard; else selectPage">
+        <div class="admin-buttons" *ngIf="isAdminCard(); else selectPage">
             <button  mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickDeleteGame(gameCard)">
                 <mat-icon>delete</mat-icon>
             </button>

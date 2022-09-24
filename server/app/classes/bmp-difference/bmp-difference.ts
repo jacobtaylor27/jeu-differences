@@ -20,6 +20,14 @@ export class BmpDifference {
         }
         return resultImage;
     }
+    static enlargePixelsArea(originalImage: Bmp, radius: number): Bmp {
+        const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
+        const pixelResult: Pixel[][] = originalImage.getPixels();
+        resultCoordinates.forEach((coordinate) => {
+            this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
+        });
+        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
+    }
 
     static applyEnlargement(center: Coordinates, radius: number): Coordinates[] {
         const result: Coordinates[] = [];
@@ -62,14 +70,6 @@ export class BmpDifference {
         return resultCoordinates;
     }
 
-    static enlargePixelsArea(originalImage: Bmp, radius: number): Bmp {
-        const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
-        const pixelResult: Pixel[][] = originalImage.getPixels();
-        resultCoordinates.forEach((coordinate) => {
-            this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
-        });
-        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
-    }
     static isHeightEqual(originalImageHeight: number, modifiedImageHeight: number): boolean {
         return originalImageHeight === modifiedImageHeight;
     }

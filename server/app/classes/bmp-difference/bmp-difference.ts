@@ -25,12 +25,7 @@ export class BmpDifference {
         const result: Coordinates[] = [];
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
-                if (
-                    Math.abs(i) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(j, 2))) &&
-                    Math.abs(j) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(i, 2)))
-                ) {
-                    if (i + center.x >= 0 && j + center.y >= 0) result.push({ x: i + center.x, y: j + center.y });
-                }
+                if (this.isInsideBoundaries({ x: i, y: j }, center, radius)) result.push({ x: i + center.x, y: j + center.y });
             }
         }
         return result;
@@ -45,6 +40,15 @@ export class BmpDifference {
             }
         }
         return coordinatesOfBlackPixels;
+    }
+    static isInsideBoundaries(coordinate: Coordinates, center: Coordinates, radius: number): boolean {
+        if (
+            Math.abs(coordinate.x) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(coordinate.y, 2))) &&
+            Math.abs(coordinate.y) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(coordinate.x, 2)))
+        ) {
+            if (coordinate.x + center.x >= 0 && coordinate.y + center.y >= 0) return true;
+        }
+        return false;
     }
 
     static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {

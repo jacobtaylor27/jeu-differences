@@ -1,9 +1,8 @@
+import { HTTP_STATUS } from '@app/constants/http-status';
 import { ExampleService } from '@app/services/example.service';
 import { Message } from '@common/message';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
-
-const HTTP_STATUS_CREATED = 201;
 
 @Service()
 export class ExampleController {
@@ -108,7 +107,7 @@ export class ExampleController {
         this.router.post('/send', (req: Request, res: Response) => {
             const message: Message = req.body;
             this.exampleService.storeMessage(message);
-            res.sendStatus(HTTP_STATUS_CREATED);
+            res.sendStatus(HTTP_STATUS.created);
         });
 
         /**

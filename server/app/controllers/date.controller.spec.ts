@@ -1,13 +1,11 @@
 import { Application } from '@app/app';
+import { HTTP_STATUS } from '@app/constants/http-status';
 import { DateService } from '@app/services/date.service';
 import { Message } from '@common/message';
 import * as chai from 'chai';
-import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
 import * as supertest from 'supertest';
 import { Container } from 'typedi';
-
-const HTTP_STATUS_OK = StatusCodes.OK;
 
 describe('DateController', () => {
     let dateService: SinonStubbedInstance<DateService>;
@@ -27,7 +25,7 @@ describe('DateController', () => {
 
         return supertest(expressApp)
             .get('/api/date')
-            .expect(HTTP_STATUS_OK)
+            .expect(HTTP_STATUS.ok)
             .then((response) => {
                 chai.expect(response.body).to.deep.equal(expectedMessage);
             });
@@ -38,7 +36,7 @@ describe('DateController', () => {
 
         return supertest(expressApp)
             .get('/api/date')
-            .expect(HTTP_STATUS_OK)
+            .expect(HTTP_STATUS.ok)
             .then((response) => {
                 chai.expect(response.body.title).to.equal('Error');
             });

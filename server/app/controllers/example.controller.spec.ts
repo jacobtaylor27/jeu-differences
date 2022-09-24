@@ -1,14 +1,11 @@
 import { Application } from '@app/app';
+import { HTTP_STATUS } from '@app/constants/http-status';
 import { ExampleService } from '@app/services/example.service';
 import { Message } from '@common/message';
 import { expect } from 'chai';
-import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
 import * as supertest from 'supertest';
 import { Container } from 'typedi';
-
-const HTTP_STATUS_OK = StatusCodes.OK;
-const HTTP_STATUS_CREATED = StatusCodes.CREATED;
 
 describe('ExampleController', () => {
     const baseMessage = { title: 'Hello world', body: 'anything really' } as Message;
@@ -29,7 +26,7 @@ describe('ExampleController', () => {
     it('should return message from example service on valid get request to root', async () => {
         return supertest(expressApp)
             .get('/api/example')
-            .expect(HTTP_STATUS_OK)
+            .expect(HTTP_STATUS.ok)
             .then((response) => {
                 expect(response.body).to.deep.equal(baseMessage);
             });
@@ -40,7 +37,7 @@ describe('ExampleController', () => {
         exampleService.about.returns(aboutMessage);
         return supertest(expressApp)
             .get('/api/example/about')
-            .expect(HTTP_STATUS_OK)
+            .expect(HTTP_STATUS.ok)
             .then((response) => {
                 expect(response.body).to.deep.equal(aboutMessage);
             });
@@ -48,14 +45,14 @@ describe('ExampleController', () => {
 
     it('should store message in the array on valid post request to /send', async () => {
         const message: Message = { title: 'Hello', body: 'World' };
-        return supertest(expressApp).post('/api/example/send').send(message).set('Accept', 'application/json').expect(HTTP_STATUS_CREATED);
+        return supertest(expressApp).post('/api/example/send').send(message).set('Accept', 'application/json').expect(HTTP_STATUS.created);
     });
 
     it('should return an array of messages on valid get request to /all', async () => {
         exampleService.getAllMessages.returns([baseMessage, baseMessage]);
         return supertest(expressApp)
             .get('/api/example/all')
-            .expect(HTTP_STATUS_OK)
+            .expect(HTTP_STATUS.ok)
             .then((response) => {
                 expect(response.body).to.deep.equal([baseMessage, baseMessage]);
             });

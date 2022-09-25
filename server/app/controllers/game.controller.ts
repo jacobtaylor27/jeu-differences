@@ -39,6 +39,8 @@ export class GameController {
          *
          * /api/game/bmp/original/{id}:
          *   get:
+         *     tags:
+         *       - GameController
          *     description: get the original bmp of the corresponding id
          *     parameters:
          *       - in: path

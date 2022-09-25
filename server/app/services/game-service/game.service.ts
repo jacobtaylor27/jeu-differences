@@ -38,15 +38,28 @@ export class GameService {
             return undefined;
         }
     }
-    async getAllGameCards() {
+    getAllGameCards() {
         const gameCards: GameCard[] = [];
         this.game.forEach((game) => {
             gameCards.push(this.convertGameIntoGameCard(game));
         });
         return gameCards;
     }
-    async addGame() {}
-
+    addGame(game: Game): boolean {
+        if (!this.verifyIfGameExists(game.id)) {
+            this.game.push(game);
+            return true;
+        }
+        return false;
+    }
+    private verifyIfGameExists(gameId: number): boolean {
+        for (const game of this.game) {
+            if (game.id === gameId) {
+                return true;
+            }
+        }
+        return false;
+    }
     private convertGameIntoGameCard(game: Game): GameCard {
         const gameCard: GameCard = {
             id: game.id,

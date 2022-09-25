@@ -54,7 +54,9 @@ export class BmpDifference {
             Math.abs(coordinate.x) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(coordinate.y, 2))) &&
             Math.abs(coordinate.y) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(coordinate.x, 2)))
         ) {
-            if (coordinate.x + center.x >= 0 && coordinate.y + center.y >= 0) return true;
+            if (coordinate.x + center.x >= 0 && coordinate.y + center.y >= 0) {
+                return true;
+            }
         }
         return false;
     }

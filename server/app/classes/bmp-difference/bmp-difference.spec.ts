@@ -63,7 +63,7 @@ describe('DifferenceBetween2Images', async () => {
             expect(e).to.be.instanceof(Error);
         }
     });
-    it('Should produce a difference between two normal size images ', async () => {
+    it('Should produce the difference between two normal size images ', async () => {
         const bmpOriginal = await BmpDecoder.decode('./assets/test-bmp/test_bmp_original.bmp');
         const bmpModified = await BmpDecoder.decode('./assets/test-bmp/test_bmp_modified.bmp');
         const radius = 0;
@@ -73,7 +73,7 @@ describe('DifferenceBetween2Images', async () => {
         const expectedDifference = await BmpDecoder.decode(filePathExpectedBmp);
         expect(difference).to.be.eql(expectedDifference);
     });
-    it('Should apply  3 pixel enlargement radius  for a given image ', async () => {
+    it('Should apply  3 pixel enlargement radius for a given image ', async () => {
         const bmpOriginal = await BmpDecoder.decode('./assets/test-bmp/test_bmp_original.bmp');
         const bmpModified = await BmpDecoder.decode('./assets/test-bmp/test_bmp_modified.bmp');
         const radius = 3;
@@ -81,7 +81,7 @@ describe('DifferenceBetween2Images', async () => {
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         expect(expectedBmpImage).to.be.eql(await BmpDifference.getDifference(bmpOriginal, bmpModified, radius));
     });
-    it('Should apply  9 pixel enlargement radius  for a given image ', async () => {
+    it('Should apply  9 pixel enlargement radius for a given image ', async () => {
         const bmpOriginal = await BmpDecoder.decode('./assets/test-bmp/test_bmp_original.bmp');
         const bmpModified = await BmpDecoder.decode('./assets/test-bmp/test_bmp_modified.bmp');
         const radius = 9;
@@ -89,7 +89,7 @@ describe('DifferenceBetween2Images', async () => {
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         expect(expectedBmpImage).to.be.eql(await BmpDifference.getDifference(bmpOriginal, bmpModified, radius));
     });
-    it('Should apply  15 pixel enlargement radius  for a given image ', async () => {
+    it('Should apply  15 pixel enlargement radius for a given image ', async () => {
         const bmpOriginal = await BmpDecoder.decode('./assets/test-bmp/test_bmp_original.bmp');
         const bmpModified = await BmpDecoder.decode('./assets/test-bmp/test_bmp_modified.bmp');
         const radius = 15;

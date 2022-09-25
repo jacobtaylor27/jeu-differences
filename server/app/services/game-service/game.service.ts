@@ -7,8 +7,11 @@ export class GameService {
     private game: Game[];
 
     constructor() {
-        // TODO: fetch toutes les parties avec MongoDb
         this.game = [];
+    }
+
+    async initialiseGames() {
+        // TODO: fetch toutes les parties avec mongoDb
         const basicGame: Game = {
             id: 0,
             idOriginalBmp: 0,

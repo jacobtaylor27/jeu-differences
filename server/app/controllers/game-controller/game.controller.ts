@@ -63,6 +63,7 @@ export class GameController {
             });
         });
         /*
+        // service de game
         this.router.get('/validate/bmp', (req: Request, res: Response) => {
             // TODO: retourne le nommbre de différences et un image de différence
         });

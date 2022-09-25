@@ -3,6 +3,7 @@ import { BmpDifference } from '@app/classes/bmp-difference/bmp-difference';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { BmpEncoder } from '../bmp-encoder/bmp-encoder';
 
 describe('DifferenceBetween2Images', async () => {
     let bmp2x2: Bmp;
@@ -86,21 +87,42 @@ describe('DifferenceBetween2Images', async () => {
         const filePathOfTheResultBmp = './assets/test-bmp/test-expected-difference-3px.bmp';
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         expect(expectedBmpImage).to.be.eql(await BmpDifference.getDifference(bmpOriginal, bmpModified, radius));
+
+        const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
+        const blackBmp = await BmpDecoder.decode('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
+        const bmpWithRadiusOf3px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-3px.bmp');
+        const bmpResulting = await BmpDifference.getDifference(bmpWithRadiusOf0px, blackBmp, radius);
+        await BmpEncoder.encode('./assets/src-bmp/result.bmp', bmpResulting);
+        expect(bmpWithRadiusOf3px).to.be.eql(bmpResulting);
     });
-    it('Should apply  9 pixel enlargement radius for a given image ', async () => {
+    it('Should apply 9 pixel enlargement radius for a given image ', async () => {
         const bmpOriginal = await BmpDecoder.decode('./assets/test-bmp/test_bmp_original.bmp');
         const bmpModified = await BmpDecoder.decode('./assets/test-bmp/test_bmp_modified.bmp');
         const radius = 9;
         const filePathOfTheResultBmp = './assets/test-bmp/test-expected-difference-9px.bmp';
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         expect(expectedBmpImage).to.be.eql(await BmpDifference.getDifference(bmpOriginal, bmpModified, radius));
+
+        const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
+        const blackBmp = await BmpDecoder.decode('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
+        const bmpWithRadiusOf3px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-9px.bmp');
+        const bmpResulting = await BmpDifference.getDifference(bmpWithRadiusOf0px, blackBmp, radius);
+        await BmpEncoder.encode('./assets/src-bmp/result.bmp', bmpResulting);
+        expect(bmpWithRadiusOf3px).to.be.eql(bmpResulting);
     });
-    it('Should apply  15 pixel enlargement radius for a given image ', async () => {
+    it('Should apply 15 pixel enlargement radius for a given image ', async () => {
         const bmpOriginal = await BmpDecoder.decode('./assets/test-bmp/test_bmp_original.bmp');
         const bmpModified = await BmpDecoder.decode('./assets/test-bmp/test_bmp_modified.bmp');
         const radius = 15;
         const filePathOfTheResultBmp = './assets/test-bmp/test-expected-difference-15px.bmp';
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         expect(expectedBmpImage).to.be.eql(await BmpDifference.getDifference(bmpOriginal, bmpModified, radius));
+
+        const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
+        const blackBmp = await BmpDecoder.decode('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
+        const bmpWithRadiusOf3px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-15px.bmp');
+        const bmpResulting = await BmpDifference.getDifference(bmpWithRadiusOf0px, blackBmp, radius);
+        await BmpEncoder.encode('./assets/src-bmp/result.bmp', bmpResulting);
+        expect(bmpWithRadiusOf3px).to.be.eql(bmpResulting);
     });
 });

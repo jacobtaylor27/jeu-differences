@@ -1,6 +1,7 @@
 import { HTTP_STATUS } from '@app/constants/http-status';
 import { BmpService } from '@app/services/bmp.service';
 import { Request, Response, Router } from 'express';
+import * as fs from 'fs';
 import { Service } from 'typedi';
 
 @Service()
@@ -53,7 +54,9 @@ export class GameController {
          */
         this.router.get('/bmp/original/:id', (req: Request, res: Response) => {
             console.log(this.bmpService.getBmp());
-            res.send(HTTP_STATUS.ok);
+            fs.readFile('./assets/test-bmp/bmp_test_2x2.bmp', (file) => {
+                res.status(HTTP_STATUS.ok).send(file);
+            });
         });
         /*
         this.router.get('/bmp/modified/:id', (req: Request, res: Response) => {

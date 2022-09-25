@@ -1,3 +1,4 @@
+import { HTTP_STATUS } from '@app/constants/http-status';
 import { BmpService } from '@app/services/bmp.service';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
@@ -35,23 +36,24 @@ export class GameController {
         /**
          * @swagger
          *
-         * /bmp/original/:id:
+         * /api/game/bmp/original/{id}:
          *   get:
-         *     description: Returns an unmodified bmp according to it's id
-         *     tags:
-         *       - GameController
-         *     produces:
-         *       - application/json
+         *     description: get the original bmp of the corresponding id
+         *     parameters:
+         *       - in: path
+         *         name: id
+         *         required: true
+         *         schema:
+         *           type: integer
+         *           minimum: 1
+         *         description: The id of a bmp
          *     responses:
          *       200:
-         *         schema:
-         *           $ref: '#/definitions/Message'
-         *
+         *         description: Ok
          */
         this.router.get('/bmp/original/:id', (req: Request, res: Response) => {
-            const httpStatus = 404;
             console.log(this.bmpService.getBmp());
-            res.send(httpStatus);
+            res.send(HTTP_STATUS.ok);
         });
         /*
         this.router.get('/bmp/modified/:id', (req: Request, res: Response) => {

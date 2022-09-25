@@ -27,9 +27,13 @@ export class GameService {
         }
         return undefined;
     }
-    async getGameCardById(gameId: number) {
-        const game: Game = await this.getGameById(gameId);
-        return this.convertGameIntoGameCard(game);
+    getGameCardById(gameId: number): GameCard | undefined {
+        const game: Game | undefined = this.getGameById(gameId);
+        if (game !== undefined) {
+            return this.convertGameIntoGameCard(game);
+        } else {
+            return undefined;
+        }
     }
     async getAllGameCards() {}
     async addGame() {}

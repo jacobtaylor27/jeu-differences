@@ -223,7 +223,7 @@ describe(' DifferenceBetween2Images', () => {
         const filePathOfTheResultBmp = './assets/test-bmp/test-expected-difference-3px.bmp';
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         const originalBmp = await BmpDecoder.decode(filePathBmp);
-        expect(expectedBmpImage).to.be.eql(BmpDifference.enlargePixelsArea(originalBmp, radius));
+        expect(expectedBmpImage).to.be.eql(BmpDifference.createBmpWithDifferences(originalBmp, radius));
     });
     it('Should apply  9 pixel enlargement radius  for a given image ', async () => {
         const radius = 9;
@@ -231,7 +231,7 @@ describe(' DifferenceBetween2Images', () => {
         const filePathOfTheResultBmp = './assets/test-bmp/test-expected-difference-9px.bmp';
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         const originalBmp = await BmpDecoder.decode(filePathBmp);
-        expect(expectedBmpImage).to.be.eql(BmpDifference.enlargePixelsArea(originalBmp, radius));
+        expect(expectedBmpImage).to.be.eql(BmpDifference.createBmpWithDifferences(originalBmp, radius));
     });
     it('Should apply  15 pixel enlargement radius  for a given image ', async () => {
         const radius = 15;
@@ -239,6 +239,6 @@ describe(' DifferenceBetween2Images', () => {
         const filePathOfTheResultBmp = './assets/test-bmp/test-expected-difference-15px.bmp';
         const expectedBmpImage = await BmpDecoder.decode(filePathOfTheResultBmp);
         const originalBmp = await BmpDecoder.decode(filePathBmp);
-        expect(expectedBmpImage).to.be.eql(BmpDifference.enlargePixelsArea(originalBmp, radius));
+        expect(expectedBmpImage).to.be.eql(BmpDifference.createBmpWithDifferences(originalBmp, radius));
     });
 });

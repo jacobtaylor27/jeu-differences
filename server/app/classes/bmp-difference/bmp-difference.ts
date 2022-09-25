@@ -20,7 +20,7 @@ export class BmpDifference {
         }
         return resultImage;
     }
-    static enlargePixelsArea(originalImage: Bmp, radius: number): Bmp {
+    static createBmpWithDifferences(originalImage: Bmp, radius: number): Bmp {
         const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coordinate) => {
@@ -76,12 +76,12 @@ export class BmpDifference {
     static isWidthEqual(originalImageWidth: number, modifiedImageWidth: number): boolean {
         return originalImageWidth === modifiedImageWidth;
     }
-    static arePixelsEqual(originalImage: Pixel, modifiedImage: Pixel): boolean {
+    static arePixelsEqual(pixelOriginalImg: Pixel, pixelModifiedImg: Pixel): boolean {
         return (
-            originalImage.a === modifiedImage.a &&
-            originalImage.b === modifiedImage.b &&
-            originalImage.g === modifiedImage.g &&
-            originalImage.r === modifiedImage.r
+            pixelOriginalImg.a === pixelModifiedImg.a &&
+            pixelOriginalImg.b === pixelModifiedImg.b &&
+            pixelOriginalImg.g === pixelModifiedImg.g &&
+            pixelOriginalImg.r === pixelModifiedImg.r
         );
     }
     static setPixelWhite(pixel: Pixel): Pixel {

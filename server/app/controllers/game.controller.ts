@@ -31,7 +31,7 @@ export class GameController {
          * @swagger
          * tags:
          *   - name: GameController
-         *     description: Responsable de s'occuper du déroulement d'une partie
+         *     description: Responsable for sending the bmp.
          */
 
         /**
@@ -47,10 +47,12 @@ export class GameController {
          *         schema:
          *           type: integer
          *           minimum: 1
-         *         description: The id of a bmp
+         *         description: The id of a bmp.
          *     responses:
          *       200:
-         *         description: Ok
+         *         description: The message containing the bmp was sent correctly.
+         *       404:
+         *         description: The id asked for was not found in the file present on the server.
          */
         this.router.get('/bmp/original/:id', (req: Request, res: Response) => {
             console.log(this.bmpService.getBmp());

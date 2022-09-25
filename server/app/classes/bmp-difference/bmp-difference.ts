@@ -1,12 +1,11 @@
-import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
 export class BmpDifference {
-    static async getDifference(originalImagePath: string, modifiedImagePath: string, radius: number): Promise<Bmp> {
-        const originalImage: Bmp = await BmpDecoder.decode(originalImagePath);
-        const modifiedImage: Bmp = await BmpDecoder.decode(modifiedImagePath);
-        if (!this.areBmpCompatible(originalImage, modifiedImage)) throw new Error('Both images do not have the same height or width');
+    static async getDifference(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
+        if (!this.areBmpCompatible(originalImage, modifiedImage)) {
+            throw new Error('Both images do not have the same height or width');
+        }
         const resultImage: Bmp = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Bmp.convertPixelsToRaw(modifiedImage.getPixels()));
         for (let i = 0; i < originalImage.getPixels().length; i++) {
             for (let j = 0; j < originalImage.getPixels()[i].length; j++) {

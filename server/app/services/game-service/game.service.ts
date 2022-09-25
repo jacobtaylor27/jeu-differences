@@ -35,7 +35,13 @@ export class GameService {
             return undefined;
         }
     }
-    async getAllGameCards() {}
+    async getAllGameCards() {
+        const gameCards: GameCard[] = [];
+        this.game.forEach((game) => {
+            gameCards.push(this.convertGameIntoGameCard(game));
+        });
+        return gameCards;
+    }
     async addGame() {}
 
     private convertGameIntoGameCard(game: Game): GameCard {

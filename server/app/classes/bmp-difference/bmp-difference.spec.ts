@@ -3,7 +3,6 @@ import { BmpDifference } from '@app/classes/bmp-difference/bmp-difference';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { BmpEncoder } from '../bmp-encoder/bmp-encoder';
 
 describe('DifferenceBetween2Images', async () => {
     let bmp2x2: Bmp;

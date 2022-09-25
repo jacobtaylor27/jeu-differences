@@ -12,9 +12,8 @@ describe('SidebarComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CluesAreaComponent, TimerStopwatchComponent, TimerCountdownComponent, DifferencesAreaComponent],
+            declarations: [SidebarComponent, CluesAreaComponent, TimerStopwatchComponent, TimerCountdownComponent, DifferencesAreaComponent],
             imports: [AppMaterialModule],
-            providers: [TimerStopwatchComponent],
         }).compileComponents();
     });
 

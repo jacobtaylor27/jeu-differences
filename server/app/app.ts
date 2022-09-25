@@ -1,7 +1,7 @@
 import { HttpException } from '@app/classes/http/http.exception';
-import { DateController } from '@app/controllers/date.controller';
-import { ExampleController } from '@app/controllers/example.controller';
-import { GameController } from '@app/controllers/game.controller';
+import { DateController } from '@app/controllers/date-controller/date.controller';
+import { ExampleController } from '@app/controllers/example-controller/example.controller';
+import { GameController } from '@app/controllers/game-controller/game.controller';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';

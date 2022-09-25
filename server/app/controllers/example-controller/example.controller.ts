@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '@app/constants/http-status';
-import { ExampleService } from '@app/services/example.service';
+import { ExampleService } from '@app/services/example-service/example.service';
 import { Message } from '@common/message';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';

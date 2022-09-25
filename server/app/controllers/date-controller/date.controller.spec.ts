@@ -1,6 +1,6 @@
 import { Application } from '@app/app';
 import { HTTP_STATUS } from '@app/constants/http-status';
-import { DateService } from '@app/services/date.service';
+import { DateService } from '@app/services/date-service/date.service';
 import { Message } from '@common/message';
 import * as chai from 'chai';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';

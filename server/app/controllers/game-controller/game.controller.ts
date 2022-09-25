@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '@app/constants/http-status';
-import { BmpService } from '@app/services/bmp.service';
+import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { Request, Response, Router } from 'express';
 import * as fs from 'fs';
 import { Service } from 'typedi';
@@ -37,7 +37,7 @@ export class GameController {
         /**
          * @swagger
          *
-         * /api/game/bmp/original/{id}:
+         * /api/game/bmp/{id}:
          *   get:
          *     tags:
          *       - GameController
@@ -56,16 +56,13 @@ export class GameController {
          *       404:
          *         description: The id asked for was not found in the file present on the server.
          */
-        this.router.get('/bmp/original/:id', (req: Request, res: Response) => {
+        this.router.get('/bmp/:id', (req: Request, res: Response) => {
             console.log(this.bmpService.getBmp());
             fs.readFile('./assets/test-bmp/bmp_test_2x2.bmp', (file) => {
                 res.status(HTTP_STATUS.ok).send(file);
             });
         });
         /*
-        this.router.get('/bmp/modified/:id', (req: Request, res: Response) => {
-            // TODO: retourne un bmp modifié
-        });
         this.router.get('/validate/bmp', (req: Request, res: Response) => {
             // TODO: retourne le nommbre de différences et un image de différence
         });

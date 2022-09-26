@@ -72,8 +72,8 @@ export class GameCardHandlerService {
     }
 
     deleteGames(): void {
-        for (const card of this.gameCards) {
-            this.deleteGame(card);
+        for (let i = this.gameCards.length - 1; i >= 0; i--) {
+            this.gameCards.splice(i, 1);
         }
     }
 

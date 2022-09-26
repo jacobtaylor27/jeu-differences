@@ -118,5 +118,20 @@ export class GameController {
                 res.sendStatus(HTTP_STATUS.notFound);
             }
         });
+
+        /*
+        this.router.get('/validate/bmp', (req: Request, res: Response) => {
+            // TODO: retourne le nommbre de différences et un image de différence
+        });
+        this.router.get('/validate/:id/coord?', (req: Request, res: Response) => {
+            // TODO: 
+            // HTTP_STATUS.ACCEPTED (202)
+            //      return differenceArea = [{pixel, coordonnées},...]
+            // HTTP_STATUS.NOT_ACCEPTED (406)
+        });
+
+        this.router.post('/', (req: Request, res: Response) => {
+        });
+        */
     }
 }

@@ -25,7 +25,7 @@ describe('Date Service', () => {
     it('currentTime should return different dates if called later', async () => {
         const { body: currentTime } = await dateService.currentTime();
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        clock.tick(5000); 
+        clock.tick(5000);
         const { body: now } = await dateService.currentTime();
         expect(new Date(currentTime)).to.be.below(new Date(now));
     });

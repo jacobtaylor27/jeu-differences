@@ -120,6 +120,11 @@ export class GameController {
         });
 
         /*
+        this.router.post('/', (req: Request, res: Response) => {
+        });
+        */
+
+        /*
         this.router.get('/validate/bmp', (req: Request, res: Response) => {
             // TODO: retourne le nommbre de différences et un image de différence
         });
@@ -128,9 +133,6 @@ export class GameController {
             // HTTP_STATUS.ACCEPTED (202)
             //      return differenceArea = [{pixel, coordonnées},...]
             // HTTP_STATUS.NOT_ACCEPTED (406)
-        });
-
-        this.router.post('/', (req: Request, res: Response) => {
         });
         */
     }

@@ -6,8 +6,8 @@ export class GameLogicService {
     constructor(private readonly gameService: GameService) {}
 
     // à la place de renvoyer undefined, renvoyer une erreur
-    validateCoordinates(gameId: number, coordinate: Coordinate): Coordinate[] | undefined {
-        const game = this.gameService.getGameById(gameId);
+    async validateCoordinates(gameId: number, coordinate: Coordinate): Promise<Coordinate[] | undefined> {
+        const game = await this.gameService.getGameById(gameId);
         if (game === undefined) return undefined;
 
         for (const areaOfDifference of game.differences) {

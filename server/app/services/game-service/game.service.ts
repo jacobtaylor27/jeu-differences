@@ -46,9 +46,7 @@ export class GameService {
         return gameCards;
     }
     async addGame(game: Game): Promise<boolean> {
-        // Il faudrait que ce ne soit pas une interface directement qui soit passé en paramètre, mais peut-être les attributs de l'objet?
-        // TODO: initialiser son attribut Id.
-        if (!this.verifyIfGameAlreadyExists(game.id)) {
+        if (!(await this.doesGameAlreadyExists(game.id))) {
             this.game.push(game);
             return true;
         }
@@ -63,11 +61,9 @@ export class GameService {
         }
         return undefined;
     }
-    private async verifyIfGameAlreadyExists(gameId: number): Promise<boolean> {
+    private async doesGameAlreadyExists(gameId: number): Promise<boolean> {
         for (const game of this.game) {
-            if (game.id === gameId) {
-                return true;
-            }
+            if (game.id === gameId) return true;
         }
         return false;
     }

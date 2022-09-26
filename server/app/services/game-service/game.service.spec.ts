@@ -43,9 +43,30 @@ describe('Game service', () => {
         gameService = new GameService(databaseService);
     });
 
-    it('initiation should fill the array of games with 3 basic games', async () => {
+    it('initialiseGames() should fill the array of games with 3 basic games', async () => {
         expect((await gameService.getAllGames()).length).to.equal(0);
         await gameService.initialiseGames();
         expect((await gameService.getAllGames()).length).to.equal(3);
+    });
+
+    it('addGame(game) should add a game to the array of games', async () => {
+        await gameService.initialiseGames();
+        expect((await gameService.getAllGames()).length).to.equal(3);
+        const newGame: Game = {
+            id: 3,
+            idOriginalBmp: 3,
+            idEditedBmp: 3,
+            idDifferenceBmp: 3,
+            bestScores: [],
+            name: 'fourthGame',
+            differences: [],
+        };
+        const isGameAdded = await gameService.addGame(newGame);
+        expect(isGameAdded).to.equal(true);
+
+        const resultingNbOfGame = 4;
+        const resultingGames = await gameService.getAllGames();
+        expect(resultingGames.length).to.equal(resultingNbOfGame);
+        expect(resultingGames[3]).to.deep.equal(newGame);
     });
 });

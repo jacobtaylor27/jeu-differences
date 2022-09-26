@@ -14,8 +14,8 @@ export class GameService {
     async initialiseGames() {
         this.game = this.databaseService.getGames();
     }
-    // à la place de renvoyer undefined, renvoyer une erreur
-    getGameById(gameId: number): Game | undefined {
+
+    async getGameById(gameId: number): Promise<Game | undefined> {
         for (const game of this.game) {
             if (game.id === gameId) {
                 return game;
@@ -23,23 +23,25 @@ export class GameService {
         }
         return undefined;
     }
-    // à la place de renvoyer undefined, renvoyer une erreur
-    getGameCardById(gameId: number): GameCard | undefined {
-        const game: Game | undefined = this.getGameById(gameId);
+
+    async getGameCardById(gameId: number): Promise<GameCard | undefined> {
+        const game: Game | undefined = await this.getGameById(gameId);
         if (game !== undefined) {
             return this.convertGameIntoGameCard(game);
         } else {
             return undefined;
         }
     }
-    getAllGameCards() {
+    async getAllGameCards(): Promise<GameCard[]> {
         const gameCards: GameCard[] = [];
         this.game.forEach((game) => {
-            gameCards.push(this.convertGameIntoGameCard(game));
+            this.convertGameIntoGameCard(game).then((gameCard) => {
+                gameCards.push(gameCard);
+            });
         });
         return gameCards;
     }
-    addGame(game: Game): boolean {
+    async addGame(game: Game): Promise<boolean> {
         // Il faudrait que ce ne soit pas une interface directement qui soit passé en paramètre, mais peut-être les attributs de l'objet?
         // TODO: initialiser son attribut Id.
         if (!this.verifyIfGameAlreadyExists(game.id)) {
@@ -48,7 +50,7 @@ export class GameService {
         }
         return false;
     }
-    deleteGameById(gameId: number): Game | undefined {
+    async deleteGameById(gameId: number): Promise<Game | undefined> {
         for (let i = 0; i < this.game.length; i++) {
             if (this.game[i].id === gameId) {
                 const nbOfElementToDelete = 1;
@@ -57,7 +59,7 @@ export class GameService {
         }
         return undefined;
     }
-    private verifyIfGameAlreadyExists(gameId: number): boolean {
+    private async verifyIfGameAlreadyExists(gameId: number): Promise<boolean> {
         for (const game of this.game) {
             if (game.id === gameId) {
                 return true;
@@ -65,7 +67,7 @@ export class GameService {
         }
         return false;
     }
-    private convertGameIntoGameCard(game: Game): GameCard {
+    private async convertGameIntoGameCard(game: Game): Promise<GameCard> {
         const gameCard: GameCard = {
             id: game.id,
             idOriginalBmp: game.idOriginalBmp,

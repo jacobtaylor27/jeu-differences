@@ -1,3 +1,4 @@
+import { Contact } from '@app/interface/contact';
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -44,9 +45,9 @@ describe('Database service', () => {
     });
 
     it('populateDatabase(...) should allow to populate the database with a collection', async () => {
-        const contact1 = { id: 1, name: 'Test', email: 'a@b.ca', message: 'test' };
-        const contact2 = { id: 2, name: 'Test', email: 'a@b.ca', message: 'test' };
-        const contacts = [contact1, contact2];
+        const contact1: Contact = { id: 1, name: 'Test', email: 'a@b.ca', message: 'test' };
+        const contact2: Contact = { id: 2, name: 'Test', email: 'a@b.ca', message: 'test' };
+        const contacts: Contact[] = [contact1, contact2];
 
         await databaseService.start(uri);
         await databaseService.database.createCollection(COLLECTION_NAME);

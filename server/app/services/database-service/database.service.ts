@@ -1,3 +1,4 @@
+import { Contact } from '@app/interface/contact';
 import { Db, MongoClient } from 'mongodb';
 import { Service } from 'typedi';
 
@@ -30,7 +31,7 @@ export class DatabaseService {
         this.client.close();
     }
 
-    async populateDatabase(collectionName: string, data: any): Promise<void> {
+    async populateDatabase(collectionName: string, data: Contact[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {

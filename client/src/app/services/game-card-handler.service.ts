@@ -8,8 +8,8 @@ import { CardRange } from '@app/interfaces/range';
     providedIn: 'root',
 })
 export class GameCardHandlerService {
-    activeCardsRange: CardRange = { start: 0, end: 3 };
-    gameCards: GameCard[] = [];
+    private activeCardsRange: CardRange = { start: 0, end: 3 };
+    private gameCards: GameCard[] = [];
 
     constructor() {
         this.fetchGameCards();
@@ -23,6 +23,14 @@ export class GameCardHandlerService {
 
     getGameCards(): GameCard[] {
         return this.gameCards;
+    }
+
+    getActiveCardsRange(): CardRange {
+        return this.activeCardsRange;
+    }
+
+    getNumberOfCards(): number {
+        return this.gameCards.length;
     }
 
     hasCards(): boolean {
@@ -51,10 +59,6 @@ export class GameCardHandlerService {
 
     setActiveCards(range: CardRange): void {
         this.hideAllCards();
-
-        if (this.gameCards.length <= range.end) {
-            range.end = this.gameCards.length - 1;
-        }
 
         for (let i = range.start; i <= range.end; i++) {
             this.gameCards[i].isShown = true;
@@ -91,6 +95,7 @@ export class GameCardHandlerService {
         }
     }
 
+    // will be removed once we have a proper database access
     generateFakeCards(): GameCard[] {
         const DEFAULT_NB_OF_CARDS = 18;
         const DEFAULT_SCORES: number[] = [1, 2, 3];
@@ -115,13 +120,13 @@ export class GameCardHandlerService {
         return cards;
     }
 
+    // will be removed or modified once we have a proper database access
     initializeScores(score: number[], gameCategory: GameCategory): PlayerScore[] {
         const scores: PlayerScore[] = [];
 
         for (let i = 0; i < score.length; i++) {
             const arbitraryNb = 5;
-            const timeForGame = arbitraryNb * i;
-            scores.push(new PlayerScore(`Player ${i}`, timeForGame, gameCategory));
+            scores.push(new PlayerScore(`Player ${i}`, arbitraryNb * i, gameCategory));
         }
 
         return scores;

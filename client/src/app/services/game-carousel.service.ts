@@ -9,11 +9,11 @@ export class GameCarouselService {
     constructor(private readonly gameCardHandlerService: GameCardHandlerService) {}
 
     getCards(): GameCard[] {
-        return this.gameCardHandlerService.gameCards;
+        return this.gameCardHandlerService.getGameCards();
     }
 
     getCarouselLength(): number {
-        return this.gameCardHandlerService.gameCards.length;
+        return this.gameCardHandlerService.getNumberOfCards();
     }
 
     resetRange(): void {
@@ -21,30 +21,30 @@ export class GameCarouselService {
     }
 
     setCardMode(makeAdmin: boolean = false): void {
-        this.gameCardHandlerService.gameCards.forEach((gameCard) => {
+        this.gameCardHandlerService.getGameCards().forEach((gameCard) => {
             gameCard.isAdminCard = makeAdmin;
         });
     }
 
     hasCards(): boolean {
-        return this.gameCardHandlerService.gameCards.length > 0;
+        return this.gameCardHandlerService.hasCards();
     }
 
     hasPreviousCards(): boolean {
-        return this.gameCardHandlerService.activeCardsRange.start > 0;
+        return this.gameCardHandlerService.getActiveCardsRange().start > 0;
     }
 
     hasNextCards(): boolean {
-        return this.gameCardHandlerService.activeCardsRange.end < this.gameCardHandlerService.gameCards.length - 1;
+        return this.gameCardHandlerService.getActiveCardsRange().end < this.gameCardHandlerService.getNumberOfCards() - 1;
     }
 
     showPreviousFour(): void {
         this.gameCardHandlerService.decreaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.activeCardsRange);
+        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.getActiveCardsRange());
     }
 
     showNextFour(): void {
         this.gameCardHandlerService.increaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.activeCardsRange);
+        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.getActiveCardsRange());
     }
 }

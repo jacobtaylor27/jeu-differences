@@ -9,6 +9,6 @@ export class GameSelectionService {
     gameCards: GameCard[] = [];
 
     constructor(private readonly gameCardHandlerService: GameCardHandlerService) {
-        this.gameCards = this.gameCardHandlerService.gameCards;
+        this.gameCards = this.gameCardHandlerService.getGameCards();
     }
 }

@@ -1,4 +1,5 @@
 import { Bmp } from '@common/bmp';
+import * as fs from 'fs';
 import { Service } from 'typedi';
 @Service()
 export class BmpService {
@@ -10,10 +11,11 @@ export class BmpService {
     // TODO: Figure out what the heck am I suppose to do with this.
     async initialiseBmps() {
         // TODO: Aller chercher tous les fichiers dans le folder './assets/src-bmp/'
+        const filebmp = fs.readFileSync('./assets/test-bmp/test_bmp_modified.bmp');
         const bmp: Bmp = {
             id: 0,
             name: 'image par défaut',
-            filepath: 'this is a path',
+            file: filebmp,
         };
         this.addNewBmp(bmp);
     }

@@ -26,9 +26,9 @@ export class DatabaseService {
     }
     async populateDatabase(collectionName: string, data: any): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
-        const nbDocuments = await collection.countDocuments();
+        const documents = await collection.find({}).toArray();
 
-        if (nbDocuments === 0) {
+        if (!documents.length) {
             await collection.insertMany(data);
         }
     }

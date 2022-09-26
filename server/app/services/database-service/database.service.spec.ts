@@ -28,16 +28,24 @@ describe('Database service', () => {
         expect(databaseService['db'].databaseName).to.equal(DB_NAME);
     });
 
-    it('should populate a collection', async () => {
+    it('populateDatabase(...) should allow to populate the database with a collection', async () => {
         const contact1 = { id: 1, name: 'Test', email: 'a@b.ca', message: 'test' };
         const contact2 = { id: 2, name: 'Test', email: 'a@b.ca', message: 'test' };
+        const contacts = [contact1, contact2];
 
         await databaseService.start(uri);
         await databaseService.database.createCollection(COLLECTION_NAME);
-        await databaseService.populateDatabase(COLLECTION_NAME, [contact1, contact2]);
+        await databaseService.populateDatabase(COLLECTION_NAME, contacts);
         const insertedContacts = await databaseService.database.collection(COLLECTION_NAME).find({}).toArray();
+        console.log(insertedContacts);
+
         expect(insertedContacts.length).to.equal(2);
-        expect(insertedContacts).to.equal([contact1, contact2]);
+        insertedContacts.forEach((contact, index) => {
+            expect(contacts[index].email).to.be.equal(contact.email);
+            expect(contacts[index].id).to.be.equal(contact.id);
+            expect(contacts[index].message).to.be.equal(contact.message);
+            expect(contacts[index].name).to.be.equal(contact.name);
+        });
     });
 
     it('should not populate a collection if data exists', async () => {

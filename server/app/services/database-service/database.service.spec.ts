@@ -10,6 +10,6 @@ describe('Database service', () => {
     });
 
     it('Should return an empty array of data (TODO: implement the service later)', () => {
-        expect(databaseService.getGames()).to.equal([]);
+        expect(databaseService.getGames()).to.deep.equal([]);
     });
 });

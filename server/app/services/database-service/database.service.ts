@@ -9,10 +9,10 @@ const DB_NAME = 'seven-differences';
 
 @Service()
 export class DatabaseService {
-    public client: MongoClient;
-    public db: Db;
+    private client: MongoClient;
+    private db: Db;
 
-    async start(url: string = DB_URL): Promise<void> {
+    async start(url: string = DB_URL): Promise<MongoClient> {
         try {
             this.client = new MongoClient(url);
             await this.client.connect();
@@ -20,6 +20,7 @@ export class DatabaseService {
         } catch (error) {
             throw new Error('La connection à mongoDb a échoué');
         }
+        return this.client;
     }
     async close(): Promise<void> {
         this.client.close();

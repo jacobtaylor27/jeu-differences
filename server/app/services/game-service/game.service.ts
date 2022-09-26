@@ -16,6 +16,7 @@ export class GameService {
             id: 0,
             idOriginalBmp: 0,
             idEditedBmp: 0,
+            idDifferenceBmp: 0,
             bestTimes: '',
             name: 'firstGame',
             differences: '',

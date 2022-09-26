@@ -58,6 +58,5 @@ describe('Database service', () => {
         await databaseService.populateDatabase(COLLECTION_NAME, [contact1, contact2]);
         const insertedContacts = await databaseService.database.collection(COLLECTION_NAME).find({}).toArray();
         expect(insertedContacts.length).equal(1);
-        expect(insertedContacts).equal([contact1]);
     });
 });

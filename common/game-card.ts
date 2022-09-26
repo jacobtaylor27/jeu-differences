@@ -1,6 +1,7 @@
+import { Score } from '@common/score';
 export interface GameCard {
     id: number;
     idOriginalBmp: number;
-    bestTimes: string;
+    bestScores: Score[];
     name: string;
 }

@@ -1,27 +1,18 @@
+import { DatabaseService } from '@app/services/database-service/database.service';
 import { Game } from '@common/game';
 import { GameCard } from '@common/game-card';
 import { Service } from 'typedi';
 
 @Service()
 export class GameService {
-    private game: Game[];
+    game: Game[];
 
-    constructor() {
+    constructor(private readonly databaseService: DatabaseService) {
         this.game = [];
     }
 
     async initialiseGames() {
-        // TODO: fetch toutes les parties avec mongoDb
-        const basicGame: Game = {
-            id: 0,
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
-            bestTimes: '',
-            name: 'firstGame',
-            differences: [],
-        };
-        this.game.push(basicGame);
+        this.game = this.databaseService.getGames();
     }
     // à la place de renvoyer undefined, renvoyer une erreur
     getGameById(gameId: number): Game | undefined {
@@ -78,7 +69,7 @@ export class GameService {
         const gameCard: GameCard = {
             id: game.id,
             idOriginalBmp: game.idOriginalBmp,
-            bestTimes: game.bestTimes,
+            bestScores: game.bestScores,
             name: game.name,
         };
         return gameCard;

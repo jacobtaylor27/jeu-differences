@@ -12,10 +12,19 @@ export class DatabaseService {
     public client: MongoClient;
     public db: Db;
 
-    constructor() {
+    async start(url: string = DB_URL): Promise<void> {
+        try {
+            this.client = new MongoClient(url);
+            await this.client.connect();
+            this.db = this.client.db(DB_NAME);
+        } catch (error) {
+            throw new Error('La connection à mongoDb a échoué');
+        }
     }
-
-    async populateDatabase(collectionName:string, data:any): Promise<void> { 
+    async close(): Promise<void> {
+        this.client.close();
+    }
+    async populateDatabase(collectionName: string, data: any): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const nbDocuments = await collection.countDocuments();
 
@@ -23,14 +32,7 @@ export class DatabaseService {
             await collection.insertMany(data);
         }
     }
-
-    async connectToDatabase(url: string = DB_URL): Promise<void> { 
-        try {
-            this.client = new MongoClient(url);
-            await this.client.connect();
-            this.db = this.client.db(DB_NAME);    
-        } catch (error) { 
-            console.error(error);
-        }
+    get database(): Db {
+        return this.db;
     }
 }

@@ -101,6 +101,18 @@ describe('Game service', () => {
         expect(await gameService.getGameCardById(missingId)).to.equal(undefined);
     });
 
+    it('getAllGameCards() should return all of the game cards', async () => {
+        await gameService.initialiseGames();
+        const expectedGameCard: GameCard = {
+            id: 0,
+            idOriginalBmp: 0,
+            bestScores: [],
+            name: 'firstGame',
+        };
+        expect((await gameService.getAllGameCards())[0]).to.deep.equal(expectedGameCard);
+        expect((await gameService.getAllGameCards()).length).to.equal(3);
+    });
+
     it('deleteGameById(id) should remove the game from the array of games', async () => {
         await gameService.initialiseGames();
 
@@ -120,7 +132,3 @@ describe('Game service', () => {
         expect((await gameService.getAllGameCards()).length).to.equal(2);
     });
 });
-
-/*
-    .deleteGameById
-*/

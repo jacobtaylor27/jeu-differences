@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 const COLLECTION_NAME = 'highscores';
+const DB_NAME = 'seven-differences';
 
 describe('Database service', () => {
     let mongoServer: MongoMemoryServer;
@@ -21,7 +22,11 @@ describe('Database service', () => {
         }
     });
 
-    it('should connect to the database', async () => {});
+    it('should connect to the database', async () => {
+        await databaseService.start(uri);
+        expect(databaseService['client']).to.not.equal(undefined);
+        expect(databaseService['db'].databaseName).to.equal(DB_NAME);
+    });
 
     it('should populate a collection', async () => {
         const contact1 = { id: 1, name: 'Test', email: 'a@b.ca', message: 'test' };

@@ -1,11 +1,21 @@
+import { GameService } from '@app/services/game-service/game.service';
 import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 @Service()
 export class GameLogicService {
+    constructor(private readonly gameService: GameService) {}
+
     validateCoordinates(gameId: number, coordinate: Coordinate): Coordinate[] | undefined {
-        // TODO: vérifier si les coordonnées sont à l'intérieur
-        // Aller chercher les coordonnées de différences et regarder si les coordonnées passées en paramètres
-        // sont à l'intérieur.
-        return [{ row: coordinate.row, column: coordinate.column }];
+        const game = this.gameService.getGameById(gameId);
+        if (game === undefined) return undefined;
+
+        for (const areaOfDifference of game.differences) {
+            for (const coordDiff of areaOfDifference) {
+                if (coordinate.row === coordDiff.row && coordinate.column === coordDiff.column) {
+                    return areaOfDifference;
+                }
+            }
+        }
+        return undefined;
     }
 }

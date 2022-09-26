@@ -19,7 +19,7 @@ export class GameService {
             idDifferenceBmp: 0,
             bestTimes: '',
             name: 'firstGame',
-            differences: '',
+            differences: [],
         };
         this.game.push(basicGame);
     }

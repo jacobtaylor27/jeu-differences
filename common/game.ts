@@ -1,3 +1,5 @@
+import { Coordinate } from './coordinate';
+
 export interface Game {
     id: number;
     idOriginalBmp: number;
@@ -5,5 +7,5 @@ export interface Game {
     idDifferenceBmp: number;
     bestTimes: string;
     name: string;
-    differences: string;
+    differences: Coordinate[][];
 }

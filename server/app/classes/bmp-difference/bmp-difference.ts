@@ -1,7 +1,16 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
+import { BmpDecoder } from '../bmp-decoder/bmp-decoder';
+import { BmpEncoder } from '../bmp-encoder/bmp-encoder';
 export class BmpDifference {
+    async test() {
+        const radius = 9;
+        const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
+        const blackBmp = await BmpDecoder.decode('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
+        const bmpResulting = await BmpDifference.getDifference(bmpWithRadiusOf0px, blackBmp, radius);
+        await BmpEncoder.encode('./assets/test-bmp/test-radius', bmpResulting);
+    }
     static async getDifference(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
@@ -18,38 +27,77 @@ export class BmpDifference {
         }
         return this.createBmpWithDifferences(resultImage, radius);
     }
-    private static applyEnlargement(center: Coordinates, radius: number): Coordinates[] {
+
+    private static drawOutlineEnlargement(center: Coordinates, radius: number): Coordinates[] {
+        let coordinates: Coordinates[] = new Array();
         if (radius === 0) return [center];
 
-        const result: Coordinates[] = [];
-        const xVariableForDecisionParameter = 4;
-        const constToAddForNegativeDecisionParameter = 6;
-        const constToAddForPositiveDecisionParameter = 10;
-        let decisionParameter: number = 3 - 2 * radius;
-        let xCoords = 0;
-        let y = radius;
-        for (let k = radius; k >= 0; k--) {
-            this.getSymmetricalPixels({ x: 0, y: k }, center, result);
+        let x = radius;
+        let y = 0;
+
+        coordinates = this.drawFullCircleEnlargement(center, radius, coordinates);
+
+        coordinates.push({ x: center.x + x, y: center.y });
+
+        if (radius > 0) {
+            coordinates.push({ x: center.x - x, y: center.y });
+            coordinates.push({ x: center.x, y: x + center.y });
+            coordinates.push({ x: center.x, y: center.y - x });
+            console.log(coordinates);
         }
-        for (let i = radius; i > 0; i--) {
-            xCoords++;
-            if (decisionParameter < 0) {
-                decisionParameter = decisionParameter + xVariableForDecisionParameter * xCoords + constToAddForNegativeDecisionParameter;
+
+        let p = 1 - radius;
+
+        while (x > y) {
+            y++;
+            if (p <= 0) {
+                p = p + 2 * y + 1;
             } else {
-                decisionParameter = decisionParameter + xVariableForDecisionParameter * (xCoords - y) + constToAddForPositiveDecisionParameter;
-                y--;
+                x--;
+                p = p + 2 * y - 2 * x + 1;
             }
-            let yAxisPixel: number = y;
-            while (yAxisPixel >= 0) {
-                this.getSymmetricalPixels({ x: xCoords, y: yAxisPixel }, center, result);
-                yAxisPixel--;
+            if (x < y) {
+                break;
+            }
+
+            coordinates.push({ x: x + center.x, y: y + center.y });
+            coordinates.push({ x: -x + center.x, y: y + center.y });
+            coordinates.push({ x: x + center.x, y: -y + center.y });
+            coordinates.push({ x: -x + center.x, y: -y + center.y });
+
+            if (x != y) {
+                coordinates.push({ x: y + center.x, y: x + center.y });
+                coordinates.push({ x: -y + center.x, y: x + center.y });
+                coordinates.push({ x: y + center.x, y: -x + center.y });
+                coordinates.push({ x: -y + center.x, y: -x + center.y });
             }
         }
-        for (let i = y; i >= 0; --i) {
-            this.getSymmetricalPixels({ x: xCoords, y: i }, center, result);
-        }
-        return result;
+
+        console.log('center ' + center.x + ' ' + center.y);
+        console.log(radius);
+        console.log(coordinates);
+
+        return coordinates;
     }
+
+    private static distance(pt1: Coordinates, pt2: Coordinates) {
+        let dx = pt2.x - pt1.x;
+        dx = dx * dx;
+        let dy = pt2.y - pt1.y;
+        dy = dy * dy;
+        return Math.sqrt(dx + dy);
+    }
+
+    private static drawFullCircleEnlargement(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
+        for (var j = coord.x - radius; j <= coord.x + radius; j++) {
+            for (var k = coord.y - radius; k <= coord.y + radius; k++) {
+                if (this.distance({ x: j, y: k }, { x: coord.x, y: coord.y }) <= radius) coordinates.push({ x: j, y: k });
+            }
+        }
+
+        return coordinates;
+    }
+
     private static createBmpWithDifferences(originalImage: Bmp, radius: number): Bmp {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
         if (radius === 0) return originalImage;
@@ -72,17 +120,11 @@ export class BmpDifference {
         }
         return coordinatesOfBlackPixels;
     }
-    private static getSymmetricalPixels(pixelCoordinate: Coordinates, center: Coordinates, coordinatesArray: Coordinates[]) {
-        coordinatesArray.push({ x: pixelCoordinate.x + center.x, y: pixelCoordinate.y + center.y });
-        coordinatesArray.push({ x: -pixelCoordinate.x + center.x, y: pixelCoordinate.y + center.y });
-        coordinatesArray.push({ x: pixelCoordinate.x + center.x, y: -pixelCoordinate.y + center.y });
-        coordinatesArray.push({ x: -pixelCoordinate.x + center.x, y: -pixelCoordinate.y + center.y });
-    }
 
     private static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {
         const resultCoordinates: Coordinates[] = [];
         originalCoordinates.forEach((coordinate) => {
-            const result = this.applyEnlargement(coordinate, radius);
+            const result = this.drawOutlineEnlargement(coordinate, radius);
             result.forEach((coord) => {
                 resultCoordinates.push(coord);
             });

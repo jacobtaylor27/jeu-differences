@@ -25,7 +25,15 @@ export class BmpService {
         }
         return false;
     }
-    deleteBmp(bmpId: number): Bmp | undefined {}
+    deleteBmp(bmpId: number): Bmp | undefined {
+        for (let i = 0; i < this.bmp.length; i++) {
+            if (this.bmp[i].id === bmpId) {
+                const nbOfElementToDelete = 1;
+                return this.bmp.splice(i, nbOfElementToDelete)[0];
+            }
+        }
+        return undefined;
+    }
 
     private verifyIfBmpExists(bmpId: number): boolean {
         for (const bmp of this.bmp) {

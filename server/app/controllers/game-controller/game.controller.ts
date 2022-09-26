@@ -1,7 +1,5 @@
-import { HTTP_STATUS } from '@app/constants/http-status';
 import { GameService } from '@app/services/game-service/game.service';
-import { GameCard } from '@common/game-card';
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
 import { Service } from 'typedi';
 
 @Service()
@@ -48,6 +46,7 @@ export class GameController {
          *       404:
          *         description: no cards were found
          */
+        /* Non nécessaire au sprint 1
         this.router.get('cards', (req: Request, res: Response) => {
             const gameCards: GameCard[] = this.gameService.getAllGameCards();
             if (gameCards?.length !== 0) {
@@ -56,6 +55,7 @@ export class GameController {
                 res.sendStatus(HTTP_STATUS.notFound);
             }
         });
+        */
 
         /**
          * @swagger
@@ -79,6 +79,7 @@ export class GameController {
          *       404:
          *         description: The id asked for was not found in the file present on the server.
          */
+        /* Non nécessaire au sprint 1
         this.router.get('card/:id', (req: Request, res: Response) => {
             const gameCard = this.gameService.getGameCardById(parseInt(req.params.id, 10));
             if (gameCard) {
@@ -87,6 +88,7 @@ export class GameController {
                 res.sendStatus(HTTP_STATUS.notFound);
             }
         });
+        */
 
         /**
          * @swagger
@@ -110,6 +112,7 @@ export class GameController {
          *       404:
          *         description: The id of the game was not found
          */
+        /* Non nécessaire au sprint 1
         this.router.delete('/:id', (req: Request, res: Response) => {
             const deletedGame = this.gameService.deleteGameById(parseInt(req.params.id, 10));
             if (deletedGame) {
@@ -118,6 +121,7 @@ export class GameController {
                 res.sendStatus(HTTP_STATUS.notFound);
             }
         });
+        */
 
         /*
         this.router.post('/', (req: Request, res: Response) => {
@@ -128,6 +132,7 @@ export class GameController {
         this.router.get('/validate/bmp', (req: Request, res: Response) => {
             // TODO: retourne le nommbre de différences et un image de différence
         });
+        
         this.router.get('/validate/:id/coord?', (req: Request, res: Response) => {
             // TODO: 
             // HTTP_STATUS.ACCEPTED (202)

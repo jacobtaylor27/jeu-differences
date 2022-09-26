@@ -43,8 +43,9 @@ describe('Game service', () => {
         gameService = new GameService(databaseService);
     });
 
-    it('initiation should fill the array of games', async () => {
+    it('initiation should fill the array of games with 3 basic games', async () => {
+        expect((await gameService.getAllGames()).length).to.equal(0);
         await gameService.initialiseGames();
-        expect(gameService.game.length).to.equal(3);
+        expect((await gameService.getAllGames()).length).to.equal(3);
     });
 });

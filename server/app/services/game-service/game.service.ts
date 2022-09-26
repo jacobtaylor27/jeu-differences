@@ -5,14 +5,18 @@ import { Service } from 'typedi';
 
 @Service()
 export class GameService {
-    game: Game[];
+    private game: Game[];
 
     constructor(private readonly databaseService: DatabaseService) {
         this.game = [];
     }
 
-    async initialiseGames() {
+    async initialiseGames(): Promise<void> {
         this.game = this.databaseService.getGames();
+    }
+
+    async getAllGames(): Promise<Game[]> {
+        return this.game;
     }
 
     async getGameById(gameId: number): Promise<Game | undefined> {

@@ -18,6 +18,38 @@ export class BmpDifference {
         }
         return this.createBmpWithDifferences(resultImage, radius);
     }
+    private static applyEnlargement(center: Coordinates, radius: number): Coordinates[] {
+        if (radius === 0) return [center];
+
+        const result: Coordinates[] = [];
+        const xVariableForDecisionParameter = 4;
+        const constToAddForNegativeDecisionParameter = 6;
+        const constToAddForPositiveDecisionParameter = 10;
+        let decisionParameter: number = 3 - 2 * radius;
+        let xCoords = 0;
+        let y = radius;
+        for (let k = radius; k >= 0; k--) {
+            this.getSymmetricalPixels({ x: 0, y: k }, center, result);
+        }
+        for (let i = radius; i > 0; i--) {
+            xCoords++;
+            if (decisionParameter < 0) {
+                decisionParameter = decisionParameter + xVariableForDecisionParameter * xCoords + constToAddForNegativeDecisionParameter;
+            } else {
+                decisionParameter = decisionParameter + xVariableForDecisionParameter * (xCoords - y) + constToAddForPositiveDecisionParameter;
+                y--;
+            }
+            let yAxisPixel: number = y;
+            while (yAxisPixel >= 0) {
+                this.getSymmetricalPixels({ x: xCoords, y: yAxisPixel }, center, result);
+                yAxisPixel--;
+            }
+        }
+        for (let i = y; i >= 0; --i) {
+            this.getSymmetricalPixels({ x: xCoords, y: i }, center, result);
+        }
+        return result;
+    }
     private static createBmpWithDifferences(originalImage: Bmp, radius: number): Bmp {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
         if (radius === 0) return originalImage;
@@ -29,15 +61,6 @@ export class BmpDifference {
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
 
-    private static applyEnlargement(center: Coordinates, radius: number): Coordinates[] {
-        const result: Coordinates[] = [];
-        for (let i = -radius; i <= radius; i++) {
-            for (let j = -radius; j <= radius; j++) {
-                if (this.isInsideBoundaries({ x: i, y: j }, center, radius)) result.push({ x: i + center.x, y: j + center.y });
-            }
-        }
-        return result;
-    }
     private static getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinates[] {
         const coordinatesOfBlackPixels: Coordinates[] = [];
         for (let i = 0; i < differenceBmp.getPixels().length; i++) {
@@ -49,16 +72,11 @@ export class BmpDifference {
         }
         return coordinatesOfBlackPixels;
     }
-    private static isInsideBoundaries(coordinate: Coordinates, center: Coordinates, radius: number): boolean {
-        if (
-            Math.abs(coordinate.x) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(coordinate.y, 2))) &&
-            Math.abs(coordinate.y) <= Math.ceil(Math.sqrt(Math.pow(radius, 2) - Math.pow(coordinate.x, 2)))
-        ) {
-            if (coordinate.x + center.x >= 0 && coordinate.y + center.y >= 0) {
-                return true;
-            }
-        }
-        return false;
+    private static getSymmetricalPixels(pixelCoordinate: Coordinates, center: Coordinates, coordinatesArray: Coordinates[]) {
+        coordinatesArray.push({ x: pixelCoordinate.x + center.x, y: pixelCoordinate.y + center.y });
+        coordinatesArray.push({ x: -pixelCoordinate.x + center.x, y: pixelCoordinate.y + center.y });
+        coordinatesArray.push({ x: pixelCoordinate.x + center.x, y: -pixelCoordinate.y + center.y });
+        coordinatesArray.push({ x: -pixelCoordinate.x + center.x, y: -pixelCoordinate.y + center.y });
     }
 
     private static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {

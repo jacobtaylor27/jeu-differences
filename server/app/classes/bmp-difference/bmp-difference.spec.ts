@@ -1,6 +1,7 @@
 import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { BmpDifference } from '@app/classes/bmp-difference/bmp-difference';
 import { Bmp } from '@app/classes/bmp/bmp';
+//import { Coordinates } from '@app/interface/coordinates';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 

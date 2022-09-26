@@ -57,6 +57,15 @@ export class GameService {
         }
         return false;
     }
+    deleteGameById(gameId: number): Game | undefined {
+        for (let i = 0; i < this.game.length; i++) {
+            if (this.game[i].id === gameId) {
+                const nbOfElementToDelete = 1;
+                return this.game.splice(i, nbOfElementToDelete)[0];
+            }
+        }
+        return undefined;
+    }
     private verifyIfGameAlreadyExists(gameId: number): boolean {
         for (const game of this.game) {
             if (game.id === gameId) {

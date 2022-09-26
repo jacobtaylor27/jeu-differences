@@ -1,4 +1,7 @@
+import { HTTP_STATUS } from '@app/constants/http-status';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
+import { GameService } from '@app/services/game-service/game.service';
+import { GameCard } from '@common/game-card';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 
@@ -6,7 +9,7 @@ import { Service } from 'typedi';
 export class GameController {
     router: Router;
 
-    constructor(private readonly bmpService: BmpService) {
+    constructor(private readonly bmpService: BmpService, private readonly gameService: GameService) {
         this.configureRouter();
     }
 
@@ -59,10 +62,9 @@ export class GameController {
             const bmpSelected = this.bmpService.getBmpById(parseInt(req.params.id, 10));
             if (bmpSelected) console.log(bmpSelected);
             // res.status(HTTP_STATUS.ok).json(bmpSelected);
-            res.sendFile('/Users/thierry/Desktop/LOG2990-106/server/app/controllers/game-controller/test_bmp_modified.bmp');
+            res.sendFile('./../assets/test-bmp/test_bmp_original.bmp');
         });
         /*
-        // service de game
         this.router.get('/validate/bmp', (req: Request, res: Response) => {
             // TODO: retourne le nommbre de différences et un image de différence
         });
@@ -72,14 +74,36 @@ export class GameController {
             //      return differenceArea = [{pixel, coordonnées},...]
             // HTTP_STATUS.NOT_ACCEPTED (406)
         });
+
         this.router.post('/', (req: Request, res: Response) => {
         });
-        this.router.get('cards', (req: Request, res: Response) => {
-        });
-        this.router.get('card/:id', (req: Request, res: Response) => {
-        });
-        this.router.delete('/:id', (req: Request, res: Response) => {
-        });
         */
+
+        this.router.get('cards', (req: Request, res: Response) => {
+            const gameCards: GameCard[] = this.gameService.getAllGameCards();
+            if (gameCards?.length !== 0) {
+                res.status(HTTP_STATUS.ok).json(gameCards);
+            } else {
+                res.sendStatus(HTTP_STATUS.notFound);
+            }
+        });
+
+        this.router.get('card/:id', (req: Request, res: Response) => {
+            const gameCard = this.gameService.getGameCardById(parseInt(req.params.id, 10));
+            if (gameCard) {
+                res.status(HTTP_STATUS.ok).json(gameCard);
+            } else {
+                res.sendStatus(HTTP_STATUS.notFound);
+            }
+        });
+
+        this.router.delete('/:id', (req: Request, res: Response) => {
+            const deletedGame = this.gameService.deleteGameById(parseInt(req.params.id, 10));
+            if (deletedGame) {
+                res.status(HTTP_STATUS.accepted).json(deletedGame);
+            } else {
+                res.sendStatus(HTTP_STATUS.notFound);
+            }
+        });
     }
 }

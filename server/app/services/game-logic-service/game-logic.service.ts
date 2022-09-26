@@ -5,6 +5,7 @@ import { Service } from 'typedi';
 export class GameLogicService {
     constructor(private readonly gameService: GameService) {}
 
+    // à la place de renvoyer undefined, renvoyer une erreur
     validateCoordinates(gameId: number, coordinate: Coordinate): Coordinate[] | undefined {
         const game = this.gameService.getGameById(gameId);
         if (game === undefined) return undefined;

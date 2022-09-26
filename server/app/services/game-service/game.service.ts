@@ -23,6 +23,7 @@ export class GameService {
         };
         this.game.push(basicGame);
     }
+    // à la place de renvoyer undefined, renvoyer une erreur
     getGameById(gameId: number): Game | undefined {
         for (const game of this.game) {
             if (game.id === gameId) {
@@ -31,6 +32,7 @@ export class GameService {
         }
         return undefined;
     }
+    // à la place de renvoyer undefined, renvoyer une erreur
     getGameCardById(gameId: number): GameCard | undefined {
         const game: Game | undefined = this.getGameById(gameId);
         if (game !== undefined) {
@@ -48,6 +50,7 @@ export class GameService {
     }
     addGame(game: Game): boolean {
         // Il faudrait que ce ne soit pas une interface directement qui soit passé en paramètre, mais peut-être les attributs de l'objet?
+        // TODO: initialiser son attribut Id.
         if (!this.verifyIfGameAlreadyExists(game.id)) {
             this.game.push(game);
             return true;

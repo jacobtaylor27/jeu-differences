@@ -1,7 +1,6 @@
 import { HTTP_STATUS } from '@app/constants/http-status';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { Request, Response, Router } from 'express';
-import * as fs from 'fs';
 import { Service } from 'typedi';
 
 @Service()
@@ -57,10 +56,8 @@ export class GameController {
          *         description: The id asked for was not found in the file present on the server.
          */
         this.router.get('/bmp/:id', (req: Request, res: Response) => {
-            console.log(this.bmpService.getBmpById(0));
-            fs.readFile('./assets/test-bmp/bmp_test_2x2.bmp', (file) => {
-                res.status(HTTP_STATUS.ok).send(file);
-            });
+            const bmpSelected = this.bmpService.getBmpById(parseInt(req.params.id, 10));
+            res.status(HTTP_STATUS.ok).json(bmpSelected);
         });
         /*
         // service de game

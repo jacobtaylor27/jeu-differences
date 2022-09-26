@@ -9,7 +9,14 @@ export class BmpService {
 
     async initialiseBmps() {
         // TODO: Aller chercher tous les fichiers dans le folder './assets/src-bmp/'
+        const bmp: Bmp = {
+            id: 0,
+            name: 'image par défaut',
+            filepath: 'this is a path',
+        };
+        this.addNewBmp(bmp);
     }
+    // TODO: À la place de renvoyer undefined, renvoyer une erreur
     getBmpById(bmpId: number): Bmp | undefined {
         for (const bmp of this.bmp) {
             if (bmp.id === bmpId) {
@@ -26,6 +33,7 @@ export class BmpService {
         }
         return false;
     }
+    // à la place de renvoyer undefined, renvoyer une erreur
     deleteBmp(bmpId: number): Bmp | undefined {
         for (let i = 0; i < this.bmp.length; i++) {
             if (this.bmp[i].id === bmpId) {

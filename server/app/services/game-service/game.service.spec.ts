@@ -1,6 +1,7 @@
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { GameService } from '@app/services/game-service/game.service';
 import { Game } from '@common/game';
+import { GameCard } from '@common/game-card';
 import { expect } from 'chai';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
 
@@ -85,4 +86,24 @@ describe('Game service', () => {
         const missingId = 10;
         expect(await gameService.getGameById(missingId)).to.equal(undefined);
     });
+
+    it('getGameCardbyId(id) should return the corresponding gameCard', async () => {
+        await gameService.initialiseGames();
+
+        const expectedGameCard: GameCard = {
+            id: 0,
+            idOriginalBmp: 0,
+            bestScores: [],
+            name: 'firstGame',
+        };
+        expect(await gameService.getGameCardById(0)).to.deep.equal(expectedGameCard);
+        const missingId = 10;
+        expect(await gameService.getGameCardById(missingId)).to.equal(undefined);
+    });
 });
+
+/*
+    .getGameCardById
+    .getAllGameCards
+    .deleteGameById
+*/

@@ -11,7 +11,7 @@ const DB_NAME = 'seven-differences';
 export class DatabaseService {
     private client: MongoClient;
     private db: Db;
-
+    
     async start(url: string = DB_URL): Promise<void> {
         try {
             this.client = new MongoClient(url);

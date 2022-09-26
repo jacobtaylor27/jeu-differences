@@ -18,11 +18,17 @@ describe('Database service', () => {
 
     afterEach(async () => {
         if (databaseService['client']) {
-            await databaseService['client'].close();
+            await databaseService.close();
         }
     });
 
     it('start(uri) should allow the connection to the database', async () => {
+        await databaseService.start(uri);
+        expect(databaseService['client']).to.not.equal(undefined);
+        expect(databaseService['db'].databaseName).to.equal(DB_NAME);
+    });
+
+    it('start() should also allow the connection to the database', async () => {
         await databaseService.start(uri);
         expect(databaseService['client']).to.not.equal(undefined);
         expect(databaseService['db'].databaseName).to.equal(DB_NAME);
@@ -56,7 +62,7 @@ describe('Database service', () => {
         });
     });
 
-    it('should not populate a collection if data exists', async () => {
+    it('populateDatabase(...) should not populate a collection if data exists', async () => {
         const contact1 = { id: 1, name: 'Test', email: 'a@b.ca', message: 'test' };
         const contact2 = { id: 2, name: 'Test', email: 'a@b.ca', message: 'test' };
 

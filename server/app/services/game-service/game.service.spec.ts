@@ -100,10 +100,27 @@ describe('Game service', () => {
         const missingId = 10;
         expect(await gameService.getGameCardById(missingId)).to.equal(undefined);
     });
+
+    it('deleteGameById(id) should remove the game from the array of games', async () => {
+        await gameService.initialiseGames();
+
+        const expectedRemovedGame: Game = {
+            id: 0,
+            idOriginalBmp: 0,
+            idEditedBmp: 0,
+            idDifferenceBmp: 0,
+            bestScores: [],
+            name: 'firstGame',
+            differences: [],
+        };
+        expect(await gameService.deleteGameById(0)).to.deep.equal(expectedRemovedGame);
+        const missingId = 10;
+        expect(await gameService.deleteGameById(missingId)).to.equal(undefined);
+        expect((await gameService.getAllGames()).length).to.equal(2);
+        expect((await gameService.getAllGameCards()).length).to.equal(2);
+    });
 });
 
 /*
-    .getGameCardById
-    .getAllGameCards
     .deleteGameById
 */

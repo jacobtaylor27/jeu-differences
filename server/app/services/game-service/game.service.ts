@@ -34,7 +34,8 @@ export class GameService {
     }
     async getAllGameCards(): Promise<GameCard[]> {
         const gameCards: GameCard[] = [];
-        this.game.forEach((game) => {
+        const games: Game[] = await this.getAllGames();
+        games.forEach((game) => {
             this.convertGameIntoGameCard(game).then((gameCard) => {
                 gameCards.push(gameCard);
             });
@@ -49,10 +50,11 @@ export class GameService {
         return false;
     }
     async deleteGameById(gameId: number): Promise<Game | undefined> {
-        for (let i = 0; i < this.game.length; i++) {
-            if (this.game[i].id === gameId) {
+        const currentGames = await this.getAllGames();
+        for (let i = 0; i < currentGames.length; i++) {
+            if (currentGames[i].id === gameId) {
                 const nbOfElementToDelete = 1;
-                return this.game.splice(i, nbOfElementToDelete)[0];
+                return currentGames.splice(i, nbOfElementToDelete)[0];
             }
         }
         return undefined;

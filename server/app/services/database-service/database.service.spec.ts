@@ -22,10 +22,19 @@ describe('Database service', () => {
         }
     });
 
-    it('should connect to the database', async () => {
+    it('start(uri) should allow the connection to the database', async () => {
         await databaseService.start(uri);
         expect(databaseService['client']).to.not.equal(undefined);
         expect(databaseService['db'].databaseName).to.equal(DB_NAME);
+    });
+
+    it('start(uri) should throw an exception given a bad uri', async () => {
+        const badUri = 'badUri00';
+        try {
+            await databaseService.start(badUri);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
     });
 
     it('populateDatabase(...) should allow to populate the database with a collection', async () => {
@@ -37,7 +46,6 @@ describe('Database service', () => {
         await databaseService.database.createCollection(COLLECTION_NAME);
         await databaseService.populateDatabase(COLLECTION_NAME, contacts);
         const insertedContacts = await databaseService.database.collection(COLLECTION_NAME).find({}).toArray();
-        console.log(insertedContacts);
 
         expect(insertedContacts.length).to.equal(2);
         insertedContacts.forEach((contact, index) => {

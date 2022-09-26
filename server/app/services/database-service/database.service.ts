@@ -12,7 +12,7 @@ export class DatabaseService {
     private client: MongoClient;
     private db: Db;
 
-    async start(url: string = DB_URL): Promise<MongoClient> {
+    async start(url: string = DB_URL): Promise<void> {
         try {
             this.client = new MongoClient(url);
             await this.client.connect();
@@ -20,7 +20,6 @@ export class DatabaseService {
         } catch (error) {
             throw new Error('La connection à mongoDb a échoué');
         }
-        return this.client;
     }
     async close(): Promise<void> {
         this.client.close();

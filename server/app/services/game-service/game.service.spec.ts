@@ -69,5 +69,20 @@ describe('Game service', () => {
         expect(resultingGames[3]).to.deep.equal(newGame);
     });
 
-    it('getGameById(id) should return the proper game according to an id', async () => {});
+    it('getGameById(id) should return the proper game according to an id', async () => {
+        await gameService.initialiseGames();
+        const game0: Game = {
+            id: 0,
+            idOriginalBmp: 0,
+            idEditedBmp: 0,
+            idDifferenceBmp: 0,
+            bestScores: [],
+            name: 'firstGame',
+            differences: [],
+        };
+        const correspondingId = 0;
+        expect(await gameService.getGameById(correspondingId)).to.deep.equal(game0);
+        const missingId = 10;
+        expect(await gameService.getGameById(missingId)).to.equal(undefined);
+    });
 });

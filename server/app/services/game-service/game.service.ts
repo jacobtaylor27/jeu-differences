@@ -17,7 +17,7 @@ export class GameService {
         return this.game;
     }
     async getGameById(gameId: number): Promise<Game | undefined> {
-        for (const game of this.game) {
+        for (const game of await this.getAllGames()) {
             if (game.id === gameId) {
                 return game;
             }

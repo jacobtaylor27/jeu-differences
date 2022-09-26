@@ -10,15 +10,12 @@ export class GameService {
     constructor(private readonly databaseService: DatabaseService) {
         this.game = [];
     }
-
     async initialiseGames(): Promise<void> {
         this.game = this.databaseService.getGames();
     }
-
     async getAllGames(): Promise<Game[]> {
         return this.game;
     }
-
     async getGameById(gameId: number): Promise<Game | undefined> {
         for (const game of this.game) {
             if (game.id === gameId) {
@@ -27,7 +24,6 @@ export class GameService {
         }
         return undefined;
     }
-
     async getGameCardById(gameId: number): Promise<GameCard | undefined> {
         const game: Game | undefined = await this.getGameById(gameId);
         if (game !== undefined) {

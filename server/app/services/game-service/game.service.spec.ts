@@ -61,12 +61,13 @@ describe('Game service', () => {
             name: 'fourthGame',
             differences: [],
         };
-        const isGameAdded = await gameService.addGame(newGame);
-        expect(isGameAdded).to.equal(true);
-
+        expect(await gameService.addGame(newGame)).to.equal(true);
+        expect(await gameService.addGame(newGame)).to.equal(false);
         const resultingNbOfGame = 4;
         const resultingGames = await gameService.getAllGames();
         expect(resultingGames.length).to.equal(resultingNbOfGame);
         expect(resultingGames[3]).to.deep.equal(newGame);
     });
+
+    it('getGameById(id) should return the proper game according to an id', async () => {});
 });

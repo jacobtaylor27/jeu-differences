@@ -1,1 +1,11 @@
-<p>dialog-create-game works!</p>
+<div [ngClass]="theme.ClassName" class="dialog">
+    <h2 mat-title>Validation des differences</h2>
+    <canvas width="640px" height="480px" id="imageDifference" #imageDifference></canvas>
+    <mat-form-field>
+        <input matInput type="text" placeholder="Nom du jeu">
+    </mat-form-field>
+    <mat-dialog-actions>
+        <button type="button" color="primary" mat-button mat-dialog-close>Cancel</button>
+        <button mat-button color="primary" (click)="this.createGame" mat-dialog-close routerLink="/admin" type="submit">Creer la partie</button>
+    </mat-dialog-actions>
+</div>

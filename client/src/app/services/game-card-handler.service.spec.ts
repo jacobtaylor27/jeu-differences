@@ -1,44 +1,8 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { TestBed } from '@angular/core/testing';
-// import { GameCategory } from '@app/enums/game-category';
 import { GameCardHandlerService } from './game-card-handler.service';
 
-// const GAME_CARDS = [
-//     {
-//         gameInformation: {
-//             gameName: 'Game 1',
-//             imgName: 'https://picsum.photos/200/300',
-//             scoresSolo: [
-//                 { playerName: 'Player 1', time: 60, category: GameCategory.Solo },
-//                 { playerName: 'Player 2', time: 120, category: GameCategory.Solo },
-//             ],
-//             scoresMultiplayer: [
-//                 { playerName: 'Player 3', time: 90, category: GameCategory.Multiplayer },
-//                 { playerName: 'Player 4', time: 150, category: GameCategory.Multiplayer },
-//             ],
-//         },
-//         isAdminCard: false,
-//         isShown: false,
-//     },
-//     {
-//         gameInformation: {
-//             gameName: 'Game 2',
-//             imgName: 'https://picsum.photos/200/300',
-//             scoresSolo: [
-//                 { playerName: 'Player 5', time: 12, category: GameCategory.Solo },
-//                 { playerName: 'Player 6', time: 40, category: GameCategory.Solo },
-//             ],
-//             scoresMultiplayer: [
-//                 { playerName: 'Player 7', time: 25, category: GameCategory.Multiplayer },
-//                 { playerName: 'Player 8', time: 75, category: GameCategory.Multiplayer },
-//             ],
-//         },
-//         isAdminCard: false,
-//         isShown: false,
-//     },
-// ];
-
-fdescribe('GameCardHandlerService', () => {
+describe('GameCardHandlerService', () => {
     let service: GameCardHandlerService;
 
     beforeEach(() => {

@@ -47,7 +47,7 @@ export class GameService {
     }
     async addGame(game: Game): Promise<boolean> {
         if (!(await this.doesGameAlreadyExists(game.id))) {
-            this.game.push(game);
+            (await this.getAllGames()).push(game);
             return true;
         }
         return false;
@@ -62,8 +62,10 @@ export class GameService {
         return undefined;
     }
     private async doesGameAlreadyExists(gameId: number): Promise<boolean> {
-        for (const game of this.game) {
-            if (game.id === gameId) return true;
+        for (const game of await this.getAllGames()) {
+            if (game.id === gameId) {
+                return true;
+            }
         }
         return false;
     }

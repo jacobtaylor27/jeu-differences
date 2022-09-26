@@ -1,4 +1,3 @@
-import { GameService } from '@app/services/game-service/game.service';
 import { Router } from 'express';
 import { Service } from 'typedi';
 
@@ -6,7 +5,7 @@ import { Service } from 'typedi';
 export class GameController {
     router: Router;
 
-    constructor(private readonly gameService: GameService) {
+    constructor() {
         this.configureRouter();
     }
 

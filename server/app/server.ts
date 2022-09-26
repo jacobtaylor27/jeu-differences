@@ -1,4 +1,5 @@
 import { Application } from '@app/app';
+import { DatabaseService } from '@app/services/database-service/database.service';
 import * as http from 'http';
 import { AddressInfo } from 'net';
 import { Service } from 'typedi';
@@ -10,7 +11,7 @@ export class Server {
     private static readonly baseDix: number = 10;
     private server: http.Server;
 
-    constructor(private readonly application: Application) {}
+    constructor(private readonly application: Application, private readonly databaseService: DatabaseService) {}
 
     private static normalizePort(val: number | string): number | string | boolean {
         const port: number = typeof val === 'string' ? parseInt(val, this.baseDix) : val;
@@ -24,12 +25,11 @@ export class Server {
     }
     init(): void {
         this.application.app.set('port', Server.appPort);
-
         this.server = http.createServer(this.application.app);
-
         this.server.listen(Server.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
+        this.databaseService.initialise();
     }
 
     private onError(error: NodeJS.ErrnoException): void {

@@ -28,6 +28,6 @@ export class DialogCreateGameComponent {
     }
 
     createGame() {
-        
+        return;
     }
 }

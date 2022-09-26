@@ -46,13 +46,13 @@ export class GameService {
         return gameCards;
     }
     addGame(game: Game): boolean {
-        if (!this.verifyIfGameExists(game.id)) {
+        if (!this.verifyIfGameAlreadyExists(game.id)) {
             this.game.push(game);
             return true;
         }
         return false;
     }
-    private verifyIfGameExists(gameId: number): boolean {
+    private verifyIfGameAlreadyExists(gameId: number): boolean {
         for (const game of this.game) {
             if (game.id === gameId) {
                 return true;

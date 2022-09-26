@@ -107,7 +107,9 @@ export class GameCardHandlerService {
             const newCard: GameCard = {
                 gameInformation: {
                     gameName: 'Game ' + i,
-                    imgName: 'https://picsum.photos/200/300',
+                    // image from api of correct size
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                    imgName: `https://picsum.photos/id/${i * 8}/640/480`,
                     scoresSolo: soloScores,
                     scoresMultiplayer: multiplayerScores,
                 },

@@ -9,7 +9,7 @@ describe('TimerStopwatchComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CluesAreaComponent],
+            declarations: [TimerStopwatchComponent, CluesAreaComponent],
             imports: [AppMaterialModule],
         }).compileComponents();
 

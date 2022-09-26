@@ -28,7 +28,7 @@ describe('Database service', () => {
         expect(databaseService['db'].databaseName).to.equal(DB_NAME);
     });
 
-    it('start() should also allow the connection to the database', async () => {
+    it('start() should also allow the connection to the database ', async () => {
         await databaseService.start(uri);
         expect(databaseService['client']).to.not.equal(undefined);
         expect(databaseService['db'].databaseName).to.equal(DB_NAME);

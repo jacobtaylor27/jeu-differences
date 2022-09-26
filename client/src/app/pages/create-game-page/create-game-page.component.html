@@ -1,4 +1,11 @@
 <div class="main" [ngClass]="theme.ClassName">
+    <mat-toolbar color="primary">
+        <button mat-button routerLink="/admin">
+            <mat-icon>home</mat-icon>
+        </button>
+        <span>CREATION DE PARTIE</span>
+    </mat-toolbar>
+
     <form [formGroup]="this.form" (ngSubmit)="onSubmit()">
         <div class="img-container">
             <div class="drawImg">
@@ -32,12 +39,7 @@
                         <option value="15">15px rayon d'elargissement</option>
                     </select>
                 </mat-form-field>
-                <mat-form-field>
-                    <input matInput type="text" formControlName="name" placeholder="Nom du jeu">
-                </mat-form-field>
-                <button mat-flat-button color="primary" type="button">Valider</button>
-
-                <button mat-flat-button color="primary" type="submit">Valider et créer</button>
+                <button mat-flat-button color="primary" (click)="this.onSubmit()" type="button">Valider</button>
             </div>
         </div>
     </form>

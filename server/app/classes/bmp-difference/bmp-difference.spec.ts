@@ -1,7 +1,8 @@
 import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { BmpDifference } from '@app/classes/bmp-difference/bmp-difference';
 import { Bmp } from '@app/classes/bmp/bmp';
-//import { Coordinates } from '@app/interface/coordinates';
+// import { Coordinates } from '@app/interface/coordinates';
+import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
@@ -84,6 +85,7 @@ describe('DifferenceBetween2Images', async () => {
         const blackBmp = await BmpDecoder.decode('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
         const bmpWithRadiusOf3px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-9px.bmp');
         const bmpResulting = await BmpDifference.getDifference(bmpWithRadiusOf0px, blackBmp, radius);
+        await BmpEncoder.encode('./assets/src-bmp/bmpResulting.bmp', bmpResulting);
         expect(bmpWithRadiusOf3px).to.be.eql(bmpResulting);
     });
     it('Should apply 15 pixel enlargement radius for a given image ', async () => {

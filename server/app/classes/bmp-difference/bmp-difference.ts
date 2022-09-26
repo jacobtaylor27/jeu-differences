@@ -1,8 +1,8 @@
+import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
+import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
-import { BmpDecoder } from '../bmp-decoder/bmp-decoder';
-import { BmpEncoder } from '../bmp-encoder/bmp-encoder';
 export class BmpDifference {
     async test() {
         const radius = 9;
@@ -43,7 +43,6 @@ export class BmpDifference {
             coordinates.push({ x: center.x - x, y: center.y });
             coordinates.push({ x: center.x, y: x + center.y });
             coordinates.push({ x: center.x, y: center.y - x });
-            console.log(coordinates);
         }
 
         let p = 1 - radius;
@@ -73,10 +72,6 @@ export class BmpDifference {
             }
         }
 
-        console.log('center ' + center.x + ' ' + center.y);
-        console.log(radius);
-        console.log(coordinates);
-
         return coordinates;
     }
 
@@ -89,8 +84,8 @@ export class BmpDifference {
     }
 
     private static drawFullCircleEnlargement(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
-        for (var j = coord.x - radius; j <= coord.x + radius; j++) {
-            for (var k = coord.y - radius; k <= coord.y + radius; k++) {
+        for (let j = coord.x - radius; j <= coord.x + radius; j++) {
+            for (let k = coord.y - radius; k <= coord.y + radius; k++) {
                 if (this.distance({ x: j, y: k }, { x: coord.x, y: coord.y }) <= radius) coordinates.push({ x: j, y: k });
             }
         }

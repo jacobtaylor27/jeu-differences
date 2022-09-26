@@ -56,6 +56,7 @@ export class GameController {
          *         description: The id asked for was not found in the file present on the server.
          */
         this.router.get('/bmp/:id', (req: Request, res: Response) => {
+            this.bmpService.initialiseBmps();
             const bmpSelected = this.bmpService.getBmpById(parseInt(req.params.id, 10));
             res.status(HTTP_STATUS.ok).json(bmpSelected);
         });

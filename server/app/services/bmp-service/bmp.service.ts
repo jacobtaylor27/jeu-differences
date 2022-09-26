@@ -19,6 +19,7 @@ export class BmpService {
         return undefined;
     }
     addNewBmp(bmp: Bmp): boolean {
+        // TODO: refactor so that it's not a bmp object that is used in parameters, but the name and the file.
         if (!this.verifyIfBmpExists(bmp.id)) {
             this.bmp.push(bmp);
             return true;

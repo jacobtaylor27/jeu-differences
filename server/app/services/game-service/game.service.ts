@@ -47,6 +47,7 @@ export class GameService {
         return gameCards;
     }
     addGame(game: Game): boolean {
+        // Il faudrait que ce ne soit pas une interface directement qui soit passé en paramètre, mais peut-être les attributs de l'objet?
         if (!this.verifyIfGameAlreadyExists(game.id)) {
             this.game.push(game);
             return true;

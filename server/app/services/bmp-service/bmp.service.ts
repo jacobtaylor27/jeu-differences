@@ -7,6 +7,7 @@ export class BmpService {
         this.bmp = [];
     }
 
+    // TODO: Figure out what the heck am I suppose to do with this.
     async initialiseBmps() {
         // TODO: Aller chercher tous les fichiers dans le folder './assets/src-bmp/'
         const bmp: Bmp = {

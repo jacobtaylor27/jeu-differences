@@ -7,3 +7,4 @@ export const DB_GAME_COLLECTION = 'game';
 
 export const DB_TEST_GAME_COLLECTION = 'test-game';
 export const DB_ID_COLLECTION = 'id-service';
+export const DEFAULT_ID = 0;

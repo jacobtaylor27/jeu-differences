@@ -1,6 +1,7 @@
-import { DB_GAME_COLLECTION, DB_NAME, DB_URL } from '@app/constants/database';
+import { DB_GAME_COLLECTION, DB_ID_COLLECTION, DB_NAME, DB_URL, DEFAULT_ID } from '@app/constants/database';
 import { DEFAULT_GAMES } from '@app/constants/default-games';
 import { Game } from '@common/game';
+import { Id } from '@common/id';
 import { Db, MongoClient } from 'mongodb';
 import { Service } from 'typedi';
 
@@ -30,15 +31,23 @@ export class DatabaseService {
 
     async populateDatabase(): Promise<void> {
         this.db.createCollection(DB_GAME_COLLECTION);
-        await this.initializeCollection(DB_GAME_COLLECTION, DEFAULT_GAMES);
-        // TODO: initialise BMP collection
+        await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAMES);
+        await this.initializeIdCollection(DB_ID_COLLECTION, [{ id: DEFAULT_ID }]);
     }
 
-    private async initializeCollection(collectionName: string, game: Game[]): Promise<void> {
+    private async initializeGameCollection(collectionName: string, game: Game[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {
             await collection.insertMany(game);
+        }
+    }
+
+    private async initializeIdCollection(collectionName: string, baseId: Id[]): Promise<void> {
+        const collection = this.client.db(DB_NAME).collection(collectionName);
+        const documents = await collection.find({}).toArray();
+        if (documents.length === 0) {
+            await collection.insertMany(baseId);
         }
     }
 }

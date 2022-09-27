@@ -3,7 +3,7 @@ import { DatabaseServiceMock } from '@app/services/database-service/database.ser
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { expect } from 'chai';
 
-describe('Game service', async () => {
+describe('Id service', async () => {
     let idGeneratorService: IdGeneratorService;
     let databaseService: DatabaseServiceMock;
 

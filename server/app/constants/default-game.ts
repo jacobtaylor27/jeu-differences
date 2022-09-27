@@ -16,4 +16,4 @@ const game1: Game = {
     differences: [],
 };
 
-export const DEFAULT_GAMES: Game[] = [game1];
+export const DEFAULT_GAME: Game[] = [game1];

@@ -9,25 +9,24 @@ export class IdGeneratorService {
     constructor(private readonly databaseService: DatabaseService) {}
 
     async generateUniqueId(): Promise<number> {
-        const oldId = await this.getLastGeneratedId();
+        const oldId: number = (await this.getLastGeneratedId())[0].id;
         let newId = oldId;
         newId++;
         await this.updateLastGeneratedId(oldId, newId);
         return newId;
     }
 
-    private async getLastGeneratedId(): Promise<number> {
+    async getLastGeneratedId(): Promise<Id[]> {
         const element: Id[] = await (await this.getCollection()).find({}).toArray();
-        return element[0].id;
+        return element;
     }
 
-    private async updateLastGeneratedId(lastGeneratedId: number, newId: number): Promise<void> {
-        const filter = { id: lastGeneratedId };
+    async updateLastGeneratedId(lastGeneratedId: number, newId: number): Promise<number> {
         const update = {
             $set: { id: newId },
         };
         const collection = await this.getCollection();
-        await collection.updateOne({ filter }, update);
+        return (await collection.updateOne({}, update)).modifiedCount;
     }
 
     private async getCollection(): Promise<Collection<Id>> {

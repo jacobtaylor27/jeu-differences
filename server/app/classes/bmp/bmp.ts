@@ -1,5 +1,5 @@
 import { PIXEL_DEPT } from '@app/constants/encoding';
-import { PixelOffset } from '@app/enum/pixel-offset';
+import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
 import { Pixel } from '@app/interface/pixel';
 export class Bmp {
     private width: number;
@@ -12,7 +12,18 @@ export class Bmp {
         this.width = width;
         this.pixels = this.convertRawToPixels(rawData);
     }
-
+    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
+        const raw: number[] = [];
+        pixelMatrix.forEach((lineOfPixels) => {
+            lineOfPixels.forEach((pixel) => {
+                raw.push(pixel.a);
+                raw.push(pixel.b);
+                raw.push(pixel.g);
+                raw.push(pixel.r);
+            });
+        });
+        return raw;
+    }
     getWidth(): number {
         return this.width;
     }
@@ -42,10 +53,10 @@ export class Bmp {
 
     private getPixel(pixel: number[]): Pixel {
         return {
-            a: pixel[PixelOffset.Intensity],
-            r: pixel[PixelOffset.Red],
-            g: pixel[PixelOffset.Green],
-            b: pixel[PixelOffset.Blue],
+            a: pixel[PIXEL_OFFSET.intensity],
+            r: pixel[PIXEL_OFFSET.red],
+            g: pixel[PIXEL_OFFSET.green],
+            b: pixel[PIXEL_OFFSET.blue],
         };
     }
 

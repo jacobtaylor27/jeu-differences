@@ -1,4 +1,4 @@
-import { DB_BMP_COLLECTION, DB_GAME_COLLECTION, DB_ID_COLLECTION, DB_NAME, DB_URL } from '@app/constants/database';
+import { DB_BMP_COLLECTION, DB_GAME_COLLECTION, DB_ID_COLLECTION, DB_NAME } from '@app/constants/database';
 import { DEFAULT_BMP } from '@app/constants/default-bmp';
 import { DEFAULT_GAME } from '@app/constants/default-game';
 import { DEFAULT_ID } from '@app/constants/default-id';
@@ -6,10 +6,9 @@ import { Bmp } from '@common/bmp';
 import { Game } from '@common/game';
 import { Id } from '@common/id';
 import { Db, MongoClient } from 'mongodb';
-import { Service } from 'typedi';
-
-@Service()
-export class DatabaseService {
+import { MongoMemoryServer } from 'mongodb-memory-server';
+export class DatabaseServiceMock {
+    private mongoServer: MongoMemoryServer;
     private client: MongoClient;
     private db: Db;
 
@@ -17,21 +16,25 @@ export class DatabaseService {
         return this.db;
     }
 
-    async start(url: string = DB_URL): Promise<void> {
-        try {
-            this.client = new MongoClient(url);
+    // eslint-disable-next-line no-unused-vars
+    async start(url?: string): Promise<MongoClient> {
+        if (!this.client) {
+            this.mongoServer = await MongoMemoryServer.create();
+            const mongoUri = this.mongoServer.getUri();
+            this.client = new MongoClient(mongoUri);
             await this.client.connect();
             this.db = this.client.db(DB_NAME);
-        } catch (error) {
-            throw new Error('La connection à mongoDb a échoué');
         }
-        await this.populateDatabase();
+        return this.client;
     }
 
     async close(): Promise<void> {
-        this.client.close();
+        if (this.client) {
+            return this.client.close();
+        } else {
+            return Promise.resolve();
+        }
     }
-
     async populateDatabase(): Promise<void> {
         this.db.createCollection(DB_GAME_COLLECTION);
         await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAME);

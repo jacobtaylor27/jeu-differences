@@ -12,7 +12,7 @@ export class DatabaseServiceMock {
     }
 
     // eslint-disable-next-line no-unused-vars
-    async start(url?: string): Promise<void> {
+    async start(url?: string): Promise<MongoClient> {
         if (!this.client) {
             this.mongoServer = await MongoMemoryServer.create();
             const mongoUri = this.mongoServer.getUri();
@@ -20,10 +20,15 @@ export class DatabaseServiceMock {
             await this.client.connect();
             this.db = this.client.db(DB_NAME);
         }
+        return this.client;
     }
 
     async close(): Promise<void> {
-        this.client.close();
+        if (this.client) {
+            return this.client.close();
+        } else {
+            return Promise.resolve();
+        }
     }
 
     async populateDatabase(): Promise<void> {

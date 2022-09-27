@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCardComponent } from './game-card.component';
 import { GameCardService } from '@app/services/game-card/game-card.service';
-import { GameCategory } from '@app/enums/game-category';
 import { GameCard } from '@app/interfaces/game-card';
 
 const GAME_CARD: GameCard = {
@@ -10,12 +9,12 @@ const GAME_CARD: GameCard = {
         name: 'test',
         imgName: 'imageName',
         scoresSolo: [
-            { playerName: 'solo1', time: 60, category: GameCategory.Solo },
-            { playerName: 'solo2', time: 90, category: GameCategory.Solo },
+            { playersName: 'solo1', time: 60 },
+            { playersName: 'solo2', time: 90 },
         ],
         scoresMultiplayer: [
-            { playerName: 'multi1', time: 125, category: GameCategory.Multiplayer },
-            { playerName: 'multi2', time: 12, category: GameCategory.Multiplayer },
+            { playersName: 'multi1', time: 125 },
+            { playersName: 'multi2', time: 12 },
         ],
     },
     isShown: true,

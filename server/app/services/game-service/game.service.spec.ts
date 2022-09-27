@@ -14,7 +14,8 @@ describe('Game service', () => {
             idOriginalBmp: 0,
             idEditedBmp: 0,
             idDifferenceBmp: 0,
-            bestScores: [],
+            soloScore: [],
+            multiplayerScore: [],
             name: 'firstGame',
             differences: [],
         };
@@ -23,7 +24,8 @@ describe('Game service', () => {
             idOriginalBmp: 1,
             idEditedBmp: 1,
             idDifferenceBmp: 1,
-            bestScores: [],
+            soloScore: [],
+            multiplayerScore: [],
             name: 'secondGame',
             differences: [],
         };
@@ -32,7 +34,8 @@ describe('Game service', () => {
             idOriginalBmp: 2,
             idEditedBmp: 2,
             idDifferenceBmp: 2,
-            bestScores: [],
+            soloScore: [],
+            multiplayerScore: [],
             name: 'thirdGame',
             differences: [],
         };
@@ -57,7 +60,8 @@ describe('Game service', () => {
             idOriginalBmp: 3,
             idEditedBmp: 3,
             idDifferenceBmp: 3,
-            bestScores: [],
+            soloScore: [],
+            multiplayerScore: [],
             name: 'fourthGame',
             differences: [],
         };
@@ -76,7 +80,8 @@ describe('Game service', () => {
             idOriginalBmp: 0,
             idEditedBmp: 0,
             idDifferenceBmp: 0,
-            bestScores: [],
+            soloScore: [],
+            multiplayerScore: [],
             name: 'firstGame',
             differences: [],
         };
@@ -94,7 +99,8 @@ describe('Game service', () => {
             idOriginalBmp: 0,
             idEditedBmp: 0,
             idDifferenceBmp: 0,
-            bestScores: [],
+            soloScore: [],
+            multiplayerScore: [],
             name: 'firstGame',
             differences: [],
         };

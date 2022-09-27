@@ -16,10 +16,9 @@ export class IdGeneratorService {
         return newId;
     }
 
-    async getLastGeneratedId(): Promise<number> {
+    private async getLastGeneratedId(): Promise<number> {
         const element: Id[] = await (await this.getCollection()).find({}).toArray();
-        const error = -1;
-        return element === undefined ? error : element[0].id;
+        return element[0].id;
     }
 
     private async updateLastGeneratedId(lastGeneratedId: number, newId: number): Promise<void> {

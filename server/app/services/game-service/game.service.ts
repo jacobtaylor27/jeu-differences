@@ -17,7 +17,7 @@ export class GameService {
     async getGameById(gameId: number): Promise<Game | undefined> {
         const filter = { id: gameId };
         try {
-            return await this.collection.find(filter).toArray()[0];
+            return (await this.collection.find(filter).toArray())[0];
         } catch (error) {
             return undefined;
         }

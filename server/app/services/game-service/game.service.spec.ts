@@ -6,7 +6,7 @@ import { Game } from '@common/game';
 import { Score } from '@common/score';
 import { expect } from 'chai';
 
-describe('Game service', () => {
+describe('Game service', async () => {
     let gameService: GameService;
     let databaseService: DatabaseService;
 

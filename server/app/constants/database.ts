@@ -6,3 +6,4 @@ export const DB_NAME = 'seven-differences';
 export const DB_GAME_COLLECTION = 'game';
 
 export const DB_TEST_GAME_COLLECTION = 'test-game';
+export const DB_ID_COLLECTION = 'id-service';

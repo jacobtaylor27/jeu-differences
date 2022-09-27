@@ -44,6 +44,13 @@ describe('DialogUploadFormComponent', () => {
         expect(component.isImageTypeCorrect({ type: expectedTypeFalse } as File)).toBeFalse();
     });
 
+    it('should check if the format of the image is 24bits', () => {
+        const expectedGoodFormat = 24;
+        const expectedWrongFormat = 8;
+        expect(component.isImageFormatCorrect(expectedGoodFormat)).toBeTrue();
+        expect(component.isImageFormatCorrect(expectedWrongFormat)).toBeFalse();
+    });
+
     it('should check if the image is correct', async () => {
         const lengthData = 30;
         const mockFileData = new Array(lengthData);

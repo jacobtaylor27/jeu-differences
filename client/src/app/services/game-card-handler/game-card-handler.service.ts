@@ -28,6 +28,14 @@ export class GameCardHandlerService {
         return this.activeCardsRange;
     }
 
+    hasNextCards(): boolean {
+        return this.activeCardsRange.end < this.gameCards.length - 1;
+    }
+
+    hasPreviousCards(): boolean {
+        return this.activeCardsRange.start > 0;
+    }
+
     getNumberOfCards(): number {
         return this.gameCards.length;
     }
@@ -61,6 +69,12 @@ export class GameCardHandlerService {
 
         for (let i = range.start; i <= range.end; i++) {
             this.gameCards[i].isShown = true;
+        }
+    }
+
+    setCardMode(isAdmin: boolean = false): void {
+        for (const gameCard of this.gameCards) {
+            gameCard.isAdminCard = isAdmin;
         }
     }
 

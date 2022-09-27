@@ -21,9 +21,7 @@ export class GameCarouselService {
     }
 
     setCardMode(makeAdmin: boolean = false): void {
-        this.gameCardHandlerService.getGameCards().forEach((gameCard) => {
-            gameCard.isAdminCard = makeAdmin;
-        });
+        this.gameCardHandlerService.setCardMode(makeAdmin);
     }
 
     hasCards(): boolean {
@@ -31,11 +29,11 @@ export class GameCarouselService {
     }
 
     hasPreviousCards(): boolean {
-        return this.gameCardHandlerService.getActiveCardsRange().start > 0;
+        return this.gameCardHandlerService.hasPreviousCards();
     }
 
     hasNextCards(): boolean {
-        return this.gameCardHandlerService.getActiveCardsRange().end < this.gameCardHandlerService.getNumberOfCards() - 1;
+        return this.gameCardHandlerService.hasNextCards();
     }
 
     showPreviousFour(): void {

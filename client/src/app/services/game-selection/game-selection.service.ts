@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameCardHandlerService } from './game-card-handler.service';
+import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 
 @Injectable({
     providedIn: 'root',

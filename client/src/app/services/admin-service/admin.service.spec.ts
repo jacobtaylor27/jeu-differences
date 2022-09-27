@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { AdminService } from './admin.service';
-import { GameCardHandlerService } from './game-card-handler.service';
+import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 
 describe('AdminService', () => {
     let service: AdminService;

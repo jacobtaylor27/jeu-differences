@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { AdminService } from '@app/services/admin.service';
+import { AdminService } from '@app/services/admin-service/admin.service';
 import { AdminCommandsComponent } from './admin-commands.component';
 
 describe('AdminCommandsComponent', () => {

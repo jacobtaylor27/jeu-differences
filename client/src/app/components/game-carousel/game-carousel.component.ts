@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameCarouselService } from '@app/services/game-carousel.service';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
     selector: 'app-game-carousel',

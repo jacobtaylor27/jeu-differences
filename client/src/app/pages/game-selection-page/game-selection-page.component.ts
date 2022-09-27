@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameCarouselService } from '@app/services/game-carousel.service';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
     selector: 'app-game-selection-page',

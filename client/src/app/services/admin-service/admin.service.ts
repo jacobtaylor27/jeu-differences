@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GameConstantsSettingsComponent } from '@app/components/game-constants-settings/game-constants-settings.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameConstants } from '@app/interfaces/game-constants';
-import { GameCardHandlerService } from './game-card-handler.service';
+import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 
 @Injectable({
     providedIn: 'root',

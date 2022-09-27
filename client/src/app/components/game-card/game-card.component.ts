@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { PlayerScore } from '@app/classes/player-score';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameCardService } from '@app/services/game-card.service';
+import { GameCardService } from '@app/services/game-card/game-card.service';
 
 @Component({
     selector: 'app-game-card',

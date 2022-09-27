@@ -78,7 +78,7 @@ describe('Difference interpreter', async () => {
     });
     it('An array of difference should contain all of the differences', async () => {
         const filepath = './assets/test-bmp/two_difference_appart.bmp';
-        const decodedBmp = await bmpDecoderService.decode(filepath);
+        const decodedBmp = await bmpDecoderService.decodeIntoBmp(filepath);
         const interpretedBmp: BmpCoordinate[][] = bmpDifferenceInterpreter.getCoordinates(decodedBmp);
         // prettier-ignore
         // eslint-disable-next-line
@@ -98,7 +98,7 @@ describe('Difference interpreter', async () => {
     });
     it('The algorithm should also work on a bmp with a large width and height', async () => {
         const filepath = './assets/test-bmp/ten_difference.bmp';
-        const bmpDecoded = await bmpDecoderService.decode(filepath);
+        const bmpDecoded = await bmpDecoderService.decodeIntoBmp(filepath);
         const nbOfDifference = 10;
         const differences: BmpCoordinate[][] = bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
         expect(differences.length).to.equal(nbOfDifference);

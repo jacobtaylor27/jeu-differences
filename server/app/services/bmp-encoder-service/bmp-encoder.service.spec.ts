@@ -29,9 +29,9 @@ describe('BmpEncoder', async () => {
         const resultFilePath = './assets/test-bmp/result.bmp';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
-        const bmpDecoded: Bmp = await bmpDecoderService.decode(originalBmpFilePath);
+        const bmpDecoded: Bmp = await bmpDecoderService.decodeIntoBmp(originalBmpFilePath);
         await bmpEncoderService.encodeIntoBmp(resultFilePath, bmpDecoded);
-        const bmpExpected: Bmp = await bmpDecoderService.decode(resultFilePath);
+        const bmpExpected: Bmp = await bmpDecoderService.decodeIntoBmp(resultFilePath);
         expect(bmpDecoded).to.eql(bmpExpected);
     });
 
@@ -39,7 +39,7 @@ describe('BmpEncoder', async () => {
         const incorrectFileExtension = './assets/test-bmp/jpg_test.jpg';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
-        const bmpDecoded: Bmp = await bmpDecoderService.decode(originalBmpFilePath);
+        const bmpDecoded: Bmp = await bmpDecoderService.decodeIntoBmp(originalBmpFilePath);
         try {
             const bmpEncoded = await bmpEncoderService.encodeIntoBmp(incorrectFileExtension, bmpDecoded);
             expect(bmpEncoded).to.equals(undefined);
@@ -53,7 +53,7 @@ describe('BmpEncoder', async () => {
         const incorrectFile = './assets/not-existant-directory/exemple_test.bmp';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
-        const bmpDecoded: Bmp = await bmpDecoderService.decode(originalBmpFilePath);
+        const bmpDecoded: Bmp = await bmpDecoderService.decodeIntoBmp(originalBmpFilePath);
         try {
             const bmpEncoded = await bmpEncoderService.encodeIntoBmp(incorrectFile, bmpDecoded);
             expect(bmpEncoded).to.equals(undefined);

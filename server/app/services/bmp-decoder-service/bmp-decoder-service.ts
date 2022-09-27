@@ -5,7 +5,7 @@ import { Service } from 'typedi';
 
 @Service()
 export class BmpDecoderService {
-    async decode(filepath: string): Promise<Bmp> {
+    async decodeIntoBmp(filepath: string): Promise<Bmp> {
         if (!this.isFileExtensionValid(filepath)) throw new Error('The file should end with .bmp');
         const bmpBuffer = await this.getFileContent(filepath);
         const bmpData = bmp.decode(bmpBuffer);

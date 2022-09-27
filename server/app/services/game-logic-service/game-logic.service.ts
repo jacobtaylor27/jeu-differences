@@ -1,4 +1,4 @@
-import { GameService } from '@app/services/game-service/game.service';
+import { GameService } from '@app/services/';
 import { Bmp } from '@common/bmp';
 import { Coordinate } from '@common/coordinate';
 import { Difference } from '@common/difference';
@@ -22,7 +22,7 @@ export class GameLogicService {
         }
         return undefined;
     }
-    async validateDifferenceBmp(originalBmp: Bmp, modifiedBmp: Bmp): Promise<Difference> {
+    async validateDifferenceBmp(originalBmp, modifiedBmp: Bmp): Promise<Difference> {
         console.log(originalBmp);
         console.log(modifiedBmp);
         const difference: Difference = {

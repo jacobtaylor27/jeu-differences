@@ -92,6 +92,13 @@ describe('CreateGamePageComponent', () => {
         toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
     });
 
+    it('should create the source image from the canvas', async () => {
+        const expectedBmpImage = {} as ImageBitmap;
+        const spyCreateBmpImage = spyOn(window, 'createImageBitmap').and.resolveTo(expectedBmpImage);
+        expect(await component.createSourceImageFromCanvas()).toEqual(expectedBmpImage);
+        expect(spyCreateBmpImage).toHaveBeenCalled();
+    });
+
     it('should subscribe to get the new image and draw it', async () => {
         const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         spyOn(component.sourceImg.nativeElement, 'getContext').and.callFake(() => null);

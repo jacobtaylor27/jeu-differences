@@ -5,7 +5,7 @@ import { Service } from 'typedi';
 
 @Service()
 export class GameService {
-    private games: Game[];
+    private game: Game[];
 
     constructor(private readonly databaseService: DatabaseService) {
         this.game = [];

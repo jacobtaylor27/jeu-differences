@@ -16,8 +16,6 @@ export class DialogCreateGameComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: { expansionRadius: number; src: ImageBitmap; difference: ImageBitmap }, // private http: HttpClient,
     ) {
-        console.log(data.src);
-        console.log(data.difference);
         //     this.http.post('', {}).subscribe((res: object) => {
         //         console.log(res);
         //     }); // get the image of difference

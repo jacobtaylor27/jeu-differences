@@ -47,12 +47,12 @@ describe('Game service', async () => {
             differences: [],
         };
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
-        await gameService.addGame(game);
+        expect(await gameService.addGame(game)).to.equal(true);
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length + 1);
     });
 
     it('deleteGameBy(id) should delete a game according to a specific id', async () => {
-        await gameService.deleteGameById(1);
+        expect(await gameService.deleteGameById(1)).to.equal(true);
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
     });
 
@@ -82,7 +82,7 @@ describe('Game service', async () => {
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
 
         try {
-            await gameService.deleteGameById(2);
+            expect(await gameService.deleteGameById(2)).to.equal(false);
         } catch (e) {
             expect(e).to.be.instanceof(Error);
         }

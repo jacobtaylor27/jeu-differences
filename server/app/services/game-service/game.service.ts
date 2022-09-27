@@ -30,10 +30,10 @@ export class GameService {
             return false;
         }
     }
-    async deleteGameById(gameId: number): Promise<void> {
+    async deleteGameById(gameId: number): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
         try {
-            await this.collection.findOneAndDelete(filter);
+            return Boolean((await this.collection.findOneAndDelete(filter)).ok);
         } catch (err) {
             throw new Error("Couldn't find and delete game");
         }

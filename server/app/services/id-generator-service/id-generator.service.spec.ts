@@ -26,5 +26,10 @@ describe('Id service', async () => {
         expectedId.forEach(async (id) => {
             expect(await idGeneratorService.generateUniqueId()).to.equal(id);
         });
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        const expectedId2 = [6, 7, 8, 9, 10];
+        expectedId2.forEach(async (id) => {
+            expect(await idGeneratorService.generateUniqueId()).to.equal(id);
+        });
     });
 });

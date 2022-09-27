@@ -48,9 +48,27 @@ describe('Bmp service', async () => {
             name: 'deuxième image',
             file: 'asdfasdf',
         };
-        expect((await bmpService.getAllBmps())?.length).to.equal(DEFAULT_BMP.length);
+        expect((await bmpService.getAllBmps()).length).to.equal(DEFAULT_BMP.length);
         expect(await bmpService.addBmp(bmp)).to.equal(true);
-        expect((await bmpService.getAllBmps())?.length).to.equal(DEFAULT_BMP.length + 1);
+        expect((await bmpService.getAllBmps()).length).to.equal(DEFAULT_BMP.length + 1);
+    });
+
+    it('addBmp(bmp) should add a bmp with a new id everytime', async () => {
+        const bmp: Bmp = {
+            name: 'deuxième image',
+            file: 'asdfasdf',
+        };
+        const expectedId = 1;
+        expect(await bmpService.addBmp(bmp)).to.equal(true);
+        expect((await bmpService.getBmpById(expectedId))?.id).to.equal(expectedId);
+
+        const bmp2: Bmp = {
+            name: 'troisième image',
+            file: 'anotherone',
+        };
+        const expectedId2 = 2;
+        expect(await bmpService.addBmp(bmp2)).to.equal(true);
+        expect((await bmpService.getBmpById(expectedId2))?.id).to.equal(expectedId2);
     });
 
     it("addBmp(bmp) shouldn't add a bmp twice", async () => {

@@ -1,5 +1,5 @@
 export interface Bmp {
-    id: number;
+    id?: number;
     name: string;
     file: string;
 }

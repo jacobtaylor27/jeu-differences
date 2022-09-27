@@ -8,19 +8,24 @@ import { Service } from 'typedi';
 export class IdGeneratorService {
     constructor(private readonly databaseService: DatabaseService) {}
 
-    async generateUniqueId(): Promise<void> {
-        let uniqueId = await this.getLastGeneratedId();
-        uniqueId++;
-        await this.updateLastGeneratedId(uniqueId);
+    async generateUniqueId(): Promise<number> {
+        const oldId = await this.getLastGeneratedId();
+        let newId = oldId;
+        newId++;
+        await this.updateLastGeneratedId(oldId, newId);
+        return newId;
     }
 
     private async getLastGeneratedId(): Promise<number> {
-        return (await this.getCollection()).find({}).toArray()[0];
+        const element = await (await this.getCollection()).find({}).toArray()[0];
+        return element[0].id;
     }
 
-    private async updateLastGeneratedId(lastGeneratedId: number): Promise<void> {
-        const updatedId = { id: lastGeneratedId };
-        await (await this.getCollection()).updateOne({}, updatedId);
+    private async updateLastGeneratedId(lastGeneratedId: number, newId: number): Promise<void> {
+        const filter = { id: lastGeneratedId };
+        const update = { id: newId };
+        const collection = await this.getCollection();
+        await collection.updateOne({ filter }, update);
     }
 
     private async getCollection(): Promise<Collection<Id>> {

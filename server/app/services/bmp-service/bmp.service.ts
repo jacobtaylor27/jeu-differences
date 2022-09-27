@@ -1,11 +1,12 @@
 import { DB_BMP_COLLECTION } from '@app/constants/database';
 import { DatabaseService } from '@app/services/database-service/database.service';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Bmp } from '@common/bmp';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 @Service()
 export class BmpService {
-    constructor(private readonly databaseService: DatabaseService) {}
+    constructor(private readonly databaseService: DatabaseService, private readonly idGeneratorService: IdGeneratorService) {}
 
     get collection(): Collection<Bmp> {
         return this.databaseService.database.collection(DB_BMP_COLLECTION);
@@ -19,6 +20,7 @@ export class BmpService {
     }
     async addBmp(bmp: Bmp): Promise<boolean> {
         try {
+            bmp.id = await this.idGeneratorService.generateUniqueId();
             await this.collection.insertOne(bmp);
             return true;
         } catch (error) {

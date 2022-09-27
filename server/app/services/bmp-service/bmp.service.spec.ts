@@ -2,17 +2,22 @@ import { DB_URL } from '@app/constants/database';
 import { DEFAULT_BMP } from '@app/constants/default-bmp';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Bmp } from '@common/bmp';
 import { expect } from 'chai';
 
 describe('Bmp service', async () => {
     let bmpService: BmpService;
     let databaseService: DatabaseServiceMock;
+    let idGeneratorService: IdGeneratorService;
 
     beforeEach(async () => {
         databaseService = new DatabaseServiceMock();
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        bmpService = new BmpService(databaseService as any);
+        idGeneratorService = new IdGeneratorService(databaseService as any);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        bmpService = new BmpService(databaseService as any, idGeneratorService);
         await databaseService.start(DB_URL);
         await databaseService.populateDatabase();
     });

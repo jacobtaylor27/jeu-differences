@@ -1,5 +1,5 @@
 export interface Difference {
-    id: number;
+    id?: number;
     nbDifference: number;
     file: string;
 }

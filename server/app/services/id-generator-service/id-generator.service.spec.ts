@@ -21,9 +21,8 @@ describe('Id service', async () => {
 
     it('generateUniqueId() should generate unique ids', async () => {
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        const expectedId: number[] = [0, 1, 2, 3, 4, 5, 6];
-        expectedId.forEach(async (id) => {
-            expect(await idGeneratorService.generateUniqueId()).to.equal(expectedId[id]);
-        });
+        const expectedId = 1;
+        const uniqueId: number = await idGeneratorService.generateUniqueId();
+        expect(uniqueId).to.equal(expectedId);
     });
 });

@@ -2,11 +2,13 @@ import { Bmp } from '@app/classes/bmp/bmp';
 import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
 export class BmpDifference {
-    static async getDifference(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
+    static async getDifferenceBMP(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
         }
+
         const resultImage: Bmp = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Bmp.convertPixelsToRaw(modifiedImage.getPixels()));
+
         for (let i = 0; i < originalImage.getPixels().length; i++) {
             for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
                 if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
@@ -16,6 +18,7 @@ export class BmpDifference {
                 }
             }
         }
+
         return this.createBmpWithDifferences(resultImage, radius);
     }
 
@@ -27,10 +30,9 @@ export class BmpDifference {
         let coordinates: Coordinates[] = new Array();
         if (radius === 0) return [center];
 
+        // MID-POINT ALGORITHM
         let x = radius;
         let y = 0;
-
-        coordinates.push({ x: center.x + x, y: center.y });
 
         if (radius > 0) {
             coordinates.push({ x: center.x - x, y: center.y });
@@ -42,16 +44,22 @@ export class BmpDifference {
 
         while (x > y) {
             y++;
+
+            // Inside or on the perimeter
             if (p <= 0) {
                 p = p + 2 * y + 1;
-            } else {
+            }
+            // Outside the perimeter
+            else {
                 x--;
                 p = p + 2 * y - 2 * x + 1;
             }
+            // All points done
             if (x < y) {
                 break;
             }
 
+            // Add points in all 8 quadrants of the enlargement circle
             coordinates.push({ x: x + center.x, y: y + center.y });
             coordinates.push({ x: -x + center.x, y: y + center.y });
             coordinates.push({ x: x + center.x, y: -y + center.y });
@@ -68,10 +76,10 @@ export class BmpDifference {
         return coordinates;
     }
 
-    private static distance(pt1: Coordinates, pt2: Coordinates) {
-        let dx = pt2.x - pt1.x;
+    private static distance(px1: Coordinates, px2: Coordinates) {
+        let dx = px2.x - px1.x;
         dx = dx * dx;
-        let dy = pt2.y - pt1.y;
+        let dy = px2.y - px1.y;
         dy = dy * dy;
         return Math.sqrt(dx + dy);
     }
@@ -88,7 +96,9 @@ export class BmpDifference {
 
     private static createBmpWithDifferences(originalImage: Bmp, radius: number): Bmp {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
+
         if (radius === 0) return originalImage;
+
         const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coordinate) => {
@@ -119,6 +129,7 @@ export class BmpDifference {
         });
         return resultCoordinates;
     }
+
     private static arePixelsEqual(pixelOriginalImg: Pixel, pixelModifiedImg: Pixel): boolean {
         return (
             pixelOriginalImg.a === pixelModifiedImg.a &&
@@ -127,6 +138,7 @@ export class BmpDifference {
             pixelOriginalImg.r === pixelModifiedImg.r
         );
     }
+
     private static setPixelWhite(pixel: Pixel): Pixel {
         pixel.a = 0;
         pixel.b = 255;
@@ -134,6 +146,7 @@ export class BmpDifference {
         pixel.r = 255;
         return pixel;
     }
+
     private static setPixelBlack(pixel: Pixel): Pixel {
         pixel.a = 0;
         pixel.b = 0;
@@ -141,9 +154,11 @@ export class BmpDifference {
         pixel.r = 0;
         return pixel;
     }
+
     private static isBlackPixel(pixel: Pixel): boolean {
         return pixel.a === 0 && pixel.b === 0 && pixel.g === 0 && pixel.r === 0;
     }
+
     private static areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {
         return originalImage.getHeight() === modifiedImage.getHeight() && originalImage.getWidth() === modifiedImage.getWidth();
     }

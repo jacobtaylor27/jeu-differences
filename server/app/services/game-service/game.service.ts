@@ -14,13 +14,9 @@ export class GameService {
     async getAllGames(): Promise<Game[] | undefined> {
         return await this.collection.find({}).toArray();
     }
-    async getGameById(gameId: number): Promise<Game | undefined> {
+    async getGameById(gameId: number): Promise<Game> {
         const filter = { id: gameId };
-        try {
-            return (await this.collection.find(filter).toArray())[0];
-        } catch (error) {
-            return undefined;
-        }
+        return (await this.collection.find(filter).toArray())[0];
     }
     async addGame(game: Game): Promise<boolean> {
         try {
@@ -32,10 +28,6 @@ export class GameService {
     }
     async deleteGameById(gameId: number): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
-        try {
-            return Boolean((await this.collection.findOneAndDelete(filter)).ok);
-        } catch (err) {
-            throw new Error("Couldn't find and delete game");
-        }
+        return Boolean((await this.collection.findOneAndDelete(filter)).ok);
     }
 }

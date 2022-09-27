@@ -77,14 +77,10 @@ describe('Game service', async () => {
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length + 1);
     });
 
-    it('deleteGameBy(id) should throw an error when trying to delete the same game twice', async () => {
-        await gameService.deleteGameById(2);
+    it('deleteGameBy(id) should return false when trying to delete the same game twice', async () => {
+        expect(await gameService.deleteGameById(2)).to.equal(true);
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
-
-        try {
-            expect(await gameService.deleteGameById(2)).to.equal(false);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(await gameService.deleteGameById(2)).to.equal(false);
+        expect(await gameService.deleteGameById(2)).to.equal(false);
     });
 });

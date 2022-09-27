@@ -5,14 +5,13 @@ import { GameService } from '@app/services/game-service/game.service';
 import { Game } from '@common/game';
 import { Score } from '@common/score';
 import { expect } from 'chai';
-import { createStubInstance, SinonStubbedInstance } from 'sinon';
 
 describe('Game service', () => {
     let gameService: GameService;
-    let databaseService: SinonStubbedInstance<DatabaseService>;
+    let databaseService: DatabaseService;
 
     beforeEach(async () => {
-        databaseService = createStubInstance(DatabaseService);
+        databaseService = new DatabaseService();
         gameService = new GameService(databaseService);
         await databaseService.start(DB_URL);
         await databaseService.populateDatabase();

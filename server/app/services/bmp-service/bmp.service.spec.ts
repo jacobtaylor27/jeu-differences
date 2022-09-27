@@ -2,6 +2,7 @@ import { DB_URL } from '@app/constants/database';
 import { DEFAULT_BMP } from '@app/constants/default-bmp';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
+import { Bmp } from '@common/bmp';
 import { expect } from 'chai';
 
 describe('Bmp service', async () => {
@@ -21,18 +22,52 @@ describe('Bmp service', async () => {
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
-        expect(await bmpService.getBmpById(0)).to.deep.equals(DEFAULT_BMP[0]);
+        expect(await bmpService.getBmpById(0)).to.deep.equal(DEFAULT_BMP[0]);
     });
 
-    it('getBmpById(id) should return undefined if the specific id is out of range', async () => {});
+    it('getBmpById(id) should return undefined if the specific id is out of range', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(await bmpService.getBmpById(5)).to.deep.equal(undefined);
+    });
 
-    it('getAllBmp() should return all of the bmps', async () => {});
+    it('getAllBmp() should return all of the bmps', async () => {
+        expect((await bmpService.getAllBmps()).length).to.equal(DEFAULT_BMP.length);
+        expect(await bmpService.deleteBmpById(0)).to.equal(true);
+        expect(await bmpService.getAllBmps()).to.deep.equal([]);
+    });
 
-    it('addBmp(bmp) should add a bmp to the bmp collection, getAllBmps() should return them', async () => {});
+    it('addBmp(bmp) should add a bmp to the bmp collection, getAllBmps() should return them', async () => {
+        const bmp: Bmp = {
+            id: 1,
+            name: 'deuxième image',
+            file: 'asdfasdf',
+        };
+        expect((await bmpService.getAllBmps())?.length).to.equal(DEFAULT_BMP.length);
+        expect(await bmpService.addBmp(bmp)).to.equal(true);
+        expect((await bmpService.getAllBmps())?.length).to.equal(DEFAULT_BMP.length + 1);
+    });
 
-    it("addBmp(bmp) shouldn't add a bmp twice", async () => {});
+    it("addBmp(bmp) shouldn't add a bmp twice", async () => {
+        const bmp: Bmp = {
+            id: 2,
+            name: 'troisième image',
+            file: '123 321*()@#$',
+        };
+        expect((await bmpService.getAllBmps()).length).to.equal(DEFAULT_BMP.length);
+        expect(await bmpService.addBmp(bmp)).to.equal(true);
+        expect(await bmpService.addBmp(bmp)).to.equal(false);
+        expect((await bmpService.getAllBmps()).length).to.equal(DEFAULT_BMP.length + 1);
+    });
 
-    it('deleteBmpBy(id) should delete a bmp according to a specific id', async () => {});
+    it('deleteBmpBy(id) should delete a bmp according to a specific id', async () => {
+        expect(await bmpService.deleteBmpById(0)).to.equal(true);
+        expect((await bmpService.getAllBmps()).length).to.equal(0);
+    });
 
-    it('deleteBmpBy(id) should return false when trying to delete the same bmp twice', async () => {});
+    it('deleteBmpBy(id) should return false when trying to delete the same bmp twice', async () => {
+        expect(await bmpService.deleteBmpById(0)).to.equal(true);
+        expect((await bmpService.getAllBmps()).length).to.equal(0);
+        expect(await bmpService.deleteBmpById(0)).to.equal(false);
+        expect(await bmpService.deleteBmpById(0)).to.equal(false);
+    });
 });

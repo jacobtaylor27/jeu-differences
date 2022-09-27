@@ -23,7 +23,7 @@ describe('Game service', async () => {
     });
 
     it('getGameById(id) should return a game according to a specific id', async () => {
-        expect(await gameService.getGameById(0)).to.deep.equals(DEFAULT_GAME[0]);
+        expect(await gameService.getGameById(0)).to.deep.equal(DEFAULT_GAME[0]);
     });
 
     it('getGameById(id) should return undefined if the specific id is out of range', async () => {
@@ -52,9 +52,9 @@ describe('Game service', async () => {
             name: 'Mark',
             differences: [],
         };
-        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAME.length);
+        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
         expect(await gameService.addGame(game)).to.equal(true);
-        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAME.length + 1);
+        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length + 1);
     });
 
     it("addGame(game) shouldn't add a game twice", async () => {
@@ -72,20 +72,20 @@ describe('Game service', async () => {
             name: 'Laurie',
             differences: [],
         };
-        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAME.length);
+        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
         expect(await gameService.addGame(game)).to.equal(true);
         expect(await gameService.addGame(game)).to.equal(false);
-        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAME.length + 1);
+        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length + 1);
     });
 
     it('deleteGameBy(id) should delete a game according to a specific id', async () => {
         expect(await gameService.deleteGameById(0)).to.equal(true);
-        expect((await gameService.getAllGames())?.length).to.equal(0);
+        expect((await gameService.getAllGames()).length).to.equal(0);
     });
 
     it('deleteGameBy(id) should return false when trying to delete the same game twice', async () => {
         expect(await gameService.deleteGameById(0)).to.equal(true);
-        expect((await gameService.getAllGames())?.length).to.equal(0);
+        expect((await gameService.getAllGames()).length).to.equal(0);
         expect(await gameService.deleteGameById(0)).to.equal(false);
         expect(await gameService.deleteGameById(0)).to.equal(false);
     });

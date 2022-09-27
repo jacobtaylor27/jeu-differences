@@ -1,112 +1,92 @@
-import { DatabaseService } from '@app/services/database-service/database.service';
+import { DB_URL } from '@app/constants/database';
+import { DEFAULT_GAMES } from '@app/constants/default-games';
+import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameService } from '@app/services/game-service/game.service';
 import { Game } from '@common/game';
+import { Score } from '@common/score';
 import { expect } from 'chai';
-import { createStubInstance, SinonStubbedInstance } from 'sinon';
 
-describe('Game service', () => {
+describe('Game service', async () => {
     let gameService: GameService;
-    let databaseService: SinonStubbedInstance<DatabaseService>;
+    let databaseService: DatabaseServiceMock;
 
     beforeEach(async () => {
-        const game0: Game = {
-            id: 0,
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'firstGame',
-            differences: [],
+        databaseService = new DatabaseServiceMock();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        gameService = new GameService(databaseService as any);
+        await databaseService.start(DB_URL);
+        await databaseService.populateDatabase();
+    });
+
+    afterEach(async () => {
+        await databaseService.close();
+    });
+
+    it('getGameById(id) should return a game according to a specific id', async () => {
+        expect(await gameService.getGameById(0)).to.deep.equals(DEFAULT_GAMES[0]);
+    });
+
+    it('getGameById(id) should return undefined if the specific id is out of range', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(await gameService.getGameById(5)).to.equal(undefined);
+    });
+
+    it('getAllGame() should return all of the games', async () => {
+        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAMES.length);
+        expect(await gameService.deleteGameById(0)).to.equal(true);
+        expect(await gameService.getAllGames()).to.deep.equal([]);
+    });
+
+    it('addGame() should add a game to the game collection, getAllGames() should return them', async () => {
+        const score: Score = {
+            playerName: 'Jacob',
+            time: 22,
         };
-        const game1: Game = {
+        const game: Game = {
             id: 1,
-            idOriginalBmp: 1,
-            idEditedBmp: 1,
-            idDifferenceBmp: 1,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'secondGame',
+            idOriginalBmp: 0,
+            idEditedBmp: 0,
+            idDifferenceBmp: 0,
+            soloScore: [score],
+            multiplayerScore: [score],
+            name: 'Mark',
             differences: [],
         };
-        const game2: Game = {
+        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
+        expect(await gameService.addGame(game)).to.equal(true);
+        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length + 1);
+    });
+
+    it("addGame() shouldn't add a game twice", async () => {
+        const score: Score = {
+            playerName: 'Laurie',
+            time: 22,
+        };
+        const game: Game = {
             id: 2,
-            idOriginalBmp: 2,
-            idEditedBmp: 2,
-            idDifferenceBmp: 2,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'thirdGame',
-            differences: [],
-        };
-        const basicGames: Game[] = [game0, game1, game2];
-
-        databaseService = createStubInstance(DatabaseService);
-        databaseService.getGames.resolves(basicGames);
-        gameService = new GameService(databaseService);
-    });
-
-    it('initialiseGames() should fill the array of games with 3 basic games', async () => {
-        expect((await gameService.getAllGames()).length).to.equal(0);
-        await gameService.initialiseGames();
-        expect((await gameService.getAllGames()).length).to.equal(3);
-    });
-
-    it('addGame(game) should add a game to the array of games', async () => {
-        await gameService.initialiseGames();
-        expect((await gameService.getAllGames()).length).to.equal(3);
-        const newGame: Game = {
-            id: 3,
-            idOriginalBmp: 3,
-            idEditedBmp: 3,
-            idDifferenceBmp: 3,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'fourthGame',
-            differences: [],
-        };
-        expect(await gameService.addGame(newGame)).to.equal(true);
-        expect(await gameService.addGame(newGame)).to.equal(false);
-        const resultingNbOfGame = 4;
-        const resultingGames = await gameService.getAllGames();
-        expect(resultingGames.length).to.equal(resultingNbOfGame);
-        expect(resultingGames[3]).to.deep.equal(newGame);
-    });
-
-    it('getGameById(id) should return the proper game according to an id', async () => {
-        await gameService.initialiseGames();
-        const game0: Game = {
-            id: 0,
             idOriginalBmp: 0,
             idEditedBmp: 0,
             idDifferenceBmp: 0,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'firstGame',
+            soloScore: [score],
+            multiplayerScore: [score],
+            name: 'Laurie',
             differences: [],
         };
-        const correspondingId = 0;
-        expect(await gameService.getGameById(correspondingId)).to.deep.equal(game0);
-        const missingId = 10;
-        expect(await gameService.getGameById(missingId)).to.equal(undefined);
+        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
+        expect(await gameService.addGame(game)).to.equal(true);
+        expect(await gameService.addGame(game)).to.equal(false);
+        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length + 1);
     });
 
-    it('deleteGameById(id) should remove the game from the array of games', async () => {
-        await gameService.initialiseGames();
+    it('deleteGameBy(id) should delete a game according to a specific id', async () => {
+        expect(await gameService.deleteGameById(0)).to.equal(true);
+        expect((await gameService.getAllGames())?.length).to.equal(0);
+    });
 
-        const expectedRemovedGame: Game = {
-            id: 0,
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'firstGame',
-            differences: [],
-        };
-        expect(await gameService.deleteGameById(0)).to.deep.equal(expectedRemovedGame);
-        const missingId = 10;
-        expect(await gameService.deleteGameById(missingId)).to.equal(undefined);
-        expect((await gameService.getAllGames()).length).to.equal(2);
+    it('deleteGameBy(id) should return false when trying to delete the same game twice', async () => {
+        expect(await gameService.deleteGameById(0)).to.equal(true);
+        expect((await gameService.getAllGames())?.length).to.equal(0);
+        expect(await gameService.deleteGameById(0)).to.equal(false);
+        expect(await gameService.deleteGameById(0)).to.equal(false);
     });
 });

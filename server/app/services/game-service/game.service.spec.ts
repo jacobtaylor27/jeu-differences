@@ -31,6 +31,12 @@ describe('Game service', async () => {
         expect(await gameService.getGameById(5)).to.equal(undefined);
     });
 
+    it('getAllGame() should return all of the games', async () => {
+        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAMES.length);
+        expect(await gameService.deleteGameById(0)).to.equal(true);
+        expect(await gameService.getAllGames()).to.deep.equal([]);
+    });
+
     it('addGame() should add a game to the game collection, getAllGames() should return them', async () => {
         const score: Score = {
             playerName: 'Jacob',
@@ -49,11 +55,6 @@ describe('Game service', async () => {
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
         expect(await gameService.addGame(game)).to.equal(true);
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length + 1);
-    });
-
-    it('deleteGameBy(id) should delete a game according to a specific id', async () => {
-        expect(await gameService.deleteGameById(1)).to.equal(true);
-        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
     });
 
     it("addGame() shouldn't add a game twice", async () => {
@@ -77,10 +78,15 @@ describe('Game service', async () => {
         expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length + 1);
     });
 
+    it('deleteGameBy(id) should delete a game according to a specific id', async () => {
+        expect(await gameService.deleteGameById(0)).to.equal(true);
+        expect((await gameService.getAllGames())?.length).to.equal(0);
+    });
+
     it('deleteGameBy(id) should return false when trying to delete the same game twice', async () => {
-        expect(await gameService.deleteGameById(2)).to.equal(true);
-        expect((await gameService.getAllGames())?.length).to.equal(DEFAULT_GAMES.length);
-        expect(await gameService.deleteGameById(2)).to.equal(false);
-        expect(await gameService.deleteGameById(2)).to.equal(false);
+        expect(await gameService.deleteGameById(0)).to.equal(true);
+        expect((await gameService.getAllGames())?.length).to.equal(0);
+        expect(await gameService.deleteGameById(0)).to.equal(false);
+        expect(await gameService.deleteGameById(0)).to.equal(false);
     });
 });

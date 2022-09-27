@@ -11,7 +11,7 @@ export class GameService {
     get collection(): Collection<Game> {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
-    async getAllGames(): Promise<Game[] | undefined> {
+    async getAllGames(): Promise<Game[]> {
         return await this.collection.find({}).toArray();
     }
     async getGameById(gameId: number): Promise<Game> {

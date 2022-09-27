@@ -104,6 +104,13 @@ describe('CreateGamePageComponent', () => {
         expect(dialogSpyObj.open).toHaveBeenCalled();
     });
 
+    it('should open the validate dialog if the form is valid', async () => {
+        spyOnProperty(component.form, 'valid').and.returnValue(true);
+        const spyValidateFormDialog = spyOn(component, 'validateForm');
+        await component.onSubmit();
+        expect(spyValidateFormDialog).toHaveBeenCalled();
+    });
+
     it('should subscribe to get the new image and draw it', async () => {
         const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         spyOn(component.sourceImg.nativeElement, 'getContext').and.callFake(() => null);

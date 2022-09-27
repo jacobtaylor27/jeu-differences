@@ -1,5 +1,6 @@
-import { DB_NAME, DB_URL } from '@app/constants/database';
-import { Contact } from '@app/interface/contact';
+import { DB_GAME_COLLECTION, DB_NAME, DB_URL } from '@app/constants/database';
+import { DEFAULT_GAMES } from '@app/constants/default-games';
+import { Game } from '@common/game';
 import { Db, MongoClient } from 'mongodb';
 import { Service } from 'typedi';
 
@@ -20,17 +21,27 @@ export class DatabaseService {
         } catch (error) {
             throw new Error('La connection à mongoDb a échoué');
         }
+        try {
+            await this.populateDatabase();
+        } catch (error) {
+            throw new Error("La base de donnée n'a pas été populée correctement");
+        }
     }
 
     async close(): Promise<void> {
         this.client.close();
     }
 
-    async populateDatabase(collectionName: string, data: Contact[]): Promise<void> {
+    async populateDatabase(): Promise<void> {
+        await this.initialiseCollection(DB_GAME_COLLECTION, DEFAULT_GAMES);
+        // TODO: initialise BMP collection
+    }
+
+    private async initialiseCollection(collectionName: string, game: Game[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {
-            await collection.insertMany(data);
+            await collection.insertMany(game);
         }
     }
 }

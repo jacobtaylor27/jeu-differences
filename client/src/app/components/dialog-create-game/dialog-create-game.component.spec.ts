@@ -24,4 +24,8 @@ describe('DialogCreateGameComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should post the game', () => {
+        component.createGame();
+    });
 });

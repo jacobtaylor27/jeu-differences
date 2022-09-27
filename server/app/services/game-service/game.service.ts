@@ -21,9 +21,7 @@ export class GameService {
     async getGameById(gameId: number): Promise<Game | undefined> {
         const filter = { id: gameId };
         try {
-            const game: Game = await this.collection.find(filter).toArray()[0];
-            if (game === undefined) throw new Error('what fthe ');
-            return game;
+            return await this.collection.find(filter).toArray()[0];
         } catch (error) {
             return undefined;
         }
@@ -41,7 +39,7 @@ export class GameService {
         try {
             await this.collection.findOneAndDelete(filter);
         } catch (err) {
-            throw new Error("could't find and delete game");
+            throw new Error("Couldn't find and delete game");
         }
     }
 }

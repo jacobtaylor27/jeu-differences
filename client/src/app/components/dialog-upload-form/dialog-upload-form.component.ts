@@ -39,6 +39,7 @@ export class DialogUploadFormComponent {
         this.isFormatBmpCorrect = bmpFormat === FORMAT_IMAGE;
         return this.isFormatBmpCorrect;
     }
+
     async isImageCorrect(file: File): Promise<boolean> {
         const bmpHeader = new DataView(await file.arrayBuffer());
         return (

@@ -1,9 +1,11 @@
-import { DB_NAME } from '@app/constants/database';
+import { DB_GAME_COLLECTION, DB_NAME } from '@app/constants/database';
+import { DEFAULT_GAMES } from '@app/constants/default-games';
+import { Game } from '@common/game';
 import { Db, MongoClient } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 export class DatabaseServiceMock {
-    mongoServer: MongoMemoryServer;
+    private mongoServer: MongoMemoryServer;
     private client: MongoClient;
     private db: Db;
 
@@ -32,6 +34,16 @@ export class DatabaseServiceMock {
     }
 
     async populateDatabase(): Promise<void> {
-        return;
+        this.db.createCollection(DB_GAME_COLLECTION);
+        await this.initializeCollection(DB_GAME_COLLECTION, DEFAULT_GAMES);
+        // TODO: initialise BMP collection
+    }
+
+    private async initializeCollection(collectionName: string, game: Game[]): Promise<void> {
+        const collection = this.client.db(DB_NAME).collection(collectionName);
+        const documents = await collection.find({}).toArray();
+        if (documents.length === 0) {
+            await collection.insertMany(game);
+        }
     }
 }

@@ -1,6 +1,6 @@
 import { DB_URL } from '@app/constants/database';
 import { DEFAULT_GAMES } from '@app/constants/default-games';
-import { DatabaseService } from '@app/services/database-service/database.service';
+import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameService } from '@app/services/game-service/game.service';
 import { Game } from '@common/game';
 import { Score } from '@common/score';
@@ -8,10 +8,10 @@ import { expect } from 'chai';
 
 describe('Game service', async () => {
     let gameService: GameService;
-    let databaseService: DatabaseService;
+    let databaseService: DatabaseServiceMock;
 
     beforeEach(async () => {
-        databaseService = new DatabaseService();
+        databaseService = new DatabaseServiceMock();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         gameService = new GameService(databaseService as any);
         await databaseService.start(DB_URL);

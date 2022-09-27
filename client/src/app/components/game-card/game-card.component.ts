@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PlayerScore } from '@app/classes/player-score';
+import { Score } from '@common/score';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCardService } from '@app/services/game-card/game-card.service';
@@ -31,11 +31,11 @@ export class GameCardComponent {
         return this.gameCard.isAdminCard;
     }
 
-    getMultiplayerScores(): PlayerScore[] {
+    getMultiplayerScores(): Score[] {
         return this.gameCard.gameInformation.scoresMultiplayer;
     }
 
-    getSinglePlayerScores(): PlayerScore[] {
+    getSinglePlayerScores(): Score[] {
         return this.gameCard.gameInformation.scoresSolo;
     }
 

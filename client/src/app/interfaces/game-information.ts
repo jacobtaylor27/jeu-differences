@@ -1,8 +1,8 @@
-import { PlayerScore } from '@app/classes/player-score';
+import { Score } from '@common/score';
 
 export interface GameInformation {
     imgName: string;
     name: string;
-    scoresSolo: PlayerScore[];
-    scoresMultiplayer: PlayerScore[];
+    scoresSolo: Score[];
+    scoresMultiplayer: Score[];
 }

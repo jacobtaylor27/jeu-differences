@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PlayerScore } from '@app/classes/player-score';
-import { GameCategory } from '@app/enums/game-category';
+import { Score } from '@common/score';
 import { GameCard } from '@app/interfaces/game-card';
 import { CardRange } from '@app/interfaces/range';
 
@@ -99,8 +98,8 @@ export class GameCardHandlerService {
     generateFakeCards(): GameCard[] {
         const DEFAULT_NB_OF_CARDS = 18;
         const DEFAULT_SCORES: number[] = [1, 2, 3];
-        const soloScores = this.initializeScores(DEFAULT_SCORES, GameCategory.Solo);
-        const multiplayerScores = this.initializeScores(DEFAULT_SCORES, GameCategory.Multiplayer);
+        const soloScores = this.initializeScores(DEFAULT_SCORES);
+        const multiplayerScores = this.initializeScores(DEFAULT_SCORES);
         const cards: GameCard[] = [];
 
         for (let i = 0; i < DEFAULT_NB_OF_CARDS; i++) {
@@ -123,12 +122,15 @@ export class GameCardHandlerService {
     }
 
     // will be removed or modified once we have a proper database access
-    initializeScores(score: number[], gameCategory: GameCategory): PlayerScore[] {
-        const scores: PlayerScore[] = [];
+    initializeScores(score: number[]): Score[] {
+        const scores: Score[] = [];
 
         for (let i = 0; i < score.length; i++) {
             const arbitraryNb = 5;
-            scores.push(new PlayerScore(`Player ${i}`, arbitraryNb * i, gameCategory));
+            scores.push({
+                playersName: 'Player ' + i,
+                time: score[i] * arbitraryNb,
+            });
         }
 
         return scores;

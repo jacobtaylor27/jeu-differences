@@ -1,18 +1,26 @@
 <section [ngClass]="favoriteTheme">
     <h2 class="title">Modifier les paramètres de jeu</h2>
-    <h4 class="success-time">Temps à la découverte d'une différence</h4>
-    <button>-</button>
-    <input type="text">
-    <button>+</button>
-    <h4 class="timer-time">Temps du compte à rebours</h4>
-    <button>-</button>
-    <input type="text">
-    <button>+</button>
-    <h4 class="time-penalty">Temps de pénalité pour l'utilisation d'un indice</h4>
-    <button>-</button>
-    <input type="text">
-    <button>+</button>
-    <br>
-    <button class="close-button" mat-flat-button matTooltip="Fermer le dialog" color="primary" mat-dialog-close>Fermer</button>
-    <!-- <button class="default-button" mat-flat-button matTooltip="Restaurer les valeurs par défaut" color="primary" (click)="onClickRestoreDefaults()">Défaut</button> -->
+
+    <div class="main-timer-container">
+        <app-game-constant-field
+        [label]="'Temps de base du jeu'"
+        [value]="30"></app-game-constant-field>
+    </div>
+
+    <div class="success-timer-container">
+        <app-game-constant-field
+        [label]="'Temps bonus lors de la détection d\'une différence'"
+        [value]="5"></app-game-constant-field>
+    </div>
+    
+    <div class="penalty-timer-container">
+        <app-game-constant-field
+        [label]="'Temps de pénalité lors de la demande d\'une indice'"
+        [value]="5"></app-game-constant-field>
+    </div>
+    
+    <div class="buttons-controls-container">
+        <button class="close-button control-button" mat-flat-button matTooltip="Fermer le dialog" color="primary" mat-dialog-close>Fermer</button>
+        <button class="default-button control-button" mat-flat-button matTooltip="Restaurer les valeurs par défaut" color="primary">Défaut</button>
+    </div>
 </section>

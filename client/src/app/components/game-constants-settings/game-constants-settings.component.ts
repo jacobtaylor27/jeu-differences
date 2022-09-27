@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-// import { HINT_PENALTY_TIME, SUCCESSFUL_ANSWER_TIME_BONUS, TIMER_TIME } from '@app/constants/game-constants';
 // import { AdminService } from '@app/services/admin.service';
 
 @Component({

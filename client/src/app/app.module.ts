@@ -27,9 +27,9 @@ import { GameConstantsSettingsComponent } from './components/game-constants-sett
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameCarouselComponent } from './components/game-carousel/game-carousel.component';
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
-
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
+import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -63,6 +63,7 @@ import { DialogResetComponent } from './components/dialog-reset/dialog-reset.com
         TimerCountdownComponent,
         TimerStopwatchComponent,
         DifferencesAreaComponent,
+        GameConstantFieldComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

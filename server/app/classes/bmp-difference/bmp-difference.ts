@@ -19,6 +19,10 @@ export class BmpDifference {
         return this.createBmpWithDifferences(resultImage, radius);
     }
 
+    private static drawEnlargement(center: Coordinates, radius: number) {
+        return this.fillContour(center, radius, this.drawContour(center, radius));
+    }
+
     private static drawContour(center: Coordinates, radius: number): Coordinates[] {
         let coordinates: Coordinates[] = new Array();
         if (radius === 0) return [center];
@@ -26,7 +30,6 @@ export class BmpDifference {
         let x = radius;
         let y = 0;
 
-        coordinates = this.fillContour(center, radius, coordinates);
         coordinates.push({ x: center.x + x, y: center.y });
 
         if (radius > 0) {
@@ -109,7 +112,7 @@ export class BmpDifference {
     private static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {
         const resultCoordinates: Coordinates[] = [];
         originalCoordinates.forEach((coordinate) => {
-            const result = this.drawContour(coordinate, radius);
+            const result = this.drawEnlargement(coordinate, radius);
             result.forEach((coord) => {
                 resultCoordinates.push(coord);
             });

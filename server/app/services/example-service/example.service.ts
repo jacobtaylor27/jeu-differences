@@ -1,4 +1,4 @@
-import { DateService } from '@app/services/date.service';
+import { DateService } from '@app/services/date-service/date.service';
 import { Message } from '@common/message';
 import { Service } from 'typedi';
 

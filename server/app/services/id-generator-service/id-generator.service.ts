@@ -16,12 +16,12 @@ export class IdGeneratorService {
         return newId;
     }
 
-    async getLastGeneratedId(): Promise<Id[]> {
+    private async getLastGeneratedId(): Promise<Id[]> {
         const element: Id[] = await (await this.getCollection()).find({}).toArray();
         return element;
     }
 
-    async updateLastGeneratedId(lastGeneratedId: number, newId: number): Promise<number> {
+    private async updateLastGeneratedId(lastGeneratedId: number, newId: number): Promise<number> {
         const update = {
             $set: { id: newId },
         };

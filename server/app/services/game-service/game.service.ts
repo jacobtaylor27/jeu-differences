@@ -1,12 +1,13 @@
 import { DB_GAME_COLLECTION } from '@app/constants/database';
 import { DatabaseService } from '@app/services/database-service/database.service';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Game } from '@common/game';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 
 @Service()
 export class GameService {
-    constructor(private readonly databaseService: DatabaseService) {}
+    constructor(private readonly databaseService: DatabaseService, private readonly idGeneratorService: IdGeneratorService) {}
 
     get collection(): Collection<Game> {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
@@ -20,6 +21,7 @@ export class GameService {
     }
     async addGame(game: Game): Promise<boolean> {
         try {
+            game.id = await this.idGeneratorService.generateUniqueId();
             await this.collection.insertOne(game);
             return true;
         } catch (error) {

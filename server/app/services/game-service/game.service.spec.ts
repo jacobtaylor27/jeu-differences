@@ -2,6 +2,7 @@ import { DB_URL } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameService } from '@app/services/game-service/game.service';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Game } from '@common/game';
 import { Score } from '@common/score';
 import { expect } from 'chai';
@@ -10,11 +11,14 @@ import { describe } from 'mocha';
 describe('Game service', async () => {
     let gameService: GameService;
     let databaseService: DatabaseServiceMock;
+    let idGeneratorService: IdGeneratorService;
 
     beforeEach(async () => {
         databaseService = new DatabaseServiceMock();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        gameService = new GameService(databaseService as any);
+        idGeneratorService = new IdGeneratorService(databaseService as any);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        gameService = new GameService(databaseService as any, idGeneratorService);
         await databaseService.start(DB_URL);
         await databaseService.populateDatabase();
     });
@@ -77,6 +81,36 @@ describe('Game service', async () => {
         expect(await gameService.addGame(game)).to.equal(true);
         expect(await gameService.addGame(game)).to.equal(false);
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length + 1);
+    });
+
+    it('Verifying that addGame(game) will have a unique id generated', async () => {
+        const score: Score = {
+            playerName: 'Jacob',
+            time: 22,
+        };
+        const game: Game = {
+            idOriginalBmp: 0,
+            idEditedBmp: 0,
+            idDifferenceBmp: 0,
+            soloScore: [score],
+            multiplayerScore: [score],
+            name: 'Mark',
+            differences: [],
+        };
+        expect(await gameService.addGame(game)).to.equal(true);
+        expect((await gameService.getGameById(1)).id).to.equal(1);
+
+        const game2: Game = {
+            idOriginalBmp: 0,
+            idEditedBmp: 0,
+            idDifferenceBmp: 0,
+            soloScore: [score],
+            multiplayerScore: [score],
+            name: 'Mark',
+            differences: [],
+        };
+        expect(await gameService.addGame(game2)).to.equal(true);
+        expect((await gameService.getGameById(2)).id).to.equal(2);
     });
 
     it('deleteGameBy(id) should delete a game according to a specific id', async () => {

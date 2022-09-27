@@ -24,13 +24,13 @@ describe('Database service', () => {
     it('start(uri) should allow the connection to the database', async () => {
         await databaseService.start(uri);
         expect(databaseService['client']).to.not.equal(undefined);
-        expect(databaseService['db'].databaseName).to.equal(DB_NAME);
+        expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
 
     it('start() should also allow the connection to the database ', async () => {
         await databaseService.start();
         expect(databaseService['client']).to.not.equal(undefined);
-        expect(databaseService['db'].databaseName).to.equal(DB_NAME);
+        expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
 
     it('start(uri) should throw an exception given a bad uri', async () => {

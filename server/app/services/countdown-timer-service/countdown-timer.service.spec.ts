@@ -1,4 +1,4 @@
-import { CountdownTimerService } from '@app/services/clock/countdown-timer.service';
+import { CountdownTimerService } from '@app/services/countdown-timer-service/countdown-timer.service';
 import { expect } from 'chai';
 import { Container } from 'typedi';
 

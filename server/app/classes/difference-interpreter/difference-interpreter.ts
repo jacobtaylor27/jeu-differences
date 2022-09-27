@@ -1,6 +1,6 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
-import { PixelColor } from '@app/enum/pixel-color';
+import { PIXEL_COLOR } from '@app/constants/pixel-color';
 import { Pixel } from '@app/interface/pixel';
 
 export class DifferenceInterpreter {
@@ -46,15 +46,15 @@ export class DifferenceInterpreter {
     }
 
     private static isPixelWhite(pixel: Pixel) {
-        return this.isPixelColorMatch(pixel, PixelColor.WHITE);
+        return this.isPixelColorMatch(pixel, PIXEL_COLOR.white);
     }
 
     private static isPixelBlack(pixel: Pixel) {
-        return this.isPixelColorMatch(pixel, PixelColor.BLACK);
+        return this.isPixelColorMatch(pixel, PIXEL_COLOR.black);
     }
 
     private static setPixelWhite(pixel: Pixel) {
-        this.setPixelColor(pixel, PixelColor.WHITE);
+        this.setPixelColor(pixel, PIXEL_COLOR.white);
     }
 
     private static setPixelColor(pixel: Pixel, color: number) {

@@ -1,4 +1,5 @@
 import { Contact } from '@app/interface/contact';
+import { Game } from '@common/game';
 import { Db, MongoClient } from 'mongodb';
 import { Service } from 'typedi';
 
@@ -37,5 +38,9 @@ export class DatabaseService {
         if (documents.length === 0) {
             await collection.insertMany(data);
         }
+    }
+
+    async getGames(): Promise<Game[]> {
+        return [];
     }
 }

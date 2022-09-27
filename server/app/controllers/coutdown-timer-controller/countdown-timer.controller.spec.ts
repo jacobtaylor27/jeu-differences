@@ -1,5 +1,5 @@
 import { Application } from '@app/app';
-import { CountdownTimerService } from '@app/services/clock/countdown-timer.service';
+import { CountdownTimerService } from '@app/services/countdown-timer-service/countdown-timer.service';
 import { Message } from '@common/message';
 import * as chai from 'chai';
 import { StatusCodes } from 'http-status-codes';

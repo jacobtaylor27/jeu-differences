@@ -3,6 +3,7 @@ import { BmpDifference } from '@app/classes/bmp-difference/bmp-difference';
 import { Bmp } from '@app/classes/bmp/bmp';
 // import { Coordinates } from '@app/interface/coordinates';
 import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
+import { Coordinates } from '@app/interface/coordinates';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
@@ -36,6 +37,7 @@ describe('DifferenceBetween2Images', async () => {
         expect(bmpProduced.getHeight()).to.equals(expectedHeight);
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
+
     it('Should throw an error if the height of the two images is not the same', async () => {
         const radius = 0;
 
@@ -46,6 +48,7 @@ describe('DifferenceBetween2Images', async () => {
             expect(e).to.be.instanceof(Error);
         }
     });
+
     it('Should throw an error if the width of the two images is not the same', async () => {
         const radius = 0;
         try {
@@ -55,6 +58,7 @@ describe('DifferenceBetween2Images', async () => {
             expect(e).to.be.instanceof(Error);
         }
     });
+
     it('verifying that the value of radius is greater or equal to zero', async () => {
         const radius = -1;
 
@@ -65,12 +69,31 @@ describe('DifferenceBetween2Images', async () => {
             expect(e).to.be.instanceof(Error);
         }
     });
+
+    it('Should return center value if radius is 0', () => {
+        const radius = 0;
+        const center: Coordinates = { x: 1, y: 1 };
+        const result = BmpDifference['findContourEnlargement'](center, radius);
+        let expected: Coordinates[] = new Array();
+        expected.push(center);
+        expect(result.length).to.equal(expected.length);
+        expect(result[0]).to.equal(expected[0]);
+    });
+
+    it('Should return array of coordinates of length bigger than 1 if radius > 0', () => {
+        const radius = 3;
+        const center: Coordinates = { x: 1, y: 1 };
+        const result = BmpDifference['findContourEnlargement'](center, radius);
+        expect(result.length).to.greaterThan(1);
+    });
+
     it('Should apply 0 pixel enlargement radius for a given image ', async () => {
         const radius = 0;
         const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
         const blackBmp = await BmpDecoder.decode('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
         expect(bmpWithRadiusOf0px).to.be.eql(await BmpDifference.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius));
     });
+
     it('Should apply 3 pixel enlargement radius for a given image ', async () => {
         const radius = 3;
         const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
@@ -79,6 +102,7 @@ describe('DifferenceBetween2Images', async () => {
         const bmpResulting = await BmpDifference.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius);
         expect(bmpWithRadiusOf3px).to.be.eql(bmpResulting);
     });
+
     it('Should apply 9 pixel enlargement radius for a given image ', async () => {
         const radius = 9;
         const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
@@ -88,6 +112,7 @@ describe('DifferenceBetween2Images', async () => {
         await BmpEncoder.encode('./assets/src-bmp/bmpResulting.bmp', bmpResulting);
         expect(bmpWithRadiusOf3px).to.be.eql(bmpResulting);
     });
+
     it('Should apply 15 pixel enlargement radius for a given image ', async () => {
         const radius = 15;
         const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');

@@ -19,14 +19,38 @@ export class BmpDifference {
             }
         }
 
-        return this.createBmpWithDifferences(resultImage, radius);
+        return this.createDifferencesBMP(resultImage, radius);
     }
 
-    private static drawEnlargement(center: Coordinates, radius: number) {
-        return this.fillContour(center, radius, this.drawContour(center, radius));
+    private static createDifferencesBMP(originalImage: Bmp, radius: number): Bmp {
+        if (radius < 0) throw new Error('radius should be greater or equal to zero');
+
+        if (radius === 0) return originalImage;
+
+        const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
+        const pixelResult: Pixel[][] = originalImage.getPixels();
+        resultCoordinates.forEach((coordinate) => {
+            this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
+        });
+        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
 
-    private static drawContour(center: Coordinates, radius: number): Coordinates[] {
+    private static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {
+        const resultCoordinates: Coordinates[] = [];
+        originalCoordinates.forEach((coordinate) => {
+            const result = this.findEnlargementArea(coordinate, radius);
+            result.forEach((coord) => {
+                resultCoordinates.push(coord);
+            });
+        });
+        return resultCoordinates;
+    }
+
+    private static findEnlargementArea(center: Coordinates, radius: number) {
+        return this.findInsideAreaEnlargement(center, radius, this.findContourEnlargement(center, radius));
+    }
+
+    private static findContourEnlargement(center: Coordinates, radius: number): Coordinates[] {
         let coordinates: Coordinates[] = new Array();
         if (radius === 0) return [center];
 
@@ -84,7 +108,7 @@ export class BmpDifference {
         return Math.sqrt(dx + dy);
     }
 
-    private static fillContour(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
+    private static findInsideAreaEnlargement(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
         for (let j = coord.x - radius; j <= coord.x + radius; j++) {
             for (let k = coord.y - radius; k <= coord.y + radius; k++) {
                 if (this.distance({ x: j, y: k }, { x: coord.x, y: coord.y }) <= radius) coordinates.push({ x: j, y: k });
@@ -92,19 +116,6 @@ export class BmpDifference {
         }
 
         return coordinates;
-    }
-
-    private static createBmpWithDifferences(originalImage: Bmp, radius: number): Bmp {
-        if (radius < 0) throw new Error('radius should be greater or equal to zero');
-
-        if (radius === 0) return originalImage;
-
-        const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
-        const pixelResult: Pixel[][] = originalImage.getPixels();
-        resultCoordinates.forEach((coordinate) => {
-            this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
-        });
-        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
 
     private static getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinates[] {
@@ -117,17 +128,6 @@ export class BmpDifference {
             }
         }
         return coordinatesOfBlackPixels;
-    }
-
-    private static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {
-        const resultCoordinates: Coordinates[] = [];
-        originalCoordinates.forEach((coordinate) => {
-            const result = this.drawEnlargement(coordinate, radius);
-            result.forEach((coord) => {
-                resultCoordinates.push(coord);
-            });
-        });
-        return resultCoordinates;
     }
 
     private static arePixelsEqual(pixelOriginalImg: Pixel, pixelModifiedImg: Pixel): boolean {

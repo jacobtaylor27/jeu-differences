@@ -3,6 +3,7 @@ import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-on
 
 export class PlayerTwoTourState extends GameState {
     next(): void {
+        // check if the game is not finish
         this.context.transitionTo(new PlayerOneTourState());
     }
 

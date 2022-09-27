@@ -52,17 +52,18 @@ export class BmpDifference {
 
     private static findContourEnlargement(center: Coordinates, radius: number): Coordinates[] {
         let coordinates: Coordinates[] = new Array();
-        if (radius === 0) return [center];
+        if (radius === 0) {
+            coordinates.push(center);
+            return coordinates;
+        }
 
         // MID-POINT ALGORITHM
         let x = radius;
         let y = 0;
 
-        if (radius > 0) {
-            coordinates.push({ x: center.x - x, y: center.y });
-            coordinates.push({ x: center.x, y: x + center.y });
-            coordinates.push({ x: center.x, y: center.y - x });
-        }
+        coordinates.push({ x: center.x - x, y: center.y });
+        coordinates.push({ x: center.x, y: x + center.y });
+        coordinates.push({ x: center.x, y: center.y - x });
 
         let p = 1 - radius;
 

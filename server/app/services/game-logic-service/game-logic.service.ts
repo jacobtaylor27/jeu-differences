@@ -1,4 +1,4 @@
-import { GameService } from '@app/services/';
+import { GameService } from '@app/services/game-service/game.service';
 import { Bmp } from '@common/bmp';
 import { Coordinate } from '@common/coordinate';
 import { Difference } from '@common/difference';
@@ -9,20 +9,12 @@ export class GameLogicService {
     constructor(private readonly gameService: GameService) {}
 
     // à la place de renvoyer undefined, renvoyer une erreur
-    async validateCoordinates(gameId: number, coordinate: Coordinate): Promise<Coordinate[] | undefined> {
-        const game = await this.gameService.getGameById(gameId);
-        if (game === undefined) return undefined;
-
-        for (const areaOfDifference of game.differences) {
-            for (const coordDiff of areaOfDifference) {
-                if (coordinate.row === coordDiff.row && coordinate.column === coordDiff.column) {
-                    return areaOfDifference;
-                }
-            }
-        }
-        return undefined;
+    async validateCoordinates(gameId: number, coordinate: Coordinate): Promise<void> {
+        console.log(gameId);
+        console.log(coordinate);
+        console.log(this.gameService);
     }
-    async validateDifferenceBmp(originalBmp, modifiedBmp: Bmp): Promise<Difference> {
+    async validateDifferenceBmp(originalBmp: Bmp, modifiedBmp: Bmp): Promise<Difference> {
         console.log(originalBmp);
         console.log(modifiedBmp);
         const difference: Difference = {

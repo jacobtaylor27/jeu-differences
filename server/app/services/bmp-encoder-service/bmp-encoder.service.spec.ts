@@ -25,12 +25,12 @@ describe('BmpEncoder', async () => {
         });
     });
 
-    it('encode() should convert a Bmp into a .bmp file', async () => {
+    it('encodeIntoBmp() should convert a Bmp into a .bmp file', async () => {
         const resultFilePath = './assets/test-bmp/result.bmp';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
         const bmpDecoded: Bmp = await bmpDecoderService.decode(originalBmpFilePath);
-        await bmpEncoderService.encode(resultFilePath, bmpDecoded);
+        await bmpEncoderService.encodeIntoBmp(resultFilePath, bmpDecoded);
         const bmpExpected: Bmp = await bmpDecoderService.decode(resultFilePath);
         expect(bmpDecoded).to.eql(bmpExpected);
     });
@@ -41,7 +41,7 @@ describe('BmpEncoder', async () => {
 
         const bmpDecoded: Bmp = await bmpDecoderService.decode(originalBmpFilePath);
         try {
-            const bmpEncoded = await bmpEncoderService.encode(incorrectFileExtension, bmpDecoded);
+            const bmpEncoded = await bmpEncoderService.encodeIntoBmp(incorrectFileExtension, bmpDecoded);
             expect(bmpEncoded).to.equals(undefined);
         } catch (e) {
             expect(e).to.be.instanceof(Error);
@@ -55,7 +55,7 @@ describe('BmpEncoder', async () => {
 
         const bmpDecoded: Bmp = await bmpDecoderService.decode(originalBmpFilePath);
         try {
-            const bmpEncoded = await bmpEncoderService.encode(incorrectFile, bmpDecoded);
+            const bmpEncoded = await bmpEncoderService.encodeIntoBmp(incorrectFile, bmpDecoded);
             expect(bmpEncoded).to.equals(undefined);
         } catch (e) {
             expect(e).to.be.instanceof(Error);

@@ -28,6 +28,6 @@ export class GameService {
     }
     async deleteGameById(gameId: number): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
-        return Boolean((await this.collection.findOneAndDelete(filter)).ok);
+        return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;
     }
 }

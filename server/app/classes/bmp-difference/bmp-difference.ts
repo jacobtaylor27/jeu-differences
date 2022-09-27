@@ -1,16 +1,7 @@
-import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
-import { BmpEncoder } from '@app/classes/bmp-encoder/bmp-encoder';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
 export class BmpDifference {
-    async test() {
-        const radius = 9;
-        const bmpWithRadiusOf0px = await BmpDecoder.decode('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
-        const blackBmp = await BmpDecoder.decode('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
-        const bmpResulting = await BmpDifference.getDifference(bmpWithRadiusOf0px, blackBmp, radius);
-        await BmpEncoder.encode('./assets/test-bmp/test-radius', bmpResulting);
-    }
     static async getDifference(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
@@ -28,15 +19,14 @@ export class BmpDifference {
         return this.createBmpWithDifferences(resultImage, radius);
     }
 
-    private static drawOutlineEnlargement(center: Coordinates, radius: number): Coordinates[] {
+    private static drawContour(center: Coordinates, radius: number): Coordinates[] {
         let coordinates: Coordinates[] = new Array();
         if (radius === 0) return [center];
 
         let x = radius;
         let y = 0;
 
-        coordinates = this.drawFullCircleEnlargement(center, radius, coordinates);
-
+        coordinates = this.fillContour(center, radius, coordinates);
         coordinates.push({ x: center.x + x, y: center.y });
 
         if (radius > 0) {
@@ -64,7 +54,7 @@ export class BmpDifference {
             coordinates.push({ x: x + center.x, y: -y + center.y });
             coordinates.push({ x: -x + center.x, y: -y + center.y });
 
-            if (x != y) {
+            if (x !== y) {
                 coordinates.push({ x: y + center.x, y: x + center.y });
                 coordinates.push({ x: -y + center.x, y: x + center.y });
                 coordinates.push({ x: y + center.x, y: -x + center.y });
@@ -83,7 +73,7 @@ export class BmpDifference {
         return Math.sqrt(dx + dy);
     }
 
-    private static drawFullCircleEnlargement(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
+    private static fillContour(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
         for (let j = coord.x - radius; j <= coord.x + radius; j++) {
             for (let k = coord.y - radius; k <= coord.y + radius; k++) {
                 if (this.distance({ x: j, y: k }, { x: coord.x, y: coord.y }) <= radius) coordinates.push({ x: j, y: k });
@@ -119,7 +109,7 @@ export class BmpDifference {
     private static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {
         const resultCoordinates: Coordinates[] = [];
         originalCoordinates.forEach((coordinate) => {
-            const result = this.drawOutlineEnlargement(coordinate, radius);
+            const result = this.drawContour(coordinate, radius);
             result.forEach((coord) => {
                 resultCoordinates.push(coord);
             });

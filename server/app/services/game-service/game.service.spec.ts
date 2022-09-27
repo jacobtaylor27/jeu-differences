@@ -1,7 +1,6 @@
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { GameService } from '@app/services/game-service/game.service';
 import { Game } from '@common/game';
-import { GameCard } from '@common/game-card';
 import { expect } from 'chai';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
 
@@ -87,32 +86,6 @@ describe('Game service', () => {
         expect(await gameService.getGameById(missingId)).to.equal(undefined);
     });
 
-    it('getGameCardbyId(id) should return the corresponding gameCard', async () => {
-        await gameService.initialiseGames();
-
-        const expectedGameCard: GameCard = {
-            id: 0,
-            idOriginalBmp: 0,
-            bestScores: [],
-            name: 'firstGame',
-        };
-        expect(await gameService.getGameCardById(0)).to.deep.equal(expectedGameCard);
-        const missingId = 10;
-        expect(await gameService.getGameCardById(missingId)).to.equal(undefined);
-    });
-
-    it('getAllGameCards() should return all of the game cards', async () => {
-        await gameService.initialiseGames();
-        const expectedGameCard: GameCard = {
-            id: 0,
-            idOriginalBmp: 0,
-            bestScores: [],
-            name: 'firstGame',
-        };
-        expect((await gameService.getAllGameCards())[0]).to.deep.equal(expectedGameCard);
-        expect((await gameService.getAllGameCards()).length).to.equal(3);
-    });
-
     it('deleteGameById(id) should remove the game from the array of games', async () => {
         await gameService.initialiseGames();
 
@@ -129,6 +102,5 @@ describe('Game service', () => {
         const missingId = 10;
         expect(await gameService.deleteGameById(missingId)).to.equal(undefined);
         expect((await gameService.getAllGames()).length).to.equal(2);
-        expect((await gameService.getAllGameCards()).length).to.equal(2);
     });
 });

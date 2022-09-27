@@ -51,6 +51,9 @@ describe('GameCarouselService', () => {
 
         service.setCardMode(false);
         expect(spyGameCardHandlerService.setCardMode).toHaveBeenCalledWith(false);
+
+        service.setCardMode();
+        expect(spyGameCardHandlerService.setCardMode).toHaveBeenCalledWith(false);
     });
 
     it('hasCards should call hasCards from game card handler service', () => {

@@ -31,6 +31,11 @@ describe('AdminService', () => {
         expect(spyGameCardHandlerService.deleteGames).toHaveBeenCalled();
     });
 
+    it('hasGameCards should call hasCards from game card handler service', () => {
+        service.hasGameCards();
+        expect(spyGameCardHandlerService.hasCards).toHaveBeenCalled();
+    });
+
     it('openSettings should call call matDialog s method open', () => {
         service.openSettings();
         expect(spyMatDialog.open).toHaveBeenCalled();

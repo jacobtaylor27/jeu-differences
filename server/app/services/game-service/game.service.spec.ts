@@ -5,6 +5,7 @@ import { GameService } from '@app/services/game-service/game.service';
 import { Game } from '@common/game';
 import { Score } from '@common/score';
 import { expect } from 'chai';
+import { describe } from 'mocha';
 
 describe('Game service', async () => {
     let gameService: GameService;

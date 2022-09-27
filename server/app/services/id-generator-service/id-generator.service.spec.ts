@@ -2,6 +2,7 @@ import { DB_URL } from '@app/constants/database';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { expect } from 'chai';
+import { describe } from 'mocha';
 
 describe('Id service', async () => {
     let idGeneratorService: IdGeneratorService;

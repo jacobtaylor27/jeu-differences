@@ -5,6 +5,7 @@ import { DatabaseServiceMock } from '@app/services/database-service/database.ser
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Bmp } from '@common/bmp';
 import { expect } from 'chai';
+import { describe } from 'mocha';
 
 describe('Bmp service', async () => {
     let bmpService: BmpService;

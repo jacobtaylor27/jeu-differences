@@ -2,7 +2,7 @@ import { PlayerScore } from '@app/classes/player-score';
 
 export interface GameInformation {
     imgName: string;
-    gameName: string;
+    name: string;
     scoresSolo: PlayerScore[];
     scoresMultiplayer: PlayerScore[];
 }

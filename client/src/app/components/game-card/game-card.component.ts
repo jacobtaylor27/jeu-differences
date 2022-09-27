@@ -20,7 +20,7 @@ export class GameCardComponent {
     }
 
     getGameName(): string {
-        return this.gameCard.gameInformation.gameName;
+        return this.gameCard.gameInformation.name;
     }
 
     getImageName(): string {

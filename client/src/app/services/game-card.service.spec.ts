@@ -9,7 +9,7 @@ import { GameCardService } from './game-card.service';
 
 const GAME_CARD: GameCard = {
     gameInformation: {
-        gameName: 'test',
+        name: 'test',
         imgName: 'imageName',
         scoresSolo: [
             { playerName: 'solo1', time: 60, category: GameCategory.Solo },

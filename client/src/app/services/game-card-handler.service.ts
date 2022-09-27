@@ -106,7 +106,7 @@ export class GameCardHandlerService {
         for (let i = 0; i < DEFAULT_NB_OF_CARDS; i++) {
             const newCard: GameCard = {
                 gameInformation: {
-                    gameName: 'Game ' + i,
+                    name: 'Game ' + i,
                     // image from api of correct size
                     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
                     imgName: `https://picsum.photos/id/${i * 8}/640/480`,

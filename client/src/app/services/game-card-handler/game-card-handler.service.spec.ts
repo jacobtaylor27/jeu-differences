@@ -113,12 +113,42 @@ describe('GameCardHandlerService', () => {
         for (const card of service['gameCards']) {
             expect(card.gameInformation.scoresSolo.length).toEqual(3);
             expect(card.gameInformation.scoresMultiplayer.length).toEqual(3);
-            service.resetHighScores(card);
         }
+
+        service.resetAllHighScores();
 
         for (const card of service['gameCards']) {
             expect(card.gameInformation.scoresSolo.length).toEqual(0);
             expect(card.gameInformation.scoresMultiplayer.length).toEqual(0);
         }
+    });
+
+    it('setCardMode should make all the cards admin or not', () => {
+        service.setCardMode(true);
+        for (const card of service['gameCards']) {
+            expect(card.isAdminCard).toBeTruthy();
+        }
+
+        service.setCardMode(false);
+        for (const card of service['gameCards']) {
+            expect(card.isAdminCard).toBeFalsy();
+        }
+
+        service.setCardMode();
+        for (const card of service['gameCards']) {
+            expect(card.isAdminCard).toBeFalsy();
+        }
+    });
+
+    it('hasNextCards should return true if there are cards after the active ones', () => {
+        expect(service.hasNextCards()).toBeTruthy();
+        service['activeCardsRange'] = { start: 14, end: 17 };
+        expect(service.hasNextCards()).toBeFalsy();
+    });
+
+    it('hasPreviousCards should return true if there are cards before the active ones', () => {
+        expect(service.hasPreviousCards()).toBeFalsy();
+        service['activeCardsRange'] = { start: 14, end: 17 };
+        expect(service.hasPreviousCards()).toBeTruthy();
     });
 });

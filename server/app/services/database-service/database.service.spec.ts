@@ -74,8 +74,4 @@ describe('Database service', () => {
         const insertedContacts = await databaseService.database.collection(COLLECTION_NAME).find({}).toArray();
         expect(insertedContacts.length).equal(1);
     });
-
-    it('useless test', async () => {
-        expect(await databaseService.getGames()).to.deep.equal([]);
-    });
 });

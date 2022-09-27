@@ -9,26 +9,6 @@ describe('Game service', () => {
     let databaseService: SinonStubbedInstance<DatabaseService>;
 
     beforeEach(async () => {
-        const game0: Game = {
-            id: 0,
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'firstGame',
-            differences: [],
-        };
-        const game1: Game = {
-            id: 1,
-            idOriginalBmp: 1,
-            idEditedBmp: 1,
-            idDifferenceBmp: 1,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'secondGame',
-            differences: [],
-        };
         const game2: Game = {
             id: 2,
             idOriginalBmp: 2,
@@ -39,7 +19,7 @@ describe('Game service', () => {
             name: 'thirdGame',
             differences: [],
         };
-        const basicGames: Game[] = [game0, game1, game2];
+        const basicGames: Game[] = [game2];
 
         databaseService = createStubInstance(DatabaseService);
         databaseService.getGames.resolves(basicGames);
@@ -50,63 +30,5 @@ describe('Game service', () => {
         expect((await gameService.getAllGames()).length).to.equal(0);
         await gameService.initialiseGames();
         expect((await gameService.getAllGames()).length).to.equal(3);
-    });
-
-    it('addGame(game) should add a game to the array of games', async () => {
-        await gameService.initialiseGames();
-        expect((await gameService.getAllGames()).length).to.equal(3);
-        const newGame: Game = {
-            id: 3,
-            idOriginalBmp: 3,
-            idEditedBmp: 3,
-            idDifferenceBmp: 3,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'fourthGame',
-            differences: [],
-        };
-        expect(await gameService.addGame(newGame)).to.equal(true);
-        expect(await gameService.addGame(newGame)).to.equal(false);
-        const resultingNbOfGame = 4;
-        const resultingGames = await gameService.getAllGames();
-        expect(resultingGames.length).to.equal(resultingNbOfGame);
-        expect(resultingGames[3]).to.deep.equal(newGame);
-    });
-
-    it('getGameById(id) should return the proper game according to an id', async () => {
-        await gameService.initialiseGames();
-        const game0: Game = {
-            id: 0,
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'firstGame',
-            differences: [],
-        };
-        const correspondingId = 0;
-        expect(await gameService.getGameById(correspondingId)).to.deep.equal(game0);
-        const missingId = 10;
-        expect(await gameService.getGameById(missingId)).to.equal(undefined);
-    });
-
-    it('deleteGameById(id) should remove the game from the array of games', async () => {
-        await gameService.initialiseGames();
-
-        const expectedRemovedGame: Game = {
-            id: 0,
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
-            soloScore: [],
-            multiplayerScore: [],
-            name: 'firstGame',
-            differences: [],
-        };
-        expect(await gameService.deleteGameById(0)).to.deep.equal(expectedRemovedGame);
-        const missingId = 10;
-        expect(await gameService.deleteGameById(missingId)).to.equal(undefined);
-        expect((await gameService.getAllGames()).length).to.equal(2);
     });
 });

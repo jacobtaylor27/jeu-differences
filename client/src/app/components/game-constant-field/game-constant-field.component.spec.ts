@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppMaterialModule } from '@app/modules/material.module';
 
 import { GameConstantFieldComponent } from './game-constant-field.component';
 
@@ -9,6 +10,7 @@ describe('GameConstantFieldComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [GameConstantFieldComponent],
+            imports: [AppMaterialModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameConstantFieldComponent);

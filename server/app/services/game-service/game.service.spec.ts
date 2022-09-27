@@ -25,8 +25,10 @@ describe('Game service', () => {
     it('getGameById(id) should return a game according to a specific id', async () => {
         expect(await gameService.getGameById(0)).to.deep.equals(DEFAULT_GAMES[0]);
     });
+
     it('getGameById(id) should return undefined if the specific id is out of range', async () => {
-        expect(await gameService.getGameById(3)).to.equal(undefined);
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(await gameService.getGameById(5)).to.equal(undefined);
     });
 
     it('addGame() should add a game to the game collection, getAllGames() should return them', async () => {

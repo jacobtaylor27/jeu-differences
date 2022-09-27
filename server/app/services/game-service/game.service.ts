@@ -12,11 +12,7 @@ export class GameService {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
     async getAllGames(): Promise<Game[] | undefined> {
-        try {
-            return await this.collection.find({}).toArray();
-        } catch (error) {
-            return undefined;
-        }
+        return await this.collection.find({}).toArray();
     }
     async getGameById(gameId: number): Promise<Game | undefined> {
         const filter = { id: gameId };

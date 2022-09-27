@@ -1,15 +1,17 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
-import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
 import { Bmp } from '@app/classes/bmp/bmp';
+import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
 describe('Difference interpreter', async () => {
     let bmpDifferenceInterpreter: BmpDifferenceInterpreter;
+    let bmpDecoderService: BmpDecoderService;
 
     beforeEach(async () => {
         bmpDifferenceInterpreter = new BmpDifferenceInterpreter();
+        bmpDecoderService = new BmpDecoderService();
     });
 
     it('Should throw an exception if given a bmp with pixels other than black or white', () => {
@@ -76,7 +78,7 @@ describe('Difference interpreter', async () => {
     });
     it('An array of difference should contain all of the differences', async () => {
         const filepath = './assets/test-bmp/two_difference_appart.bmp';
-        const decodedBmp = await BmpDecoder.decode(filepath);
+        const decodedBmp = await bmpDecoderService.decode(filepath);
         const interpretedBmp: BmpCoordinate[][] = bmpDifferenceInterpreter.getCoordinates(decodedBmp);
         // prettier-ignore
         // eslint-disable-next-line
@@ -96,7 +98,7 @@ describe('Difference interpreter', async () => {
     });
     it('The algorithm should also work on a bmp with a large width and height', async () => {
         const filepath = './assets/test-bmp/ten_difference.bmp';
-        const bmpDecoded = await BmpDecoder.decode(filepath);
+        const bmpDecoded = await bmpDecoderService.decode(filepath);
         const nbOfDifference = 10;
         const differences: BmpCoordinate[][] = bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
         expect(differences.length).to.equal(nbOfDifference);

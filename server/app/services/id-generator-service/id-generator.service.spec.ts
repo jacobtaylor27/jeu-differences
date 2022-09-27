@@ -4,7 +4,7 @@ import { IdGeneratorService } from '@app/services/id-generator-service/id-genera
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe('Id service', async () => {
+describe('Id generator service', async () => {
     let idGeneratorService: IdGeneratorService;
     let databaseService: DatabaseServiceMock;
 

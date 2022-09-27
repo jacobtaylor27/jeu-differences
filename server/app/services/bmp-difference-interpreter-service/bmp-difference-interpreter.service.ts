@@ -2,9 +2,11 @@ import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { PIXEL_COLOR } from '@app/constants/pixel-color';
 import { Pixel } from '@app/interface/pixel';
+import { Service } from 'typedi';
 
-export class DifferenceInterpreter {
-    static getCoordinates(bmpDifferentiated: Bmp): BmpCoordinate[][] {
+@Service()
+export class BmpDifferenceInterpreter {
+    getCoordinates(bmpDifferentiated: Bmp): BmpCoordinate[][] {
         if (!this.isBmpDifferentiated(bmpDifferentiated)) throw new Error('The pixels are not perfectly black or white');
 
         const differences: BmpCoordinate[][] = [];
@@ -21,7 +23,7 @@ export class DifferenceInterpreter {
         return differences;
     }
 
-    private static getRegion(pixels: Pixel[][], row: number, column: number): BmpCoordinate[] {
+    private getRegion(pixels: Pixel[][], row: number, column: number): BmpCoordinate[] {
         if (row < 0 || column < 0 || row >= pixels.length || column >= pixels[row].length) {
             return [];
         }
@@ -41,29 +43,29 @@ export class DifferenceInterpreter {
         return differences;
     }
 
-    private static isPixelColorMatch(pixel: Pixel, color: number) {
+    private isPixelColorMatch(pixel: Pixel, color: number) {
         return pixel.r === color && pixel.g === color && pixel.b === color;
     }
 
-    private static isPixelWhite(pixel: Pixel) {
+    private isPixelWhite(pixel: Pixel) {
         return this.isPixelColorMatch(pixel, PIXEL_COLOR.white);
     }
 
-    private static isPixelBlack(pixel: Pixel) {
+    private isPixelBlack(pixel: Pixel) {
         return this.isPixelColorMatch(pixel, PIXEL_COLOR.black);
     }
 
-    private static setPixelWhite(pixel: Pixel) {
+    private setPixelWhite(pixel: Pixel) {
         this.setPixelColor(pixel, PIXEL_COLOR.white);
     }
 
-    private static setPixelColor(pixel: Pixel, color: number) {
+    private setPixelColor(pixel: Pixel, color: number) {
         pixel.b = color;
         pixel.g = color;
         pixel.r = color;
     }
 
-    private static isBmpDifferentiated(bmp: Bmp): boolean {
+    private isBmpDifferentiated(bmp: Bmp): boolean {
         const pixels: Pixel[][] = bmp.getPixels();
         for (const scanLine of pixels) {
             for (const pixel of scanLine) {

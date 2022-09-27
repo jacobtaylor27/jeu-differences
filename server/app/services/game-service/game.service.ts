@@ -10,7 +10,7 @@ export class GameService {
         this.game = [];
     }
     async initialiseGames(): Promise<void> {
-        this.game = this.databaseService.getGames();
+        this.game = await this.databaseService.getGames();
     }
     async getAllGames(): Promise<Game[]> {
         return this.game;

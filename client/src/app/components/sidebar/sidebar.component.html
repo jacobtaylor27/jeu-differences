@@ -1,11 +1,26 @@
 <div class="container">
-    <p>Barre latérale pour l'information!</p>
-    <p>
-        Ceci est un exemple de base pour vous aider à débuter le projet <br />
-        L'implémentation ici ne couvre pas les critères d'acceptation du projet! <br />
-        La grille et le mot "Différence" sont écrits sur le Canvas avec du code, <br />
-        mais à des positions fixes <br />
-        Vous devez modifier et compléter le code.<br />
-        <strong>N'oubliez pas de regarder les tests dans les fichiers spec.ts aussi!</strong>
-    </p>
+    <mat-grid-list cols="3" rowHeight="15vh">
+        <mat-grid-tile>
+            <section class="game-infos">
+                <p class="title"><strong> INFOS DU JEU</strong></p>
+                <p>Nom du jeu :</p>
+                <p>Mode de jeu :</p>
+                <p>Temps de pénalité ajouté :</p>
+                <p>Temps gagné par différence trouvé :</p>
+            </section>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="middle-col">
+                <app-clues-area (clueCounter)="onClueAsked($event)"></app-clues-area>
+                <!-- <app-timer-countdown [timerAdmin]="timer" [clueAskedCounter]="askedClue"></app-timer-countdown> -->
+                <app-timer-stopwatch [clueAskedCounter]="askedClue"></app-timer-stopwatch>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="differences-area">
+                <app-differences-area> </app-differences-area>
+                <!-- <app-differences-area> </app-differences-area> -->
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
 </div>

@@ -1,6 +1,5 @@
-import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { AppMaterialModule } from '@app/modules/material.module';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 
 describe('MainPageComponent', () => {
@@ -9,8 +8,8 @@ describe('MainPageComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule, HttpClientModule],
             declarations: [MainPageComponent],
+            imports: [AppMaterialModule],
         }).compileComponents();
     });
 
@@ -24,7 +23,7 @@ describe('MainPageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it("should have as title 'LOG2990'", () => {
-        expect(component.title).toEqual('LOG2990');
+    it("should have as title 'Jeu de différences'", () => {
+        expect(component.title).toEqual('Jeu de différences');
     });
 });

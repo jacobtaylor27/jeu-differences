@@ -1,11 +1,12 @@
-import { Coordinate } from './coordinate';
-
+import { Coordinate } from '@common/coordinate';
+import { Score } from '@common/score';
 export interface Game {
     id: number;
     idOriginalBmp: number;
     idEditedBmp: number;
     idDifferenceBmp: number;
-    bestTimes: string;
+    soloScore: Score[];
+    multiplayerScore: Score[];
     name: string;
     differences: Coordinate[][];
 }

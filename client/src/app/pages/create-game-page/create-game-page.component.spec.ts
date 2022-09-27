@@ -99,6 +99,11 @@ describe('CreateGamePageComponent', () => {
         expect(spyCreateBmpImage).toHaveBeenCalled();
     });
 
+    it('should open a dialog to validate the game settings', async () => {
+        await component.validateForm();
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+    });
+
     it('should subscribe to get the new image and draw it', async () => {
         const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         spyOn(component.sourceImg.nativeElement, 'getContext').and.callFake(() => null);

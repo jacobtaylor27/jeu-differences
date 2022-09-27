@@ -30,11 +30,11 @@ export class DatabaseService {
 
     async populateDatabase(): Promise<void> {
         this.db.createCollection(DB_GAME_COLLECTION);
-        await this.initialiseCollection(DB_GAME_COLLECTION, DEFAULT_GAMES);
+        await this.initializeCollection(DB_GAME_COLLECTION, DEFAULT_GAMES);
         // TODO: initialise BMP collection
     }
 
-    private async initialiseCollection(collectionName: string, game: Game[]): Promise<void> {
+    private async initializeCollection(collectionName: string, game: Game[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {

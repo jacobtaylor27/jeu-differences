@@ -1,6 +1,6 @@
 import { DB_URL } from '@app/constants/database';
 import { DEFAULT_GAMES } from '@app/constants/default-games';
-import { DatabaseService } from '@app/services/database-service/database.service';
+import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameService } from '@app/services/game-service/game.service';
 import { Game } from '@common/game';
 import { Score } from '@common/score';
@@ -8,14 +8,14 @@ import { expect } from 'chai';
 
 describe('Game service', () => {
     let gameService: GameService;
-    let databaseService: DatabaseService;
+    let databaseService: DatabaseServiceMock;
 
     beforeEach(async () => {
-        databaseService = new DatabaseService();
-        gameService = new GameService(databaseService);
+        databaseService = new DatabaseServiceMock();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        gameService = new GameService(databaseService as any);
         await databaseService.start(DB_URL);
         await databaseService.populateDatabase();
-        // databaseService.getGames.resolves(basicGames);)
     });
 
     afterEach(async () => {
@@ -42,9 +42,14 @@ describe('Game service', () => {
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAMES.length + 1);
     });
 
-    it("addGame() should't add a game twice", async () => {
+    it('deleteGameBy(id) should delete a game according to a specific id', async () => {
+        await gameService.deleteGameById(0);
+        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAMES.length);
+    });
+
+    it("addGame() shouldn't add a game twice", async () => {
         const score: Score = {
-            playerName: 'Jacob',
+            playerName: 'Laurie',
             time: 22,
         };
         const game: Game = {
@@ -54,11 +59,10 @@ describe('Game service', () => {
             idDifferenceBmp: 0,
             soloScore: [score],
             multiplayerScore: [score],
-            name: 'Mark',
+            name: 'Laurie',
             differences: [],
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAMES.length);
-        await gameService.addGame(game);
         await gameService.addGame(game);
         await gameService.addGame(game);
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAMES.length + 1);
@@ -80,24 +84,5 @@ describe('Game service', () => {
             differences: [],
         };
         expect(await gameService.getGameById(0)).to.deep.equal(game);
-    });
-    it('deleteGameBy(id) should delete a game according to a specific id', async () => {
-        const score: Score = {
-            playerName: 'Jacob',
-            time: 22,
-        };
-        const game: Game = {
-            id: 0,
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
-            soloScore: [score],
-            multiplayerScore: [score],
-            name: 'Mark',
-            differences: [],
-        };
-        expect(await gameService.addGame(game));
-        await gameService.deleteGameById(0);
-        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAMES.length);
     });
 });

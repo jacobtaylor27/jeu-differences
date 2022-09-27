@@ -5,7 +5,8 @@ export interface Game {
     idOriginalBmp: number;
     idEditedBmp: number;
     idDifferenceBmp: number;
-    bestScores: Score[];
+    soloScore: Score[];
+    multiplayerScore: Score[];
     name: string;
     differences: Coordinate[][];
 }

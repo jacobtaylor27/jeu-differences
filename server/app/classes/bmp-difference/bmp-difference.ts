@@ -51,7 +51,7 @@ export class BmpDifference {
     }
 
     private static findContourEnlargement(center: Coordinates, radius: number): Coordinates[] {
-        let coordinates: Coordinates[] = new Array();
+        const coordinates: Coordinates[] = new Array();
         if (radius === 0) {
             coordinates.push(center);
             return coordinates;

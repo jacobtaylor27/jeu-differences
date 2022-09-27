@@ -74,7 +74,7 @@ describe('DifferenceBetween2Images', async () => {
         const radius = 0;
         const center: Coordinates = { x: 1, y: 1 };
         const result = BmpDifference['findContourEnlargement'](center, radius);
-        let expected: Coordinates[] = new Array();
+        const expected: Coordinates[] = new Array();
         expected.push(center);
         expect(result.length).to.equal(expected.length);
         expect(result[0]).to.equal(expected[0]);

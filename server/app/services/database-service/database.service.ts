@@ -21,11 +21,7 @@ export class DatabaseService {
         } catch (error) {
             throw new Error('La connection à mongoDb a échoué');
         }
-        try {
-            await this.populateDatabase();
-        } catch (error) {
-            throw new Error("La base de donnée n'a pas été populée correctement");
-        }
+        await this.populateDatabase();
     }
 
     async close(): Promise<void> {
@@ -33,6 +29,7 @@ export class DatabaseService {
     }
 
     async populateDatabase(): Promise<void> {
+        this.db.createCollection(DB_GAME_COLLECTION);
         await this.initialiseCollection(DB_GAME_COLLECTION, DEFAULT_GAMES);
         // TODO: initialise BMP collection
     }

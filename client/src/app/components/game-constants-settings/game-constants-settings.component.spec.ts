@@ -4,7 +4,7 @@ import { GameConstantFieldComponent } from '../game-constant-field/game-constant
 
 import { GameConstantsSettingsComponent } from './game-constants-settings.component';
 
-fdescribe('GameConstantsSettingsComponent', () => {
+describe('GameConstantsSettingsComponent', () => {
     let component: GameConstantsSettingsComponent;
     let fixture: ComponentFixture<GameConstantsSettingsComponent>;
 

@@ -28,9 +28,10 @@ export class BmpEncoderService {
         };
         await this.writeFile(filepath, bmp.encode(bmpData).data);
     }
-    // TODO: make a test that verify if the file extension if a bmp.
     async encodeAIntoBmp(asciiContent: string, filepath: string): Promise<void> {
-        if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
+        if (!(await this.isFileExtensionValid(filepath))) {
+            throw new Error('File extension must be a .bmp');
+        }
         await this.writeFile(filepath, Buffer.from(asciiContent, 'ascii'));
     }
     private async getFileContent(filepath: string): Promise<Buffer> {

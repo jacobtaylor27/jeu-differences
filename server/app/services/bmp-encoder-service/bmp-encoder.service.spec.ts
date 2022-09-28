@@ -26,7 +26,7 @@ describe('BmpEncoder', async () => {
         });
     });
 
-    it('encodeIntoBmp() should convert a Bmp into a .bmp file', async () => {
+    it('encodeIntoBmp(...) should convert a Bmp into a .bmp file', async () => {
         const resultFilePath = './assets/test-bmp/result.bmp';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
@@ -36,13 +36,13 @@ describe('BmpEncoder', async () => {
         expect(bmpDecoded).to.deep.equal(bmpExpected);
     });
 
-    it('encodeIntoASCII() should convert a Bmp into a base64 string', async () => {
+    it('encodeIntoASCII(...) should convert a Bmp into a base64 string', async () => {
         const filepath = './assets/test-bmp/test_bmp_original.bmp';
         const encodedImg = await bmpEncoderService.encodeIntoASCII(filepath);
         expect(encodedImg).to.deep.equal(EXPECTED_ENCODED_ASCII);
     });
 
-    it('encodeIntoASCII() should throw an error if the file extension is not correct', async () => {
+    it('encodeIntoASCII(...) should throw an error if the file extension is not correct', async () => {
         const filepath = './assets/test-bmp/test_bmp_original.jpg';
         try {
             const encodedImg = await bmpEncoderService.encodeIntoASCII(filepath);
@@ -50,6 +50,13 @@ describe('BmpEncoder', async () => {
         } catch (e) {
             expect(e).to.be.instanceof(Error);
         }
+    });
+
+    it('encodeAIntoBmp(...) should produce a .bmp', async () => {
+        const filepath = './assets/test-bmp/somethingOringinal.bmp';
+        await bmpEncoderService.encodeAIntoBmp(filepath, EXPECTED_ENCODED_ASCII);
+        const encodedASCII = await bmpEncoderService.encodeIntoASCII(filepath);
+        expect(encodedASCII).to.deep.equal(EXPECTED_ENCODED_ASCII);
     });
 
     it("encodeAIntoBmp(...) should throw an error if the file doesn't exists", async () => {
@@ -70,13 +77,6 @@ describe('BmpEncoder', async () => {
         } catch (e) {
             expect(e).to.be.instanceof(Error);
         }
-    });
-
-    it('encodeIntoASCII(...) should produce a .bmp', async () => {
-        const filepath = './assets/src-bmp/result.bmp';
-        await bmpEncoderService.encodeAIntoBmp(filepath, EXPECTED_ENCODED_ASCII);
-        const encodedASCII = await bmpEncoderService.encodeIntoASCII(filepath);
-        expect(encodedASCII).to.deep.equal(EXPECTED_ENCODED_ASCII);
     });
 
     it("should throw an error if the file doesn't exists", async () => {

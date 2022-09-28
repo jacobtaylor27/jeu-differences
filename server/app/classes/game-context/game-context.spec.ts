@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { FindDifferenceState } from '@app/classes/find-difference-state/find-difference-state';
 import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-one-tour-state';
+import { GameMode } from '@app/enum/game-mode';
 
 describe('GameContext', () => {
     let state: FindDifferenceState;
@@ -12,7 +13,7 @@ describe('GameContext', () => {
 
     beforeEach(() => {
         state = new FindDifferenceState();
-        gameContext = new GameContext('', state);
+        gameContext = new GameContext(GameMode.Classic, state);
         stateSpyObj = spy(state);
         state.setContext(gameContext);
     });
@@ -22,7 +23,7 @@ describe('GameContext', () => {
     });
 
     it('should get the mode of the game', () => {
-        expect(gameContext.gameMode).to.equal('');
+        expect(gameContext.gameMode).to.equal(GameMode.Classic);
     });
 
     it('should go to the next state', () => {

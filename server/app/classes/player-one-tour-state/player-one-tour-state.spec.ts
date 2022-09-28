@@ -3,6 +3,7 @@ import { GameContext } from '@app/classes/game-context/game-context';
 import { expect } from 'chai';
 import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-one-tour-state';
 import { PlayerTwoTourState } from '@app/classes/player-two-tour-state/player-two-tour-state';
+import { GameMode } from '@app/enum/game-mode';
 
 describe('PlayerOneTourState', () => {
     let state: PlayerOneTourState;
@@ -11,7 +12,7 @@ describe('PlayerOneTourState', () => {
 
     beforeEach(() => {
         state = new PlayerOneTourState();
-        gameContext = new GameContext('', state);
+        gameContext = new GameContext(GameMode.Classic, state);
         gameContextSpyObj = spy(gameContext);
         state.setContext(gameContext);
     });

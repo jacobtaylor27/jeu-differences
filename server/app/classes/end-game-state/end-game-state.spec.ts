@@ -2,6 +2,7 @@ import { SinonSpiedInstance, spy } from 'sinon';
 import { GameContext } from '@app/classes/game-context/game-context';
 import { expect } from 'chai';
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
+import { GameMode } from '@app/enum/game-mode';
 
 describe('EndGame', () => {
     let state: EndGameState;
@@ -10,7 +11,7 @@ describe('EndGame', () => {
 
     beforeEach(() => {
         state = new EndGameState();
-        gameContext = new GameContext('', state);
+        gameContext = new GameContext(GameMode.Classic, state);
         gameContextSpyObj = spy(gameContext);
         state.setContext(gameContext);
     });

@@ -3,6 +3,7 @@ import { SinonSpiedInstance, spy } from 'sinon';
 import { GameContext } from '@app/classes/game-context/game-context';
 import { expect } from 'chai';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
+import { GameMode } from '@app/enum/game-mode';
 
 describe('InitialGameState', () => {
     let state: InitGameState;
@@ -11,7 +12,7 @@ describe('InitialGameState', () => {
 
     beforeEach(() => {
         state = new InitGameState();
-        gameContext = new GameContext('', state);
+        gameContext = new GameContext(GameMode.Classic, state);
         gameContextSpyObj = spy(gameContext);
         state.setContext(gameContext);
     });

@@ -1,5 +1,7 @@
+import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
+import { Bmp } from '@app/classes/bmp/bmp';
+import { BmpConverterService } from '@app/services/bmp-converter-service/bmp-converter.service';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
-import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { GameService } from '@app/services/game-service/game.service';
 import { BmpMessage } from '@common/bmp-message';
@@ -12,8 +14,8 @@ export class GameLogicService {
     constructor(
         private readonly gameService: GameService,
         private readonly bmpSubtractorService: BmpSubtractorService,
-        private readonly bmpEncoderService: BmpEncoderService,
         private readonly bmpInterpreterService: BmpDifferenceInterpreter,
+        private readonly bmpConverterService: BmpConverterService,
     ) {}
 
     // à la place de renvoyer undefined, renvoyer une erreur
@@ -28,18 +30,15 @@ export class GameLogicService {
         }
         return undefined;
     }
-    async validateNewGameBmp(originalBmp: BmpMessage, modifiedBmp: BmpMessage, radius: number): Promise<Difference> {
-        // const bmpOfDifference: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, radius);
-        console.log(originalBmp);
-        console.log(modifiedBmp);
-        console.log(radius);
-        console.log(this.bmpEncoderService);
-        console.log(this.bmpInterpreterService);
-        console.log(this.bmpSubtractorService);
-        // const bmpConvertedIntoASCII: string = await this.bmpEncoderService.encodeIntoASCII(bmpOfDifference);
-        // const nbOfDifference = await this.bmpInterpreterService.getCoordinates(bmpOfDifference);
+    async validateNewGameBmp(originalBmpMessage: BmpMessage, modifiedBmpMessage: BmpMessage, radius: number): Promise<Difference> {
+        const originalBmp: Bmp = await this.bmpConverterService.convertAToBmp(originalBmpMessage.file);
+        const modifiedBmp: Bmp = await this.bmpConverterService.convertAToBmp(modifiedBmpMessage.file);
+
+        const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, radius);
+        const coordinatesOfDifferences: BmpCoordinate[][] = await this.bmpInterpreterService.getCoordinates(differenceBmp);
+        const nbOfDifference: number = coordinatesOfDifferences.length;
         const difference: Difference = {
-            nbDifference: 0,
+            nbDifference: nbOfDifference,
             file: '',
         };
         return difference;

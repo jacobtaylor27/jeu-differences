@@ -1,6 +1,6 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
+import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 
 @Service()
@@ -30,7 +30,7 @@ export class BmpSubtractorService {
 
         if (radius === 0) return originalImage;
 
-        const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
+        const resultCoordinates: Coordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coordinate) => {
             this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
@@ -38,8 +38,8 @@ export class BmpSubtractorService {
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
 
-    private getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {
-        const resultCoordinates: Coordinates[] = [];
+    private getCoordinatesAfterEnlargement(originalCoordinates: Coordinate[], radius: number): Coordinate[] {
+        const resultCoordinates: Coordinate[] = [];
         originalCoordinates.forEach((coordinate) => {
             const result = this.findEnlargementArea(coordinate, radius);
             result.forEach((coord) => {
@@ -49,12 +49,12 @@ export class BmpSubtractorService {
         return resultCoordinates;
     }
 
-    private findEnlargementArea(center: Coordinates, radius: number) {
+    private findEnlargementArea(center: Coordinate, radius: number) {
         return this.findInsideAreaEnlargement(center, radius, this.findContourEnlargement(center, radius));
     }
 
-    private findContourEnlargement(center: Coordinates, radius: number): Coordinates[] {
-        const coordinates: Coordinates[] = new Array();
+    private findContourEnlargement(center: Coordinate, radius: number): Coordinate[] {
+        const coordinates: Coordinate[] = new Array();
         if (radius === 0) {
             coordinates.push(center);
             return coordinates;
@@ -104,7 +104,7 @@ export class BmpSubtractorService {
         return coordinates;
     }
 
-    private distance(px1: Coordinates, px2: Coordinates) {
+    private distance(px1: Coordinate, px2: Coordinate) {
         let dx = px2.x - px1.x;
         dx = dx * dx;
         let dy = px2.y - px1.y;
@@ -112,7 +112,7 @@ export class BmpSubtractorService {
         return Math.sqrt(dx + dy);
     }
 
-    private findInsideAreaEnlargement(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
+    private findInsideAreaEnlargement(coord: Coordinate, radius: number, coordinates: Coordinate[]) {
         for (let j = coord.x - radius; j <= coord.x + radius; j++) {
             for (let k = coord.y - radius; k <= coord.y + radius; k++) {
                 if (this.distance({ x: j, y: k }, { x: coord.x, y: coord.y }) <= radius) coordinates.push({ x: j, y: k });
@@ -122,8 +122,8 @@ export class BmpSubtractorService {
         return coordinates;
     }
 
-    private getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinates[] {
-        const coordinatesOfBlackPixels: Coordinates[] = [];
+    private getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinate[] {
+        const coordinatesOfBlackPixels: Coordinate[] = [];
         for (let i = 0; i < differenceBmp.getPixels().length; i++) {
             for (let j = 0; j < differenceBmp.getPixels()[i].length; j++) {
                 if (this.isBlackPixel(differenceBmp.getPixels()[i][j])) {

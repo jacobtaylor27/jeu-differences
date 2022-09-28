@@ -1,7 +1,6 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
-// import { Coordinates } from '@app/interface/coordinates';
-import { Coordinates } from '@app/interface/coordinates';
+import { Coordinate } from '@common/coordinate';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 import { BmpSubtractorService } from './bmp-subtractor.service';
@@ -77,9 +76,9 @@ describe('Bmp subractor service', async () => {
 
     it('Should return center value if radius is 0', () => {
         const radius = 0;
-        const center: Coordinates = { x: 1, y: 1 };
+        const center: Coordinate = { x: 1, y: 1 };
         const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        const expected: Coordinates[] = new Array();
+        const expected: Coordinate[] = new Array();
         expected.push(center);
         expect(result.length).to.equal(expected.length);
         expect(result[0]).to.equal(expected[0]);
@@ -87,7 +86,7 @@ describe('Bmp subractor service', async () => {
 
     it('Should return array of coordinates of length bigger than 1 if radius > 0', () => {
         const radius = 3;
-        const center: Coordinates = { x: 1, y: 1 };
+        const center: Coordinate = { x: 1, y: 1 };
         const result = bmpSubtractorService['findContourEnlargement'](center, radius);
         expect(result.length).to.greaterThan(1);
     });

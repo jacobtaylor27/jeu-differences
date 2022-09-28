@@ -21,7 +21,7 @@ export class GameLogicService {
         const game: Game = await this.gameService.getGameById(gameId);
         for (const lineOfCoordinates of game.differences) {
             for (const difference of lineOfCoordinates) {
-                if (difference.column === coordinate.column && difference.row === coordinate.column) {
+                if (difference.x === coordinate.x && difference.y === coordinate.y) {
                     return lineOfCoordinates;
                 }
             }

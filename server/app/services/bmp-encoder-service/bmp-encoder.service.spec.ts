@@ -1,6 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { EXPECTED_ENCODED_ASCII } from '@app/services/bmp-encoder-service/bmp-encoder.service.constant.spec';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import { describe } from 'mocha';
@@ -32,7 +33,23 @@ describe('BmpEncoder', async () => {
         const bmpDecoded: Bmp = await bmpDecoderService.decodeIntoBmp(originalBmpFilePath);
         await bmpEncoderService.encodeIntoBmp(resultFilePath, bmpDecoded);
         const bmpExpected: Bmp = await bmpDecoderService.decodeIntoBmp(resultFilePath);
-        expect(bmpDecoded).to.eql(bmpExpected);
+        expect(bmpDecoded).to.deep.equal(bmpExpected);
+    });
+
+    it('encodeIntoASCII() should convert a Bmp into a base64 string', async () => {
+        const filepath = './assets/test-bmp/test_bmp_original.bmp';
+        const encodedImg = await bmpEncoderService.encodeIntoASCII(filepath);
+        expect(encodedImg).to.deep.equal(EXPECTED_ENCODED_ASCII);
+    });
+
+    it('encodeIntoASCII() should throw an error if the file extension is not correct', async () => {
+        const filepath = './assets/test-bmp/test_bmp_original.jpg';
+        try {
+            const encodedImg = await bmpEncoderService.encodeIntoASCII(filepath);
+            expect(encodedImg).to.equals(undefined);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
     });
 
     it('Should throw an error if the file is not a bitmap', async () => {

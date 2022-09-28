@@ -6,6 +6,12 @@ import { Service } from 'typedi';
 
 @Service()
 export class BmpEncoderService {
+    async encodeIntoASCII(filepath: string) {
+        if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
+        const bitmap = fs.readFileSync(filepath);
+        // convert binary data to base64 encoded string
+        return Buffer.from(bitmap).toString('base64');
+    }
     async encodeIntoBmp(filepath: string, bmpObj: Bmp) {
         if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
         const width: number = bmpObj.getWidth();
@@ -18,7 +24,6 @@ export class BmpEncoderService {
         };
         await this.writeFile(filepath, bmp.encode(bmpData).data);
     }
-
     private async writeFile(filepath: string, buffer: Buffer): Promise<void> {
         return new Promise((resolve, reject) => {
             fs.writeFile(filepath, buffer, (err) => {
@@ -29,7 +34,6 @@ export class BmpEncoderService {
             });
         });
     }
-
     private async getBuffer(pixels: Pixel[][]): Promise<Buffer> {
         const rawPixels: number[] = [];
 
@@ -43,7 +47,6 @@ export class BmpEncoderService {
         });
         return Buffer.from(rawPixels);
     }
-
     private async isFileExtensionValid(filename: string): Promise<boolean> {
         // prettier-ignore
         // eslint-disable-next-line

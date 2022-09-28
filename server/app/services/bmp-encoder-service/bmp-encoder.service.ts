@@ -32,7 +32,11 @@ export class BmpEncoderService {
         if (!(await this.isFileExtensionValid(filepath))) {
             throw new Error('File extension must be a .bmp');
         }
-        await this.writeFile(filepath, Buffer.from(asciiContent, 'base64'));
+        try {
+            await this.writeFile(filepath, Buffer.from(asciiContent, 'base64'));
+        } catch (e) {
+            throw new Error(e);
+        }
     }
     private async getFileContent(filepath: string): Promise<Buffer> {
         return new Promise((resolve, reject) => {

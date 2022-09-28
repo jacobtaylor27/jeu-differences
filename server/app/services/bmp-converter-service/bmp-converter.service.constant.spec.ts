@@ -1,3 +1,4 @@
+export const CORRUPTED_ENCODED_ASCII = '🔥';
 /* eslint-disable max-len */
 /* eslint-disable prettier/prettier */
 

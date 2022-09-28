@@ -8,8 +8,12 @@ import { Service } from 'typedi';
 export class BmpEncoderService {
     async encodeIntoASCII(filepath: string) {
         if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
-        const bitmap = fs.readFileSync(filepath);
-        // convert binary data to base64 encoded string
+        let bitmap;
+        try {
+            bitmap = await this.getFileContent(filepath);
+        } catch (e) {
+            throw new Error(e);
+        }
         return Buffer.from(bitmap).toString('base64');
     }
     async encodeIntoBmp(filepath: string, bmpObj: Bmp) {
@@ -23,6 +27,17 @@ export class BmpEncoderService {
             data,
         };
         await this.writeFile(filepath, bmp.encode(bmpData).data);
+    }
+    private async getFileContent(filepath: string): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            fs.readFile(filepath, (err, data) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(data);
+            });
+        });
     }
     private async writeFile(filepath: string, buffer: Buffer): Promise<void> {
         return new Promise((resolve, reject) => {

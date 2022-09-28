@@ -52,6 +52,16 @@ describe('BmpEncoder', async () => {
         }
     });
 
+    it("encodeIntoASCII() should throw an error if the file doesn't exists", async () => {
+        const filepath = './assets/impossible-file-ath/something.bmp';
+        try {
+            const encodedImg = await bmpEncoderService.encodeIntoASCII(filepath);
+            expect(encodedImg).to.equals(undefined);
+        } catch (e) {
+            expect(e).to.be.instanceof(Error);
+        }
+    });
+
     it('Should throw an error if the file is not a bitmap', async () => {
         const incorrectFileExtension = './assets/test-bmp/jpg_test.jpg';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';

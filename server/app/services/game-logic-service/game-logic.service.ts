@@ -2,7 +2,7 @@ import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpret
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { GameService } from '@app/services/game-service/game.service';
-import { Bmp } from '@common/bmp';
+import { BmpMessage } from '@common/bmp-message';
 import { Coordinate } from '@common/coordinate';
 import { Difference } from '@common/difference';
 import { Game } from '@common/game';
@@ -28,7 +28,7 @@ export class GameLogicService {
         }
         return undefined;
     }
-    async validateNewGameBmp(originalBmp: Bmp, modifiedBmp: Bmp, radius: number): Promise<Difference> {
+    async validateNewGameBmp(originalBmp: BmpMessage, modifiedBmp: BmpMessage, radius: number): Promise<Difference> {
         // const bmpOfDifference: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, radius);
         console.log(originalBmp);
         console.log(modifiedBmp);

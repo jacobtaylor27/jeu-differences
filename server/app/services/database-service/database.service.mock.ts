@@ -2,7 +2,7 @@ import { DB_BMP_COLLECTION, DB_GAME_COLLECTION, DB_ID_COLLECTION, DB_NAME } from
 import { DEFAULT_BMP } from '@app/constants/default-bmp';
 import { DEFAULT_GAME } from '@app/constants/default-game';
 import { DEFAULT_ID } from '@app/constants/default-id';
-import { Bmp } from '@common/bmp';
+import { BmpMessage } from '@common/bmp-message';
 import { Game } from '@common/game';
 import { Id } from '@common/id';
 import { Db, MongoClient } from 'mongodb';
@@ -58,7 +58,7 @@ export class DatabaseServiceMock {
         }
     }
 
-    private async initializeBmpCollection(collectionName: string, bmp: Bmp[]): Promise<void> {
+    private async initializeBmpCollection(collectionName: string, bmp: BmpMessage[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {

@@ -3,7 +3,7 @@ import { DEFAULT_BMP } from '@app/constants/default-bmp';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
-import { Bmp } from '@common/bmp';
+import { BmpMessage } from '@common/bmp-message';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
@@ -43,7 +43,7 @@ describe('Bmp service', async () => {
     });
 
     it('addBmp(bmp) should add a bmp to the bmp collection, getAllBmps() should return them', async () => {
-        const bmp: Bmp = {
+        const bmp: BmpMessage = {
             id: 1,
             name: 'deuxième image',
             file: 'asdfasdf',
@@ -54,7 +54,7 @@ describe('Bmp service', async () => {
     });
 
     it('addBmp(bmp) should add a bmp with a new id everytime', async () => {
-        const bmp: Bmp = {
+        const bmp: BmpMessage = {
             name: 'deuxième image',
             file: 'asdfasdf',
         };
@@ -62,7 +62,7 @@ describe('Bmp service', async () => {
         expect(await bmpService.addBmp(bmp)).to.equal(true);
         expect((await bmpService.getBmpById(expectedId))?.id).to.equal(expectedId);
 
-        const bmp2: Bmp = {
+        const bmp2: BmpMessage = {
             name: 'troisième image',
             file: 'anotherone',
         };
@@ -72,7 +72,7 @@ describe('Bmp service', async () => {
     });
 
     it("addBmp(bmp) shouldn't add a bmp twice", async () => {
-        const bmp: Bmp = {
+        const bmp: BmpMessage = {
             id: 2,
             name: 'troisième image',
             file: '123 321*()@#$',

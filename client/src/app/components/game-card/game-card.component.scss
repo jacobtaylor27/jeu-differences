@@ -1,0 +1,58 @@
+.highscores-content {
+    justify-content: center;
+}
+
+.game-name-title {
+    text-align: center;
+    margin-bottom: 2vh;
+}
+
+.card-container {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    width: 18vw;
+    min-height: fit-content;
+}
+
+img {
+    border: 2px black solid;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.highscores-multi-title {
+    text-align: right;
+}
+
+.highscore-title {
+    text-align: center;
+    margin: 0;
+}
+
+ul.highscores-solo, ul.highscores-multi {
+    margin: 0;
+    padding-inline-start: 0;
+    list-style: none;
+}
+
+.scores {
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-card-buttons button {
+    margin-right: 1vw;
+    margin-left: 1vw;
+}
+
+.game-card-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.empty-solo-scores, .empty-multi-scores{
+    color: gray;
+}

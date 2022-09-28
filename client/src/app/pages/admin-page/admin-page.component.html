@@ -1,1 +1,6 @@
-<p>admin-page works!</p>
+<main [ngClass]="favoriteTheme">
+    <mat-toolbar class="header-toolbar" color="primary"><button class="home-button" mat-mini-fab color="primary" routerLink="/"><mat-icon>home</mat-icon></button>Configurez les jeux</mat-toolbar>
+    <app-admin-commands></app-admin-commands>
+    <app-game-carousel
+    [gameCards]="gameCards"></app-game-carousel>
+</main>

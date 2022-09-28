@@ -1,0 +1,16 @@
+.game-cards-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2vh;
+}
+
+.carousel-actions-container {
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-actions-container > button {
+    margin-right: 1vw;
+    margin-left: 1vw;
+    margin-bottom: 2vh;
+} 

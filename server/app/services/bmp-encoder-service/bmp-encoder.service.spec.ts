@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import * as fs from 'fs';
 import { describe } from 'mocha';
 
-describe('BmpEncoder', async () => {
+describe('Bmp encoder service', async () => {
     let bmpEncoderService: BmpEncoderService;
     let bmpDecoderService: BmpDecoderService;
 
@@ -34,9 +34,9 @@ describe('BmpEncoder', async () => {
         const resultFilePath = './assets/test-bmp/result.bmp';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
-        const bmpDecoded: Bmp = await bmpDecoderService.decodeIntoBmp(originalBmpFilePath);
+        const bmpDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(originalBmpFilePath);
         await bmpEncoderService.encodeBmpIntoB(resultFilePath, bmpDecoded);
-        const bmpExpected: Bmp = await bmpDecoderService.decodeIntoBmp(resultFilePath);
+        const bmpExpected: Bmp = await bmpDecoderService.decodeBIntoBmp(resultFilePath);
         expect(bmpDecoded).to.deep.equal(bmpExpected);
     });
 
@@ -97,7 +97,7 @@ describe('BmpEncoder', async () => {
         const incorrectFileExtension = './assets/test-bmp/jpg_test.jpg';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
-        const bmpDecoded: Bmp = await bmpDecoderService.decodeIntoBmp(originalBmpFilePath);
+        const bmpDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(originalBmpFilePath);
         try {
             const bmpEncoded = await bmpEncoderService.encodeBmpIntoB(incorrectFileExtension, bmpDecoded);
             expect(bmpEncoded).to.equals(undefined);
@@ -111,7 +111,7 @@ describe('BmpEncoder', async () => {
         const incorrectFile = './assets/not-existant-directory/exemple_test.bmp';
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
-        const bmpDecoded: Bmp = await bmpDecoderService.decodeIntoBmp(originalBmpFilePath);
+        const bmpDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(originalBmpFilePath);
         try {
             const bmpEncoded = await bmpEncoderService.encodeBmpIntoB(incorrectFile, bmpDecoded);
             expect(bmpEncoded).to.equals(undefined);

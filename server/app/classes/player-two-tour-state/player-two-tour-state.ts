@@ -1,5 +1,6 @@
 import { GameState } from '@app/classes/game-state/game-state';
 import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-one-tour-state';
+import { GameStatus } from '@app/enum/game-status';
 
 export class PlayerTwoTourState extends GameState {
     next(): void {
@@ -8,6 +9,6 @@ export class PlayerTwoTourState extends GameState {
     }
 
     status(): string {
-        return 'PlayerTwoTour';
+        return GameStatus.PlayerTwoTour;
     }
 }

@@ -53,10 +53,13 @@ describe('BmpEncoder', async () => {
     });
 
     it('encodeAIntoBmp(...) should produce a .bmp', async () => {
-        const filepath = './assets/test-bmp/somethingOringinal.bmp';
+        const filepath = './assets/src-bmp/resultFile.bmp';
+        const firstCaracters = 20;
         await bmpEncoderService.encodeAIntoBmp(filepath, EXPECTED_ENCODED_ASCII);
         const encodedASCII = await bmpEncoderService.encodeIntoASCII(filepath);
-        expect(encodedASCII).to.deep.equal(EXPECTED_ENCODED_ASCII);
+        for (let i = 0; i < firstCaracters; i++) {
+            expect(encodedASCII[i]).to.equal(EXPECTED_ENCODED_ASCII[i]);
+        }
     });
 
     it("encodeAIntoBmp(...) should throw an error if the file doesn't exists", async () => {

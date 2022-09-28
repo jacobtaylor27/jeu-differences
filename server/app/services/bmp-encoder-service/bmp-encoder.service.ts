@@ -28,11 +28,11 @@ export class BmpEncoderService {
         };
         await this.writeFile(filepath, bmp.encode(bmpData).data);
     }
-    async encodeAIntoBmp(asciiContent: string, filepath: string): Promise<void> {
+    async encodeAIntoBmp(filepath: string, asciiContent: string): Promise<void> {
         if (!(await this.isFileExtensionValid(filepath))) {
             throw new Error('File extension must be a .bmp');
         }
-        await this.writeFile(filepath, Buffer.from(asciiContent, 'ascii'));
+        await this.writeFile(filepath, Buffer.from(asciiContent, 'hex'));
     }
     private async getFileContent(filepath: string): Promise<Buffer> {
         return new Promise((resolve, reject) => {

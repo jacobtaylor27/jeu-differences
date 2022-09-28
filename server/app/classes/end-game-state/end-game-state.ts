@@ -5,7 +5,7 @@ export class EndGameState extends GameState {
     next(): void {
         return;
     }
-    status(): string {
+    status(): GameStatus {
         return GameStatus.EndGame;
     }
 }

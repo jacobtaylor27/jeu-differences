@@ -6,7 +6,8 @@ export class InitGameState extends GameState {
     next() {
         this.context.transitionTo(new InitTimerState());
     }
-    status(): string {
+
+    status(): GameStatus {
         return GameStatus.InitGame;
     }
 }

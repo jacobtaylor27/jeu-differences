@@ -1,10 +1,12 @@
 import { GameState } from '@app/classes/game-state/game-state';
+import { GameMode } from '@app/enum/game-mode';
+import { GameStatus } from '@app/enum/game-status';
 
 export class GameContext {
     private state: GameState;
-    private mode: string;
+    private mode: GameMode;
 
-    constructor(mode: string, state: GameState) {
+    constructor(mode: GameMode, state: GameState) {
         this.state = state;
         this.mode = mode;
     }
@@ -21,7 +23,7 @@ export class GameContext {
         this.state = newState;
     }
 
-    gameState(): string {
+    gameState(): GameStatus {
         return this.state.status();
     }
 }

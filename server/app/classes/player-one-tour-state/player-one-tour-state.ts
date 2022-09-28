@@ -6,7 +6,7 @@ export class PlayerOneTourState extends GameState {
     next(): void {
         this.context.transitionTo(new PlayerTwoTourState());
     }
-    status(): string {
+    status(): GameStatus {
         return GameStatus.PlayerOneTour;
     }
 }

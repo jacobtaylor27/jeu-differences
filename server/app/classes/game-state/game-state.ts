@@ -1,4 +1,5 @@
 import { GameContext } from '@app/classes/game-context/game-context';
+import { GameStatus } from '@app/enum/game-status';
 
 export abstract class GameState {
     context: GameContext;
@@ -8,5 +9,5 @@ export abstract class GameState {
     }
 
     abstract next(): void;
-    abstract status(): string;
+    abstract status(): GameStatus;
 }

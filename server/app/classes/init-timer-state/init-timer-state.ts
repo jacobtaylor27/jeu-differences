@@ -13,7 +13,7 @@ export class InitTimerState extends GameState {
         }
     }
 
-    status(): string {
+    status(): GameStatus {
         return GameStatus.InitTimer;
     }
 }

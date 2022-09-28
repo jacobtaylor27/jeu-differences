@@ -6,7 +6,7 @@ export class FindDifferenceState extends GameState {
     next() {
         this.context.transitionTo(new EndGameState());
     }
-    status(): string {
+    status(): GameStatus {
         return GameStatus.FindDifference;
     }
 }

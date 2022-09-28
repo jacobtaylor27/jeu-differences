@@ -20,4 +20,8 @@ export class BmpConverterService {
         });
         return bmpProduced;
     }
+    async convertBmpToA(bmp: Bmp): Promise<string> {
+        console.log(bmp);
+        return '';
+    }
 }

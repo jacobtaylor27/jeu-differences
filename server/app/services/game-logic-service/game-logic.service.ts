@@ -35,11 +35,12 @@ export class GameLogicService {
         const modifiedBmp: Bmp = await this.bmpConverterService.convertAToBmp(modifiedBmpMessage.file);
 
         const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, radius);
+        const differenceFile: string = await this.bmpConverterService.convertBmpToA(differenceBmp);
         const coordinatesOfDifferences: BmpCoordinate[][] = await this.bmpInterpreterService.getCoordinates(differenceBmp);
         const nbOfDifference: number = coordinatesOfDifferences.length;
         const difference: Difference = {
             nbDifference: nbOfDifference,
-            file: '',
+            file: differenceFile,
         };
         return difference;
     }

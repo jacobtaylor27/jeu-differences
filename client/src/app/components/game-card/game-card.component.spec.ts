@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppMaterialModule } from '@app/modules/material.module';
-import { GameCardComponent } from './game-card.component';
-import { GameCardService } from '@app/services/game-card/game-card.service';
 import { GameCard } from '@app/interfaces/game-card';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { GameCardService } from '@app/services/game-card/game-card.service';
+import { GameCardComponent } from './game-card.component';
 
 const GAME_CARD: GameCard = {
     gameInformation: {

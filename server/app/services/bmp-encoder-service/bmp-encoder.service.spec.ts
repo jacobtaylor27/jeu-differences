@@ -16,12 +16,16 @@ describe('BmpEncoder', async () => {
     });
 
     afterEach(() => {
+        const base64FileConverted = './assets/test-bmp/convertionFile.bmp';
         const resultFilePath = './assets/test-bmp/result.bmp';
         const incorrectFileExtension = './assets/test-bmp/jpg_test.jpg';
         fs.unlink(resultFilePath, () => {
             return;
         });
         fs.unlink(incorrectFileExtension, () => {
+            return;
+        });
+        fs.unlink(base64FileConverted, () => {
             return;
         });
     });
@@ -53,13 +57,10 @@ describe('BmpEncoder', async () => {
     });
 
     it('encodeAIntoBmp(...) should produce a .bmp', async () => {
-        const filepath = './assets/src-bmp/resultFile.bmp';
-        const firstCaracters = 20;
+        const filepath = './assets/test-bmp/convertionFile.bmp';
         await bmpEncoderService.encodeAIntoB(filepath, EXPECTED_ENCODED_ASCII);
         const encodedASCII = await bmpEncoderService.encodeBIntoA(filepath);
-        for (let i = 0; i < firstCaracters; i++) {
-            expect(encodedASCII[i]).to.equal(EXPECTED_ENCODED_ASCII[i]);
-        }
+        expect(encodedASCII).to.deep.equal(EXPECTED_ENCODED_ASCII);
     });
 
     it("encodeAIntoBmp(...) should throw an error if the file doesn't exists", async () => {

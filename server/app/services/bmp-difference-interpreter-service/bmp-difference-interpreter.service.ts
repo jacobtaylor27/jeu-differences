@@ -6,8 +6,8 @@ import { Service } from 'typedi';
 
 @Service()
 export class BmpDifferenceInterpreter {
-    getCoordinates(bmpDifferentiated: Bmp): BmpCoordinate[][] {
-        if (!this.isBmpDifferentiated(bmpDifferentiated)) throw new Error('The pixels are not perfectly black or white');
+    async getCoordinates(bmpDifferentiated: Bmp): Promise<BmpCoordinate[][]> {
+        if (!(await this.isBmpDifferentiated(bmpDifferentiated))) throw new Error('The pixels are not perfectly black or white');
 
         const differences: BmpCoordinate[][] = [];
         const pixels = bmpDifferentiated.getPixels();
@@ -15,7 +15,7 @@ export class BmpDifferenceInterpreter {
         for (let row = 0; row < pixels.length; row++) {
             for (let column = 0; column < pixels[row].length; column++) {
                 if (this.isPixelBlack(pixels[row][column])) {
-                    const difference = this.getRegion(pixels, row, column);
+                    const difference = await this.getRegion(pixels, row, column);
                     differences.push(difference);
                 }
             }
@@ -23,7 +23,7 @@ export class BmpDifferenceInterpreter {
         return differences;
     }
 
-    private getRegion(pixels: Pixel[][], row: number, column: number): BmpCoordinate[] {
+    private async getRegion(pixels: Pixel[][], row: number, column: number): Promise<BmpCoordinate[]> {
         if (row < 0 || column < 0 || row >= pixels.length || column >= pixels[row].length) {
             return [];
         }
@@ -35,7 +35,7 @@ export class BmpDifferenceInterpreter {
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = column - 1; c <= column + 1; c++) {
                 if (r !== row || c !== column) {
-                    const newElement: BmpCoordinate[] = this.getRegion(pixels, r, c);
+                    const newElement: BmpCoordinate[] = await this.getRegion(pixels, r, c);
                     differences = differences.concat(newElement);
                 }
             }
@@ -65,7 +65,7 @@ export class BmpDifferenceInterpreter {
         pixel.r = color;
     }
 
-    private isBmpDifferentiated(bmp: Bmp): boolean {
+    private async isBmpDifferentiated(bmp: Bmp): Promise<boolean> {
         const pixels: Pixel[][] = bmp.getPixels();
         for (const scanLine of pixels) {
             for (const pixel of scanLine) {

@@ -1,3 +1,6 @@
+import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { GameService } from '@app/services/game-service/game.service';
 import { Bmp } from '@common/bmp';
 import { Coordinate } from '@common/coordinate';
@@ -6,7 +9,12 @@ import { Game } from '@common/game';
 import { Service } from 'typedi';
 @Service()
 export class GameLogicService {
-    constructor(private readonly gameService: GameService) {}
+    constructor(
+        private readonly gameService: GameService,
+        private readonly bmpSubtractorService: BmpSubtractorService,
+        private readonly bmpEncoderService: BmpEncoderService,
+        private readonly bmpInterpreterService: BmpDifferenceInterpreter,
+    ) {}
 
     // à la place de renvoyer undefined, renvoyer une erreur
     async validateCoordinates(gameId: number, coordinate: Coordinate): Promise<Coordinate[] | undefined> {
@@ -20,11 +28,17 @@ export class GameLogicService {
         }
         return undefined;
     }
-    async validateDifferenceBmp(originalBmp: Bmp, modifiedBmp: Bmp): Promise<Difference> {
+    async validateNewGameBmp(originalBmp: Bmp, modifiedBmp: Bmp, radius: number): Promise<Difference> {
+        // const bmpOfDifference: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, radius);
         console.log(originalBmp);
         console.log(modifiedBmp);
+        console.log(radius);
+        console.log(this.bmpEncoderService);
+        console.log(this.bmpInterpreterService);
+        console.log(this.bmpSubtractorService);
+        // const bmpConvertedIntoASCII: string = await this.bmpEncoderService.encodeIntoASCII(bmpOfDifference);
+        // const nbOfDifference = await this.bmpInterpreterService.getCoordinates(bmpOfDifference);
         const difference: Difference = {
-            id: 0,
             nbDifference: 0,
             file: '',
         };

@@ -23,6 +23,10 @@ export class GameManagerService {
     isGameFound(gameId: string) {
         return this.findGame(gameId) !== undefined;
     }
+    isGameOver(gameId: string) {
+        return this.isGameFound(gameId) ? this.findGame(gameId)?.isGameOver() : null;
+    }
+
     differenceLeft(gameId: string) {
         return this.isGameFound(gameId) ? this.findGame(gameId)?.differenceLeft() : null;
     }

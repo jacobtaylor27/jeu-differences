@@ -1,12 +1,15 @@
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
+import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
 describe('Bmp decoder service', () => {
     let bmpDecoderService: BmpDecoderService;
+    let fileManagerService: FileManagerService;
 
     beforeEach(async () => {
-        bmpDecoderService = new BmpDecoderService();
+        fileManagerService = new FileManagerService();
+        bmpDecoderService = new BmpDecoderService(fileManagerService);
     });
 
     it('Should create an object Bmp based on bmp file of size 2x2', async () => {

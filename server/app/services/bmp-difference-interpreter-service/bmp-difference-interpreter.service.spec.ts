@@ -4,14 +4,15 @@ import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { Container } from 'typedi';
 
 describe('Bmp difference interpreter service', async () => {
     let bmpDifferenceInterpreter: BmpDifferenceInterpreter;
     let bmpDecoderService: BmpDecoderService;
 
     beforeEach(async () => {
-        bmpDifferenceInterpreter = new BmpDifferenceInterpreter();
-        bmpDecoderService = new BmpDecoderService();
+        bmpDifferenceInterpreter = Container.get(BmpDifferenceInterpreter);
+        bmpDecoderService = Container.get(BmpDecoderService);
     });
 
     it('Should throw an exception if given a bmp with pixels other than black or white', () => {

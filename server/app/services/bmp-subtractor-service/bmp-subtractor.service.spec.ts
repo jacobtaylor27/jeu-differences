@@ -3,6 +3,7 @@ import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder
 import { Coordinate } from '@common/coordinate';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { Container } from 'typedi';
 import { BmpSubtractorService } from './bmp-subtractor.service';
 
 describe('Bmp subractor service', async () => {
@@ -13,7 +14,7 @@ describe('Bmp subractor service', async () => {
     let bmp2x3: Bmp;
 
     beforeEach(async () => {
-        bmpDecoderService = new BmpDecoderService();
+        bmpDecoderService = Container.get(BmpDecoderService);
         bmpSubtractorService = new BmpSubtractorService();
 
         bmp2x2 = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/bmp_test_2x2.bmp');

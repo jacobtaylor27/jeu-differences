@@ -4,14 +4,15 @@ import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder
 import { expect } from 'chai';
 import * as fs from 'fs';
 import { describe } from 'mocha';
+import { Container } from 'typedi';
 
 describe('Bmp encoder service', async () => {
     let bmpEncoderService: BmpEncoderService;
     let bmpDecoderService: BmpDecoderService;
 
     beforeEach(async () => {
-        bmpEncoderService = new BmpEncoderService();
-        bmpDecoderService = new BmpDecoderService();
+        bmpEncoderService = Container.get(BmpEncoderService);
+        bmpDecoderService = Container.get(BmpDecoderService);
     });
 
     afterEach(() => {

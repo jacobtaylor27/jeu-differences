@@ -39,3 +39,7 @@ export class Game {
     next() {
         this.context.next();
     }
+
+    isGameInitialize() {
+        return this.context.gameState() === GameStatus.InitGame || this.context.gameState() === GameStatus.InitTimer;
+    }

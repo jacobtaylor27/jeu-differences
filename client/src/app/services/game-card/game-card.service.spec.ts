@@ -11,12 +11,12 @@ const GAME_CARD: GameCard = {
         name: 'test',
         imgName: 'imageName',
         scoresSolo: [
-            { playersName: 'solo1', time: 60 },
-            { playersName: 'solo2', time: 90 },
+            { playerName: 'solo1', time: 60 },
+            { playerName: 'solo2', time: 90 },
         ],
         scoresMultiplayer: [
-            { playersName: 'multi1', time: 125 },
-            { playersName: 'multi2', time: 12 },
+            { playerName: 'multi1', time: 125 },
+            { playerName: 'multi2', time: 12 },
         ],
     },
     isShown: true,

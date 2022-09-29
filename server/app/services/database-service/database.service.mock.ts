@@ -1,6 +1,6 @@
 import { DB_BMP_COLLECTION, DB_GAME_COLLECTION, DB_ID_COLLECTION, DB_NAME } from '@app/constants/database';
 import { DEFAULT_BMP } from '@app/constants/default-bmp';
-import { DEFAULT_GAME } from '@app/constants/default-game';
+import { DEFAULT_GAME } from '@app/constants/default-game-info';
 import { DEFAULT_ID } from '@app/constants/default-id';
 import { BmpMessage } from '@common/bmp-message';
 import { GameInfo } from '@common/game-info';

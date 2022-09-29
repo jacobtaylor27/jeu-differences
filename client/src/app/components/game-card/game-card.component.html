@@ -1,7 +1,7 @@
 <mat-card [ngClass]="favoriteTheme" class="card-container">
     <mat-card-title class="game-name-title">{{ getGameName() }}</mat-card-title>
-    <img class="game-image" mat-card-lg-image [src]="getImageName()">
-    
+    <img class="game-image" mat-card-lg-image [src]="getImageName()" />
+
     <mat-card-content class="highscores-content">
         <h3 class="highscore-title"><b>Meilleurs scores</b></h3>
         <div class="scores">
@@ -9,11 +9,13 @@
                 <li class="highscores-solo-title"><b>Solo</b></li>
                 <div class="highscores-multi-content" *ngIf="hasSinglePlayerScores(); else noSoloScores">
                     <li *ngFor="let score of getSinglePlayerScores()">
-                        {{ score.playersName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
+                        {{ score.playerName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
                     </li>
                 </div>
                 <ng-template #noSoloScores>
-                    <li class="empty-solo-scores" *ngFor="let i of [1, 2, 3]"><em>{{ 'Joueur ' + i }} &mdash; 00:00</em></li>
+                    <li class="empty-solo-scores" *ngFor="let i of [1, 2, 3]">
+                        <em>{{ 'Joueur ' + i }} &mdash; 00:00</em>
+                    </li>
                 </ng-template>
             </ul>
 
@@ -21,28 +23,36 @@
                 <li class="highscores-multi-title"><b>1 vs 1</b></li>
                 <div class="highscores-multi-content" *ngIf="hasMultiplayerScores(); else noMultiplayerScores">
                     <li *ngFor="let score of getMultiplayerScores()">
-                        {{ score.playersName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
+                        {{ score.playerName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
                     </li>
                 </div>
                 <ng-template #noMultiplayerScores>
-                    <li class="empty-multi-scores" *ngFor="let i of [1, 2, 3]"><em>{{ 'Joueur ' + i }} &mdash; 00:00</em></li>
+                    <li class="empty-multi-scores" *ngFor="let i of [1, 2, 3]">
+                        <em>{{ 'Joueur ' + i }} &mdash; 00:00</em>
+                    </li>
                 </ng-template>
             </ul>
         </div>
     </mat-card-content>
-    
+
     <mat-card-actions class="game-card-buttons">
         <div class="admin-buttons" *ngIf="isAdminCard(); else selectPage">
-            <button  mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickDeleteGame(gameCard)">
+            <button mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickDeleteGame(gameCard)">
                 <mat-icon>delete</mat-icon>
             </button>
-            <button mat-fab color="primary" matTooltip="Réinitialiser les records" aria-label="Boutton réinitialiser" (click)="onClickResetHighScores(gameCard)">
+            <button
+                mat-fab
+                color="primary"
+                matTooltip="Réinitialiser les records"
+                aria-label="Boutton réinitialiser"
+                (click)="onClickResetHighScores(gameCard)"
+            >
                 <mat-icon>refresh</mat-icon>
             </button>
         </div>
 
         <ng-template #selectPage>
-            <button  mat-flat-button color="primary" aria-label="Boutton Jouer" (click)="onClickPlayGame()">Jouer</button>
+            <button mat-flat-button color="primary" aria-label="Boutton Jouer" (click)="onClickPlayGame()">Jouer</button>
             <button mat-flat-button color="primary" aria-label="Boutton Créer">Créer</button>
         </ng-template>
     </mat-card-actions>

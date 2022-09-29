@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Score } from '@common/score';
 import { GameCard } from '@app/interfaces/game-card';
 import { CardRange } from '@app/interfaces/range';
+import { Score } from '@common/score';
 
 @Injectable({
     providedIn: 'root',
@@ -142,7 +142,7 @@ export class GameCardHandlerService {
         for (let i = 0; i < score.length; i++) {
             const arbitraryNb = 5;
             scores.push({
-                playersName: 'Player ' + i,
+                playerName: 'Player ' + i,
                 time: score[i] * arbitraryNb,
             });
         }

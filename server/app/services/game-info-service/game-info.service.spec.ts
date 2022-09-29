@@ -1,5 +1,5 @@
 import { DB_URL } from '@app/constants/database';
-import { DEFAULT_GAME } from '@app/constants/default-game';
+import { DEFAULT_GAME } from '@app/constants/default-game-info';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';

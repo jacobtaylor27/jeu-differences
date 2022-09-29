@@ -2,9 +2,12 @@ import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
+chai.use(chaiAsPromised);
 
 describe('Bmp difference interpreter service', async () => {
     let bmpDifferenceInterpreter: BmpDifferenceInterpreter;
@@ -22,12 +25,7 @@ describe('Bmp difference interpreter service', async () => {
         const width = 2;
         const height = 2;
         const bmpWithColors = new Bmp(width, height, rawData);
-        try {
-            const difference = bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
-            expect(difference).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(bmpDifferenceInterpreter.getCoordinates(bmpWithColors)).to.eventually.be.rejectedWith(Error);
     });
     it("A white image shouldn't have any difference", async () => {
         // prettier-ignore

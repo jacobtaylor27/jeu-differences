@@ -20,8 +20,8 @@ export class GameManagerService {
         // Todo: get the region of difference
     }
 
-    isGameOver(idGame: number) {
-        //game.isAllDifferenceFound
+    differenceLeft(gameId: string) {
+        return this.isGameFound(gameId) ? this.findGame(gameId)?.differenceLeft() : null;
     }
 
     differenceLeft(idGame: number) {

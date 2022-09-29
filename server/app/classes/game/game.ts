@@ -50,3 +50,7 @@ export class Game {
         }
         return this.info.differences.length === this.differenceFound;
     }
+
+    isGameOver() {
+        return this.context.gameState() === GameStatus.EndGame;
+    }

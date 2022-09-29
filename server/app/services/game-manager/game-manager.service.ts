@@ -24,7 +24,7 @@ export class GameManagerService {
         return this.isGameFound(gameId) ? this.findGame(gameId)?.differenceLeft() : null;
     }
 
-    differenceLeft(idGame: number) {
-        // game.differenceLeft()
+    private findGame(gameId: string): Game | undefined {
+        return this.games.find((game: Game) => game.identifier === gameId);
     }
 }

@@ -1,6 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GameScoreComponent } from './game-score.component';
+
+const SCORES = [
+    {
+        playersName: 'player1',
+        time: 100,
+    },
+    {
+        playersName: 'player2',
+        time: 200,
+    },
+];
 
 describe('GameScoreComponent', () => {
     let component: GameScoreComponent;
@@ -13,10 +23,22 @@ describe('GameScoreComponent', () => {
 
         fixture = TestBed.createComponent(GameScoreComponent);
         component = fixture.componentInstance;
+        component.scores = SCORES;
         fixture.detectChanges();
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should verify if it has scores', () => {
+        expect(component.hasScores()).toBeTruthy();
+        component.scores = [];
+        expect(component.hasScores()).toBeFalsy();
+    });
+
+    it('should format score time', () => {
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(component.formatScoreTime(70)).toEqual('01:10');
     });
 });

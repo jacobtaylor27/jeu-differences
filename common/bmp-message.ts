@@ -1,5 +1,5 @@
 export interface BmpMessage {
-    id?: number;
+    id?: string;
     name: string;
     file: string;
 }

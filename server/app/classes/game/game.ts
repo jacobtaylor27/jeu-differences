@@ -35,3 +35,7 @@ export class Game {
             this.context.next();
         }
     }
+
+    next() {
+        this.context.next();
+    }

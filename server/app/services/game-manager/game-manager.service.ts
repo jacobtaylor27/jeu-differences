@@ -1,11 +1,12 @@
 import { Service } from 'typedi';
 import { GameService } from '@app/services/game-info-service/game-info.service';
-import { Coordinate } from '@common/coordinate';
+// import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
+import { Game } from '@app/classes/game/game';
 
 @Service()
 export class GameManagerService {
-    // games = Games[];
+    games: Game[] = [];
     constructor(private gameInfo: GameService) {}
 
     async createGame(player: string[], mode: string, gameCardId: number) {

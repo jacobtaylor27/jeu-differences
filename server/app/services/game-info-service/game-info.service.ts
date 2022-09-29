@@ -12,13 +12,16 @@ export class GameService {
     get collection(): Collection<GameInfo> {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
+
     async getAllGames(): Promise<GameInfo[]> {
         return await this.collection.find({}).toArray();
     }
+
     async getGameById(gameId: number): Promise<GameInfo> {
         const filter = { id: gameId };
         return (await this.collection.find(filter).toArray())[0];
     }
+
     async addGame(game: GameInfo): Promise<boolean> {
         try {
             game.id = await this.idGeneratorService.generateUniqueId();
@@ -28,6 +31,7 @@ export class GameService {
             return false;
         }
     }
+
     async deleteGameById(gameId: number): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
         return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;

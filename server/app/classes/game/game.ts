@@ -24,3 +24,7 @@ export class Game {
     get identifier() {
         return this.id;
     }
+
+    status(): GameStatus {
+        return this.context.gameState();
+    }

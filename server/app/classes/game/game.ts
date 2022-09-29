@@ -28,3 +28,10 @@ export class Game {
     status(): GameStatus {
         return this.context.gameState();
     }
+
+    differenceFounded() {
+        this.differenceFound++;
+        if (this.isAllDifferenceFound() && !this.isGameOver()) {
+            this.context.next();
+        }
+    }

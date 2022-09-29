@@ -42,7 +42,7 @@ describe('Bmp service', async () => {
         const bmp: BmpMessage = {
             id: '1',
             name: 'deuxième image',
-            file: 'asdfasdf',
+            filepath: 'asdfasdf',
         };
         expect((await bmpService.getAllBmps()).length).to.equal(DEFAULT_BMP.length);
         expect(await bmpService.addBmp(bmp)).to.equal(true);
@@ -53,7 +53,7 @@ describe('Bmp service', async () => {
         const bmp: BmpMessage = {
             id: '2',
             name: 'troisième image',
-            file: '123 321*()@#$',
+            filepath: '123 321*()@#$',
         };
         expect((await bmpService.getAllBmps()).length).to.equal(DEFAULT_BMP.length);
         expect(await bmpService.addBmp(bmp)).to.equal(true);

@@ -49,13 +49,6 @@ describe('GameCardComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('formatScoreTime should format the given seconds to correct format', () => {
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresSolo[0].time)).toEqual('1:00');
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresSolo[1].time)).toEqual('1:30');
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresMultiplayer[0].time)).toEqual('2:05');
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresMultiplayer[1].time)).toEqual('0:12');
-    });
-
     it('getGameName should return the name of the game', () => {
         expect(component.getGameName()).toEqual('test');
     });

@@ -1,5 +1,5 @@
 <ul class="highscores">
-    <li class="title"><b>{{ title }}</b></li>
+    <li class="title-{{ isMultiplayer }}"><b>{{ title }}</b></li>
     <div class="score-content" *ngIf="hasScores(); else noScores">
         <li *ngFor="let score of scores">
             {{ score.playersName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}

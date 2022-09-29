@@ -10,6 +10,7 @@ import { Score } from '@common/score';
 export class GameScoreComponent {
     @Input() scores: Score[];
     @Input() title: string;
+    @Input() isMultiplayer: boolean;
 
     formatScoreTime(scoreTime: number): string {
         return TimeFormatter.getMMSSFormat(scoreTime);

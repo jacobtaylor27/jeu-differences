@@ -20,3 +20,7 @@ export class Game {
         this.context.next();
         this.context.next(); // go directly to the Found Difference State because timer is not initialize in the server for now
     }
+
+    get identifier() {
+        return this.id;
+    }

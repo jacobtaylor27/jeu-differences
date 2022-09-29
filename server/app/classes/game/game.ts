@@ -54,3 +54,8 @@ export class Game {
     isGameOver() {
         return this.context.gameState() === GameStatus.EndGame;
     }
+
+    differenceLeft(): number {
+        return this.info.differences.length - this.differenceFound;
+    }
+}

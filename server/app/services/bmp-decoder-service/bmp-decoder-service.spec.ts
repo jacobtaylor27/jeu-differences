@@ -1,7 +1,10 @@
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
+chai.use(chaiAsPromised);
 
 describe('Bmp decoder service', () => {
     let bmpDecoderService: BmpDecoderService;
@@ -78,31 +81,16 @@ describe('Bmp decoder service', () => {
 
     it('Should throw an error if the path is incorrect', async () => {
         const invalidPath = '';
-        try {
-            const bmpProduced = await bmpDecoderService.decodeBIntoBmp(invalidPath);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(bmpDecoderService.decodeBIntoBmp(invalidPath)).to.eventually.be.rejectedWith(Error);
     });
 
     it('Should throw an error if the file is not a bitmap', async () => {
         const filepath = './assets/test-bmp/jpg_test.jpg';
-        try {
-            const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error);
     });
 
     it("Should throw an error if the file is a bitmap but doesn't exists", async () => {
         const filepath = './assets/test-bmp/doesntexistfile.bmp';
-        try {
-            const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error);
     });
 });

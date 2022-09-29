@@ -9,9 +9,11 @@ export class GameManagerService {
     games: Game[] = [];
     constructor(private gameInfo: GameService) {}
 
-    async createGame(player: string[], mode: string, gameCardId: number) {
+    async createGame(players: string[], mode: string, gameCardId: number) {
         const gameCard: GameInfo = await this.gameInfo.getGameById(gameCardId);
-        // Todo: call Game constructor
+        const game = new Game(mode, players, gameCard);
+        this.games.push(game);
+        return game.identifier;
     }
     isDifference(idGame: number, coord: Coordinate) {
         // Todo: get the game by id

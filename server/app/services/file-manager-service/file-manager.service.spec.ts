@@ -1,7 +1,10 @@
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
+chai.use(chaiAsPromised);
 
 describe('File Manager Service', async () => {
     let fileManagerService: FileManagerService;
@@ -17,5 +20,8 @@ describe('File Manager Service', async () => {
         expect(fileNames[1]).to.equal('test_bmp_modified.bmp');
     });
 
-    it("getFileNames(path) should throw an exception when given a path that doesn't exists", async () => {});
+    it("getFileNames(path) should throw an exception when given a path that doesn't exists", async () => {
+        const dirName = './assets/test-src/bad-directory-name';
+        expect(fileManagerService.getFileNames(dirName)).to.eventually.be.rejectedWith(Error);
+    });
 });

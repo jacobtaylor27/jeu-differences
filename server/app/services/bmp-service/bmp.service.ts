@@ -3,7 +3,7 @@ import { DatabaseService } from '@app/services/database-service/database.service
 import { BmpMessage } from '@common/bmp-message';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
-import { uuid } from 'uuidv4';
+import { v4 } from 'uuid';
 @Service()
 export class BmpService {
     constructor(private readonly databaseService: DatabaseService) {}
@@ -20,7 +20,7 @@ export class BmpService {
     }
     async addBmp(bmp: BmpMessage): Promise<boolean> {
         try {
-            bmp.id = uuid();
+            bmp.id = v4();
             await this.collection.insertOne(bmp);
             return true;
         } catch (error) {

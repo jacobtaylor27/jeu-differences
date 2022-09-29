@@ -3,7 +3,7 @@ import { DatabaseService } from '@app/services/database-service/database.service
 import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
-import { uuid } from 'uuidv4';
+import { v4 } from 'uuid';
 
 @Service()
 export class GameService {
@@ -21,7 +21,7 @@ export class GameService {
     }
     async addGame(game: GameInfo): Promise<boolean> {
         try {
-            game.id = uuid();
+            game.id = v4();
             await this.collection.insertOne(game);
             return true;
         } catch (error) {

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
 
-import { AdminPageComponent } from './admin-page.component';
+import { GameConstantFieldComponent } from './game-constant-field.component';
 
-describe('AdminPageComponent', () => {
-    let component: AdminPageComponent;
-    let fixture: ComponentFixture<AdminPageComponent>;
+describe('GameConstantFieldComponent', () => {
+    let component: GameConstantFieldComponent;
+    let fixture: ComponentFixture<GameConstantFieldComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AdminPageComponent],
+            declarations: [GameConstantFieldComponent],
             imports: [AppMaterialModule],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(AdminPageComponent);
+        fixture = TestBed.createComponent(GameConstantFieldComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

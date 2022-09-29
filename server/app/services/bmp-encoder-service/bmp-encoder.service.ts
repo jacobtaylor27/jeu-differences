@@ -6,16 +6,6 @@ import { Service } from 'typedi';
 
 @Service()
 export class BmpEncoderService {
-    async encodeBIntoA(filepath: string) {
-        if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
-        let bitmap;
-        try {
-            bitmap = await this.getFileContent(filepath);
-        } catch (e) {
-            throw new Error(e);
-        }
-        return Buffer.from(bitmap).toString('base64');
-    }
     async encodeBmpIntoB(filepath: string, bmpObj: Bmp) {
         if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
         const width: number = bmpObj.getWidth();
@@ -27,27 +17,6 @@ export class BmpEncoderService {
             data,
         };
         await this.writeFile(filepath, bmp.encode(bmpData).data);
-    }
-    async encodeAIntoB(filepath: string, asciiContent: string): Promise<void> {
-        if (!(await this.isFileExtensionValid(filepath))) {
-            throw new Error('File extension must be a .bmp');
-        }
-        try {
-            await this.writeFile(filepath, Buffer.from(asciiContent, 'base64'));
-        } catch (e) {
-            throw new Error(e);
-        }
-    }
-    private async getFileContent(filepath: string): Promise<Buffer> {
-        return new Promise((resolve, reject) => {
-            fs.readFile(filepath, (err, data) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve(data);
-            });
-        });
     }
     private async writeFile(filepath: string, buffer: Buffer): Promise<void> {
         return new Promise((resolve, reject) => {

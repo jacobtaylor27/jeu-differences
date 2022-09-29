@@ -1,11 +1,11 @@
-import { Game } from '@common/game';
+import { GameInfo } from '@common/game-info';
 import { Score } from '@common/score';
 
 const score: Score = {
     playerName: 'Mark',
     time: 23,
 };
-const game1: Game = {
+const game1: GameInfo = {
     id: 0,
     idOriginalBmp: 0,
     idEditedBmp: 0,
@@ -16,4 +16,4 @@ const game1: Game = {
     differences: [],
 };
 
-export const DEFAULT_GAME: Game[] = [game1];
+export const DEFAULT_GAME: GameInfo[] = [game1];

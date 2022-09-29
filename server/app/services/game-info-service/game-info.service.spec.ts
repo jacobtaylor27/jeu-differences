@@ -1,14 +1,14 @@
 import { DB_URL } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
-import { GameService } from '@app/services/game-service/game.service';
+import { GameService } from '@app/services/game-info-service/game-info.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
-import { Game } from '@common/game';
+import { GameInfo } from '@common/game-info';
 import { Score } from '@common/score';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe('Game service', async () => {
+describe('GameInfo service', async () => {
     let gameService: GameService;
     let databaseService: DatabaseServiceMock;
     let idGeneratorService: IdGeneratorService;
@@ -47,7 +47,7 @@ describe('Game service', async () => {
             playerName: 'Jacob',
             time: 22,
         };
-        const game: Game = {
+        const game: GameInfo = {
             id: 1,
             idOriginalBmp: 0,
             idEditedBmp: 0,
@@ -67,7 +67,7 @@ describe('Game service', async () => {
             playerName: 'Laurie',
             time: 22,
         };
-        const game: Game = {
+        const game: GameInfo = {
             id: 2,
             idOriginalBmp: 0,
             idEditedBmp: 0,
@@ -88,7 +88,7 @@ describe('Game service', async () => {
             playerName: 'Jacob',
             time: 22,
         };
-        const game: Game = {
+        const game: GameInfo = {
             idOriginalBmp: 0,
             idEditedBmp: 0,
             idDifferenceBmp: 0,
@@ -100,7 +100,7 @@ describe('Game service', async () => {
         expect(await gameService.addGame(game)).to.equal(true);
         expect((await gameService.getGameById(1)).id).to.equal(1);
 
-        const game2: Game = {
+        const game2: GameInfo = {
             idOriginalBmp: 0,
             idEditedBmp: 0,
             idDifferenceBmp: 0,

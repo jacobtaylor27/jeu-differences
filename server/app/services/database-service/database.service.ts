@@ -3,7 +3,7 @@ import { DEFAULT_BMP } from '@app/constants/default-bmp';
 import { DEFAULT_GAME } from '@app/constants/default-game';
 import { DEFAULT_ID } from '@app/constants/default-id';
 import { BmpMessage } from '@common/bmp-message';
-import { Game } from '@common/game';
+import { GameInfo } from '@common/game-info';
 import { Id } from '@common/id';
 import { Db, MongoClient } from 'mongodb';
 import { Service } from 'typedi';
@@ -39,7 +39,7 @@ export class DatabaseService {
         await this.initializeBmpCollection(DB_BMP_COLLECTION, DEFAULT_BMP);
     }
 
-    private async initializeGameCollection(collectionName: string, game: Game[]): Promise<void> {
+    private async initializeGameCollection(collectionName: string, game: GameInfo[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {

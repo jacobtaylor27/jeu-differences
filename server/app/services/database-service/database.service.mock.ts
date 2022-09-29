@@ -3,7 +3,7 @@ import { DEFAULT_BMP } from '@app/constants/default-bmp';
 import { DEFAULT_GAME } from '@app/constants/default-game';
 import { DEFAULT_ID } from '@app/constants/default-id';
 import { BmpMessage } from '@common/bmp-message';
-import { Game } from '@common/game';
+import { GameInfo } from '@common/game-info';
 import { Id } from '@common/id';
 import { Db, MongoClient } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -37,12 +37,12 @@ export class DatabaseServiceMock {
     }
     async populateDatabase(): Promise<void> {
         this.db.createCollection(DB_GAME_COLLECTION);
-        await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
+        await this.initializeGameInfoCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
         await this.initializeIdCollection(DB_ID_COLLECTION, [{ id: DEFAULT_ID }]);
         await this.initializeBmpCollection(DB_BMP_COLLECTION, DEFAULT_BMP);
     }
 
-    private async initializeGameCollection(collectionName: string, game: Game[]): Promise<void> {
+    private async initializeGameInfoCollection(collectionName: string, game: GameInfo[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {

@@ -43,3 +43,10 @@ export class Game {
     isGameInitialize() {
         return this.context.gameState() === GameStatus.InitGame || this.context.gameState() === GameStatus.InitTimer;
     }
+
+    isAllDifferenceFound(): boolean {
+        if (this.isGameInitialize() || this.isGameOver()) {
+            return this.isGameOver(); // if the game is already over all the difference are found and if the game is not initialize 0 difference found
+        }
+        return this.info.differences.length === this.differenceFound;
+    }

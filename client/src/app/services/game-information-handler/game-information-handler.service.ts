@@ -4,5 +4,9 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class GameInformationHandlerService {
-    constructor() {}
+    name: string;
+
+    setName(name: string): void {
+        this.name = name;
+    }
 }

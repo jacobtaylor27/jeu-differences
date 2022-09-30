@@ -12,4 +12,9 @@ describe('GameInformationHandlerService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+
+    fit('should set the name', () => {
+        service.setName('test');
+        expect(service.name).toBe('test');
+    });
 });

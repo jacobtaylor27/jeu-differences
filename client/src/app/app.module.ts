@@ -30,6 +30,8 @@ import { AdminCommandsComponent } from './components/admin-commands/admin-comman
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
 import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
+import { GameScoreComponent } from './components/game-score/game-score.component';
+import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -64,6 +66,8 @@ import { GameConstantFieldComponent } from './components/game-constant-field/gam
         TimerStopwatchComponent,
         DifferencesAreaComponent,
         GameConstantFieldComponent,
+        GameCardButtonsComponent,
+        GameScoreComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

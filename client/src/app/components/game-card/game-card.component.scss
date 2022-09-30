@@ -23,34 +23,14 @@ img {
     height: 100%;
 }
 
-.highscores-multi-title {
-    text-align: right;
-}
-
 .highscore-title {
     text-align: center;
     margin: 0;
 }
 
-ul.highscores-solo, ul.highscores-multi {
-    margin: 0;
-    padding-inline-start: 0;
-    list-style: none;
-}
-
 .scores {
     display: flex;
     justify-content: space-between;
-}
-
-.game-card-buttons button {
-    margin-right: 1vw;
-    margin-left: 1vw;
-}
-
-.game-card-buttons {
-    display: flex;
-    justify-content: center;
 }
 
 .empty-solo-scores, .empty-multi-scores{

@@ -30,3 +30,11 @@ describe.only('GameController', () => {
                 expect(response.body).to.deep.equal({ id: expectedGameId });
             });
     });
+
+    it('should return an error if createGame have a problem', async () => {
+        gameManager.createGame.rejects();
+        return supertest(expressApp)
+            .post('/api/game/create/0')
+            .send({ mode: 'Classic', players: ['testPlayer1'] })
+            .expect(StatusCodes.NOT_FOUND);
+    });

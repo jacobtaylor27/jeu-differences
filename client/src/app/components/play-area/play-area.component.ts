@@ -1,10 +1,7 @@
-import { Component, HostListener } from '@angular/core';
-import { Vec2 } from '@app/interfaces/vec2';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 
 // TODO : Avoir un fichier séparé pour les constantes!
-export const DEFAULT_WIDTH = 480;
-export const DEFAULT_HEIGHT = 640;
 const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
 
 @Component({
@@ -13,20 +10,10 @@ const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent {
-    mousePosition: Vec2 = { x: 0, y: 0 };
+    @ViewChild('actionsGame', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
     buttonPressed = '';
 
-    private canvasSize = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
-
     constructor(private readonly mouseHandlerService: MouseHandlerService) {}
-
-    get width(): number {
-        return this.canvasSize.x;
-    }
-
-    get height(): number {
-        return this.canvasSize.y;
-    }
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
@@ -34,6 +21,8 @@ export class PlayAreaComponent {
     }
 
     mouseHitDetect($event: MouseEvent) {
+        // const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+
         console.log(this.mouseHandlerService.mouseHitDetect($event));
         wrongSound.play();
     }

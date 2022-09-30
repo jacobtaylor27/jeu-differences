@@ -1,7 +1,7 @@
 <div id="grid-container">
-    <canvas id="img" #img [attr.width]="width" [attr.height]="height"></canvas>
+    <canvas id="img" #img width="SIZE.X" height="SIZE.Y"></canvas>
 
-    <canvas id="canvas" (click)="mouseHitDetect($event)" #actionsGame [attr.width]="width" [attr.height]="height"></canvas>
+    <canvas id="canvas" (click)="mouseHitDetect($event)" #actionsGame width="SIZE.X" height="SIZE.Y"></canvas>
 
     <!-- <div id="mouse-position-display">
         <p>Cliquez sur la grille pour avoir la position de la souris</p>

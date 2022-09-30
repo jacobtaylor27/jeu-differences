@@ -8,17 +8,6 @@ export class FileManagerService {
         const filenames: string[] = await this.getFileNameAndExtension(filepath);
         return filenames.map((filename) => path.parse(filename).name);
     }
-    async getFileNameAndExtension(filepath: string): Promise<string[]> {
-        return new Promise((resolve, reject) => {
-            fs.readdir(filepath, (err, data) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve(data);
-            });
-        });
-    }
     async deleteFile(filepath: string): Promise<void> {
         new Promise((resolve, reject) => {
             fs.unlink(filepath, (err) => {
@@ -42,6 +31,17 @@ export class FileManagerService {
     async getFileContent(filepath: string): Promise<Buffer> {
         return new Promise((resolve, reject) => {
             fs.readFile(filepath, (err, data) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(data);
+            });
+        });
+    }
+    private async getFileNameAndExtension(filepath: string): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            fs.readdir(filepath, (err, data) => {
                 if (err) {
                     reject(err);
                     return;

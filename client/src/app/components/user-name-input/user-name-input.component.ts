@@ -7,12 +7,12 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
     styleUrls: ['./user-name-input.component.scss'],
 })
 export class UserNameInputComponent {
-    name: string;
+    playerName: string;
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {}
 
     onClickContinue(): void {
-        this.gameInformationHandlerService.setName(this.name);
+        this.gameInformationHandlerService.setPlayerName(this.playerName);
     }
 }

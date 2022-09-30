@@ -2,8 +2,9 @@ import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@
 import { Vec2 } from '@app/interfaces/vec2';
 
 // TODO : Avoir un fichier séparé pour les constantes!
-export const DEFAULT_WIDTH = 500;
-export const DEFAULT_HEIGHT = 500;
+export const DEFAULT_WIDTH = 480;
+export const DEFAULT_HEIGHT = 640;
+const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
 
 // TODO : Déplacer ça dans un fichier séparé accessible par tous
 export enum MouseButton {
@@ -47,6 +48,10 @@ export class PlayAreaComponent implements AfterViewInit {
     // TODO : déplacer ceci dans un service de gestion de la souris!
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
+            console.log(this.mousePosition.x);
+            if (this.mousePosition.x > 250) {
+                wrongSound.play();
+            }
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
         }
     }

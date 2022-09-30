@@ -78,3 +78,11 @@ describe('Game', () => {
         stateSpyObj.callsFake(() => GameStatus.EndGame);
         expect(game.isGameOver()).to.equal(true);
     });
+
+    it('should get the number of difference not found', () => {
+        const expectedDifference = { length: 10 } as Coordinate[][];
+        const expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['differenceFound'] = expectedDifferenceFound;
+        expect(game.differenceLeft()).to.equal(expectedDifference.length - expectedDifferenceFound.size);
+    });

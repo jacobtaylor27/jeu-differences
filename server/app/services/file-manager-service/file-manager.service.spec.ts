@@ -22,6 +22,6 @@ describe('File Manager Service', async () => {
 
     it("getFileNames(path) should throw an exception when given a path that doesn't exists", async () => {
         const dirName = './assets/test-src/bad-directory-name';
-        expect(fileManagerService.getFileNames(dirName)).to.eventually.be.rejectedWith(Error);
+        await expect(fileManagerService.getFileNames(dirName)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
     });
 });

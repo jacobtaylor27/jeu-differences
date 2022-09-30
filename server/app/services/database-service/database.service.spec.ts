@@ -8,7 +8,7 @@ import { MongoParseError } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 chai.use(chaiAsPromised);
 
-describe.only('Database service', () => {
+describe('Database service', () => {
     let mongoServer: MongoMemoryServer;
     let databaseService: DatabaseService;
     let uri = '';

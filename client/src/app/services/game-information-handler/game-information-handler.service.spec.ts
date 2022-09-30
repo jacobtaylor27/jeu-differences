@@ -14,7 +14,7 @@ describe('GameInformationHandlerService', () => {
     });
 
     fit('should set the name', () => {
-        service.setName('test');
-        expect(service.name).toBe('test');
+        service.setPlayerName('test');
+        expect(service.playerName).toBe('test');
     });
 });

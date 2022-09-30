@@ -51,3 +51,10 @@ describe('Game', () => {
         expect(stateSpyObj.called).to.equal(true);
         expect(game.status()).to.equal(expectGameState.status());
     });
+
+    it('should go to the next state of the game', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const stateSpyObj = stub(game['context'], 'next').callsFake(() => {});
+        game.next();
+        expect(stateSpyObj.called).to.equal(true);
+    });

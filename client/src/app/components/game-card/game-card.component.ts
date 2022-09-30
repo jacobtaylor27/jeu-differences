@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Score } from '@common/score';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameCardService } from '@app/services/game-card/game-card.service';
+import { TimeFormatter } from '@app/classes/time-formatter';
 
 @Component({
     selector: 'app-game-card',
@@ -12,7 +12,9 @@ export class GameCardComponent {
     @Input() gameCard: GameCard;
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(private readonly gameCardService: GameCardService) {}
+    formatScoreTime(scoreTime: number): string {
+        return TimeFormatter.getMMSSFormat(scoreTime);
+    }
 
     getGameName(): string {
         return this.gameCard.gameInformation.name;
@@ -40,17 +42,5 @@ export class GameCardComponent {
 
     hasSinglePlayerScores(): boolean {
         return this.gameCard.gameInformation.scoresSolo.length > 0;
-    }
-
-    onClickPlayGame(): void {
-        this.gameCardService.openNameDialog();
-    }
-
-    onClickDeleteGame(game: GameCard): void {
-        this.gameCardService.deleteGame(game);
-    }
-
-    onClickResetHighScores(game: GameCard): void {
-        this.gameCardService.resetHighScores(game);
     }
 }

@@ -33,12 +33,6 @@ img {
     justify-content: space-between;
 }
 
-.game-card-buttons button {
-    margin-right: 1vw;
-    margin-left: 1vw;
-}
-
-.game-card-buttons {
-    display: flex;
-    justify-content: center;
+.empty-solo-scores, .empty-multi-scores{
+    color: gray;
 }

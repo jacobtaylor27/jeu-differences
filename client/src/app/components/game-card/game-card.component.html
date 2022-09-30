@@ -9,20 +9,5 @@
             <app-game-score [title]="'1 vs 1'" [scores]="getMultiplayerScores()" [isMultiplayer]="true"></app-game-score>
         </div>
     </mat-card-content>
-    
-    <mat-card-actions class="game-card-buttons">
-        <div class="admin-buttons" *ngIf="isAdminCard(); else selectPage">
-            <button  mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickDeleteGame(gameCard)">
-                <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-fab color="primary" matTooltip="Réinitialiser les records" aria-label="Boutton réinitialiser" (click)="onClickResetHighScores(gameCard)">
-                <mat-icon>refresh</mat-icon>
-            </button>
-        </div>
-
-        <ng-template #selectPage>
-            <button  mat-flat-button color="primary" aria-label="Boutton Jouer" (click)="onClickPlayGame()">Jouer</button>
-            <button mat-flat-button color="primary" aria-label="Boutton Créer">Créer</button>
-        </ng-template>
-    </mat-card-actions>
+    <app-game-card-buttons [gameCard]="gameCard"></app-game-card-buttons>
 </mat-card>

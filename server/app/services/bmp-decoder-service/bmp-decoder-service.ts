@@ -27,8 +27,7 @@ export class BmpDecoderService {
         } catch (error) {
             throw new Error(error);
         }
-        const rawData: number[] = bmpData.data.toJSON().data;
-        return new Bmp(bmpData.width, bmpData.height, rawData);
+        return new Bmp(bmpData.width, bmpData.height, bmpData.data.toJSON().data);
     }
 
     async convertBufferIntoArrayBuffer(buffer: Buffer): Promise<ArrayBuffer> {

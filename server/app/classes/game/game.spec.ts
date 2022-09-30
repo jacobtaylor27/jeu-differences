@@ -118,3 +118,12 @@ describe('Game', () => {
         game['differenceFound'] = expectedDifferenceFound;
         expect(game.isAllDifferenceFound()).to.equal(true);
     });
+
+
+    it('should verify if the difference is already found', () => {
+        const differenceFoundSpy = stub(game['differenceFound'], 'has').callsFake(() => false);
+        expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(false);
+        differenceFoundSpy.callsFake(() => true);
+        expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(true);
+    });
+});

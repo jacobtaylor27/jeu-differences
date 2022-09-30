@@ -9,6 +9,6 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 export class DifferencesAreaComponent {
     name: string;
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
-        this.name = this.gameInformationHandlerService.playerName;
+        this.name = this.gameInformationHandlerService.getPlayerName();
     }
 }

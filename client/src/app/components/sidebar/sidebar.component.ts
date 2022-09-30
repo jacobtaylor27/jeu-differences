@@ -27,7 +27,7 @@ export class SidebarComponent {
     }
 
     getGameName() {
-        return this.gameInformationHandlerService.getGameInformation().name;
+        return this.gameInformationHandlerService.getGameName();
     }
 
     getGameMode() {

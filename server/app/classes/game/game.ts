@@ -3,14 +3,14 @@ import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { GameInfo } from '@common/game-info';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
-import { uuid } from 'uuidv4';
-import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
+import { v4 } from 'uuid';
+import { Coordinate } from '@common/coordinate';
 
 export class Game {
     players: string[];
     private id: string;
     private info: GameInfo;
-    private differenceFound: Set<BmpCoordinate[]>;
+    private differenceFound: Set<Coordinate[]>;
     private context: GameContext;
 
     constructor(mode: string, players: string[], info: GameInfo) {
@@ -18,7 +18,7 @@ export class Game {
         this.players = players;
         this.differenceFound = new Set();
         this.context = new GameContext(mode as GameMode, new InitGameState());
-        this.id = uuid();
+        this.id = v4();
         this.context.next();
         this.context.next(); // go directly to the Found Difference State because timer is not initialize in the server for now
     }
@@ -35,7 +35,7 @@ export class Game {
         return this.context.gameState();
     }
 
-    differenceFounded(differenceCoords: BmpCoordinate[]) {
+    differenceFounded(differenceCoords: Coordinate[]) {
         if (this.isDifferenceAlreadyFound(differenceCoords)) {
             return;
         }
@@ -45,7 +45,7 @@ export class Game {
         }
     }
 
-    isDifferenceAlreadyFound(differenceCoords: BmpCoordinate[]) {
+    isDifferenceAlreadyFound(differenceCoords: Coordinate[]) {
         return this.differenceFound.has(differenceCoords);
     }
 

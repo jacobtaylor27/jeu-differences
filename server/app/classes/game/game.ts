@@ -27,6 +27,10 @@ export class Game {
         return this.id;
     }
 
+    get information() {
+        return this.info;
+    }
+
     status(): GameStatus {
         return this.context.gameState();
     }

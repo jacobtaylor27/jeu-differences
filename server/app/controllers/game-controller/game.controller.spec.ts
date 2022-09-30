@@ -20,3 +20,13 @@ describe.only('GameController', () => {
         expressApp = app.app;
     });
 
+    it('should return the id of the new game', async () => {
+        gameManager.createGame.resolves(expectedGameId);
+        return supertest(expressApp)
+            .post('/api/game/create/0')
+            .send({ mode: 'Classic', players: ['testPlayer1'] })
+            .expect(StatusCodes.CREATED)
+            .then((response) => {
+                expect(response.body).to.deep.equal({ id: expectedGameId });
+            });
+    });

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Vec2 } from '@app/interfaces/vec2';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 
@@ -12,9 +12,7 @@ const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
     templateUrl: './play-area.component.html',
     styleUrls: ['./play-area.component.scss'],
 })
-export class PlayAreaComponent implements AfterViewInit {
-    @ViewChild('gridCanvas', { static: false }) private canvas!: ElementRef<HTMLCanvasElement>;
-
+export class PlayAreaComponent {
     mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
 
@@ -33,10 +31,6 @@ export class PlayAreaComponent implements AfterViewInit {
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
-    }
-
-    ngAfterViewInit(): void {
-        this.canvas.nativeElement.focus();
     }
 
     mouseHitDetect($event: MouseEvent) {

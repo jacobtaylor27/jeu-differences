@@ -14,12 +14,16 @@ export class SidebarComponent {
     gameName: string;
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
-        this.gameMode = this.getGameMode();
-        this.gameName = this.getGameName();
+        this.getGameInformation();
     }
 
     onClueAsked(eventData: number) {
         this.askedClue = eventData;
+    }
+
+    getGameInformation(): void {
+        this.gameMode = this.getGameMode();
+        this.gameName = this.getGameName();
     }
 
     getGameName() {

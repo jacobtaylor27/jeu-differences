@@ -13,7 +13,7 @@ describe('GameInformationHandlerService', () => {
         expect(service).toBeTruthy();
     });
 
-    fit('should set the name', () => {
+    it('should set the name', () => {
         service.setPlayerName('test');
         expect(service.playerName).toBe('test');
     });

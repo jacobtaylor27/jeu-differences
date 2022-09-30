@@ -12,7 +12,6 @@ export class BmpService {
         private readonly fileManagerService: FileManagerService,
         private readonly bmpEncoderService: BmpEncoderService,
     ) {}
-
     async getAllBmps(): Promise<Bmp[]> {
         const allBmps: Bmp[] = [];
         const allPaths: string[] = await this.fileManagerService.getFileNames(DEFAULT_BMP_ASSET_PATH);

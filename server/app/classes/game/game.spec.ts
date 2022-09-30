@@ -102,3 +102,19 @@ describe('Game', () => {
         overSpy.callsFake(() => true);
         expect(game.isAllDifferenceFound()).to.equal(true);
     });
+
+    it('should check if all difference is found', () => {
+        stub(game, 'isGameInitialize').callsFake(() => false);
+        stub(game, 'isGameOver').callsFake(() => false);
+        let expectedDifference = { length: 10 } as Coordinate[][];
+        let expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['differenceFound'] = expectedDifferenceFound;
+        expect(game.isAllDifferenceFound()).to.equal(false);
+
+        expectedDifference = { length: 10 } as Coordinate[][];
+        expectedDifferenceFound = { size: 10 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['differenceFound'] = expectedDifferenceFound;
+        expect(game.isAllDifferenceFound()).to.equal(true);
+    });

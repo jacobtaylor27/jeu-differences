@@ -174,9 +174,19 @@ export class GameController {
 
         /*
         this.router.post('/', (req: Request, res: Response) => {
+        this.router.get('/difference/:id', (req: Request, res: Response) => {
+            if (!req.query.x || !req.query.y || this.gameManager.isGameFound(req.params.id)) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+            }
+            const difference = this.gameManager.isDifference(req.params.id as string, {
+                x: parseInt(req.query.x as string, 10),
+                y: parseInt(req.query.y as string, 10),
+            });
+            if (difference === null) {
+                res.status(StatusCodes.NOT_FOUND).send();
+            }
+            res.status(StatusCodes.OK).send(difference);
         });
-        */
-
         /*
         this.router.get('/validate/bmp', (req: Request, res: Response) => {
             // TODO: retourne le nommbre de différences et un image de différence

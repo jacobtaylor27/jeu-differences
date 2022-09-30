@@ -86,3 +86,19 @@ describe('Game', () => {
         game['differenceFound'] = expectedDifferenceFound;
         expect(game.differenceLeft()).to.equal(expectedDifference.length - expectedDifferenceFound.size);
     });
+
+    it('before check if all difference found check if the game is on init or over', () => {
+        const initSpy = stub(game, 'isGameInitialize').callsFake(() => false);
+        const overSpy = stub(game, 'isGameOver').callsFake(() => false);
+        expect(game.isAllDifferenceFound()).to.equal(false);
+        expect(initSpy.called).to.equal(true);
+        expect(overSpy.called).to.equal(true);
+
+        initSpy.callsFake(() => true);
+        overSpy.callsFake(() => false);
+        expect(game.isAllDifferenceFound()).to.equal(false);
+
+        initSpy.callsFake(() => false);
+        overSpy.callsFake(() => true);
+        expect(game.isAllDifferenceFound()).to.equal(true);
+    });

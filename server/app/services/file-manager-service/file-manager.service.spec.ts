@@ -16,8 +16,8 @@ describe('File Manager Service', async () => {
     it('getFileNames(path) should return the proper file names in a directory', async () => {
         const testDirectory = './assets/test-dir/';
         const fileNames: string[] = await fileManagerService.getFileNames(testDirectory);
-        expect(fileNames[0]).to.equal('bmp_test_2x2.bmp');
-        expect(fileNames[1]).to.equal('test_bmp_modified.bmp');
+        expect(fileNames[0]).to.equal('bmp_test_2x2');
+        expect(fileNames[1]).to.equal('test_bmp_modified');
     });
 
     it("getFileNames(path) should throw an exception when given a path that doesn't exists", async () => {

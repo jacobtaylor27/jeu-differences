@@ -1,9 +1,14 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import { Service } from 'typedi';
 
 @Service()
 export class FileManagerService {
     async getFileNames(filepath: string): Promise<string[]> {
+        const filenames: string[] = await this.getFileNameAndExtension(filepath);
+        return filenames.map((filename) => path.parse(filename).name);
+    }
+    async getFileNameAndExtension(filepath: string): Promise<string[]> {
         return new Promise((resolve, reject) => {
             fs.readdir(filepath, (err, data) => {
                 if (err) {

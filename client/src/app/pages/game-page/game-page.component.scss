@@ -1,5 +1,7 @@
 .container {
-    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 .page {
     min-height: 100vh;
@@ -7,10 +9,10 @@
 }
 
 .play-area-container {
-    overflow: auto;
     display: flex;
-    justify-content: center;
-    flex: 1 1 auto;
+    flex-direction: column;
+    margin-left: 1vw;
+    margin-right: 1vw;
 }
 
 .play-area {

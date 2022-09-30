@@ -8,6 +8,7 @@ export class GameContext {
 
     constructor(mode: GameMode, state: GameState) {
         this.state = state;
+        this.state.setContext(this);
         this.mode = mode;
     }
 
@@ -21,6 +22,7 @@ export class GameContext {
 
     transitionTo(newState: GameState) {
         this.state = newState;
+        this.state.setContext(this);
     }
 
     gameState(): GameStatus {

@@ -70,6 +70,14 @@ describe('GameManagerService', () => {
         expect(gameManager.differenceLeft('')).equal(false);
     });
 
+    it('should find a game', () => {
+        expect(gameManager['findGame']('')).to.equal(undefined);
+        const expectedIdGame = '';
+        const expectedGame = { identifier: expectedIdGame } as Game;
+        gameManager['games'].push(expectedGame);
+        expect(gameManager['findGame'](expectedIdGame)).to.deep.equal(expectedGame);
+    });
+
     afterEach(() => {
         restore();
     });

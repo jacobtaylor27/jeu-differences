@@ -24,8 +24,8 @@ export class BmpService {
         }
         return undefined;
     }
-    async addBmp(bmp: ArrayBuffer): Promise<boolean> {
-        // TODO
+    async addBmp(bpmToConvert: ArrayBuffer): Promise<boolean> {
+        this.bmpDecoderService.decodeArrayBufferToBmp(bpmToConvert);
         console.log(bmp);
         return false;
     }

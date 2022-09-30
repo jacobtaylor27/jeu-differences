@@ -14,6 +14,11 @@ export class BmpDecoderService {
         return new Bmp(bmpData.width, bmpData.height, rawData);
     }
 
+    async decodeArrayBufferToBmp(arrayBufferToDecode: ArrayBuffer): Promise<Bmp> {
+        console.log(arrayBufferToDecode);
+        return await this.decodeBIntoBmp('./assets/test-bmp/test_bmp_modified.bmp');
+    }
+
     private isFileExtensionValid(filename: string): boolean {
         // prettier-ignore
         // eslint-disable-next-line

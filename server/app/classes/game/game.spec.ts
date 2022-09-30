@@ -44,4 +44,10 @@ describe('Game', () => {
         expect(game.information).to.equal(expectedGameInfo);
     });
 
-});
+    it('should get the status of the game', () => {
+        const expectGameState = new InitGameState();
+        const stateSpyObj = stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
+        game.status();
+        expect(stateSpyObj.called).to.equal(true);
+        expect(game.status()).to.equal(expectGameState.status());
+    });

@@ -38,6 +38,10 @@ export class Game {
         }
     }
 
+    isDifferenceAlreadyFound(differenceCoords: BmpCoordinate[]) {
+        return this.differenceFound.has(differenceCoords);
+    }
+
     next() {
         this.context.next();
     }

@@ -40,4 +40,8 @@ describe('Game', () => {
         expect(game.identifier).to.equal(game['id']);
     });
 
+    it('should get the information of the game', () => {
+        expect(game.information).to.equal(expectedGameInfo);
+    });
+
 });

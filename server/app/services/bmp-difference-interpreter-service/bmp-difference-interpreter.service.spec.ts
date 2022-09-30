@@ -18,14 +18,16 @@ describe('Bmp difference interpreter service', async () => {
         bmpDecoderService = Container.get(BmpDecoderService);
     });
 
-    it('Should throw an exception if given a bmp with pixels other than black or white', () => {
+    it('Should throw an exception if given a bmp with pixels other than black or white', async () => {
         // prettier-ignore
         // eslint-disable-next-line
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 254, 255, 255];
         const width = 2;
         const height = 2;
         const bmpWithColors = new Bmp(width, height, rawData);
-        expect(bmpDifferenceInterpreter.getCoordinates(bmpWithColors)).to.eventually.be.rejectedWith(Error);
+        await expect(bmpDifferenceInterpreter.getCoordinates(bmpWithColors))
+            .to.eventually.be.rejectedWith('The pixels are not perfectly black or white')
+            .and.be.an.instanceOf(Error);
     });
     it("A white image shouldn't have any difference", async () => {
         // prettier-ignore

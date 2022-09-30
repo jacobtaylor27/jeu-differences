@@ -80,17 +80,19 @@ describe('Bmp decoder service', () => {
     });
 
     it('Should throw an error if the path is incorrect', async () => {
-        const invalidPath = '';
-        expect(bmpDecoderService.decodeBIntoBmp(invalidPath)).to.eventually.be.rejectedWith(Error);
+        const invalidPath = '.bmp';
+        await expect(bmpDecoderService.decodeBIntoBmp(invalidPath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
     });
 
     it('Should throw an error if the file is not a bitmap', async () => {
         const filepath = './assets/test-bmp/jpg_test.jpg';
-        expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith('The file should end with .bmp');
+        await expect(bmpDecoderService.decodeBIntoBmp(filepath))
+            .to.eventually.be.rejectedWith('The file should end with .bmp')
+            .and.be.an.instanceOf(Error);
     });
 
     it("Should throw an error if the file is a bitmap but doesn't exists", async () => {
         const filepath = './assets/test-bmp/doesntexistfile.bmp';
-        expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error);
+        await expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
     });
 });

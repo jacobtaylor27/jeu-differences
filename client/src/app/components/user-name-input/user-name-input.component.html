@@ -1,0 +1,13 @@
+<section [ngClass]="favoriteTheme">
+    <div class="dialog-content">
+        <mat-form-field>
+            <mat-label>Quel est votre nom?</mat-label>
+            <input [(ngModel)]="name" matInput/>
+        </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-flat-button color="primary" mat-dialog-close>Annuler</button>
+        <button mat-flat-button color="primary" routerLink="/game" mat-dialog-close [disabled]="!name">Continuer</button>
+    </div>
+</section>

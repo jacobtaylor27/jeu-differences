@@ -1,8 +1,7 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameSelectionService } from '@app/services/game-selection.service';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
     selector: 'app-game-selection-page',
@@ -10,46 +9,26 @@ import { GameSelectionService } from '@app/services/game-selection.service';
     styleUrls: ['./game-selection-page.component.scss'],
 })
 export class GameSelectionPageComponent implements OnInit {
-    @ViewChild('enterNameDialogContentRef')
-    private readonly enterNameDialogContentRef: TemplateRef<HTMLElement>;
-
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(readonly gameSelectionService: GameSelectionService, private readonly matDialog: MatDialog) {}
+    constructor(readonly gameCarouselService: GameCarouselService) {}
 
     ngOnInit(): void {
-        this.getGameCards();
+        this.gameCards = this.gameCarouselService.getCards();
+        this.makeCardsSelectMode();
     }
 
-    hasCardsBefore(): boolean {
-        return this.gameSelectionService.hasPreviousCards();
+    getNumberOfGames(): number {
+        return this.gameCarouselService.getCarouselLength();
     }
 
-    hasCardsAfter(): boolean {
-        return this.gameSelectionService.hasNextCards();
+    hasGames(): boolean {
+        return this.gameCarouselService.hasCards();
     }
 
-    getGameCards(): void {
-        this.gameCards = this.gameSelectionService.getActiveCards();
-    }
-
-    onClickPrevious(): void {
-        this.gameSelectionService.showPreviousFour();
-        this.getGameCards();
-    }
-
-    onClickNext(): void {
-        this.gameSelectionService.showNextFour();
-        this.getGameCards();
-    }
-
-    onSelectPlayGame(): void {
-        this.matDialog.open(this.enterNameDialogContentRef);
-    }
-
-    onSelectCreateGame(): void {
-        this.matDialog.open(this.enterNameDialogContentRef);
+    makeCardsSelectMode(): void {
+        this.gameCarouselService.setCardMode();
     }
 
     formatScoreTime(scoreTime: number): string {

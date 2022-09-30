@@ -22,9 +22,17 @@ import { TimerCountdownComponent } from './components/timer-countdown/timer-coun
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
+import { GameCardComponent } from './components/game-card/game-card.component';
+import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
+import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
+import { GameCarouselComponent } from './components/game-carousel/game-carousel.component';
+import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
+import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
+import { GameScoreComponent } from './components/game-score/game-score.component';
+import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -47,6 +55,11 @@ import { DialogCreateGameComponent } from './components/dialog-create-game/dialo
         AdminPageComponent,
         DialogUploadFormComponent,
         DialogResetComponent,
+        GameCardComponent,
+        GameConstantsSettingsComponent,
+        UserNameInputComponent,
+        GameCarouselComponent,
+        AdminCommandsComponent,
         PlayAreaComponent,
         ExitGameButtonComponent,
         CluesAreaComponent,
@@ -54,6 +67,9 @@ import { DialogCreateGameComponent } from './components/dialog-create-game/dialo
         TimerStopwatchComponent,
         DifferencesAreaComponent,
         DialogCreateGameComponent,
+        GameConstantFieldComponent,
+        GameCardButtonsComponent,
+        GameScoreComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

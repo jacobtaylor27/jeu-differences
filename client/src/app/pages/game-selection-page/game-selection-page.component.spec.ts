@@ -1,15 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { GameSelectionPageComponent } from './game-selection-page.component';
 
 describe('GameSelectionPageComponent', () => {
     let component: GameSelectionPageComponent;
     let fixture: ComponentFixture<GameSelectionPageComponent>;
+    let spyGameCarouselService: jasmine.SpyObj<GameCarouselService>;
 
     beforeEach(async () => {
+        spyGameCarouselService = jasmine.createSpyObj<GameCarouselService>('GameCarouselService', [
+            'setCardMode',
+            'getCards',
+            'getCarouselLength',
+            'hasCards',
+        ]);
         await TestBed.configureTestingModule({
             declarations: [GameSelectionPageComponent],
             imports: [AppMaterialModule],
+            providers: [
+                {
+                    provide: GameCarouselService,
+                    useValue: spyGameCarouselService,
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameSelectionPageComponent);
@@ -21,45 +35,12 @@ describe('GameSelectionPageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should open dialog on click create game', () => {
-        const spy = spyOn(component['matDialog'], 'open');
-        component.onSelectCreateGame();
-        expect(spy).toHaveBeenCalled();
+    it('makeCardsSelectMode should call setCardMode from gameCarouselService', () => {
+        component.makeCardsSelectMode();
+        expect(spyGameCarouselService.setCardMode).toHaveBeenCalled();
     });
 
-    it('should open dialog on click play game', () => {
-        const spy = spyOn(component['matDialog'], 'open');
-        component.onSelectPlayGame();
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('GameSelectionService showNextFour() should be called when clicking next button', () => {
-        const spy = spyOn(component['gameSelectionService'], 'showNextFour');
-        component.onClickNext();
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('GameSelectionService showPreviousFour() should be called when clicking previous button', () => {
-        const spy = spyOn(component['gameSelectionService'], 'showPreviousFour');
-        component.onClickPrevious();
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('GameSelectionService hasPreviousCards() should be called to disable previous button', () => {
-        const spy = spyOn(component['gameSelectionService'], 'hasPreviousCards');
-        component.hasCardsBefore();
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('GameSelectionService hasNextCards() should be called to disable next button', () => {
-        const spy = spyOn(component['gameSelectionService'], 'hasNextCards');
-        component.hasCardsAfter();
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('GameSelectionService getActiveCards() should be called to get the card to the component', () => {
-        const spy = spyOn(component['gameSelectionService'], 'getActiveCards');
-        component.getGameCards();
-        expect(spy).toHaveBeenCalled();
+    it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
+        expect(component.formatScoreTime(1)).toEqual('0:01');
     });
 });

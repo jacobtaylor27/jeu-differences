@@ -7,13 +7,13 @@
         </div>
 
         <div class="delete-games-button control-button">
-            <button mat-fab color="primary" matTooltip="Supprimer tous les jeux" aria-label="Boutton supprimer" [disabled]="!hasCards()" (click)="onClickDeleteGames()">
-                <mat-icon>delete</mat-icon>
+            <button mat-fab color="primary" [disabled]="true" matTooltip="Supprimer tous les jeux" aria-label="Boutton supprimer" (click)="onClickDeleteGames()">
+                <mat-icon>delete</mat-icon> 
             </button>
         </div>
 
         <div class="reset-highsccore-button control-button">
-            <button mat-fab color="primary" matTooltip="Réinitialiser les temps records" aria-label="Boutton réinitialiser" (click)="onClickResetHighScores()">
+            <button mat-fab color="primary"  [disabled]="true" matTooltip="Réinitialiser les temps records" aria-label="Boutton réinitialiser" (click)="onClickResetHighScores()">
                 <mat-icon>refresh</mat-icon>
             </button>
         </div>

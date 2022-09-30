@@ -1,8 +1,6 @@
-import { DB_GAME_COLLECTION, DB_ID_COLLECTION, DB_NAME } from '@app/constants/database';
+import { DB_GAME_COLLECTION, DB_NAME } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game-info';
-import { DEFAULT_ID } from '@app/constants/default-id';
 import { GameInfo } from '@common/game-info';
-import { Id } from '@common/id';
 import { Db, MongoClient } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 export class DatabaseServiceMock {
@@ -36,7 +34,6 @@ export class DatabaseServiceMock {
     async populateDatabase(): Promise<void> {
         this.db.createCollection(DB_GAME_COLLECTION);
         await this.initializeGameInfoCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
-        await this.initializeIdCollection(DB_ID_COLLECTION, [{ id: DEFAULT_ID }]);
     }
 
     private async initializeGameInfoCollection(collectionName: string, game: GameInfo[]): Promise<void> {
@@ -44,14 +41,6 @@ export class DatabaseServiceMock {
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {
             await collection.insertMany(game);
-        }
-    }
-
-    private async initializeIdCollection(collectionName: string, baseId: Id[]): Promise<void> {
-        const collection = this.client.db(DB_NAME).collection(collectionName);
-        const documents = await collection.find({}).toArray();
-        if (documents.length === 0) {
-            await collection.insertMany(baseId);
         }
     }
 }

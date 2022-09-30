@@ -18,7 +18,7 @@ describe('Bmp subractor service', async () => {
 
     beforeEach(async () => {
         bmpDecoderService = Container.get(BmpDecoderService);
-        bmpSubtractorService = new BmpSubtractorService();
+        bmpSubtractorService = Container.get(BmpSubtractorService);
 
         bmp2x2 = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/bmp_test_2x2.bmp');
         bmp2x3 = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/bmp_test_2x3.bmp');

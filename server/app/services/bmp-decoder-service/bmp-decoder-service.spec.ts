@@ -86,7 +86,7 @@ describe('Bmp decoder service', () => {
 
     it('Should throw an error if the file is not a bitmap', async () => {
         const filepath = './assets/test-bmp/jpg_test.jpg';
-        expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error);
+        expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith('The file should end with .bmp');
     });
 
     it("Should throw an error if the file is a bitmap but doesn't exists", async () => {

@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-user-name-input',
@@ -6,6 +6,6 @@ import { Component, Output } from '@angular/core';
     styleUrls: ['./user-name-input.component.scss'],
 })
 export class UserNameInputComponent {
-    @Output() name: string;
+    name: string;
     favoriteTheme: string = 'deeppurple-amber-theme';
 }

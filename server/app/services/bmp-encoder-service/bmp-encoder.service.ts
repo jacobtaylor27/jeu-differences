@@ -7,7 +7,7 @@ import { Service } from 'typedi';
 @Service()
 export class BmpEncoderService {
     constructor(private readonly fileManagerService: FileManagerService) {}
-    async encodeBmpIntoB(filepath: string, bmpObj: Bmp) {
+    async encodeBmpIntoB(filepath: string, bmpObj: Bmp): Promise<void> {
         if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
         const width: number = bmpObj.getWidth();
         const height: number = bmpObj.getHeight();

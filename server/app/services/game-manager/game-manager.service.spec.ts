@@ -21,6 +21,12 @@ describe('GameManagerService', () => {
         gameManager = new GameManagerService(gameInfo, differenceService);
     });
 
+    it('should create a game', async () => {
+        expect(await gameManager.createGame(['test'], 'classic', 0)).to.equal(gameManager['games'][0].identifier);
+        expect(gameInfoSpyObj.getGameById.called).to.equal(true);
+        expect(gameManager['games'].length).not.to.equal(0);
+    });
+
     afterEach(() => {
         restore();
     });

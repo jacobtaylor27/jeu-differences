@@ -45,7 +45,7 @@ describe('File Manager Service', async () => {
         await expect(fileManagerService.deleteFile(dirName)).to.eventually.equal(undefined);
     });
 
-    it('deleteFile(path) should return undefined', async () => {
+    it("deleteFile(path) should return undefine when given a path that doesn't exist", async () => {
         const dirName = './assets/test-bad/path/test-file.txt';
         await expect(fileManagerService.deleteFile(dirName)).to.eventually.equal(undefined);
     });

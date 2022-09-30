@@ -1,5 +1,6 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
+// @ts-ignore
 import * as bmp from 'bmp-js';
 import { Service } from 'typedi';
 
@@ -20,12 +21,17 @@ export class BmpDecoderService {
         for (let i = 0; i < buffer.length; ++i) {
             buffer[i] = view[i];
         }
-        const bmpData = bmp.decode(buffer);
+        let bmpData: bmp.BmpDecoder;
+        try {
+            bmpData = bmp.decode(buffer);
+        } catch (error) {
+            throw new Error(error);
+        }
         const rawData: number[] = bmpData.data.toJSON().data;
         return new Bmp(bmpData.width, bmpData.height, rawData);
     }
 
-    private async convertBufferIntoArrayBuffer(buffer: Buffer): Promise<ArrayBuffer> {
+    async convertBufferIntoArrayBuffer(buffer: Buffer): Promise<ArrayBuffer> {
         const arrayBuffer: ArrayBuffer = new ArrayBuffer(buffer.length);
         const view = new Uint8Array(arrayBuffer);
         for (let i = 0; i < buffer.length; ++i) {

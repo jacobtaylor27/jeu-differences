@@ -97,12 +97,17 @@ describe('Bmp decoder service', () => {
         await expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
     });
 
-    it('Convert an array buffer into a bmp object', async () => {
+    it('decodeArrayBufferToBmp(...) Should convert an array buffer into a bmp object', async () => {
         const filepath = './assets/test-bmp/test_bmp_modified.bmp';
         const bmpBuffer: Buffer = await fileManagerService.getFileContent(filepath);
-        const arrayBufferToTest: ArrayBuffer = await bmpDecoderService['convertBufferIntoArrayBuffer'](bmpBuffer);
+        const arrayBufferToTest: ArrayBuffer = await bmpDecoderService.convertBufferIntoArrayBuffer(bmpBuffer);
         const resultBmp: Bmp = await bmpDecoderService.decodeArrayBufferToBmp(arrayBufferToTest);
         const expectedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);
         expect(resultBmp).to.deep.equal(expectedBmp);
+    });
+
+    it('decodeArrayBufferToBmp(...) Should throw an exception if the arraybuffer is invalid', async () => {
+        const arrayBuf: ArrayBuffer = new ArrayBuffer(0);
+        await expect(bmpDecoderService.decodeArrayBufferToBmp(arrayBuf)).to.eventually.be.rejected.and.be.an.instanceOf(Error);
     });
 });

@@ -1,10 +1,13 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { Coordinate } from '@common/coordinate';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
 import { BmpSubtractorService } from './bmp-subtractor.service';
+chai.use(chaiAsPromised);
 
 describe('Bmp subractor service', async () => {
     let bmpDecoderService: BmpDecoderService;
@@ -45,34 +48,23 @@ describe('Bmp subractor service', async () => {
 
     it('Should throw an error if the height of the two images is not the same', async () => {
         const radius = 0;
-
-        try {
-            const bmpProduced = await bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x3, radius);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x3, radius))
+            .to.eventually.be.rejectedWith('Both images do not have the same height or width')
+            .and.be.an.instanceOf(Error);
     });
 
     it('Should throw an error if the width of the two images is not the same', async () => {
         const radius = 0;
-        try {
-            const bmpProduced = await bmpSubtractorService.getDifferenceBMP(bmp2x3, bmp2x2, radius);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpSubtractorService.getDifferenceBMP(bmp2x3, bmp2x2, radius))
+            .to.eventually.be.rejectedWith('Both images do not have the same height or width')
+            .and.be.an.instanceOf(Error);
     });
 
     it('verifying that the value of radius is greater or equal to zero', async () => {
         const radius = -1;
-
-        try {
-            const bmpProduced = await bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, radius);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, radius))
+            .to.eventually.be.rejectedWith('radius should be greater or equal to zero')
+            .and.be.an.instanceOf(Error);
     });
 
     it('Should return center value if radius is 0', () => {

@@ -121,6 +121,19 @@ export class GameController {
             }
         });
         */
+        this.router.get('/create/:id', (req: Request, res: Response) => {
+            if (!req.query.players || !req.query.mode) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+            }
+            this.gameManager
+                .createGame(req.query.players as string[], req.query.mode as string, parseInt(req.params.id as string, 10))
+                .then((gameId: string) => {
+                    res.status(StatusCodes.CREATED).send({ id: gameId });
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_FOUND).send();
+                });
+        });
 
         /*
         this.router.post('/', (req: Request, res: Response) => {

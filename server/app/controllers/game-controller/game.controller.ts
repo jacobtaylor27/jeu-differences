@@ -172,8 +172,41 @@ export class GameController {
                 });
         });
 
-        /*
-        this.router.post('/', (req: Request, res: Response) => {
+        /**
+         * @swagger
+         *
+         * /api/game/difference/{id}/?{x}?{y}:
+         *   get:
+         *     tags:
+         *       - GameController
+         *     description: create a game with a specific card, mode and players name
+         *     parameters:
+         *       - in: path
+         *         name: id
+         *         required: true
+         *         schema:
+         *           type: string
+         *         description: The id of the active game.
+         *      - in: path
+         *          name: x
+         *          required: true
+         *          schema:
+         *              type: number
+         *          description: x coordinate
+         *      - in: path
+         *          name: y
+         *          required: true
+         *          schema:
+         *              type: number
+         *          description: y coordinate
+         *     responses:
+         *       200:
+         *         description: the game is created
+         *      404:
+         *          description the game does not have the id pass
+         *      400:
+         *          description: x and y not specified
+         */
         this.router.get('/difference/:id', (req: Request, res: Response) => {
             if (!req.query.x || !req.query.y || this.gameManager.isGameFound(req.params.id)) {
                 res.status(StatusCodes.BAD_REQUEST).send();

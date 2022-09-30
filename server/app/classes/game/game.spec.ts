@@ -25,4 +25,10 @@ describe('Game', () => {
     beforeEach(() => {
         game = new Game(expectedMode, expectedPlayers, expectedGameInfo);
     });
+
+
+    it('should get the id of the game', () => {
+        expect(game.identifier).to.equal(game['id']);
+    });
+
 });

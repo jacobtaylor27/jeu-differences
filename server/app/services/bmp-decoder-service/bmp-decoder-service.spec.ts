@@ -1,3 +1,4 @@
+import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as chai from 'chai';
@@ -94,5 +95,14 @@ describe('Bmp decoder service', () => {
     it("Should throw an error if the file is a bitmap but doesn't exists", async () => {
         const filepath = './assets/test-bmp/doesntexistfile.bmp';
         await expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
+    });
+
+    it('Convert an array buffer into a bmp object', async () => {
+        const filepath = './assets/test-bmp/bmp_test_2x2.bmp';
+        const bmpBuffer: Buffer = await fileManagerService.getFileContent(filepath);
+        const arrayBufferToTest: ArrayBuffer = await bmpDecoderService['convertBufferIntoArrayBuffer'](bmpBuffer);
+        const resultBmp: Bmp = await bmpDecoderService.decodeArrayBufferToBmp(arrayBufferToTest);
+        const expectedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);
+        expect(resultBmp).to.deep.equal(expectedBmp);
     });
 });

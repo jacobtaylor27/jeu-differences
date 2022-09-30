@@ -68,3 +68,13 @@ describe('Game', () => {
         stateSpyObj.callsFake(() => GameStatus.EndGame);
         expect(game.isGameInitialize()).to.equal(false);
     });
+
+    it('should check if the game is over', () => {
+        const stateSpyObj = stub(game['context'], 'gameState').callsFake(() => GameStatus.InitGame);
+        expect(game.isGameOver()).to.equal(false);
+        expect(stateSpyObj.called).to.equal(true);
+        stateSpyObj.callsFake(() => GameStatus.InitTimer);
+        expect(game.isGameOver()).to.equal(false);
+        stateSpyObj.callsFake(() => GameStatus.EndGame);
+        expect(game.isGameOver()).to.equal(true);
+    });

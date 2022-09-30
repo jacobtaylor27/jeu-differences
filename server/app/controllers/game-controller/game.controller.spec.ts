@@ -38,3 +38,7 @@ describe.only('GameController', () => {
             .send({ mode: 'Classic', players: ['testPlayer1'] })
             .expect(StatusCodes.NOT_FOUND);
     });
+
+    it('should return an error if game query is not set', async () => {
+        return supertest(expressApp).post('/api/game/create/0').send({}).expect(StatusCodes.BAD_REQUEST);
+    });

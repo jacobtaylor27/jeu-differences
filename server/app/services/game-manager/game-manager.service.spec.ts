@@ -78,6 +78,15 @@ describe('GameManagerService', () => {
         expect(gameManager['findGame'](expectedIdGame)).to.deep.equal(expectedGame);
     });
 
+    it('should check if a difference is found', () => {
+        const findGameSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
+        expect(gameManager.isDifference('')).to.equal(null);
+        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(null);
+        findGameSpy.callsFake(() => true);
+        expect(gameManager.isDifference('')).to.deep.equal(null);
+        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal([]);
+    });
+
     afterEach(() => {
         restore();
     });

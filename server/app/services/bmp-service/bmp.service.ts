@@ -12,32 +12,32 @@ export class BmpService {
         private readonly fileManagerService: FileManagerService,
         private readonly bmpEncoderService: BmpEncoderService,
     ) {}
-    async getAllBmps(): Promise<Bmp[]> {
+    async getAllBmps(filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<Bmp[]> {
         const allBmps: Bmp[] = [];
-        const allPaths: string[] = await this.fileManagerService.getFileNames(DEFAULT_BMP_ASSET_PATH);
+        const allPaths: string[] = await this.fileManagerService.getFileNames(filepath);
         allPaths.forEach(async (filePath) => {
-            allBmps.push(await this.bmpDecoderService.decodeBIntoBmp(filePath));
+            allBmps.push(await this.bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_ASSET_PATH + filePath + '.bmp'));
         });
         return allBmps;
     }
-    async getBmpById(bmpId: string): Promise<Bmp | undefined> {
-        const allPaths: string[] = await this.fileManagerService.getFileNames(DEFAULT_BMP_ASSET_PATH);
-        for (const id of allPaths) {
+    async getBmpById(bmpId: string, filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<Bmp | undefined> {
+        const allFileNames: string[] = await this.fileManagerService.getFileNames(filepath);
+        for (const id of allFileNames) {
             if (bmpId === id) {
-                return await this.bmpDecoderService.decodeBIntoBmp(id);
+                return await this.bmpDecoderService.decodeBIntoBmp(filepath + id + '.bmp');
             }
         }
         return undefined;
     }
-    async addBmp(bpmToConvert: ArrayBuffer): Promise<void> {
+    async addBmp(bpmToConvert: ArrayBuffer, filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<void> {
         const decodedBmp: Bmp = await this.bmpDecoderService.decodeArrayBufferToBmp(bpmToConvert);
         const bmpId: string = v4();
-        const filepath = DEFAULT_BMP_ASSET_PATH + bmpId;
-        await this.bmpEncoderService.encodeBmpIntoB(filepath, decodedBmp);
+        const fullpath = filepath + bmpId;
+        await this.bmpEncoderService.encodeBmpIntoB(fullpath, decodedBmp);
     }
 
-    async deleteBmpById(bmpId: string): Promise<boolean> {
-        this.fileManagerService.deleteFile(DEFAULT_BMP_ASSET_PATH + bmpId + '.bmp');
+    async deleteBmpById(bmpId: string, filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<boolean> {
+        this.fileManagerService.deleteFile(filepath + bmpId + '.bmp');
         return false;
     }
 }

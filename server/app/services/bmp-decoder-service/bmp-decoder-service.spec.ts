@@ -98,7 +98,7 @@ describe('Bmp decoder service', () => {
     });
 
     it('Convert an array buffer into a bmp object', async () => {
-        const filepath = './assets/test-bmp/bmp_test_2x2.bmp';
+        const filepath = './assets/test-bmp/test_bmp_modified.bmp';
         const bmpBuffer: Buffer = await fileManagerService.getFileContent(filepath);
         const arrayBufferToTest: ArrayBuffer = await bmpDecoderService['convertBufferIntoArrayBuffer'](bmpBuffer);
         const resultBmp: Bmp = await bmpDecoderService.decodeArrayBufferToBmp(arrayBufferToTest);

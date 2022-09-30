@@ -20,7 +20,7 @@ export class GameManagerService {
 
     isDifference(gameId: string, coord?: Coordinate) {
         if (!this.isGameFound(gameId) || !coord) {
-            return [];
+            return null;
         }
         // const game = this.findGame(gameId) as Game;
         // const difference = this.differenceService.difference(game.information.idDifferenceBmp, coord);
@@ -34,11 +34,11 @@ export class GameManagerService {
     }
 
     isGameOver(gameId: string) {
-        return this.isGameFound(gameId) ? this.findGame(gameId)?.isGameOver() : null;
+        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).isGameOver() : null;
     }
 
     differenceLeft(gameId: string) {
-        return this.isGameFound(gameId) ? this.findGame(gameId)?.differenceLeft() : null;
+        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).differenceLeft() : null;
     }
 
     private findGame(gameId: string): Game | undefined {

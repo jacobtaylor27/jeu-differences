@@ -1,6 +1,6 @@
 import { SinonSpiedInstance, stub, restore } from 'sinon';
 import { GameService } from '@app/services/game-info-service/game-info.service';
-import { GameManagerService } from '@app/services/game-manager/game-manager.service';
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';

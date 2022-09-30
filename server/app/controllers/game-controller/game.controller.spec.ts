@@ -61,3 +61,8 @@ describe.only('GameController', () => {
                 expect(response.body).to.deep.equal({ difference: expectedDifference });
             });
     });
+
+    it('should return an error if the difference query is not set', async () => {
+        return supertest(expressApp).post('/api/game/difference/0').send({}).expect(StatusCodes.BAD_REQUEST);
+    });
+});

@@ -35,8 +35,11 @@ export class Game {
         return this.context.gameState();
     }
 
-    differenceFounded() {
-        this.differenceFound++;
+    differenceFounded(differenceCoords: BmpCoordinate[]) {
+        if (this.isDifferenceAlreadyFound(differenceCoords)) {
+            return;
+        }
+        this.differenceFound.add(differenceCoords);
         if (this.isAllDifferenceFound() && !this.isGameOver()) {
             this.context.next();
         }

@@ -3,7 +3,7 @@ import { DEFAULT_GAME } from '@app/constants/default-game-info';
 import { DEFAULT_ID } from '@app/constants/default-id';
 import { GameInfo } from '@common/game-info';
 import { Id } from '@common/id';
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient, MongoParseError } from 'mongodb';
 import { Service } from 'typedi';
 
 @Service()
@@ -21,7 +21,7 @@ export class DatabaseService {
             await this.client.connect();
             this.db = this.client.db(DB_NAME);
         } catch (error) {
-            throw new Error('La connection à mongoDb a échoué');
+            throw new MongoParseError(error);
         }
         await this.populateDatabase();
     }

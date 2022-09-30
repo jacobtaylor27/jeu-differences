@@ -1,11 +1,14 @@
+import { DB_NAME } from '@app/constants/database';
 import { DatabaseService } from '@app/services/database-service/database.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
+import { MongoParseError } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+chai.use(chaiAsPromised);
 
-const DB_NAME = 'seven-differences';
-
-describe('Database service', () => {
+describe.only('Database service', () => {
     let mongoServer: MongoMemoryServer;
     let databaseService: DatabaseService;
     let uri = '';
@@ -36,10 +39,6 @@ describe('Database service', () => {
 
     it('start(uri) should throw an exception given a bad uri', async () => {
         const badUri = 'badUri00';
-        try {
-            await databaseService.start(badUri);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(databaseService.start(badUri)).to.eventually.be.rejectedWith(Error).to.be.instanceof(MongoParseError);
     });
 });

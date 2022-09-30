@@ -40,6 +40,20 @@ describe('GameManagerService', () => {
         expect(gameManager.isGameFound('')).to.equal(false);
     });
 
+    it('should check if the game is over', () => {
+        const gameFoundSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
+        const expectedGame = stub(new Game('', ['test'], {} as GameInfo));
+        expectedGame.isGameOver.callsFake(() => false);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        expect(gameManager.isGameOver('')).to.equal(null);
+        expect(gameFoundSpy.called).to.equal(true);
+
+        gameFoundSpy.callsFake(() => true);
+        expect(gameManager.isGameOver('')).to.equal(false);
+        expectedGame.isGameOver.callsFake(() => true);
+        expect(gameManager.isGameOver('')).to.equal(true);
+    });
+
     afterEach(() => {
         restore();
     });

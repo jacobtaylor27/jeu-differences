@@ -1,19 +1,11 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/interfaces/vec2';
+import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 
 // TODO : Avoir un fichier séparé pour les constantes!
 export const DEFAULT_WIDTH = 480;
 export const DEFAULT_HEIGHT = 640;
 const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
-
-// TODO : Déplacer ça dans un fichier séparé accessible par tous
-export enum MouseButton {
-    Left = 0,
-    Middle = 1,
-    Right = 2,
-    Back = 3,
-    Forward = 4,
-}
 
 @Component({
     selector: 'app-play-area',
@@ -27,6 +19,8 @@ export class PlayAreaComponent implements AfterViewInit {
     buttonPressed = '';
 
     private canvasSize = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
+
+    constructor(private readonly mouseHandlerService: MouseHandlerService) {}
 
     get width(): number {
         return this.canvasSize.x;
@@ -45,14 +39,8 @@ export class PlayAreaComponent implements AfterViewInit {
         this.canvas.nativeElement.focus();
     }
 
-    // TODO : déplacer ceci dans un service de gestion de la souris!
-    mouseHitDetect(event: MouseEvent) {
-        if (event.button === MouseButton.Left) {
-            console.log(this.mousePosition.x);
-            if (this.mousePosition.x > 250) {
-                wrongSound.play();
-            }
-            this.mousePosition = { x: event.offsetX, y: event.offsetY };
-        }
+    mouseHitDetect($event: MouseEvent) {
+        console.log(this.mouseHandlerService.mouseHitDetect($event));
+        wrongSound.play();
     }
 }

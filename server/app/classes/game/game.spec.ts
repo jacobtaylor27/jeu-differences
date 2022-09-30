@@ -26,6 +26,15 @@ describe('Game', () => {
         game = new Game(expectedMode, expectedPlayers, expectedGameInfo);
     });
 
+    it('should create a game with specific mode, players and game information', () => {
+        const expectedGameState = new PlayerOneTourState();
+        const newGame = new Game(expectedMode, expectedPlayers, expectedGameInfo);
+        expect(newGame.information).to.deep.equal(expectedGameInfo);
+        expect(newGame['players']).to.deep.equal(expectedPlayers);
+        expect(newGame['differenceFound']).to.deep.equal(new Set<Coordinate[]>());
+        expect(newGame['context'].gameMode).to.equal(expectedMode as GameMode);
+        expect(newGame['context'].gameState()).to.equal(expectedGameState.status());
+    });
 
     it('should get the id of the game', () => {
         expect(game.identifier).to.equal(game['id']);

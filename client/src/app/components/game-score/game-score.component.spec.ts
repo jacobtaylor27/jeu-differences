@@ -3,11 +3,11 @@ import { GameScoreComponent } from './game-score.component';
 
 const SCORES = [
     {
-        playersName: 'player1',
+        playerName: 'player1',
         time: 100,
     },
     {
-        playersName: 'player2',
+        playerName: 'player2',
         time: 200,
     },
 ];

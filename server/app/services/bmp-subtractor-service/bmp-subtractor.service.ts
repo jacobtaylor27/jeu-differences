@@ -1,8 +1,11 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { Coordinates } from '@app/interface/coordinates';
 import { Pixel } from '@app/interface/pixel';
-export class BmpDifference {
-    static async getDifferenceBMP(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
+import { Coordinate } from '@common/coordinate';
+import { Service } from 'typedi';
+
+@Service()
+export class BmpSubtractorService {
+    async getDifferenceBMP(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
         }
@@ -22,12 +25,12 @@ export class BmpDifference {
         return this.createDifferencesBMP(resultImage, radius);
     }
 
-    private static createDifferencesBMP(originalImage: Bmp, radius: number): Bmp {
+    private createDifferencesBMP(originalImage: Bmp, radius: number): Bmp {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
 
         if (radius === 0) return originalImage;
 
-        const resultCoordinates: Coordinates[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
+        const resultCoordinates: Coordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coordinate) => {
             this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
@@ -35,8 +38,8 @@ export class BmpDifference {
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
 
-    private static getCoordinatesAfterEnlargement(originalCoordinates: Coordinates[], radius: number): Coordinates[] {
-        const resultCoordinates: Coordinates[] = [];
+    private getCoordinatesAfterEnlargement(originalCoordinates: Coordinate[], radius: number): Coordinate[] {
+        const resultCoordinates: Coordinate[] = [];
         originalCoordinates.forEach((coordinate) => {
             const result = this.findEnlargementArea(coordinate, radius);
             result.forEach((coord) => {
@@ -46,12 +49,12 @@ export class BmpDifference {
         return resultCoordinates;
     }
 
-    private static findEnlargementArea(center: Coordinates, radius: number) {
+    private findEnlargementArea(center: Coordinate, radius: number) {
         return this.findInsideAreaEnlargement(center, radius, this.findContourEnlargement(center, radius));
     }
 
-    private static findContourEnlargement(center: Coordinates, radius: number): Coordinates[] {
-        const coordinates: Coordinates[] = new Array();
+    private findContourEnlargement(center: Coordinate, radius: number): Coordinate[] {
+        const coordinates: Coordinate[] = new Array();
         if (radius === 0) {
             coordinates.push(center);
             return coordinates;
@@ -101,7 +104,7 @@ export class BmpDifference {
         return coordinates;
     }
 
-    private static distance(px1: Coordinates, px2: Coordinates) {
+    private distance(px1: Coordinate, px2: Coordinate) {
         let dx = px2.x - px1.x;
         dx = dx * dx;
         let dy = px2.y - px1.y;
@@ -109,7 +112,7 @@ export class BmpDifference {
         return Math.sqrt(dx + dy);
     }
 
-    private static findInsideAreaEnlargement(coord: Coordinates, radius: number, coordinates: Coordinates[]) {
+    private findInsideAreaEnlargement(coord: Coordinate, radius: number, coordinates: Coordinate[]) {
         for (let j = coord.x - radius; j <= coord.x + radius; j++) {
             for (let k = coord.y - radius; k <= coord.y + radius; k++) {
                 if (this.distance({ x: j, y: k }, { x: coord.x, y: coord.y }) <= radius) coordinates.push({ x: j, y: k });
@@ -119,8 +122,8 @@ export class BmpDifference {
         return coordinates;
     }
 
-    private static getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinates[] {
-        const coordinatesOfBlackPixels: Coordinates[] = [];
+    private getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinate[] {
+        const coordinatesOfBlackPixels: Coordinate[] = [];
         for (let i = 0; i < differenceBmp.getPixels().length; i++) {
             for (let j = 0; j < differenceBmp.getPixels()[i].length; j++) {
                 if (this.isBlackPixel(differenceBmp.getPixels()[i][j])) {
@@ -131,7 +134,7 @@ export class BmpDifference {
         return coordinatesOfBlackPixels;
     }
 
-    private static arePixelsEqual(pixelOriginalImg: Pixel, pixelModifiedImg: Pixel): boolean {
+    private arePixelsEqual(pixelOriginalImg: Pixel, pixelModifiedImg: Pixel): boolean {
         return (
             pixelOriginalImg.a === pixelModifiedImg.a &&
             pixelOriginalImg.b === pixelModifiedImg.b &&
@@ -140,7 +143,7 @@ export class BmpDifference {
         );
     }
 
-    private static setPixelWhite(pixel: Pixel): Pixel {
+    private setPixelWhite(pixel: Pixel): Pixel {
         pixel.a = 0;
         pixel.b = 255;
         pixel.g = 255;
@@ -148,7 +151,7 @@ export class BmpDifference {
         return pixel;
     }
 
-    private static setPixelBlack(pixel: Pixel): Pixel {
+    private setPixelBlack(pixel: Pixel): Pixel {
         pixel.a = 0;
         pixel.b = 0;
         pixel.g = 0;
@@ -156,11 +159,11 @@ export class BmpDifference {
         return pixel;
     }
 
-    private static isBlackPixel(pixel: Pixel): boolean {
+    private isBlackPixel(pixel: Pixel): boolean {
         return pixel.a === 0 && pixel.b === 0 && pixel.g === 0 && pixel.r === 0;
     }
 
-    private static areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {
+    private areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {
         return originalImage.getHeight() === modifiedImage.getHeight() && originalImage.getWidth() === modifiedImage.getWidth();
     }
 }

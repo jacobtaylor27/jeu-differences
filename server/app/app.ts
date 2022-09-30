@@ -1,5 +1,5 @@
 import { HttpException } from '@app/classes/http/http.exception';
-import { CountdownTimerController } from '@app/controllers/coutdown-timer-controller/countdown-timer.controller';
+import { CountdownTimerController } from '@app/controllers/countdown-timer-controller/countdown-timer.controller';
 import { DateController } from '@app/controllers/date-controller/date.controller';
 import { ExampleController } from '@app/controllers/example-controller/example.controller';
 import { GameController } from '@app/controllers/game-controller/game.controller';
@@ -22,6 +22,7 @@ export class Application {
         private readonly exampleController: ExampleController,
         private readonly dateController: DateController,
         private readonly gameController: GameController,
+
         private readonly countDownController: CountdownTimerController,
     ) {
         this.app = express();

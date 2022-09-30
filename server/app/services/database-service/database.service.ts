@@ -1,13 +1,8 @@
-import { Contact } from '@app/interface/contact';
-import { Game } from '@common/game';
-import { Db, MongoClient } from 'mongodb';
+import { DB_GAME_COLLECTION, DB_NAME, DB_URL } from '@app/constants/database';
+import { DEFAULT_GAME } from '@app/constants/default-game-info';
+import { GameInfo } from '@common/game-info';
+import { Db, MongoClient, MongoParseError } from 'mongodb';
 import { Service } from 'typedi';
-
-const DB_USERNAME = 'admin';
-const DB_PASSWORD = 'mpwqKiEIeOimdmr5';
-
-const DB_URL = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.7njxiw7.mongodb.net/?retryWrites=true&w=majority`;
-const DB_NAME = 'seven-differences';
 
 @Service()
 export class DatabaseService {
@@ -24,23 +19,25 @@ export class DatabaseService {
             await this.client.connect();
             this.db = this.client.db(DB_NAME);
         } catch (error) {
-            throw new Error('La connection à mongoDb a échoué');
+            throw new MongoParseError(error);
         }
+        await this.populateDatabase();
     }
 
     async close(): Promise<void> {
         this.client.close();
     }
 
-    async populateDatabase(collectionName: string, data: Contact[]): Promise<void> {
+    async populateDatabase(): Promise<void> {
+        this.db.createCollection(DB_GAME_COLLECTION);
+        await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
+    }
+
+    private async initializeGameCollection(collectionName: string, game: GameInfo[]): Promise<void> {
         const collection = this.client.db(DB_NAME).collection(collectionName);
         const documents = await collection.find({}).toArray();
         if (documents.length === 0) {
-            await collection.insertMany(data);
+            await collection.insertMany(game);
         }
-    }
-
-    async getGames(): Promise<Game[]> {
-        return [];
     }
 }

@@ -1,8 +1,20 @@
-import { BmpDecoder } from '@app/classes/bmp-decoder/bmp-decoder';
+import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
+import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
+chai.use(chaiAsPromised);
 
-describe('BmpDecoder', () => {
+describe('Bmp decoder service', () => {
+    let bmpDecoderService: BmpDecoderService;
+    let fileManagerService: FileManagerService;
+
+    beforeEach(async () => {
+        fileManagerService = new FileManagerService();
+        bmpDecoderService = new BmpDecoderService(fileManagerService);
+    });
+
     it('Should create an object Bmp based on bmp file of size 2x2', async () => {
         const pixelsExpected = [
             [
@@ -16,7 +28,7 @@ describe('BmpDecoder', () => {
         ];
 
         const filepath = './assets/test-bmp/bmp_test_2x2.bmp';
-        const bmpProduced = await BmpDecoder.decode(filepath);
+        const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
 
         expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
         expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
@@ -38,7 +50,7 @@ describe('BmpDecoder', () => {
         ];
 
         const filepath = './assets/test-bmp/bmp_test_3x2.bmp';
-        const bmpProduced = await BmpDecoder.decode(filepath);
+        const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
         expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
         expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
@@ -61,39 +73,26 @@ describe('BmpDecoder', () => {
         ];
 
         const filepath = './assets/test-bmp/bmp_test_2x3.bmp';
-        const bmpProduced = await BmpDecoder.decode(filepath);
+        const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
         expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
         expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
     it('Should throw an error if the path is incorrect', async () => {
-        const invalidPath = '';
-        try {
-            const bmpProduced = await BmpDecoder.decode(invalidPath);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        const invalidPath = '.bmp';
+        await expect(bmpDecoderService.decodeBIntoBmp(invalidPath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
     });
 
     it('Should throw an error if the file is not a bitmap', async () => {
         const filepath = './assets/test-bmp/jpg_test.jpg';
-        try {
-            const bmpProduced = await BmpDecoder.decode(filepath);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpDecoderService.decodeBIntoBmp(filepath))
+            .to.eventually.be.rejectedWith('The file should end with .bmp')
+            .and.be.an.instanceOf(Error);
     });
 
     it("Should throw an error if the file is a bitmap but doesn't exists", async () => {
         const filepath = './assets/test-bmp/doesntexistfile.bmp';
-        try {
-            const bmpProduced = await BmpDecoder.decode(filepath);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
     });
 });

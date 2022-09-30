@@ -54,6 +54,22 @@ describe('GameManagerService', () => {
         expect(gameManager.isGameOver('')).to.equal(true);
     });
 
+    it('should check if the difference left', () => {
+        const findGameSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
+        expect(gameManager.differenceLeft('')).to.equal(null);
+        expect(findGameSpy.called).to.equal(true);
+
+        findGameSpy.callsFake(() => true);
+        const findSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
+            return { differenceLeft: () => true };
+        });
+        expect(gameManager.differenceLeft('')).equal(true);
+        findSpy.callsFake(() => {
+            return { differenceLeft: () => false };
+        });
+        expect(gameManager.differenceLeft('')).equal(false);
+    });
+
     afterEach(() => {
         restore();
     });

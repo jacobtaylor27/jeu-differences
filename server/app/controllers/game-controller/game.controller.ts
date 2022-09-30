@@ -124,47 +124,13 @@ export class GameController {
         });
         */
 
-        /**
-         * @swagger
-         *
-         * /api/game/create/{id}/?{mode}?{players}:
-         *   get:
-         *     tags:
-         *       - GameController
-         *     description: create a game with a specific card, mode and players name
-         *     parameters:
-         *       - in: path
-         *         name: id
-         *         required: true
-         *         schema:
-         *           type: string
-         *         description: The id of the gameCard.
-         *      - in: path
-         *          name: mode
-         *          required: true
-         *          schema:
-         *              type: string
-         *          description: the mode of the game
-         *      - in: path
-         *          name: players
-         *          required: true
-         *          schema:
-         *              type: string[]
-         *          description: the name of players
-         *     responses:
-         *       201:
-         *         description: the game is created
-         *      404:
-         *          description the game does not have the id pass
-         *      400:
-         *         description: parameters are incorrect
-         */
-        this.router.get('/create/:id', (req: Request, res: Response) => {
-            if (!req.query.players || !req.query.mode) {
+        this.router.post('/create/:id', (req: Request, res: Response) => {
+            if (!req.body.players || req.body.players.length === 0 || !req.body.mode || !req.params.id) {
                 res.status(StatusCodes.BAD_REQUEST).send();
+                return;
             }
             this.gameManager
-                .createGame(req.query.players as string[], req.query.mode as string, parseInt(req.params.id as string, 10))
+                .createGame(req.body.players, req.body.mode as string, parseInt(req.params.id as string, 10))
                 .then((gameId: string) => {
                     res.status(StatusCodes.CREATED).send({ id: gameId });
                 })
@@ -173,53 +139,20 @@ export class GameController {
                 });
         });
 
-        /**
-         * @swagger
-         *
-         * /api/game/difference/{id}/?{x}?{y}:
-         *   get:
-         *     tags:
-         *       - GameController
-         *     description: create a game with a specific card, mode and players name
-         *     parameters:
-         *       - in: path
-         *         name: id
-         *         required: true
-         *         schema:
-         *           type: string
-         *         description: The id of the active game.
-         *      - in: path
-         *          name: x
-         *          required: true
-         *          schema:
-         *              type: number
-         *          description: x coordinate
-         *      - in: path
-         *          name: y
-         *          required: true
-         *          schema:
-         *              type: number
-         *          description: y coordinate
-         *     responses:
-         *       200:
-         *         description: the game is created
-         *      404:
-         *          description the game does not have the id pass
-         *      400:
-         *          description: x and y not specified
-         */
-        this.router.get('/difference/:id', (req: Request, res: Response) => {
-            if (!req.query.x || !req.query.y || this.gameManager.isGameFound(req.params.id)) {
+        this.router.post('/difference/:id', (req: Request, res: Response) => {
+            if (req.body.x === undefined || req.body.y === undefined || !this.gameManager.isGameFound(req.params.id)) {
                 res.status(StatusCodes.BAD_REQUEST).send();
+                return;
             }
             const difference = this.gameManager.isDifference(req.params.id as string, {
-                x: parseInt(req.query.x as string, 10),
-                y: parseInt(req.query.y as string, 10),
+                x: req.body.x,
+                y: req.body.y,
             });
             if (difference === null) {
                 res.status(StatusCodes.NOT_FOUND).send();
+                return;
             }
-            res.status(StatusCodes.OK).send(difference);
+            res.status(StatusCodes.OK).send({ difference });
         });
 
         /*

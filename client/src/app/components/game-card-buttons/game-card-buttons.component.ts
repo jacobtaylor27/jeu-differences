@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { GameCard } from '@app/interfaces/game-card';
+import { GameCardService } from '@app/services/game-card/game-card.service';
 
 @Component({
     selector: 'app-game-card-buttons',
@@ -6,5 +8,23 @@ import { Component } from '@angular/core';
     styleUrls: ['./game-card-buttons.component.scss'],
 })
 export class GameCardButtonsComponent {
-    constructor() {}
+    @Input() gameCard: GameCard;
+
+    constructor(private readonly gameCardService: GameCardService) {}
+
+    isAdminCard(): boolean {
+        return this.gameCard.isAdminCard;
+    }
+
+    onClickDeleteGame(game: GameCard): void {
+        this.gameCardService.deleteGame(game);
+    }
+
+    onClickResetHighScores(game: GameCard): void {
+        this.gameCardService.resetHighScores(game);
+    }
+
+    onClickPlayGame(): void {
+        this.gameCardService.openNameDialog();
+    }
 }

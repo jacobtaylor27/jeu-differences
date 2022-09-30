@@ -1,11 +1,12 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/interface/pixel';
+import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as bmp from 'bmp-js';
-import * as fs from 'fs';
 import { Service } from 'typedi';
 
 @Service()
 export class BmpEncoderService {
+    constructor(private readonly fileManagerService: FileManagerService) {}
     async encodeBmpIntoB(filepath: string, bmpObj: Bmp) {
         if (!(await this.isFileExtensionValid(filepath))) throw new Error('File extension must be a .bmp');
         const width: number = bmpObj.getWidth();
@@ -16,18 +17,9 @@ export class BmpEncoderService {
             height,
             data,
         };
-        await this.writeFile(filepath, bmp.encode(bmpData).data);
+        await this.fileManagerService.writeFile(filepath, bmp.encode(bmpData).data);
     }
-    private async writeFile(filepath: string, buffer: Buffer): Promise<void> {
-        return new Promise((resolve, reject) => {
-            fs.writeFile(filepath, buffer, (err) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve();
-            });
-        });
-    }
+
     private async getBuffer(pixels: Pixel[][]): Promise<Buffer> {
         const rawPixels: number[] = [];
 

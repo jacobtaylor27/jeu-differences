@@ -5,55 +5,9 @@
     <mat-card-content class="highscores-content">
         <h3 class="highscore-title"><b>Meilleurs scores</b></h3>
         <div class="scores">
-            <ul class="highscores-solo">
-                <li class="highscores-solo-title"><b>Solo</b></li>
-                <div class="highscores-multi-content" *ngIf="hasSinglePlayerScores(); else noSoloScores">
-                    <li *ngFor="let score of getSinglePlayerScores()">
-                        {{ score.playerName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
-                    </li>
-                </div>
-                <ng-template #noSoloScores>
-                    <li class="empty-solo-scores" *ngFor="let i of [1, 2, 3]">
-                        <em>{{ 'Joueur ' + i }} &mdash; 00:00</em>
-                    </li>
-                </ng-template>
-            </ul>
-
-            <ul class="highscores-multi">
-                <li class="highscores-multi-title"><b>1 vs 1</b></li>
-                <div class="highscores-multi-content" *ngIf="hasMultiplayerScores(); else noMultiplayerScores">
-                    <li *ngFor="let score of getMultiplayerScores()">
-                        {{ score.playerName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
-                    </li>
-                </div>
-                <ng-template #noMultiplayerScores>
-                    <li class="empty-multi-scores" *ngFor="let i of [1, 2, 3]">
-                        <em>{{ 'Joueur ' + i }} &mdash; 00:00</em>
-                    </li>
-                </ng-template>
-            </ul>
+            <app-game-score [title]="'Solo'" [scores]="getSinglePlayerScores()" [isMultiplayer]="false"></app-game-score>
+            <app-game-score [title]="'1 vs 1'" [scores]="getMultiplayerScores()" [isMultiplayer]="true"></app-game-score>
         </div>
     </mat-card-content>
-
-    <mat-card-actions class="game-card-buttons">
-        <div class="admin-buttons" *ngIf="isAdminCard(); else selectPage">
-            <button mat-fab color="primary" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickDeleteGame(gameCard)">
-                <mat-icon>delete</mat-icon>
-            </button>
-            <button
-                mat-fab
-                color="primary"
-                matTooltip="Réinitialiser les records"
-                aria-label="Boutton réinitialiser"
-                (click)="onClickResetHighScores(gameCard)"
-            >
-                <mat-icon>refresh</mat-icon>
-            </button>
-        </div>
-
-        <ng-template #selectPage>
-            <button mat-flat-button color="primary" aria-label="Boutton Jouer" (click)="onClickPlayGame()">Jouer</button>
-            <button mat-flat-button color="primary" aria-label="Boutton Créer">Créer</button>
-        </ng-template>
-    </mat-card-actions>
+    <app-game-card-buttons [gameCard]="gameCard"></app-game-card-buttons>
 </mat-card>

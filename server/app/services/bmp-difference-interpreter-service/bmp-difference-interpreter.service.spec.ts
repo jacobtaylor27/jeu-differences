@@ -2,31 +2,32 @@ import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
+import { Container } from 'typedi';
+chai.use(chaiAsPromised);
 
 describe('Bmp difference interpreter service', async () => {
     let bmpDifferenceInterpreter: BmpDifferenceInterpreter;
     let bmpDecoderService: BmpDecoderService;
 
     beforeEach(async () => {
-        bmpDifferenceInterpreter = new BmpDifferenceInterpreter();
-        bmpDecoderService = new BmpDecoderService();
+        bmpDifferenceInterpreter = Container.get(BmpDifferenceInterpreter);
+        bmpDecoderService = Container.get(BmpDecoderService);
     });
 
-    it('Should throw an exception if given a bmp with pixels other than black or white', () => {
+    it('Should throw an exception if given a bmp with pixels other than black or white', async () => {
         // prettier-ignore
         // eslint-disable-next-line
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 254, 255, 255];
         const width = 2;
         const height = 2;
         const bmpWithColors = new Bmp(width, height, rawData);
-        try {
-            const difference = bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
-            expect(difference).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpDifferenceInterpreter.getCoordinates(bmpWithColors))
+            .to.eventually.be.rejectedWith('The pixels are not perfectly black or white')
+            .and.be.an.instanceOf(Error);
     });
     it("A white image shouldn't have any difference", async () => {
         // prettier-ignore

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCardComponent } from './game-card.component';
-import { GameCardService } from '@app/services/game-card/game-card.service';
 import { GameCard } from '@app/interfaces/game-card';
 
 const GAME_CARD: GameCard = {
@@ -24,19 +23,11 @@ const GAME_CARD: GameCard = {
 describe('GameCardComponent', () => {
     let component: GameCardComponent;
     let fixture: ComponentFixture<GameCardComponent>;
-    let spyGameCardService: jasmine.SpyObj<GameCardService>;
 
     beforeEach(async () => {
-        spyGameCardService = jasmine.createSpyObj('GameCardService', ['openNameDialog', 'deleteGame', 'resetHighScores']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
             declarations: [GameCardComponent],
-            providers: [
-                {
-                    provide: GameCardService,
-                    useValue: spyGameCardService,
-                },
-            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameCardComponent);
@@ -47,13 +38,6 @@ describe('GameCardComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('formatScoreTime should format the given seconds to correct format', () => {
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresSolo[0].time)).toEqual('1:00');
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresSolo[1].time)).toEqual('1:30');
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresMultiplayer[0].time)).toEqual('2:05');
-        expect(component.formatScoreTime(component.gameCard.gameInformation.scoresMultiplayer[1].time)).toEqual('0:12');
     });
 
     it('getGameName should return the name of the game', () => {
@@ -86,20 +70,5 @@ describe('GameCardComponent', () => {
 
     it('hasSinglePlayerScores should return true if the game has a single player score', () => {
         expect(component.hasSinglePlayerScores()).toEqual(true);
-    });
-
-    it('onClickPlayGame should call the open name dialog method', () => {
-        component.onClickPlayGame();
-        expect(spyGameCardService.openNameDialog).toHaveBeenCalled();
-    });
-
-    it('onClickDeleteGame should call the deleteGame method from gameCardService', () => {
-        component.onClickDeleteGame(component.gameCard);
-        expect(spyGameCardService.deleteGame).toHaveBeenCalled();
-    });
-
-    it('onClickResetHighScores should call the resetHighScores method from gameCardService', () => {
-        component.onClickResetHighScores(component.gameCard);
-        expect(spyGameCardService.resetHighScores).toHaveBeenCalled();
     });
 });

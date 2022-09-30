@@ -1,17 +1,21 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import * as fs from 'fs';
 import { describe } from 'mocha';
+import { Container } from 'typedi';
+chai.use(chaiAsPromised);
 
 describe('Bmp encoder service', async () => {
     let bmpEncoderService: BmpEncoderService;
     let bmpDecoderService: BmpDecoderService;
 
     beforeEach(async () => {
-        bmpEncoderService = new BmpEncoderService();
-        bmpDecoderService = new BmpDecoderService();
+        bmpEncoderService = Container.get(BmpEncoderService);
+        bmpDecoderService = Container.get(BmpDecoderService);
     });
 
     afterEach(() => {
@@ -44,12 +48,9 @@ describe('Bmp encoder service', async () => {
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
         const bmpDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(originalBmpFilePath);
-        try {
-            const bmpEncoded = await bmpEncoderService.encodeBmpIntoB(incorrectFileExtension, bmpDecoded);
-            expect(bmpEncoded).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpEncoderService.encodeBmpIntoB(incorrectFileExtension, bmpDecoded))
+            .to.eventually.be.rejectedWith('File extension must be a .bmp')
+            .and.be.an.instanceOf(Error);
         expect(fs.existsSync(incorrectFileExtension)).to.equals(false);
     });
 
@@ -58,12 +59,9 @@ describe('Bmp encoder service', async () => {
         const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
 
         const bmpDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(originalBmpFilePath);
-        try {
-            const bmpEncoded = await bmpEncoderService.encodeBmpIntoB(incorrectFile, bmpDecoded);
-            expect(bmpEncoded).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(bmpEncoderService.encodeBmpIntoB(incorrectFile, bmpDecoded))
+            .to.eventually.be.rejectedWith(Error)
+            .and.have.property('code', 'ENOENT');
         expect(fs.existsSync(incorrectFile)).to.equals(false);
     });
 });

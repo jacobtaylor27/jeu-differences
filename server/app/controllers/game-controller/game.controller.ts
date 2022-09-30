@@ -130,7 +130,7 @@ export class GameController {
                 return;
             }
             this.gameManager
-                .createGame(req.body.players, req.body.mode as string, parseInt(req.params.id as string, 10))
+                .createGame(req.body.players, req.body.mode as string, req.params.id as string)
                 .then((gameId: string) => {
                     res.status(StatusCodes.CREATED).send({ id: gameId });
                 })

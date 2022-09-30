@@ -6,7 +6,7 @@ const score: Score = {
     time: 23,
 };
 const game1: GameInfo = {
-    id: 0,
+    id: '0',
     idOriginalBmp: 0,
     idEditedBmp: 0,
     idDifferenceBmp: 0,

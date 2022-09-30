@@ -58,3 +58,13 @@ describe('Game', () => {
         game.next();
         expect(stateSpyObj.called).to.equal(true);
     });
+
+    it('should check if the game is on initialize', () => {
+        const stateSpyObj = stub(game['context'], 'gameState').callsFake(() => GameStatus.InitGame);
+        expect(game.isGameInitialize()).to.equal(true);
+        expect(stateSpyObj.called).to.equal(true);
+        stateSpyObj.callsFake(() => GameStatus.InitTimer);
+        expect(game.isGameInitialize()).to.equal(true);
+        stateSpyObj.callsFake(() => GameStatus.EndGame);
+        expect(game.isGameInitialize()).to.equal(false);
+    });

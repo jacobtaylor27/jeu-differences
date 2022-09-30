@@ -1,11 +1,13 @@
-import { Router } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
+import { Request, Response, Router } from 'express';
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 
 @Service()
 export class GameController {
     router: Router;
 
-    constructor() {
+    constructor(private gameManager: GameManagerService) {
         this.configureRouter();
     }
 
@@ -121,6 +123,41 @@ export class GameController {
             }
         });
         */
+        /**
+         * @swagger
+         *
+         * /api/game/create/{id}/?{mode}?{players}:
+         *   get:
+         *     tags:
+         *       - GameController
+         *     description: create a game with a specific card, mode and players name
+         *     parameters:
+         *       - in: path
+         *         name: id
+         *         required: true
+         *         schema:
+         *           type: string
+         *         description: The id of the gameCard.
+         *      - in: path
+         *          name: mode
+         *          required: true
+         *          schema:
+         *              type: string
+         *          description: the mode of the game
+         *      - in: path
+         *          name: players
+         *          required: true
+         *          schema:
+         *              type: string[]
+         *          description: the name of players
+         *     responses:
+         *       201:
+         *         description: the game is created
+         *      404:
+         *          description the game does not have the id pass
+         *      400:
+         *         description: parameters are incorrect
+         */
         this.router.get('/create/:id', (req: Request, res: Response) => {
             if (!req.query.players || !req.query.mode) {
                 res.status(StatusCodes.BAD_REQUEST).send();

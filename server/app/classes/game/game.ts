@@ -4,17 +4,19 @@ import { GameStatus } from '@app/enum/game-status';
 import { GameInfo } from '@common/game-info';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { uuid } from 'uuidv4';
+import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
+
 export class Game {
     players: string[];
     private id: string;
     private info: GameInfo;
-    private differenceFound: number;
+    private differenceFound: Set<BmpCoordinate[]>;
     private context: GameContext;
 
     constructor(mode: string, players: string[], info: GameInfo) {
         this.info = info;
         this.players = players;
-        this.differenceFound = 0;
+        this.differenceFound = new Set();
         this.context = new GameContext(mode as GameMode, new InitGameState());
         this.id = uuid();
         this.context.next();
@@ -48,7 +50,7 @@ export class Game {
         if (this.isGameInitialize() || this.isGameOver()) {
             return this.isGameOver(); // if the game is already over all the difference are found and if the game is not initialize 0 difference found
         }
-        return this.info.differences.length === this.differenceFound;
+        return this.info.differences.length === this.differenceFound.size;
     }
 
     isGameOver() {
@@ -56,6 +58,6 @@ export class Game {
     }
 
     differenceLeft(): number {
-        return this.info.differences.length - this.differenceFound;
+        return this.info.differences.length - this.differenceFound.size;
     }
 }

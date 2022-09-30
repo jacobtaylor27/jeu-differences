@@ -27,6 +27,19 @@ describe('GameManagerService', () => {
         expect(gameManager['games'].length).not.to.equal(0);
     });
 
+    it('should check if the game is found', () => {
+        const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
+            return {} as Game;
+        });
+        expect(gameManager.isGameFound('')).to.equal(true);
+        expect(findGameSpy.called).to.equal(true);
+
+        findGameSpy.callsFake(() => {
+            return undefined;
+        });
+        expect(gameManager.isGameFound('')).to.equal(false);
+    });
+
     afterEach(() => {
         restore();
     });

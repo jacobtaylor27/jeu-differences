@@ -123,6 +123,7 @@ export class GameController {
             }
         });
         */
+
         /**
          * @swagger
          *
@@ -220,6 +221,7 @@ export class GameController {
             }
             res.status(StatusCodes.OK).send(difference);
         });
+
         /*
         this.router.get('/validate/bmp', (req: Request, res: Response) => {
             // TODO: retourne le nommbre de différences et un image de différence

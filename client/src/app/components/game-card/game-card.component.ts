@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Score } from '@common/score';
 import { GameCard } from '@app/interfaces/game-card';
+import { TimeFormatter } from '@app/classes/time-formatter';
 
 @Component({
     selector: 'app-game-card',

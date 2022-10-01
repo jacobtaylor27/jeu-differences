@@ -149,23 +149,20 @@ export class GameController {
         });
 
         this.router.post('/card/validation', async (req: Request, res: Response) => {
-            if (!req.body.original || !req.body.modify || !req.body.differenceRadius) {
-                res.status(StatusCodes.BAD_REQUEST);
+            if (!req.body.original || !req.body.modify || req.body.differenceRadius === undefined) {
+                res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
             this.gameValidation
                 .isGameValid(req.body.original, req.body.modify, req.body.differenceRadius)
-                .then((isValid: boolean) => {
-                    res.status(StatusCodes.ACCEPTED).send({
-                        nbDifference: isValid,
-                    });
-                })
-                .catch(() => res.status(StatusCodes.NOT_FOUND));
+                .then((isValid: boolean) => res.status(isValid ? StatusCodes.ACCEPTED : StatusCodes.NOT_ACCEPTABLE).send())
+                .catch(() => res.status(StatusCodes.NOT_FOUND).send());
         });
 
         this.router.post('/card', (req: Request, res: Response) => {
-            if (!req.body.original || !req.body.modify || !req.body.differenceRadius || !req.body.name) {
-                res.status(StatusCodes.BAD_REQUEST);
+            if (!req.body.original || !req.body.modify || req.body.differenceRadius === undefined || !req.body.name) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+                return;
             }
 
             let isErrorOnGameValidation = false;
@@ -175,14 +172,13 @@ export class GameController {
                 .then((isValid: boolean) => {
                     if (!isValid) {
                         isErrorOnGameValidation = true;
-                        res.status(StatusCodes.NOT_ACCEPTABLE);
+                        res.status(StatusCodes.NOT_ACCEPTABLE).send();
                     }
                 })
                 .catch(() => {
-                    res.status(StatusCodes.NOT_FOUND);
                     isErrorOnGameValidation = true;
+                    res.status(StatusCodes.NOT_FOUND).send();
                 });
-
             if (isErrorOnGameValidation) {
                 return;
             }
@@ -190,10 +186,10 @@ export class GameController {
             this.gameInfo
                 .addGame({} as GameInfo)
                 .then(() => {
-                    res.status(StatusCodes.CREATED);
+                    res.status(StatusCodes.CREATED).send();
                 })
                 .catch(() => {
-                    res.status(StatusCodes.NOT_ACCEPTABLE);
+                    res.status(StatusCodes.NOT_ACCEPTABLE).send();
                 });
         });
 

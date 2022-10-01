@@ -1,20 +1,30 @@
 import { DB_URL } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game-info';
+import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpService } from '@app/services/bmp-service/bmp.service';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameInfo } from '@common/game-info';
 import { Score } from '@common/score';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { Container } from 'typedi';
 
 describe('GameInfo service', async () => {
     let gameService: GameService;
+    let bmpSubtractorService: BmpSubtractorService;
+    let bmpService: BmpService;
+    let bmpDifferenceService: BmpDifferenceInterpreter;
     let databaseService: DatabaseServiceMock;
 
     beforeEach(async () => {
         databaseService = new DatabaseServiceMock();
+        bmpSubtractorService = Container.get(BmpSubtractorService);
+        bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
+        bmpService = Container.get(BmpService);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        gameService = new GameService(databaseService as any);
+        gameService = new GameService(databaseService as any, bmpService, bmpSubtractorService, bmpDifferenceService);
         await databaseService.start(DB_URL);
         await databaseService.populateDatabase();
     });

@@ -18,15 +18,12 @@ export class GameManagerService {
         return game.identifier;
     }
 
-    isDifference(gameId: string, coord?: Coordinate) {
-        if (!this.isGameFound(gameId) || !coord) {
+    isDifference(gameId: string, coord: Coordinate) {
+        const game = this.findGame(gameId);
+        if (!game) {
             return null;
         }
-        // const game = this.findGame(gameId) as Game;
-        // const difference = this.differenceService.difference(game.information.idDifferenceBmp, coord);
-        // if ( difference.length !== 0) { game.differenceFounded(difference); }
-        // return difference;
-        return [];
+        return game.isDifferenceFound(coord);
     }
 
     isGameFound(gameId: string) {

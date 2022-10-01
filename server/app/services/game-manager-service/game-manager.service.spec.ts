@@ -6,6 +6,7 @@ import { DatabaseService } from '@app/services/database-service/database.service
 import { expect } from 'chai';
 import { Game } from '@app/classes/game/game';
 import { GameInfo } from '@common/game-info';
+import { Coordinate } from '@common/coordinate';
 
 describe('GameManagerService', () => {
     let gameManager: GameManagerService;
@@ -77,13 +78,20 @@ describe('GameManagerService', () => {
         expect(gameManager['findGame'](expectedIdGame)).to.deep.equal(expectedGame);
     });
 
-    it('should check if a difference is found', () => {
-        const findGameSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
-        expect(gameManager.isDifference('')).to.equal(null);
+    it('should check if the game is found and the difference is not null', () => {
+        const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(null);
-        findGameSpy.callsFake(() => true);
-        expect(gameManager.isDifference('')).to.deep.equal(null);
-        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal([]);
+        const game = { isDifferenceFound: () => null } as unknown as Game;
+        findGameSpy.callsFake(() => game);
+        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(null);
+    });
+
+    it('should return the difference within a specific coord', () => {
+        const expectedDifferences = [{} as Coordinate];
+        const game = { isDifferenceFound: () => expectedDifferences } as unknown as Game;
+        const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
+        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(expectedDifferences);
+        expect(findGameSpy.called).to.equal(true);
     });
 
     afterEach(() => {

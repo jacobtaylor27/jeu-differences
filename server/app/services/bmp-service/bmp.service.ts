@@ -14,17 +14,18 @@ export class BmpService {
     ) {}
     async getAllBmps(filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<Bmp[]> {
         const allBmps: Bmp[] = [];
-        const allPaths: string[] = await this.fileManagerService.getFileNames(filepath);
-        allPaths.forEach(async (filePath) => {
-            allBmps.push(await this.bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_ASSET_PATH + filePath + '.bmp'));
-        });
+        const allFileNames: string[] = await this.fileManagerService.getFileNames(filepath);
+        for (const bmpId of allFileNames) {
+            const bmp: Bmp = await this.bmpDecoderService.decodeBIntoBmp(filepath + bmpId + '.bmp');
+            allBmps.push(bmp);
+        }
         return allBmps;
     }
     async getBmpById(bmpId: string, filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<Bmp | undefined> {
         const allFileNames: string[] = await this.fileManagerService.getFileNames(filepath);
         for (const id of allFileNames) {
             if (bmpId === id) {
-                return await this.bmpDecoderService.decodeBIntoBmp(filepath + id + '.bmp');
+                return await this.bmpDecoderService.decodeBIntoBmp(filepath + bmpId + '.bmp');
             }
         }
         return undefined;

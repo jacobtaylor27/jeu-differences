@@ -55,6 +55,6 @@ describe.only('Bmp service', async () => {
                 await bmpService.deleteBmpById(name, DEFAULT_BMP_TEST_PATH);
             }
         }
-        expect(fileNames.length).to.equal(2);
+        expect((await fileManagerService.getFileNames(DEFAULT_BMP_TEST_PATH)).length).to.equal(2);
     });
 });

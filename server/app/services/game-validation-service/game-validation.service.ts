@@ -21,4 +21,12 @@ export class GameValidation {
             .catch(() => null);
     }
 
-}
+    async differenceBmp(original: Bmp, modify: Bmp, radius: number) {
+        if (!original || !modify) {
+            return null;
+        }
+        return this.bmpSubtractor
+            .getDifferenceBMP(original, modify, radius)
+            .then((differenceBMP: Bmp) => differenceBMP)
+            .catch(() => null);
+    }

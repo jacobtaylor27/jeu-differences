@@ -1,6 +1,7 @@
 import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
+import { Buffer } from 'buffer';
 export class Bmp {
     private width: number;
     private height: number;
@@ -17,9 +18,9 @@ export class Bmp {
         pixelMatrix.forEach((lineOfPixels) => {
             lineOfPixels.forEach((pixel) => {
                 raw.push(pixel.a);
-                raw.push(pixel.b);
-                raw.push(pixel.g);
                 raw.push(pixel.r);
+                raw.push(pixel.g);
+                raw.push(pixel.b);
             });
         });
         return raw;
@@ -34,6 +35,11 @@ export class Bmp {
 
     getPixels(): Pixel[][] {
         return this.pixels;
+    }
+
+    async getPixelsBuffered(): Promise<Buffer> {
+        const rawPixels: number[] = Bmp.convertPixelsToRaw(this.pixels);
+        return Buffer.from(rawPixels);
     }
 
     private convertRawToPixels(rawData: number[]): Pixel[][] {

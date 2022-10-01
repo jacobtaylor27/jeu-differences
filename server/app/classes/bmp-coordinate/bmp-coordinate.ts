@@ -24,6 +24,7 @@ export class BmpCoordinate {
             y: this.column,
         };
     }
+
     private areParametersValid(row: number, column: number): boolean {
         return row >= 0 && column >= 0;
     }

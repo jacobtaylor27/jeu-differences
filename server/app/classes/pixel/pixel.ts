@@ -26,7 +26,7 @@ export class Pixel {
     }
 
     setBlack() {
-        this.setColor(PIXEL_COLOR.white);
+        this.setColor(PIXEL_COLOR.black);
     }
 
     private isColor(color: number) {

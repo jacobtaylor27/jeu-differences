@@ -41,3 +41,16 @@ export class GameValidation {
             )
             .catch(() => null);
     }
+
+    async isGameValid(original: ArrayBuffer, modify: ArrayBuffer, radius: number) {
+        let modifyBmp: Bmp;
+        let originalBmp: Bmp;
+        try {
+            modifyBmp = await this.bmpDecoder.decodeArrayBufferToBmp(modify);
+            originalBmp = await this.bmpDecoder.decodeArrayBufferToBmp(original);
+        } catch (e) {
+            return Promise.reject();
+        }
+        return await this.isNbDifferenceValid(originalBmp, modifyBmp, radius);
+    }
+}

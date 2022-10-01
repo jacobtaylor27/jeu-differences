@@ -33,7 +33,7 @@ export class BmpService {
     async addBmp(bpmToConvert: ArrayBuffer, filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<void> {
         const decodedBmp: Bmp = await this.bmpDecoderService.decodeArrayBufferToBmp(bpmToConvert);
         const bmpId: string = v4();
-        const fullpath = filepath + bmpId;
+        const fullpath = filepath + bmpId + '.bmp';
         await this.bmpEncoderService.encodeBmpIntoB(fullpath, decodedBmp);
     }
 

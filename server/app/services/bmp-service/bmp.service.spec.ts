@@ -50,8 +50,11 @@ describe.only('Bmp service', async () => {
         await bmpService.addBmp(await bmpDecoderService.convertBufferIntoArrayBuffer(buffer), DEFAULT_BMP_TEST_PATH);
         const fileNames = await fileManagerService.getFileNames(DEFAULT_BMP_TEST_PATH);
         expect(fileNames.length).to.equal(3);
-
-        await bmpService.deleteBmpById(fileName, DEFAULT_BMP_TEST_PATH);
+        for (const name of fileNames) {
+            if (name !== 'bmp_test_2x2' && name !== 'test_bmp_modified') {
+                await bmpService.deleteBmpById(name, DEFAULT_BMP_TEST_PATH);
+            }
+        }
         expect(fileNames.length).to.equal(2);
     });
 });

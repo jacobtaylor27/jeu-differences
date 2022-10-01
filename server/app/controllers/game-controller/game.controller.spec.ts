@@ -87,4 +87,19 @@ describe.only('GameController', () => {
         return supertest(expressApp).get('/api/game/cards').expect(StatusCodes.NOT_FOUND);
     });
 
+    it('should fetch a games card of the database', async () => {
+        const expectedGameCard = {} as GameInfo;
+        gameInfo.getGameById.resolves(expectedGameCard);
+        return supertest(expressApp)
+            .get('/api/game/cards/0')
+            .expect(StatusCodes.OK)
+            .then((response) => {
+                expect(response.body).to.deep.equal({ games: expectedGameCard });
+            });
+    });
+
+    it('should return Not Found if the game does not exist', async () => {
+        gameInfo.getGameById.rejects();
+        return supertest(expressApp).get('/api/game/cards/0').expect(StatusCodes.NOT_FOUND);
+    });
 });

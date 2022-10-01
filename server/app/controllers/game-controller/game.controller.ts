@@ -136,6 +136,17 @@ export class GameController {
                 });
         });
 
+        this.router.get('/cards/:id', (req: Request, res: Response) => {
+            this.gameInfo
+                .getGameById(req.params.id)
+                .then((games: GameInfo) => {
+                    res.status(StatusCodes.OK).send({ games });
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_FOUND).send();
+                });
+        });
+
         this.router.post('/create/:id', (req: Request, res: Response) => {
             if (!req.body.players || req.body.players.length === 0 || !req.body.mode || !req.params.id) {
                 res.status(StatusCodes.BAD_REQUEST).send();

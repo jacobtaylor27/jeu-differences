@@ -24,8 +24,8 @@ export class BmpDecoderService {
         let bmpData: bmp.BmpDecoder;
         try {
             bmpData = bmp.decode(buffer);
-        } catch (error) {
-            throw new Error(error);
+        } catch (e) {
+            throw new Error('Le décodage du fichier a échoué');
         }
         return new Bmp(bmpData.width, bmpData.height, bmpData.data.toJSON().data);
     }

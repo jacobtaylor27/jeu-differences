@@ -7,7 +7,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 chai.use(chaiAsPromised);
 
-describe('Bmp decoder service', () => {
+describe.only('Bmp decoder service', () => {
     let bmpDecoderService: BmpDecoderService;
     let fileManagerService: FileManagerService;
 
@@ -106,8 +106,19 @@ describe('Bmp decoder service', () => {
         expect(resultBmp).to.deep.equal(expectedBmp);
     });
 
-    it('decodeArrayBufferToBmp(...) Should throw an exception if the arraybuffer is invalid', async () => {
+    it("decodeArrayBufferToBmp(...) Should throw an exception if the arraybuffer doesn't have a bmp header", async () => {
         const arrayBuf: ArrayBuffer = new ArrayBuffer(0);
-        await expect(bmpDecoderService.decodeArrayBufferToBmp(arrayBuf)).to.eventually.be.rejected.and.be.an.instanceOf(Error);
+        await expect(bmpDecoderService.decodeArrayBufferToBmp(arrayBuf))
+            .to.eventually.be.rejectedWith('Le décodage du fichier a échoué')
+            .and.be.an.instanceOf(Error);
+    });
+
+    it('decodeArrayBufferToBmp(...) Should throw an exception if the arraybuffer has a corrupted file', async () => {
+        const filepath = './assets/test-bmp/corrupted.bmp';
+        const bmpBuffer: Buffer = await fileManagerService.getFileContent(filepath);
+        const bmpFile: ArrayBuffer = await bmpDecoderService.convertBufferIntoArrayBuffer(bmpBuffer);
+        await expect(bmpDecoderService.decodeArrayBufferToBmp(bmpFile))
+            .to.eventually.be.rejectedWith('Le décodage du fichier a échoué')
+            .and.be.an.instanceOf(Error);
     });
 });

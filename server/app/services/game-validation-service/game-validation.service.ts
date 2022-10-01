@@ -30,3 +30,14 @@ export class GameValidation {
             .then((differenceBMP: Bmp) => differenceBMP)
             .catch(() => null);
     }
+
+    async isNbDifferenceValid(original: Bmp, modify: Bmp, radius: number) {
+        return this.differenceBmp(original, modify, radius)
+            .then(async (bmpDifferentiated: Bmp) =>
+                this.bmpDifferenceInterpreter
+                    .getCoordinates(bmpDifferentiated)
+                    .then((coordinates: BmpCoordinate[][]) => coordinates.length >= Difference.MIN || coordinates.length <= Difference.MAX)
+                    .catch(() => null),
+            )
+            .catch(() => null);
+    }

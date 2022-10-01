@@ -2,26 +2,34 @@ import { Bmp } from '@app/classes/bmp/bmp';
 import { DEFAULT_BMP_TEST_PATH } from '@app/constants/database';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
+import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
+import * as Sinon from 'sinon';
 import { Container } from 'typedi';
 chai.use(chaiAsPromised);
 
-describe('Bmp service', async () => {
+describe.only('Bmp service', async () => {
     let bmpService: BmpService;
     let bmpDecoderService: BmpDecoderService;
+    let fileManagerService: FileManagerService;
 
     beforeEach(async () => {
         bmpService = Container.get(BmpService);
         bmpDecoderService = Container.get(BmpDecoderService);
+        fileManagerService = Container.get(FileManagerService);
+    });
+
+    after(() => {
+        Sinon.restore();
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
         const id = 'test_bmp_modified';
-        const bmp: Bmp = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + id + '.bmp');
-        await expect(bmpService.getBmpById(id, DEFAULT_BMP_TEST_PATH)).to.eventually.deep.equal(bmp);
+        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + id + '.bmp');
+        await expect(bmpService.getBmpById(id, DEFAULT_BMP_TEST_PATH)).to.eventually.deep.equal(btmDecoded);
     });
 
     it("getBmpById(id) should return undefined if the id doesn't exist", async () => {
@@ -35,13 +43,15 @@ describe('Bmp service', async () => {
         await expect(bmpService.getAllBmps(DEFAULT_BMP_TEST_PATH)).to.eventually.deep.equal([bmp2, bmp1]);
     });
 
-    it('addBmp(bmpToConvert) should return add a .bmp files to the bmp-src', async () => {
-        console.log(bmpService);
-        expect(1).to.be.equal(1);
-    });
+    it('addBmp(bmpToConvert) should return add a .bmp files to the bmp-src and deleteBmpById should delete it', async () => {
+        const fileName = 'test_bmp_modified.bmp';
+        const buffer: Buffer = await fileManagerService.getFileContent(DEFAULT_BMP_TEST_PATH + fileName);
 
-    it('deleteBmpById(bmpId) should ', async () => {
-        console.log(bmpService);
-        expect(1).to.be.equal(1);
+        await bmpService.addBmp(await bmpDecoderService.convertBufferIntoArrayBuffer(buffer), DEFAULT_BMP_TEST_PATH);
+        const fileNames = await fileManagerService.getFileNames(DEFAULT_BMP_TEST_PATH);
+        expect(fileNames.length).to.equal(3);
+
+        await bmpService.deleteBmpById(fileName, DEFAULT_BMP_TEST_PATH);
+        expect(fileNames.length).to.equal(2);
     });
 });

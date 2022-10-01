@@ -11,15 +11,13 @@ export class BmpSubtractorService {
         }
 
         const resultImage: Bmp = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Bmp.convertPixelsToRaw(modifiedImage.getPixels()));
-        const resultImagePixels: Pixel[][] = resultImage.getPixels();
-        const originalImagePixels: Pixel[][] = originalImage.getPixels();
 
-        for (let i = 0; i < originalImagePixels.length; i++) {
-            for (let j = 0; j < originalImagePixels[i].length; j++) {
-                if (this.arePixelsEqual(originalImagePixels[i][j], resultImagePixels[i][j])) {
-                    resultImagePixels[i][j].setWhite();
+        for (let i = 0; i < originalImage.getPixels().length; i++) {
+            for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
+                if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
+                    resultImage.getPixels()[i][j].setWhite();
                 } else {
-                    resultImagePixels[i][j].setBlack();
+                    resultImage.getPixels()[i][j].setBlack();
                 }
             }
         }

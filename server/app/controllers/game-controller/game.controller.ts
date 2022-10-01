@@ -147,6 +147,12 @@ export class GameController {
                 });
         });
 
+        this.router.post('/cards/validation', (req: Request, res: Response) => {
+            if (!req.body.src || !req.body.diff || !req.body.differenceRadius) {
+                res.status(StatusCodes.BAD_REQUEST);
+            }
+        });
+
         this.router.post('/create/:id', (req: Request, res: Response) => {
             if (!req.body.players || req.body.players.length === 0 || !req.body.mode || !req.params.id) {
                 res.status(StatusCodes.BAD_REQUEST).send();

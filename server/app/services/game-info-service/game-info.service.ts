@@ -11,6 +11,7 @@ import { Service } from 'typedi';
 import { v4 } from 'uuid';
 @Service()
 export class GameService {
+    // eslint-disable-next-line max-params
     constructor(
         private readonly databaseService: DatabaseService,
         private readonly bmpService: BmpService,

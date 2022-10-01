@@ -1,4 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
+import { DEFAULT_BMP_TEST_PATH } from '@app/constants/database';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
@@ -20,6 +21,8 @@ describe('Bmp service', async () => {
         bmpService = Container.get(BmpService);
         bmpDecoderService = Container.get(BmpDecoderService);
         fileManagerService = Container.get(FileManagerService);
+        const bmp: Bmp = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + 'test_bmp_modified.bmp');
+        fileManagerService.writeFile(bmp.)
     });
 
     after(() => {

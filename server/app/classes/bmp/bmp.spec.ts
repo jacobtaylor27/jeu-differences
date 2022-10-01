@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Bmp } from './bmp';
@@ -64,5 +65,15 @@ describe('Bmp', () => {
         } catch (e) {
             expect(e).to.be.instanceof(Error);
         }
+    });
+
+    it('toBuffer() should convert a bmp file into a buffer', async () => {
+        const expectedWidth = 2;
+        const expectedHeight = 2;
+        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const expectedBuffer: Buffer = Buffer.from(rawData);
+        const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
+
+        expect(await bmpProduced.toBuffer()).to.deep.equal(expectedBuffer);
     });
 });

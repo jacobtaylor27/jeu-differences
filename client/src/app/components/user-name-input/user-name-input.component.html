@@ -8,6 +8,6 @@
 
     <div mat-dialog-actions>
         <button mat-flat-button color="primary" mat-dialog-close>Annuler</button>
-        <button mat-flat-button color="primary" routerLink="/game" mat-dialog-close [disabled]="!playerName" (click)="onClickContinue()">Continuer</button>
+        <button mat-flat-button type="submit" color="primary" [disabled]="!playerName" (click)="onClickContinue()">Continuer</button>
     </div>
 </section>

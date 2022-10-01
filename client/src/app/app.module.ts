@@ -29,6 +29,7 @@ import { GameCarouselComponent } from './components/game-carousel/game-carousel.
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
+import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
 import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
 import { GameScoreComponent } from './components/game-score/game-score.component';
 import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
@@ -65,6 +66,7 @@ import { GameCardButtonsComponent } from './components/game-card-buttons/game-ca
         TimerCountdownComponent,
         TimerStopwatchComponent,
         DifferencesAreaComponent,
+        DialogCreateGameComponent,
         GameConstantFieldComponent,
         GameCardButtonsComponent,
         GameScoreComponent,

@@ -12,6 +12,7 @@ import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZ
 })
 export class DrawCanvasComponent implements AfterViewInit {
     @ViewChild('imageDifference', { static: false }) img!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('paint', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
 
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
@@ -24,14 +25,25 @@ export class DrawCanvasComponent implements AfterViewInit {
         });
     }
 
-    ngAfterViewInit(): void {
-        this.toolBoxService.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
+    ngAfterViewInit() {
+        this.toolBoxService.$uploadImageInDiff.subscribe(async (newImage: ImageBitmap) => {
             this.img.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
+            await this.updateImage();
         });
-        this.toolBoxService.$resetDiff.subscribe(() => {
+
+        this.toolBoxService.$resetDiff.subscribe(async () => {
             (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
             (this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
+            await this.updateImage();
         });
+        this.updateImage();
+    }
+
+    async updateImage() {
+        const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        ctx.drawImage(this.img.nativeElement, 0, 0);
+        ctx.drawImage(this.canvas.nativeElement, 0, 0);
+        this.drawService.$differenceImage.next(await createImageBitmap(this.noContentCanvas.nativeElement));
     }
 
     // https://daily-dev-tips.com/posts/javascript-mouse-drawing-on-the-canvas/
@@ -44,24 +56,25 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.isClick = false;
     }
 
-    draw(event: MouseEvent) {
+    async draw(event: MouseEvent) {
         if (!this.isClick) {
             return;
         }
         if (this.pencil.state !== Tool.Pencil) {
-            this.erase(event);
+            await this.erase(event);
             return;
         }
-        this.drawPoint(event);
+        await this.drawPoint(event);
     }
 
-    erase(event: MouseEvent) {
+    async erase(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         ctx.clearRect(this.coordDraw.x, this.coordDraw.y, this.pencil.width, this.pencil.width);
+        await this.updateImage();
     }
 
-    drawPoint(event: MouseEvent) {
+    async drawPoint(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
         ctx.lineWidth = this.pencil.width;
@@ -71,5 +84,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
         ctx.stroke();
+        await this.updateImage();
     }
 }

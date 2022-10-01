@@ -44,21 +44,50 @@ describe('DialogUploadFormComponent', () => {
         expect(component.isImageTypeCorrect({ type: expectedTypeFalse } as File)).toBeFalse();
     });
 
+    it('should check if the format of the image is 24bits', () => {
+        const expectedGoodFormat = 24;
+        const expectedWrongFormat = 8;
+        expect(component.isImageFormatCorrect(expectedGoodFormat)).toBeTrue();
+        expect(component.isImageFormatCorrect(expectedWrongFormat)).toBeFalse();
+    });
+
     it('should check if the image is correct', async () => {
+        const lengthData = 30;
+        const mockFileData = new Array(lengthData);
+        const mockFile = new File(mockFileData, '');
         const spySize = spyOn(component, 'isSizeCorrect').and.resolveTo(true);
         const spyType = spyOn(component, 'isImageTypeCorrect').and.returnValue(true);
-        expect(await component.isImageCorrect({} as File)).toBeTrue();
+        const spyFormat = spyOn(component, 'isImageFormatCorrect').and.returnValue(true);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        expect(await component.isImageCorrect(mockFile)).toBeTrue();
         expect(spySize).toHaveBeenCalled();
         expect(spyType).toHaveBeenCalled();
+        expect(spyFormat).toHaveBeenCalled();
         spySize.and.resolveTo(false);
         spyType.and.returnValue(true);
-        expect(await component.isImageCorrect({} as File)).toBeFalse();
+        spyFormat.and.returnValue(false);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        expect(await component.isImageCorrect(mockFile)).toBeFalse();
         spySize.and.resolveTo(true);
         spyType.and.returnValue(false);
-        expect(await component.isImageCorrect({} as File)).toBeFalse();
+        spyFormat.and.returnValue(false);
+        expect(await component.isImageCorrect(mockFile)).toBeFalse();
         spySize.and.resolveTo(false);
         spyType.and.returnValue(false);
-        expect(await component.isImageCorrect({} as File)).toBeFalse();
+        spyFormat.and.returnValue(false);
+        expect(await component.isImageCorrect(mockFile)).toBeFalse();
+        spySize.and.resolveTo(true);
+        spyType.and.returnValue(true);
+        spyFormat.and.returnValue(false);
+        expect(await component.isImageCorrect(mockFile)).toBeFalse();
+        spySize.and.resolveTo(false);
+        spyType.and.returnValue(true);
+        spyFormat.and.returnValue(true);
+        expect(await component.isImageCorrect(mockFile)).toBeFalse();
+        spySize.and.resolveTo(true);
+        spyType.and.returnValue(false);
+        spyFormat.and.returnValue(true);
+        expect(await component.isImageCorrect(mockFile)).toBeFalse();
     });
 
     it('should check the size of the image', async () => {

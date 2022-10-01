@@ -1,8 +1,8 @@
 import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
+import * as bmp from 'bmp-js';
 import { Buffer } from 'buffer';
-
 export class Bmp {
     private width: number;
     private height: number;
@@ -30,6 +30,17 @@ export class Bmp {
     async toBuffer(): Promise<Buffer> {
         const data: Buffer = await this.getPixelsBuffered();
         return Buffer.from(data);
+    }
+
+    async toImageData(): Promise<bmp.ImageData> {
+        const width: number = this.width;
+        const height = this.height;
+        const data = await this.toBuffer();
+        return {
+            width,
+            height,
+            data,
+        };
     }
 
     getWidth(): number {

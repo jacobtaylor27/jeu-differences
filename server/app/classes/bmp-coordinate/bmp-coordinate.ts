@@ -1,3 +1,5 @@
+import { Coordinate } from '@common/coordinate';
+
 export class BmpCoordinate {
     private row: number;
     private column: number;
@@ -11,10 +13,17 @@ export class BmpCoordinate {
     getRow(): number {
         return this.row;
     }
+
     getColumn(): number {
         return this.column;
     }
 
+    toCoordinate(): Coordinate {
+        return {
+            x: this.row,
+            y: this.column,
+        };
+    }
     private areParametersValid(row: number, column: number): boolean {
         return row >= 0 && column >= 0;
     }

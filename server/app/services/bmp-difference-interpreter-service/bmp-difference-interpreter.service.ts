@@ -8,20 +8,9 @@ import { Service } from 'typedi';
 @Service()
 export class BmpDifferenceInterpreter {
     async getCoordinates(bmpDifferentiated: Bmp): Promise<Coordinate[][]> {
-        const bmpCoordinates: BmpCoordinate[][] = await this.getBmpCoordinates(bmpDifferentiated);
-        const differences: Coordinate[][] = [];
-        for (const lineOfCoordinates of bmpCoordinates) {
-            const lineOfDifference: Coordinate[] = [];
-            for (const coordinate of lineOfCoordinates) {
-                const difference: Coordinate = {
-                    x: coordinate.getRow(),
-                    y: coordinate.getColumn(),
-                };
-                lineOfDifference.push(difference);
-            }
-            differences.push(lineOfDifference);
-        }
-        return differences;
+        return (await this.getBmpCoordinates(bmpDifferentiated)).map((bmpCoordinates) =>
+            bmpCoordinates.map((bmpCoordinate) => bmpCoordinate.toCoordinate()),
+        );
     }
 
     async getBmpCoordinates(bmpDifferentiated: Bmp): Promise<BmpCoordinate[][]> {

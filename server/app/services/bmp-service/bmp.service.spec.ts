@@ -47,7 +47,7 @@ describe('Bmp service', async () => {
         const fileName = 'test_bmp_modified.bmp';
         const buffer: Buffer = await fileManagerService.getFileContent(DEFAULT_BMP_TEST_PATH + fileName);
 
-        await bmpService.addBmp(await bmpDecoderService.convertBufferIntoArrayBuffer(buffer), DEFAULT_BMP_TEST_PATH);
+        await bmpService.addBFromArrayBuffer(await bmpDecoderService.convertBufferIntoArrayBuffer(buffer), DEFAULT_BMP_TEST_PATH);
         const fileNames = await fileManagerService.getFileNames(DEFAULT_BMP_TEST_PATH);
         expect(fileNames.length).to.equal(3);
         for (const name of fileNames) {

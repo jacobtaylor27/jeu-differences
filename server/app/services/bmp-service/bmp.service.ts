@@ -29,11 +29,19 @@ export class BmpService {
         }
         return undefined;
     }
-    async addBmp(bpmToConvert: ArrayBuffer, filepath: string): Promise<void> {
+    async addBFromArrayBuffer(bpmToConvert: ArrayBuffer, filepath: string): Promise<string> {
         const decodedBmp: Bmp = await this.bmpDecoderService.decodeArrayBufferToBmp(bpmToConvert);
         const bmpId: string = v4();
         const fullpath = filepath + bmpId + '.bmp';
         await this.bmpEncoderService.encodeBmpIntoB(fullpath, decodedBmp);
+        return bmpId;
+    }
+
+    async addBFromBmp(bmpObj: Bmp, filepath: string): Promise<string> {
+        const bmpId: string = v4();
+        const fullpath = filepath + bmpId + '.bmp';
+        await this.bmpEncoderService.encodeBmpIntoB(fullpath, bmpObj);
+        return bmpId;
     }
 
     async deleteBmpById(bmpId: string, filepath: string): Promise<boolean> {

@@ -7,6 +7,8 @@ export class Pixel {
     a: number;
 
     constructor(r: number, g: number, b: number) {
+        if (!this.arePixelsValid(r, g, b)) throw new Error('Les pixels ne peuvent pas avoir une valeur négative');
+
         this.r = r;
         this.g = g;
         this.b = b;
@@ -37,5 +39,9 @@ export class Pixel {
         this.b = color;
         this.g = color;
         this.r = color;
+    }
+
+    private arePixelsValid(r: number, g: number, b: number): boolean {
+        return r >= 0 && b >= 0 && g >= 0;
     }
 }

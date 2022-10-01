@@ -2,11 +2,11 @@ import { Bmp } from '@app/classes/bmp/bmp';
 import { DEFAULT_BMP_TEST_PATH } from '@app/constants/database';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
-import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as bmp from 'bmp-js';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
+import { promises as fs } from 'fs';
 import { describe } from 'mocha';
 import { tmpdir } from 'os';
 import * as Sinon from 'sinon';
@@ -16,25 +16,23 @@ chai.use(chaiAsPromised);
 describe('Bmp service', async () => {
     let bmpService: BmpService;
     let bmpDecoderService: BmpDecoderService;
-    let fileManagerService: FileManagerService;
 
     beforeEach(async () => {
         bmpService = Container.get(BmpService);
         bmpDecoderService = Container.get(BmpDecoderService);
-        fileManagerService = Container.get(FileManagerService);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + 'test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toImageData());
-        fileManagerService.writeFile(tmpdir() + '/1.bmp', buffer.data);
+        fs.writeFile(tmpdir() + '1.bmp', buffer.data);
     });
 
     after(() => {
-        fileManagerService.deleteFile(tmpdir() + '/1.bmp');
+        fs.unlink(tmpdir() + '1.bmp');
         Sinon.restore();
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
         const id = '1';
-        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(tmpdir() + '/' + id + '.bmp');
+        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(tmpdir() + id + '.bmp');
         await expect(bmpService.getBmpById(id, tmpdir())).to.eventually.deep.equal(btmDecoded);
     });
     /*

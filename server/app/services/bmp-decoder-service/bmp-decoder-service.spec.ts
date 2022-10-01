@@ -1,19 +1,18 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
-import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
+import { promises as fs } from 'fs';
 import { describe } from 'mocha';
+
 chai.use(chaiAsPromised);
 
 describe('Bmp decoder service', () => {
     let bmpDecoderService: BmpDecoderService;
-    let fileManagerService: FileManagerService;
 
     beforeEach(async () => {
-        fileManagerService = new FileManagerService();
-        bmpDecoderService = new BmpDecoderService(fileManagerService);
+        bmpDecoderService = new BmpDecoderService();
     });
 
     it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 2x2', async () => {
@@ -111,7 +110,7 @@ describe('Bmp decoder service', () => {
 
     it('decodeArrayBufferToBmp(...) Should convert an array buffer into a bmp object', async () => {
         const filepath = './assets/test-bmp/test_bmp_modified.bmp';
-        const bmpBuffer: Buffer = await fileManagerService.getFileContent(filepath);
+        const bmpBuffer: Buffer = await fs.readFile(filepath);
         const arrayBufferToTest: ArrayBuffer = await bmpDecoderService.convertBufferIntoArrayBuffer(bmpBuffer);
         const resultBmp: Bmp = await bmpDecoderService.decodeArrayBufferToBmp(arrayBufferToTest);
         const expectedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);
@@ -127,7 +126,7 @@ describe('Bmp decoder service', () => {
 
     it('decodeArrayBufferToBmp(...) Should throw an exception if the arraybuffer has a corrupted file', async () => {
         const filepath = './assets/test-bmp/corrupted.bmp';
-        const bmpBuffer: Buffer = await fileManagerService.getFileContent(filepath);
+        const bmpBuffer: Buffer = await fs.readFile(filepath);
         const bmpFile: ArrayBuffer = await bmpDecoderService.convertBufferIntoArrayBuffer(bmpBuffer);
         await expect(bmpDecoderService.decodeArrayBufferToBmp(bmpFile))
             .to.eventually.be.rejectedWith('Le décodage du bmp a échoué')

@@ -16,7 +16,7 @@ describe('DrawCanvasComponent', () => {
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
-        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['reposition']);
+        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['reposition'], { $differenceImage: new Subject() });
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
             $pencil: new Subject(),
             $uploadImageInDiff: new Subject(),
@@ -63,7 +63,10 @@ describe('DrawCanvasComponent', () => {
         component.pencil.state = Tool.Pencil;
         component.coordDraw = DEFAULT_POSITION_MOUSE_CLIENT;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(() => {});
+        const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(async () => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            return new Promise<void>(() => {});
+        });
         component.draw({} as MouseEvent);
         expect(drawPointSpy).not.toHaveBeenCalled();
         component.isClick = true;

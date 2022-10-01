@@ -1,6 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
-// @ts-ignore
 import * as bmp from 'bmp-js';
 import { Service } from 'typedi';
 
@@ -45,8 +44,6 @@ export class BmpDecoderService {
     }
 
     private isFileExtensionValid(filename: string): boolean {
-        // prettier-ignore
-        // eslint-disable-next-line
-        return  filename.match('^.*\.(bmp)$') !== null;
+        return filename.match('^.*.(bmp)$') !== null;
     }
 }

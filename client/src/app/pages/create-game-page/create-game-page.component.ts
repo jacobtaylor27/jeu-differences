@@ -1,11 +1,12 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { SIZE } from '@app/constants/canvas';
 import { Theme } from '@app/enums/theme';
 import { Vec2 } from '@app/interfaces/vec2';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 @Component({
@@ -15,15 +16,14 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 })
 export class CreateGamePageComponent implements AfterViewInit {
     @ViewChild('sourceImg', { static: false }) sourceImg!: ElementRef<HTMLCanvasElement>;
+
     form: FormGroup;
     theme: typeof Theme = Theme;
+    imageDifference: ImageBitmap;
 
-    constructor(private toolBoxService: ToolBoxService, public dialog: MatDialog, private http: HttpClient) {
+    constructor(private toolBoxService: ToolBoxService, public dialog: MatDialog, private drawService: DrawService) {
         this.form = new FormGroup({
-            name: new FormControl('', Validators.required),
             expansionRadius: new FormControl(3, Validators.required),
-            img: new FormControl(null, [Validators.required, this.differenceValidator()]),
-            imgDiff: new FormControl(null, [Validators.required, this.differenceValidator()]),
         });
     }
 
@@ -33,6 +33,9 @@ export class CreateGamePageComponent implements AfterViewInit {
         });
         this.toolBoxService.$resetSource.subscribe(() => {
             (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
+        });
+        this.drawService.$differenceImage.subscribe((newImageDifference: ImageBitmap) => {
+            this.imageDifference = newImageDifference;
         });
     }
 
@@ -50,22 +53,33 @@ export class CreateGamePageComponent implements AfterViewInit {
         return difference;
     }
 
+    async createSourceImageFromCanvas(): Promise<ImageBitmap> {
+        return await createImageBitmap(this.sourceImg.nativeElement);
+    }
+
+    manageErrorInForm() {
+        const errorsMessages = Object.entries(this.form.controls)
+            .filter(([, control]) => !control.valid)
+            .map(([name]) => name + ' is not valid');
+        this.dialog.open(DialogFormsErrorComponent, { data: { formTitle: 'Create Game Form', errorMessages: errorsMessages } });
+    }
+
+    async validateForm() {
+        this.dialog.open(DialogCreateGameComponent, {
+            data: {
+                expansionRadius: (this.form.get('expansionRadius') as FormControl).value,
+                src: await this.createSourceImageFromCanvas(),
+                difference: this.imageDifference,
+            },
+        });
+    }
+
     // set submit function but it will be done with the route
-    onSubmit() {
+    async onSubmit() {
         if (!this.form.valid) {
-            const errorsMessages = Object.entries(this.form.controls)
-                .filter(([, control]) => !control.valid)
-                .map(([name]) => name + ' is not valid');
-            this.dialog.open(DialogFormsErrorComponent, { data: { formTitle: 'Create Game Form', errorMessages: errorsMessages } });
+            this.manageErrorInForm();
             return;
         }
-        const game = {
-            name: (this.form.get('name') as FormControl).value,
-            expansionRadius: (this.form.get('expansionRadius') as FormControl).value,
-            img: (this.form.get('img') as FormControl).value,
-            imgDiff: (this.form.get('imgDiff') as FormControl).value,
-        };
-
-        this.http.post('', game);
+        await this.validateForm();
     }
 }

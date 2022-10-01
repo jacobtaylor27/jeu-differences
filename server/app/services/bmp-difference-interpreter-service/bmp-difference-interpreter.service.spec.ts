@@ -19,7 +19,6 @@ describe('Bmp difference interpreter service', async () => {
     });
 
     it('Should throw an exception if given a bmp with pixels other than black or white', async () => {
-        // prettier-ignore
         // eslint-disable-next-line
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 254, 255, 255];
         const width = 2;
@@ -30,7 +29,6 @@ describe('Bmp difference interpreter service', async () => {
             .and.be.an.instanceOf(Error);
     });
     it("A white image shouldn't have any difference", async () => {
-        // prettier-ignore
         // eslint-disable-next-line
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255];
         const width = 2;
@@ -42,7 +40,6 @@ describe('Bmp difference interpreter service', async () => {
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('A black image should have one difference', async () => {
-        // prettier-ignore
         // eslint-disable-next-line
         const rawData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const width = 2;
@@ -54,7 +51,6 @@ describe('Bmp difference interpreter service', async () => {
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels side by side should be considered as one difference', async () => {
-        // prettier-ignore
         // eslint-disable-next-line
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0];
         const width = 2;
@@ -66,7 +62,6 @@ describe('Bmp difference interpreter service', async () => {
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels in diagonal should be considered as one difference', async () => {
-        // prettier-ignore
         // eslint-disable-next-line
         const rawData = [0, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0];
         const width = 2;
@@ -81,7 +76,6 @@ describe('Bmp difference interpreter service', async () => {
         const filepath = './assets/test-bmp/two_difference_appart.bmp';
         const decodedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);
         const interpretedBmp: BmpCoordinate[][] = await bmpDifferenceInterpreter.getCoordinates(decodedBmp);
-        // prettier-ignore
         // eslint-disable-next-line
         const firstDifference: BmpCoordinate[] = [new BmpCoordinate(0, 0), new BmpCoordinate(0, 1), new BmpCoordinate(1, 0)];
         // eslint-disable-next-line

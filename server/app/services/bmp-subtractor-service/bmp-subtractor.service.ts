@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { Pixel } from '@app/interface/pixel';
+import { Pixel } from '@app/classes/pixel/pixel';
 import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 
@@ -15,9 +15,9 @@ export class BmpSubtractorService {
         for (let i = 0; i < originalImage.getPixels().length; i++) {
             for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
                 if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
-                    this.setPixelWhite(resultImage.getPixels()[i][j]);
+                    resultImage.getPixels()[i][j].setWhite();
                 } else {
-                    this.setPixelBlack(resultImage.getPixels()[i][j]);
+                    resultImage.getPixels()[i][j].setBlack();
                 }
             }
         }
@@ -33,7 +33,7 @@ export class BmpSubtractorService {
         const resultCoordinates: Coordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coordinate) => {
-            this.setPixelBlack(pixelResult[coordinate.x][coordinate.y]);
+            pixelResult[coordinate.x][coordinate.y].setBlack();
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
     }
@@ -124,9 +124,10 @@ export class BmpSubtractorService {
 
     private getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinate[] {
         const coordinatesOfBlackPixels: Coordinate[] = [];
-        for (let i = 0; i < differenceBmp.getPixels().length; i++) {
-            for (let j = 0; j < differenceBmp.getPixels()[i].length; j++) {
-                if (this.isBlackPixel(differenceBmp.getPixels()[i][j])) {
+        const pixels: Pixel[][] = differenceBmp.getPixels();
+        for (let i = 0; i < pixels.length; i++) {
+            for (let j = 0; j < pixels[i].length; j++) {
+                if (pixels[i][j].isBlack()) {
                     coordinatesOfBlackPixels.push({ x: i, y: j });
                 }
             }
@@ -142,27 +143,6 @@ export class BmpSubtractorService {
             pixelOriginalImg.r === pixelModifiedImg.r
         );
     }
-
-    private setPixelWhite(pixel: Pixel): Pixel {
-        pixel.a = 0;
-        pixel.b = 255;
-        pixel.g = 255;
-        pixel.r = 255;
-        return pixel;
-    }
-
-    private setPixelBlack(pixel: Pixel): Pixel {
-        pixel.a = 0;
-        pixel.b = 0;
-        pixel.g = 0;
-        pixel.r = 0;
-        return pixel;
-    }
-
-    private isBlackPixel(pixel: Pixel): boolean {
-        return pixel.a === 0 && pixel.b === 0 && pixel.g === 0 && pixel.r === 0;
-    }
-
     private areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {
         return originalImage.getHeight() === modifiedImage.getHeight() && originalImage.getWidth() === modifiedImage.getWidth();
     }

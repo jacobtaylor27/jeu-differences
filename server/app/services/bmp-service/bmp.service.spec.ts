@@ -32,9 +32,11 @@ describe('Bmp service', async () => {
         await expect(bmpService.getBmpById(id, DEFAULT_BMP_TEST_PATH)).to.eventually.deep.equal(btmDecoded);
     });
 
-    it("getBmpById(id) should return undefined if the id doesn't exist", async () => {
+    it("getBmpById(id) should throw an error if the id doesn't exist", async () => {
         const invalidId = 'invalid-id-test-1000';
-        await expect(bmpService.getBmpById(invalidId, DEFAULT_BMP_TEST_PATH)).to.eventually.deep.equal(undefined);
+        await expect(bmpService.getBmpById(invalidId, DEFAULT_BMP_TEST_PATH))
+            .to.eventually.be.rejectedWith('File not found')
+            .and.be.an.instanceOf(Error);
     });
 
     it('getAllBmps()) should return all of the files in the Bmp format', async () => {

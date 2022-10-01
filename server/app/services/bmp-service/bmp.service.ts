@@ -20,14 +20,14 @@ export class BmpService {
         }
         return allBmps;
     }
-    async getBmpById(bmpId: string, filepath: string): Promise<Bmp | undefined> {
+    async getBmpById(bmpId: string, filepath: string): Promise<Bmp> {
         const allFileNames: string[] = await this.fileManagerService.getFileNames(filepath);
         for (const id of allFileNames) {
             if (bmpId === id) {
                 return await this.bmpDecoderService.decodeBIntoBmp(filepath + bmpId + '.bmp');
             }
         }
-        return undefined;
+        throw new Error('File not found');
     }
     async addBFromArrayBuffer(bpmToConvert: ArrayBuffer, filepath: string): Promise<string> {
         const decodedBmp: Bmp = await this.bmpDecoderService.decodeArrayBufferToBmp(bpmToConvert);

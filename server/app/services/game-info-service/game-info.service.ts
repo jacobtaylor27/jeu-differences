@@ -33,17 +33,13 @@ export class GameService {
         game.id = v4();
         game.soloScore = DEFAULT_SCORE;
         game.multiplayerScore = DEFAULT_SCORE;
-        const originalBmp = await this.bmpService.getBmpById(game.idOriginalBmp, DEFAULT_BMP_ASSET_PATH);
-        const modifiedBmp = await this.bmpService.getBmpById(game.idEditedBmp, DEFAULT_BMP_ASSET_PATH);
+        try {
+            const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, DEFAULT_BMP_ASSET_PATH);
+            const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, DEFAULT_BMP_ASSET_PATH);
 
-        let differenceBmp: Bmp;
-        if (originalBmp !== undefined && modifiedBmp !== undefined) {
-            differenceBmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
+            const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
             game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
             game.idDifferenceBmp = await this.bmpService.addBFromBmp(differenceBmp, DEFAULT_BMP_ASSET_PATH);
-        }
-
-        try {
             await this.collection.insertOne(game);
             return true;
         } catch (error) {

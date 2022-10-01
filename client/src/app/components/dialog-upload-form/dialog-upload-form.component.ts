@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IMAGE_TYPE, SIZE } from '@app/constants/canvas';
+import { BMP_HEADER_OFFSET, FORMAT_IMAGE, IMAGE_TYPE, SIZE } from '@app/constants/canvas';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { ImageCorrect } from '@app/interfaces/image-correct';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 @Component({
@@ -11,8 +12,7 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 })
 export class DialogUploadFormComponent {
     form: FormGroup;
-    isSizeImageCorrect: boolean = true;
-    isTypeImageCorrect: boolean = true;
+    isPropertiesImageCorrect: ImageCorrect = { size: true, type: true, format: true };
     img: ImageBitmap;
     isFormSubmitted: boolean = false;
     typePropagateCanvasEvent: typeof PropagateCanvasEvent = PropagateCanvasEvent;
@@ -30,11 +30,21 @@ export class DialogUploadFormComponent {
         if (files === null || !this.isFormSubmitted) {
             return;
         }
+
         this.img = await this.createImage(files[0]);
     }
 
+    isImageFormatCorrect(bmpFormat: number) {
+        return (this.isPropertiesImageCorrect.format = bmpFormat === FORMAT_IMAGE);
+    }
+
     async isImageCorrect(file: File): Promise<boolean> {
-        return (await this.isSizeCorrect(file)) && this.isImageTypeCorrect(file);
+        const bmpHeader = new DataView(await file.arrayBuffer());
+        return (
+            (await this.isSizeCorrect(file)) &&
+            this.isImageTypeCorrect(file) &&
+            this.isImageFormatCorrect(bmpHeader.getUint16(BMP_HEADER_OFFSET, true))
+        );
     }
 
     async createImage(file: File): Promise<ImageBitmap> {
@@ -42,14 +52,12 @@ export class DialogUploadFormComponent {
     }
 
     isImageTypeCorrect(file: File): boolean {
-        this.isTypeImageCorrect = file.type === IMAGE_TYPE;
-        return this.isTypeImageCorrect;
+        return (this.isPropertiesImageCorrect.type = file.type === IMAGE_TYPE);
     }
 
     async isSizeCorrect(file: File): Promise<boolean> {
         const img = await this.createImage(file);
-        this.isSizeImageCorrect = img.width === SIZE.y && img.height === SIZE.x;
-        return this.isSizeImageCorrect;
+        return (this.isPropertiesImageCorrect.size = img.width === SIZE.y && img.height === SIZE.x);
     }
 
     onSubmit(): void {

@@ -44,8 +44,6 @@ export class BmpDecoderService {
         return arrayBuffer;
     }
     private isFileExtensionValid(filename: string): boolean {
-        // prettier-ignore
-        // eslint-disable-next-line
-        return  filename.match('^.*\.(bmp)$') !== null;
+        return filename.match('^.*.(bmp)$') !== null;
     }
 }

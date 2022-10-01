@@ -12,6 +12,10 @@
     z-index: -1;
 }
 
+#noContentCanvas {
+    position: absolute;
+    z-index:-2;
+}
 .canvas-container {
     width: 640px;
     height: 480px;

@@ -1,17 +1,27 @@
-#canvas {
+.canvas {
     z-index: 0;
-    box-sizing: border-box;
     position: relative;
     box-shadow: 0px 0px 0px 2px black;
     width: 640px;
     height: 480px;
+    margin-left: 2vw;
+    margin-right: 2vw;
 }
 
-#img {
-    position: absolute;
+.img {
     z-index: -1;
-}
-.canvas-container {
+    position: absolute;
     width: 640px;
     height: 480px;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}
+
+.wrapper {
+    display: inline-block;
+    position: relative;
+}
+
+#grid-container {
+    display: flex;
 }

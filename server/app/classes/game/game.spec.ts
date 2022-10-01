@@ -153,4 +153,21 @@ describe('Game', () => {
         differenceFoundSpy.callsFake(() => true);
         expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(true);
     });
+
+    it('should return undefined if differences is not found with coordinate', () => {
+        const expectedDifferences = [[{} as Coordinate]];
+        game['info'] = { differences: expectedDifferences } as GameInfo;
+        expect(game.findDifference({ x: 0, y: 0 })).to.equal(undefined);
+    });
+
+    it('should find a difference and return it', () => {
+        const expectedDifferencesFound = [
+            { x: 0, y: 0 },
+            { x: 1, y: -1 },
+        ];
+        const expectedDifferences = [expectedDifferencesFound];
+        game['info'] = { differences: expectedDifferences } as GameInfo;
+        expect(game.findDifference({ x: 0, y: 0 })).to.deep.equal(expectedDifferencesFound);
+    });
+
 });

@@ -36,7 +36,9 @@ export class Game {
     }
 
     findDifference(differenceCoords: Coordinate) {
-        return this.info.differences.find((difference: Coordinate[]) => difference.find((coord: Coordinate) => coord === differenceCoords));
+        return this.info.differences.find((difference: Coordinate[]) =>
+            difference.find((coord: Coordinate) => coord.x === differenceCoords.x && coord.y === differenceCoords.y),
+        );
     }
 
     isDifferenceFound(differenceCoords: Coordinate) {

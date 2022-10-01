@@ -35,6 +35,10 @@ export class Game {
         return this.context.gameState();
     }
 
+    findDifference(differenceCoords: Coordinate) {
+        return this.info.differences.find((difference: Coordinate[]) => difference.find((coord: Coordinate) => coord === differenceCoords));
+    }
+
     differenceFounded(differenceCoords: Coordinate[]) {
         if (this.isDifferenceAlreadyFound(differenceCoords)) {
             return;

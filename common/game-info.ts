@@ -8,5 +8,6 @@ export interface GameInfo {
     idDifferenceBmp?: string;
     soloScore?: Score[];
     multiplayerScore?: Score[];
+    differenceRadius: number;
     differences?: Coordinate[][];
 }

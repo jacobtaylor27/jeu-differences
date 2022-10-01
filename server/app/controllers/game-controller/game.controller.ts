@@ -163,18 +163,38 @@ export class GameController {
                 .catch(() => res.status(StatusCodes.NOT_FOUND));
         });
 
-                res.status(StatusCodes.NOT_FOUND);
-                return;
-            }
-            res.status(StatusCodes.ACCEPTED).send({
-                nbDifference: this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius),
-            });
-        });
-
-        this.router.post('/cards', (req: Request, res: Response) => {
-            if (!req.body.src || !req.body.diff || !req.body.differenceRadius || !req.body.name) {
+        this.router.post('/card', (req: Request, res: Response) => {
+            if (!req.body.original || !req.body.modify || !req.body.differenceRadius || !req.body.name) {
                 res.status(StatusCodes.BAD_REQUEST);
             }
+
+            let isErrorOnGameValidation = false;
+
+            this.gameValidation
+                .isGameValid(req.body.original, req.body.modify, req.body.differenceRadius)
+                .then((isValid: boolean) => {
+                    if (!isValid) {
+                        isErrorOnGameValidation = true;
+                        res.status(StatusCodes.NOT_ACCEPTABLE);
+                    }
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_FOUND);
+                    isErrorOnGameValidation = true;
+                });
+
+            if (isErrorOnGameValidation) {
+                return;
+            }
+
+            this.gameInfo
+                .addGame({} as GameInfo)
+                .then(() => {
+                    res.status(StatusCodes.CREATED);
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_ACCEPTABLE);
+                });
         });
 
         this.router.post('/create/:id', (req: Request, res: Response) => {

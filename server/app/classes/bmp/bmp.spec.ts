@@ -28,43 +28,23 @@ describe('Bmp', () => {
     });
 
     it('An exception should be thrown if the width is less or equal to 0', () => {
-        const invalidWidth = -1;
-        const validHeight = 1;
-        const validDataRow = [0, 1, 2, 3];
-
-        try {
-            const bmpProduced = new Bmp(invalidWidth, validHeight, validDataRow);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(() => {
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            new Bmp(-1, 1, [0, 1, 2, 3]);
+        }).to.throw(Error);
     });
 
     it('An exception should be throw if the height is less or equal to 0', () => {
-        const validWidth = 1;
-        const invalidHeight = -1;
-        const validDataRow = [0, 1, 2, 3];
-
-        try {
-            const bmpProduced = new Bmp(validWidth, invalidHeight, validDataRow);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(() => {
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            new Bmp(1, -1, [0, 1, 2, 3]);
+        }).to.throw(Error);
     });
 
     it('The number of pixels should match the width, the height and the depth of the pixels', () => {
-        const validWidth = 1;
-        const validHeight = 3;
-
-        const invalidRawData = [0, 1, 2, 3, 0];
-
-        try {
-            const bmpProduced = new Bmp(validWidth, validHeight, invalidRawData);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(() => {
+            new Bmp(1, 3, [0, 1, 2, 3, 0]);
+        }).to.throw(Error);
     });
 
     it('toBuffer() should convert a bmp file into a buffer', async () => {

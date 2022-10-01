@@ -9,7 +9,7 @@ import { createStubInstance, SinonStubbedInstance } from 'sinon';
 import * as supertest from 'supertest';
 import { Container } from 'typedi';
 
-describe.only('GameController', () => {
+describe('GameController', () => {
     const expectedGameId = 'test';
     let gameManager: SinonStubbedInstance<GameManagerService>;
     let gameInfo: SinonStubbedInstance<GameService>;

@@ -9,7 +9,7 @@ import { describe } from 'mocha';
 import { Container } from 'typedi';
 chai.use(chaiAsPromised);
 
-describe.only('Bmp service', async () => {
+describe('Bmp service', async () => {
     let bmpService: BmpService;
     let bmpDecoderService: BmpDecoderService;
 

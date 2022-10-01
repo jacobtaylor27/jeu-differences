@@ -45,4 +45,15 @@ describe('Pixel', () => {
         const whitePixel: Pixel = new Pixel(PIXEL_COLOR.black, PIXEL_COLOR.white, PIXEL_COLOR.black);
         expect(whitePixel['isBlack']()).to.equal(false);
     });
+
+    it('arePixelValid(...) should return true when a pixel are superior to 0', () => {
+        const whitePixel: Pixel = new Pixel(PIXEL_COLOR.black, PIXEL_COLOR.white, PIXEL_COLOR.black);
+        expect(whitePixel['arePixelsValid'](0, 0, 0)).to.equal(true);
+    });
+
+    it('arePixelValid(...) should return false when a pixel is less then 0', () => {
+        const whitePixel: Pixel = new Pixel(PIXEL_COLOR.black, PIXEL_COLOR.white, PIXEL_COLOR.black);
+        // eslint-disable-next-line
+        expect(whitePixel['arePixelsValid'](0, -1, 0)).to.equal(false);
+    });
 });

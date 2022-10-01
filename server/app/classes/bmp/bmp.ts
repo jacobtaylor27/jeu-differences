@@ -1,9 +1,7 @@
 import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
-import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { Buffer } from 'buffer';
-import { Container } from 'typedi';
 
 export class Bmp {
     private width: number;
@@ -28,6 +26,12 @@ export class Bmp {
         });
         return raw;
     }
+
+    async toBuffer(): Promise<Buffer> {
+        const data: Buffer = await this.getPixelsBuffered();
+        return Buffer.from(data);
+    }
+
     getWidth(): number {
         return this.width;
     }
@@ -43,11 +47,6 @@ export class Bmp {
     async getPixelsBuffered(): Promise<Buffer> {
         const rawPixels: number[] = Bmp.convertPixelsToRaw(this.pixels);
         return Buffer.from(rawPixels);
-    }
-
-    async getPixelsArrayBuffered(): Promise<ArrayBuffer> {
-        const decoder = Container.get(BmpDecoderService);
-        return await decoder.convertBufferIntoArrayBuffer(await this.getPixelsBuffered());
     }
 
     private convertRawToPixels(rawData: number[]): Pixel[][] {

@@ -9,8 +9,8 @@ import { v4 } from 'uuid';
 export class BmpService {
     constructor(
         private readonly bmpDecoderService: BmpDecoderService,
-        private readonly fileManagerService: FileManagerService,
         private readonly bmpEncoderService: BmpEncoderService,
+        private readonly fileManagerService: FileManagerService,
     ) {}
     async getAllBmps(filepath: string = DEFAULT_BMP_ASSET_PATH): Promise<Bmp[]> {
         const allBmps: Bmp[] = [];

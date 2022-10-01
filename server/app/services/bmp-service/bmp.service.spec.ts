@@ -31,12 +31,8 @@ describe.only('Bmp service', async () => {
 
     it('getAllBmps()) should return all of the files in the Bmp format', async () => {
         const bmp1 = await bmpService.getBmpById('test_bmp_modified', DEFAULT_BMP_TEST_PATH);
-        await expect(bmpService.getAllBmps()).to.eventually.deep.equal([bmp1]);
-    });
-
-    it('getBmpById(bmpId) should return a bmp object', async () => {
-        console.log(bmpService);
-        expect(1).to.be.equal(1);
+        const bmp2 = await bmpService.getBmpById('bmp_test_2x2', DEFAULT_BMP_TEST_PATH);
+        await expect(bmpService.getAllBmps(DEFAULT_BMP_TEST_PATH)).to.eventually.deep.equal([bmp2, bmp1]);
     });
 
     it('addBmp(bmpToConvert) should return add a .bmp files to the bmp-src', async () => {

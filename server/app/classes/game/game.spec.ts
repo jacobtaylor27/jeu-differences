@@ -170,4 +170,19 @@ describe('Game', () => {
         expect(game.findDifference({ x: 0, y: 0 })).to.deep.equal(expectedDifferencesFound);
     });
 
+    it('should return null if no difference is found or already found', () => {
+        const findDifferenceSpy = stub(game, 'findDifference').callsFake(() => undefined);
+        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(findDifferenceSpy.called).to.equal(true);
+        const expectedDifferences = [] as Coordinate[];
+        findDifferenceSpy.callsFake(() => expectedDifferences);
+        const isDifferenceAlreadyFoundSpy = stub(game, 'isDifferenceAlreadyFound').callsFake(() => true);
+        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(isDifferenceAlreadyFoundSpy.called).to.equal(true);
+        isDifferenceAlreadyFoundSpy.callsFake(() => false);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const differenceFoundedSpy = stub(game, 'differenceFounded').callsFake(() => {});
+        expect(game.isDifferenceFound({} as Coordinate)).to.equal(expectedDifferences);
+        expect(differenceFoundedSpy.called).to.equal(true);
+    });
 });

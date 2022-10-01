@@ -34,7 +34,6 @@ export class BmpEncoderService {
         return Buffer.from(rawPixels);
     }
     private async isFileExtensionValid(filename: string): Promise<boolean> {
-        // eslint-disable-next-line
         return filename.match('^.*.(bmp)$') !== null;
     }
 }

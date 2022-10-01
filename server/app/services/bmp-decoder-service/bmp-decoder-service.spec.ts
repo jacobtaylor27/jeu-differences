@@ -16,7 +16,7 @@ describe.only('Bmp decoder service', () => {
         bmpDecoderService = new BmpDecoderService(fileManagerService);
     });
 
-    it('Should create an object Bmp based on bmp file of size 2x2', async () => {
+    it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 2x2', async () => {
         const pixelsExpected = [
             [
                 { a: 0, r: 0, g: 0, b: 255 },
@@ -36,7 +36,7 @@ describe.only('Bmp decoder service', () => {
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
-    it('Should create an object Bmp based on bmp file of size 3x2', async () => {
+    it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 3x2', async () => {
         const pixelsExpected = [
             [
                 { a: 0, r: 0, g: 0, b: 255 },
@@ -57,7 +57,7 @@ describe.only('Bmp decoder service', () => {
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
-    it('Should create an object Bmp based on bmp file of size 2x3', async () => {
+    it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 2x3', async () => {
         const pixelsExpected = [
             [
                 { a: 0, r: 0, g: 0, b: 255 },
@@ -80,21 +80,33 @@ describe.only('Bmp decoder service', () => {
         expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
     });
 
-    it('Should throw an error if the path is incorrect', async () => {
+    it('decodeBIntoBmp(...) Should throw an error if the path is incorrect', async () => {
         const invalidPath = '.bmp';
         await expect(bmpDecoderService.decodeBIntoBmp(invalidPath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
     });
 
-    it('Should throw an error if the file is not a bitmap', async () => {
+    it('decodeBIntoBmp(...) Should throw an error if the path is incorrect', async () => {
+        const invalidPath = '.bmp';
+        await expect(bmpDecoderService.decodeBIntoBmp(invalidPath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
+    });
+
+    it('decodeBIntoBmp(...) Should throw an error if the file is not a bitmap', async () => {
         const filepath = './assets/test-bmp/jpg_test.jpg';
         await expect(bmpDecoderService.decodeBIntoBmp(filepath))
             .to.eventually.be.rejectedWith('The file should end with .bmp')
             .and.be.an.instanceOf(Error);
     });
 
-    it("Should throw an error if the file is a bitmap but doesn't exists", async () => {
+    it("decodeBIntoBmp(...) Should throw an error if the file is a bitmap but doesn't exists", async () => {
         const filepath = './assets/test-bmp/doesntexistfile.bmp';
         await expect(bmpDecoderService.decodeBIntoBmp(filepath)).to.eventually.be.rejectedWith(Error).and.have.property('code', 'ENOENT');
+    });
+
+    it('decodeBIntoBmp(...) Should throw an error if the file is corrupted', async () => {
+        const filepath = './assets/test-bmp/corrupted.bmp';
+        await expect(bmpDecoderService.decodeBIntoBmp(filepath))
+            .to.eventually.be.rejectedWith('Le décodage du bmp a échoué')
+            .and.be.an.instanceOf(Error);
     });
 
     it('decodeArrayBufferToBmp(...) Should convert an array buffer into a bmp object', async () => {
@@ -109,7 +121,7 @@ describe.only('Bmp decoder service', () => {
     it("decodeArrayBufferToBmp(...) Should throw an exception if the arraybuffer doesn't have a bmp header", async () => {
         const arrayBuf: ArrayBuffer = new ArrayBuffer(0);
         await expect(bmpDecoderService.decodeArrayBufferToBmp(arrayBuf))
-            .to.eventually.be.rejectedWith('Le décodage du fichier a échoué')
+            .to.eventually.be.rejectedWith('Le décodage du bmp a échoué')
             .and.be.an.instanceOf(Error);
     });
 
@@ -118,7 +130,7 @@ describe.only('Bmp decoder service', () => {
         const bmpBuffer: Buffer = await fileManagerService.getFileContent(filepath);
         const bmpFile: ArrayBuffer = await bmpDecoderService.convertBufferIntoArrayBuffer(bmpBuffer);
         await expect(bmpDecoderService.decodeArrayBufferToBmp(bmpFile))
-            .to.eventually.be.rejectedWith('Le décodage du fichier a échoué')
+            .to.eventually.be.rejectedWith('Le décodage du bmp a échoué')
             .and.be.an.instanceOf(Error);
     });
 });

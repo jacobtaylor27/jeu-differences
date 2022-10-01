@@ -10,7 +10,12 @@ export class BmpDecoderService {
     async decodeBIntoBmp(filepath: string): Promise<Bmp> {
         if (!this.isFileExtensionValid(filepath)) throw new Error('The file should end with .bmp');
         const bmpBuffer: Buffer = await this.fileManagerService.getFileContent(filepath);
-        const bmpData = bmp.decode(bmpBuffer);
+        let bmpData: bmp.BmpDecoder;
+        try {
+            bmpData = bmp.decode(bmpBuffer);
+        } catch (e) {
+            throw new Error('Le décodage du bmp a échoué');
+        }
         const rawData: number[] = bmpData.data.toJSON().data;
         return new Bmp(bmpData.width, bmpData.height, rawData);
     }
@@ -25,7 +30,7 @@ export class BmpDecoderService {
         try {
             bmpData = bmp.decode(buffer);
         } catch (e) {
-            throw new Error('Le décodage du fichier a échoué');
+            throw new Error('Le décodage du bmp a échoué');
         }
         return new Bmp(bmpData.width, bmpData.height, bmpData.data.toJSON().data);
     }

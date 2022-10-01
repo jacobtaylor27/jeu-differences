@@ -12,6 +12,7 @@ export class GameService {
     get collection(): Collection<GameInfo> {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
+
     async getAllGames(): Promise<GameInfo[]> {
         return await this.collection.find({}).toArray();
     }
@@ -19,6 +20,7 @@ export class GameService {
         const filter = { id: gameId };
         return (await this.collection.find(filter).toArray())[0];
     }
+
     async addGame(game: GameInfo): Promise<boolean> {
         try {
             game.id = v4();

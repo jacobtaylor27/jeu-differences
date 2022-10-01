@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { Pixel } from '@app/interface/pixel';
+import { Pixel } from '@app/classes/pixel/pixel';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as bmp from 'bmp-js';
 import { Service } from 'typedi';

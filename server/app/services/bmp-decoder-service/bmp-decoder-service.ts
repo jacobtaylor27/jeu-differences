@@ -1,6 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
-// @ts-ignore
 import * as bmp from 'bmp-js';
 import { Service } from 'typedi';
 

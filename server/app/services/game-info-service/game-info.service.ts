@@ -9,7 +9,6 @@ import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
-
 @Service()
 export class GameService {
     constructor(
@@ -40,7 +39,7 @@ export class GameService {
         if (originalBmp !== undefined && modifiedBmp !== undefined) {
             differenceBmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
             game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
-            game.idDifferenceBmp = await this.bmpService.addBFromArrayBuffer(differenceBmp, DEFAULT_BMP_ASSET_PATH);
+            game.idDifferenceBmp = await this.bmpService.addBFromBmp(differenceBmp, DEFAULT_BMP_ASSET_PATH);
         }
 
         try {

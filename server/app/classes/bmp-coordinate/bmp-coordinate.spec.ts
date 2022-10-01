@@ -3,7 +3,7 @@ import { Coordinate } from '@common/coordinate';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe('BmpCoordinate', () => {
+describe.only('BmpCoordinate', () => {
     it('BmpCoordinate constructor should create a coordinate with positive values', () => {
         const row = 0;
         const column = 1;
@@ -14,15 +14,17 @@ describe('BmpCoordinate', () => {
     });
 
     it('BmpCoordinate constructor should not allow negative coordinates', () => {
-        // eslint-disable-next-line
-        const coordinate = new BmpCoordinate(-1, 1);
-        expect(coordinate).to.be.an.instanceOf(Error);
+        expect(() => {
+            // eslint-disable-next-line
+            new BmpCoordinate(-1, 1);
+        }).to.throw(Error);
     });
 
     it('BmpCoordinate constructor should not allow negative coordinates', () => {
-        // eslint-disable-next-line
-        const coordinate = new BmpCoordinate(-1, 1);
-        expect(coordinate).to.be.an.instanceOf(Error);
+        expect(() => {
+            // eslint-disable-next-line
+            new BmpCoordinate(1, -1);
+        }).to.throw(Error);
     });
 
     it('toCoordinate() should convert BmpCoordinates to Coordinate', () => {

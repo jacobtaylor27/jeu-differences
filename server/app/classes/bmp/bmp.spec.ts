@@ -1,6 +1,7 @@
 import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { Pixel } from '../pixel/pixel';
 import { Bmp } from './bmp';
 
 describe('Bmp', () => {
@@ -55,5 +56,18 @@ describe('Bmp', () => {
         const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
         expect(await bmpProduced.toBuffer()).to.deep.equal(expectedBuffer);
+    });
+
+    it('convertRawToPixels() should convert an array of numbers into pixels', async () => {
+        const width = 2;
+        const height = 2;
+        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const pixel: Pixel = new Pixel(1, 2, 3);
+        const pixels: Pixel[][] = [
+            [pixel, pixel],
+            [pixel, pixel],
+        ];
+        const bmp = new Bmp(width, height, rawData);
+        expect(bmp['convertRawToPixels'](rawData, width, height)).to.deep.equal(pixels);
     });
 });

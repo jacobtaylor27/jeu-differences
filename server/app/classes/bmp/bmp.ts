@@ -10,9 +10,9 @@ export class Bmp {
 
     constructor(width: number, height: number, rawData: number[]) {
         this.assertParameters(width, height, rawData);
+        this.pixels = this.convertRawToPixels(rawData, width, height);
         this.height = height;
         this.width = width;
-        this.pixels = this.convertRawToPixels(rawData);
     }
     static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
         const raw: number[] = [];
@@ -49,13 +49,13 @@ export class Bmp {
         return Buffer.from(rawPixels);
     }
 
-    private convertRawToPixels(rawData: number[]): Pixel[][] {
+    private convertRawToPixels(rawData: number[], width: number, height: number): Pixel[][] {
         const pixels = [];
-        for (let i = 0; i < this.height; i++) {
+        for (let i = 0; i < height; i++) {
             const scanLine = [];
 
-            for (let j = 0; j < this.width; j++) {
-                const beginRange = (i * this.width + j) * PIXEL_DEPT;
+            for (let j = 0; j < width; j++) {
+                const beginRange = (i * width + j) * PIXEL_DEPT;
                 const pixel: Pixel = this.getPixel(rawData.slice(beginRange, beginRange + PIXEL_DEPT));
                 scanLine.push(pixel);
             }

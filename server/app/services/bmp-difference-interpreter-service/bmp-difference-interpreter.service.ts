@@ -7,19 +7,19 @@ import { Service } from 'typedi';
 
 @Service()
 export class BmpDifferenceInterpreter {
-    async getCoordinates(bmpDifferentiated: Bmp): Promise<BmpCoordinate[][]> {
-        if (!(await this.isBmpDifferentiated(bmpDifferentiated))) throw new Error('The pixels are not perfectly black or white');
-
-        const differences: BmpCoordinate[][] = [];
-        const pixels = bmpDifferentiated.getPixels();
-
-        for (let row = 0; row < pixels.length; row++) {
-            for (let column = 0; column < pixels[row].length; column++) {
-                if (this.isPixelBlack(pixels[row][column])) {
-                    const difference = await this.getRegion(pixels, row, column);
-                    differences.push(difference);
-                }
+    async getCoordinates(bmpDifferentiated: Bmp): Promise<Coordinate[][]> {
+        const bmpCoordinates: BmpCoordinate[][] = await this.getBmpCoordinates(bmpDifferentiated);
+        const differences: Coordinate[][] = [];
+        for (const lineOfCoordinates of bmpCoordinates) {
+            const lineOfDifference: Coordinate[] = [];
+            for (const coordinate of lineOfCoordinates) {
+                const difference: Coordinate = {
+                    x: coordinate.getRow(),
+                    y: coordinate.getColumn(),
+                };
+                lineOfDifference.push(difference);
             }
+            differences.push(lineOfDifference);
         }
         return differences;
     }
@@ -42,6 +42,23 @@ export class BmpDifferenceInterpreter {
         }
 
         return this.createDifferencesBMP(resultImage, radius);
+    }
+
+    async getBmpCoordinates(bmpDifferentiated: Bmp): Promise<BmpCoordinate[][]> {
+        if (!(await this.isBmpDifferentiated(bmpDifferentiated))) throw new Error('The pixels are not perfectly black or white');
+
+        const differences: BmpCoordinate[][] = [];
+        const pixels = bmpDifferentiated.getPixels();
+
+        for (let row = 0; row < pixels.length; row++) {
+            for (let column = 0; column < pixels[row].length; column++) {
+                if (this.isPixelBlack(pixels[row][column])) {
+                    const difference = await this.getRegion(pixels, row, column);
+                    differences.push(difference);
+                }
+            }
+        }
+        return differences;
     }
 
     private createDifferencesBMP(originalImage: Bmp, radius: number): Bmp {

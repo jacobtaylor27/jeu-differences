@@ -45,12 +45,13 @@ describe('GameInfo service', async () => {
         };
         const game: GameInfo = {
             id: '1',
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
+            idOriginalBmp: '0',
+            idEditedBmp: '0',
+            idDifferenceBmp: '0',
             soloScore: [score],
             multiplayerScore: [score],
             name: 'Mark',
+            differenceRadius: 1,
             differences: [],
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
@@ -65,12 +66,13 @@ describe('GameInfo service', async () => {
         };
         const game: GameInfo = {
             id: '2',
-            idOriginalBmp: 0,
-            idEditedBmp: 0,
-            idDifferenceBmp: 0,
+            idOriginalBmp: '0',
+            idEditedBmp: '0',
+            idDifferenceBmp: '0',
             soloScore: [score],
             multiplayerScore: [score],
             name: 'Laurie',
+            differenceRadius: 3,
             differences: [],
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);

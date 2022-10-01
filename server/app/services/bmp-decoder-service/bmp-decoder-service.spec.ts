@@ -7,7 +7,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 chai.use(chaiAsPromised);
 
-describe.only('Bmp decoder service', () => {
+describe('Bmp decoder service', () => {
     let bmpDecoderService: BmpDecoderService;
     let fileManagerService: FileManagerService;
 

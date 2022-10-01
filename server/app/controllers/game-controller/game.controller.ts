@@ -5,19 +5,12 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameInfo } from '@common/game-info';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
-import { Bmp } from '@app/classes/bmp/bmp';
-import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 
 @Service()
 export class GameController {
     router: Router;
 
-    constructor(
-        private gameManager: GameManagerService,
-        private gameInfo: GameService,
-        private gameValidation: GameValidation,
-        private bmpDecoder: BmpDecoderService,
-    ) {
+    constructor(private gameManager: GameManagerService, private gameInfo: GameService, private gameValidation: GameValidation) {
         this.configureRouter();
     }
 
@@ -155,17 +148,21 @@ export class GameController {
                 });
         });
 
-        this.router.post('/cards/validation', async (req: Request, res: Response) => {
-            if (!req.body.src || !req.body.diff || !req.body.differenceRadius) {
+        this.router.post('/card/validation', async (req: Request, res: Response) => {
+            if (!req.body.original || !req.body.modify || !req.body.differenceRadius) {
                 res.status(StatusCodes.BAD_REQUEST);
                 return;
             }
-            let original: Bmp;
-            let modify: Bmp;
-            try {
-                original = await this.bmpDecoder.decodeArrayBufferToBmp(req.body.src);
-                modify = await this.bmpDecoder.decodeArrayBufferToBmp(req.body.src);
-            } catch (e) {
+            this.gameValidation
+                .isGameValid(req.body.original, req.body.modify, req.body.differenceRadius)
+                .then((isValid: boolean) => {
+                    res.status(StatusCodes.ACCEPTED).send({
+                        nbDifference: isValid,
+                    });
+                })
+                .catch(() => res.status(StatusCodes.NOT_FOUND));
+        });
+
                 res.status(StatusCodes.NOT_FOUND);
                 return;
             }

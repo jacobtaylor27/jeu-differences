@@ -14,4 +14,11 @@ export class GameValidation {
         private bmpDecoder: BmpDecoderService,
     ) {}
 
+    async numberDifference(bmpDifferentiated: Bmp) {
+        return this.bmpDifferenceInterpreter
+            .getCoordinates(bmpDifferentiated)
+            .then((coordinates: BmpCoordinate[][]) => coordinates.length)
+            .catch(() => null);
+    }
+
 }

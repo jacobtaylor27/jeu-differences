@@ -46,11 +46,11 @@ export class Game {
         if (!differences || this.isDifferenceAlreadyFound(differences)) {
             return null;
         }
-        this.differenceFounded(differences);
+        this.addCoordinatesOnDifferenceFound(differences);
         return differences;
     }
 
-    differenceFounded(differenceCoords: Coordinate[]) {
+    addCoordinatesOnDifferenceFound(differenceCoords: Coordinate[]) {
         if (this.isDifferenceAlreadyFound(differenceCoords)) {
             return;
         }

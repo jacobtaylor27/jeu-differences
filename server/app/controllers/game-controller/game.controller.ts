@@ -2,12 +2,14 @@ import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import { Request, Response, Router } from 'express';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameInfo } from '@common/game-info';
 
 @Service()
 export class GameController {
     router: Router;
 
-    constructor(private gameManager: GameManagerService) {
+    constructor(private gameManager: GameManagerService, private gameInfo: GameService) {
         this.configureRouter();
     }
 
@@ -123,6 +125,16 @@ export class GameController {
             }
         });
         */
+        this.router.get('/cards', (req: Request, res: Response) => {
+            this.gameInfo
+                .getAllGames()
+                .then((games: GameInfo[]) => {
+                    res.status(StatusCodes.OK).send({ games });
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_FOUND).send();
+                });
+        });
 
         this.router.post('/create/:id', (req: Request, res: Response) => {
             if (!req.body.players || req.body.players.length === 0 || !req.body.mode || !req.params.id) {

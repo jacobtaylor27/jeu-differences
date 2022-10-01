@@ -1,7 +1,7 @@
+import { Pixel } from '@app/classes/pixel/pixel';
 import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { Pixel } from '../pixel/pixel';
 import { Bmp } from './bmp';
 
 describe('Bmp', () => {
@@ -45,7 +45,7 @@ describe('Bmp', () => {
     it('The number of pixels should match the width, the height and the depth of the pixels', () => {
         expect(() => {
             new Bmp(1, 3, [0, 1, 2, 3, 0]);
-        }).to.throw(Error);
+        }).to.throw(RangeError);
     });
 
     it('toBuffer() should convert a bmp file into a buffer', async () => {

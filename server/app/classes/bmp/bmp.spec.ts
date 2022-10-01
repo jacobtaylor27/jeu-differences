@@ -1,3 +1,5 @@
+import { Pixel } from '@app/classes/pixel/pixel';
+import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Bmp } from './bmp';
@@ -27,42 +29,45 @@ describe('Bmp', () => {
     });
 
     it('An exception should be thrown if the width is less or equal to 0', () => {
-        const invalidWidth = -1;
-        const validHeight = 1;
-        const validDataRow = [0, 1, 2, 3];
-
-        try {
-            const bmpProduced = new Bmp(invalidWidth, validHeight, validDataRow);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(() => {
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            new Bmp(-1, 1, [0, 1, 2, 3]);
+        }).to.throw(Error);
     });
 
     it('An exception should be throw if the height is less or equal to 0', () => {
-        const validWidth = 1;
-        const invalidHeight = -1;
-        const validDataRow = [0, 1, 2, 3];
-
-        try {
-            const bmpProduced = new Bmp(validWidth, invalidHeight, validDataRow);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(() => {
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            new Bmp(1, -1, [0, 1, 2, 3]);
+        }).to.throw(Error);
     });
 
     it('The number of pixels should match the width, the height and the depth of the pixels', () => {
-        const validWidth = 1;
-        const validHeight = 3;
+        expect(() => {
+            new Bmp(1, 3, [0, 1, 2, 3, 0]);
+        }).to.throw(RangeError);
+    });
 
-        const invalidRawData = [0, 1, 2, 3, 0];
+    it('toBuffer() should convert a bmp file into a buffer', async () => {
+        const expectedWidth = 2;
+        const expectedHeight = 2;
+        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const expectedBuffer: Buffer = Buffer.from(rawData);
+        const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
-        try {
-            const bmpProduced = new Bmp(validWidth, validHeight, invalidRawData);
-            expect(bmpProduced).to.equals(undefined);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        expect(await bmpProduced.toBuffer()).to.deep.equal(expectedBuffer);
+    });
+
+    it('convertRawToPixels() should convert an array of numbers into pixels', async () => {
+        const width = 2;
+        const height = 2;
+        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const pixel: Pixel = new Pixel(1, 2, 3);
+        const pixels: Pixel[][] = [
+            [pixel, pixel],
+            [pixel, pixel],
+        ];
+        const bmp = new Bmp(width, height, rawData);
+        expect(bmp['convertRawToPixels'](rawData, width, height)).to.deep.equal(pixels);
     });
 });

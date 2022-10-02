@@ -1,5 +1,6 @@
 // import { HttpClient } from '@angular/common/http';
-import { Component, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Theme } from '@app/enums/theme';
 
@@ -8,23 +9,29 @@ import { Theme } from '@app/enums/theme';
     templateUrl: './dialog-create-game.component.html',
     styleUrls: ['./dialog-create-game.component.scss'],
 })
-export class DialogCreateGameComponent {
-    @ViewChild('imageDifference', { static: false }) image!: HTMLCanvasElement;
-    nbDifference: number;
+export class DialogCreateGameComponent implements AfterViewInit {
+    @ViewChild('imageDifference', { static: false }) differentImage!: ElementRef<HTMLCanvasElement>;
     theme: typeof Theme = Theme;
-
+    name: FormControl = new FormControl('', Validators.pattern(''));
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: { expansionRadius: number; src: ImageBitmap; difference: ImageBitmap }, // private http: HttpClient,
-    ) {
-        //     this.http.post('', {}).subscribe((res: object) => {
-        //         console.log(res);
-        //     }); // get the image of difference
-        //     this.http.post('', {}).subscribe((res: object) => {
-        //         console.log(res);
-        //     }); // get the number of difference
-        // }
-    }
+        @Inject(MAT_DIALOG_DATA)
+        public data: {
+            expansionRadius: number;
+            src: ImageData;
+            difference: ImageData;
+            nbDifference: number;
+            differenceImage: ImageData;
+        } /* private http: HttpClient */,
+    ) {}
 
+    ngAfterViewInit() {
+        const ctx = this.differentImage.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        ctx.putImageData(
+            new ImageData(new Uint8ClampedArray(this.data.differenceImage.data), this.data.differenceImage.width, this.data.differenceImage.height),
+            0,
+            0,
+        );
+    }
     createGame() {
         return;
     }

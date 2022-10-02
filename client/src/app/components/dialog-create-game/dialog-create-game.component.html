@@ -1,5 +1,6 @@
 <div [ngClass]="theme.ClassName" class="dialog">
     <h2 mat-title>Validation des differences</h2>
+    <mat-card-content>Il y a {{ this.data.nbDifference}} differences dans ce jeu</mat-card-content>
     <canvas width="640px" height="480px" id="imageDifference" #imageDifference></canvas>
     <mat-form-field>
         <input matInput type="text" placeholder="Nom du jeu">

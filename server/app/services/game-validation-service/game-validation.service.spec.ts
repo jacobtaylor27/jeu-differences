@@ -37,6 +37,34 @@ describe('GameValidation', () => {
         expect(await gameValidation.differenceBmp({} as Bmp, {} as Bmp, 0)).to.equal(null);
     });
 
+    it('should return check if the number of differences is valid', async () => {
+        const differenceBmpSpy = stub(gameValidation, 'differenceBmp').rejects();
+        expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(null);
+        differenceBmpSpy.resolves();
+
+        bmpDifferenceInterpreterSpyObj.getCoordinates.rejects();
+        expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(null);
+
+        bmpDifferenceInterpreterSpyObj.getCoordinates.resolves([]);
+        expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(false);
+
+        bmpDifferenceInterpreterSpyObj.getCoordinates.resolves([[{} as BmpCoordinate], [{} as BmpCoordinate], [{} as BmpCoordinate]]);
+        expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(true);
+
+        bmpDifferenceInterpreterSpyObj.getCoordinates.resolves([
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+            [{} as BmpCoordinate],
+        ]);
+        expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(false);
+    });
 
     it('should return if the game is valid', async () => {
         const expectedReject = 'bmp decode failed';

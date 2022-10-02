@@ -1,14 +1,13 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as bmp from 'bmp-js';
+import { promises as fs } from 'fs';
 import { Service } from 'typedi';
 
 @Service()
 export class BmpDecoderService {
-    constructor(private readonly fileManagerService: FileManagerService) {}
     async decodeBIntoBmp(filepath: string): Promise<Bmp> {
         if (!this.isFileExtensionValid(filepath)) throw new Error('The file should end with .bmp');
-        const bmpBuffer: Buffer = await this.fileManagerService.getFileContent(filepath);
+        const bmpBuffer: Buffer = await fs.readFile(filepath);
         let bmpData: bmp.BmpDecoder;
         try {
             bmpData = bmp.decode(bmpBuffer);

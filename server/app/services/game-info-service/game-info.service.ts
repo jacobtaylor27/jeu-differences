@@ -41,7 +41,6 @@ export class GameService {
 
             const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
             game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
-            game.idDifferenceBmp = await this.bmpService.addBFromBmp(differenceBmp, DEFAULT_BMP_ASSET_PATH);
             await this.collection.insertOne(game);
             return true;
         } catch (error) {

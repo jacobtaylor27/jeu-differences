@@ -1,6 +1,8 @@
 import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
+import * as bmp from 'bmp-js';
+import { Buffer } from 'buffer';
 export class Bmp {
     private width: number;
     private height: number;
@@ -8,22 +10,37 @@ export class Bmp {
 
     constructor(width: number, height: number, rawData: number[]) {
         this.assertParameters(width, height, rawData);
+        this.pixels = this.convertRawToPixels(rawData, width, height);
         this.height = height;
         this.width = width;
-        this.pixels = this.convertRawToPixels(rawData);
     }
-    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
-        const raw: number[] = [];
-        pixelMatrix.forEach((lineOfPixels) => {
-            lineOfPixels.forEach((pixel) => {
-                raw.push(pixel.a);
-                raw.push(pixel.b);
-                raw.push(pixel.g);
-                raw.push(pixel.r);
-            });
-        });
-        return raw;
+
+    async toImageData(): Promise<ImageData> {
+        const width: number = this.width;
+        const height = this.height;
+        const data = new Uint8ClampedArray(await this.getPixelBuffer());
+        const colorSpace = 'srgb';
+        const imageData: ImageData = {
+            colorSpace,
+            width,
+            height,
+            data,
+        };
+        return imageData;
     }
+
+    async toBmpImageData(): Promise<bmp.ImageData> {
+        const width: number = this.width;
+        const height = this.height;
+        const data = await this.getPixelBuffer();
+        const imageData: bmp.ImageData = {
+            width,
+            height,
+            data,
+        };
+        return bmp.encode(imageData);
+    }
+
     getWidth(): number {
         return this.width;
     }
@@ -36,13 +53,18 @@ export class Bmp {
         return this.pixels;
     }
 
-    private convertRawToPixels(rawData: number[]): Pixel[][] {
+    private async getPixelBuffer(): Promise<Buffer> {
+        const rawPixels: number[] = Pixel.convertPixelsToRaw(this.pixels);
+        return Buffer.from(rawPixels);
+    }
+
+    private convertRawToPixels(rawData: number[], width: number, height: number): Pixel[][] {
         const pixels = [];
-        for (let i = 0; i < this.height; i++) {
+        for (let i = 0; i < height; i++) {
             const scanLine = [];
 
-            for (let j = 0; j < this.width; j++) {
-                const beginRange = (i * this.width + j) * PIXEL_DEPT;
+            for (let j = 0; j < width; j++) {
+                const beginRange = (i * width + j) * PIXEL_DEPT;
                 const pixel: Pixel = this.getPixel(rawData.slice(beginRange, beginRange + PIXEL_DEPT));
                 scanLine.push(pixel);
             }

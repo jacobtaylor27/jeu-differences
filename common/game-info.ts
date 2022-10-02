@@ -9,5 +9,5 @@ export interface GameInfo {
     soloScore?: Score[];
     multiplayerScore?: Score[];
     differenceRadius: number;
-    differences?: Coordinate[][];
+    differences: Coordinate[][];
 }

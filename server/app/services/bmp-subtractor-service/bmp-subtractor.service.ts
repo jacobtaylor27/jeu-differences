@@ -3,7 +3,7 @@ import { Pixel } from '@app/classes/pixel/pixel';
 import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 
-const WIDTH: number = 640;
+const WIDTH = 640;
 const HEIGHT = 420;
 @Service()
 export class BmpSubtractorService {
@@ -57,14 +57,13 @@ export class BmpSubtractorService {
 
     private findContourEnlargement(center: Coordinate, radius: number): Coordinate[] {
         const coordinates: Coordinate[] = new Array();
-        let distance: Coordinate;
 
         if (radius === 0) {
             coordinates.push(center);
             return coordinates;
         }
 
-        distance = { x: radius, y: 0 };
+        const distance: Coordinate = { x: radius, y: 0 };
 
         this.addInitial4Coords(center, distance, coordinates);
 

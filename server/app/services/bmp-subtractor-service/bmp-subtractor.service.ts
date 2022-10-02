@@ -107,14 +107,14 @@ export class BmpSubtractorService {
     }
 
     private isValidCoordinate(coordinate: Coordinate) {
-        return this.isXCoordinateValide(coordinate.x) && this.isYCoordinateValide(coordinate.y);
+        return this.isXCoordinateValid(coordinate.x) && this.isYCoordinateValid(coordinate.y);
     }
 
-    private isXCoordinateValide(x: number) {
+    private isXCoordinateValid(x: number) {
         return x >= 0 && x <= this.WIDTH;
     }
 
-    private isYCoordinateValide(y: number) {
+    private isYCoordinateValid(y: number) {
         return y >= 0 && y <= this.HEIGHT;
     }
 

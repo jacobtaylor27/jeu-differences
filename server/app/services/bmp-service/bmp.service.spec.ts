@@ -49,21 +49,12 @@ describe('Bmp service', async () => {
     it('getAllBmps()) should return all of the files in the Bmp format', async () => {
         expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(2);
     });
-    /*
 
-    it('addBmp(bmpToConvert) should return add a .bmp files to the bmp-src and deleteBmpById should delete it', async () => {
-        const fileName = 'test_bmp_modified.bmp';
-        const buffer: Buffer = await fileManagerService.getFileContent(tmpdir() + fileName);
-
-        await bmpService.addBmp(await bmpDecoderService.convertBufferIntoArrayBuffer(buffer), tmpdir());
-        const fileNames = await fileManagerService.getFileNames(tmpdir());
-        expect(fileNames.length).to.equal(3);
-        for (const name of fileNames) {
-            if (name !== 'bmp_test_2x2' && name !== 'test_bmp_modified') {
-                await bmpService.deleteBmpById(name, tmpdir());
-            }
-        }
-        expect((await fileManagerService.getFileNames(tmpdir())).length).to.equal(2);
+    it('deleteBmpById(bmpId) should delete a file in a folder', async () => {
+        await bmpService.deleteBmpById('1', tmpdir());
+        expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(1);
+        const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
+        const buffer = bmp.encode(await bmpObj.toImageData());
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
     });
-    */
 });

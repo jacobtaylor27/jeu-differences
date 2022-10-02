@@ -22,9 +22,6 @@ export class GameValidation {
     }
 
     async differenceBmp(original: Bmp, modify: Bmp, radius: number) {
-        if (!original || !modify) {
-            return null;
-        }
         return this.bmpSubtractor
             .getDifferenceBMP(original, modify, radius)
             .then((differenceBMP: Bmp) => differenceBMP)
@@ -36,7 +33,7 @@ export class GameValidation {
             .then(async (bmpDifferentiated: Bmp) =>
                 this.bmpDifferenceInterpreter
                     .getCoordinates(bmpDifferentiated)
-                    .then((coordinates: BmpCoordinate[][]) => coordinates.length >= Difference.MIN || coordinates.length <= Difference.MAX)
+                    .then((coordinates: BmpCoordinate[][]) => coordinates.length >= Difference.MIN && coordinates.length <= Difference.MAX)
                     .catch(() => null),
             )
             .catch(() => null);

@@ -14,7 +14,7 @@ export class BmpService {
         const files: string[] = await fs.promises.readdir(filepath);
         for (const file of files) {
             if (file.includes(ID_PREFIX)) {
-                const fileToAdd = file.slice(0, -4).slice(ID_PREFIX.length);
+                const fileToAdd = file.slice(0, -BMP_EXTENSION.length).slice(ID_PREFIX.length);
                 allBmps.push(await this.getBmpById(fileToAdd, filepath));
             }
         }

@@ -1,7 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
-import { promises as fs } from 'fs';
+import * as fs from 'fs';
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
 @Service()
@@ -16,14 +16,10 @@ export class BmpService {
         }
         return allBmps;
     }
-    async getBmpById(bmpId: string, filepath: string): Promise<Bmp | undefined> {
-        const allFileNames: string[] = [];
-        for (const id of allFileNames) {
-            if (bmpId === id) {
-                return await this.bmpDecoderService.decodeBIntoBmp(filepath + '/' + bmpId + '.bmp');
-            }
-        }
-        return undefined;
+    async getBmpById(bmpId: string, filepath: string): Promise<Bmp> {
+        const fullpath: string = filepath + '/' + bmpId + '.bmp';
+        if (!fs.existsSync(fullpath)) throw new Error("Couldn't get the bmp by id");
+        return await this.bmpDecoderService.decodeBIntoBmp(fullpath);
     }
     async addBmp(bpmToConvert: ArrayBuffer, filepath: string): Promise<void> {
         const decodedBmp: Bmp = await this.bmpDecoderService.decodeArrayBufferToBmp(bpmToConvert);
@@ -33,7 +29,7 @@ export class BmpService {
     }
 
     async deleteBmpById(bmpId: string, filepath: string): Promise<boolean> {
-        fs.unlink(filepath + '/' + bmpId + '.bmp');
+        await fs.promises.unlink(filepath + '/' + bmpId + '.bmp');
         return false;
     }
 }

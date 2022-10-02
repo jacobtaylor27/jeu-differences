@@ -1,23 +1,24 @@
+import { Game } from '@app/classes/game/game';
+import { InitGameState } from '@app/classes/init-game-state/init-game-state';
+import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-one-tour-state';
+import { GameMode } from '@app/enum/game-mode';
+import { GameStatus } from '@app/enum/game-status';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
 import { Score } from '@common/score';
-import { Game } from '@app/classes/game/game';
 import { expect } from 'chai';
-import { GameMode } from '@app/enum/game-mode';
-import { InitGameState } from '@app/classes/init-game-state/init-game-state';
-import { stub, spy } from 'sinon';
-import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-one-tour-state';
-import { GameStatus } from '@app/enum/game-status';
+import { spy, stub } from 'sinon';
 
 describe('Game', () => {
     let game: Game;
     const expectedGameInfo: GameInfo = {
-        idOriginalBmp: 0,
-        idEditedBmp: 1,
-        idDifferenceBmp: 2,
+        idOriginalBmp: '0',
+        idEditedBmp: '1',
+        idDifferenceBmp: '2',
         soloScore: [{} as Score],
         multiplayerScore: [{} as Score],
         name: 'test game',
+        differenceRadius: 0,
         differences: [[{} as Coordinate]],
     };
     const expectedPlayers = ['test player'];
@@ -124,7 +125,7 @@ describe('Game', () => {
         const isAllDifferenceFoundSpy = stub(game, 'isAllDifferenceFound').callsFake(() => false);
         const isGameOverSpy = stub(game, 'isGameOver').callsFake(() => true);
         const differenceFoundSpy = stub(game['differenceFound'], 'add');
-        game.differenceFounded([{} as Coordinate]);
+        game.addCoordinatesOnDifferenceFound([{} as Coordinate]);
         expect(isAlreadyDifferenceFoundSpy.called).to.equal(true);
         expect(isAllDifferenceFoundSpy.called).to.equal(false);
         expect(isGameOverSpy.called).to.equal(false);
@@ -132,7 +133,7 @@ describe('Game', () => {
 
         isAlreadyDifferenceFoundSpy.callsFake(() => false);
         const expectedCoordinates = [{ x: 0, y: 0 }];
-        game.differenceFounded(expectedCoordinates);
+        game.addCoordinatesOnDifferenceFound(expectedCoordinates);
         expect(isAlreadyDifferenceFoundSpy.calledTwice).to.equal(true);
         expect(isAllDifferenceFoundSpy.called).to.equal(true);
         expect(isGameOverSpy.called).to.equal(false);
@@ -142,7 +143,7 @@ describe('Game', () => {
         isAllDifferenceFoundSpy.callsFake(() => true);
         const nextStateSpy = spy(game['context'], 'next');
         isGameOverSpy.callsFake(() => false);
-        game.differenceFounded([{} as Coordinate]);
+        game.addCoordinatesOnDifferenceFound([{} as Coordinate]);
         expect(differenceFoundSpy.called).to.equal(true);
         expect(nextStateSpy.called).to.equal(true);
     });
@@ -152,5 +153,37 @@ describe('Game', () => {
         expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(false);
         differenceFoundSpy.callsFake(() => true);
         expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(true);
+    });
+
+    it('should return undefined if differences is not found with coordinate', () => {
+        const expectedDifferences = [[{} as Coordinate]];
+        game['info'] = { differences: expectedDifferences } as GameInfo;
+        expect(game.findDifference({ x: 0, y: 0 })).to.equal(undefined);
+    });
+
+    it('should find a difference and return it', () => {
+        const expectedDifferencesFound = [
+            { x: 0, y: 0 },
+            { x: 1, y: -1 },
+        ];
+        const expectedDifferences = [expectedDifferencesFound];
+        game['info'] = { differences: expectedDifferences } as GameInfo;
+        expect(game.findDifference({ x: 0, y: 0 })).to.deep.equal(expectedDifferencesFound);
+    });
+
+    it('should return null if no difference is found or already found', () => {
+        const findDifferenceSpy = stub(game, 'findDifference').callsFake(() => undefined);
+        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(findDifferenceSpy.called).to.equal(true);
+        const expectedDifferences = [] as Coordinate[];
+        findDifferenceSpy.callsFake(() => expectedDifferences);
+        const isDifferenceAlreadyFoundSpy = stub(game, 'isDifferenceAlreadyFound').callsFake(() => true);
+        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(isDifferenceAlreadyFoundSpy.called).to.equal(true);
+        isDifferenceAlreadyFoundSpy.callsFake(() => false);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const addCoordinatesOnDifferenceFoundSpy = stub(game, 'addCoordinatesOnDifferenceFound').callsFake(() => {});
+        expect(game.isDifferenceFound({} as Coordinate)).to.equal(expectedDifferences);
+        expect(addCoordinatesOnDifferenceFoundSpy.called).to.equal(true);
     });
 });

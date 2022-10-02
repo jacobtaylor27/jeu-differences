@@ -221,7 +221,11 @@ export class GameController {
                 res.status(StatusCodes.NOT_FOUND).send();
                 return;
             }
-            res.status(StatusCodes.OK).send({ difference });
+            res.status(StatusCodes.OK).send({
+                difference,
+                isGameOver: this.gameManager.isGameOver(req.params.id),
+                differencesLeft: this.gameManager.differenceLeft(req.params.id),
+            });
         });
 
         /*

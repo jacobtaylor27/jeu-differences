@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { GameConstantFieldComponent } from '@app/components/game-constant-field/game-constant-field.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { GameConstantFieldComponent } from '../game-constant-field/game-constant-field.component';
 
 import { GameConstantsSettingsComponent } from './game-constants-settings.component';
 

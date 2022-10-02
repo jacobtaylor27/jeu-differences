@@ -11,7 +11,8 @@ import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-s
 @Service()
 export class GameController {
     router: Router;
-
+    // justification: nous avons encapsule la logique dans different service. Le controller s occupe d appeler ces service
+    // eslint-disable-next-line max-params
     constructor(
         private gameManager: GameManagerService,
         private gameInfo: GameService,

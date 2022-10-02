@@ -57,5 +57,12 @@ describe('Bmp service', async () => {
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
     });
 
-    it('addBmp(bmp) should create a file and store it with a unique id', async () => {});
+    it('addBmp(bmp) should create a file and store it with a unique id', async () => {
+        const width = 2;
+        const height = 2;
+        const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const bmpObj = new Bmp(width, height, defaultRawData);
+        await bmpService.addBmp(await bmpObj.toImageData(), tmpdir());
+        expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(3);
+    });
 });

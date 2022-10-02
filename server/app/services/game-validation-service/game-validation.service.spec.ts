@@ -21,6 +21,13 @@ describe('GameValidation', () => {
         gameValidation = new GameValidation(bmpSubtractor, bmpDifferenceInterpreterSpyObj, bmpDecoder);
     });
 
+    it('should get the number of difference', async () => {
+        const expectedDifferences = [[{} as BmpCoordinate]];
+        bmpDifferenceInterpreterSpyObj.getCoordinates.resolves(expectedDifferences);
+        expect(await gameValidation.numberDifference({} as Bmp)).to.equal(expectedDifferences.length);
+        bmpDifferenceInterpreterSpyObj.getCoordinates.rejects();
+        expect(await gameValidation.numberDifference({} as Bmp)).to.equal(null);
+    });
 
     afterEach(() => {
         restore();

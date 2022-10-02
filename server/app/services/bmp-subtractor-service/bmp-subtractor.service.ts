@@ -66,9 +66,9 @@ export class BmpSubtractorService {
         let x = radius;
         let y = 0;
 
-        this.addInitial4Pixels(center, distance, coordinates);
+        this.addInitial4Coords(center, distance, coordinates);
 
-        let p = 1 - radius;
+        let perimeter = 1 - radius;
 
         while (x > y) {
             y++;
@@ -87,6 +87,7 @@ export class BmpSubtractorService {
                 break;
             }
 
+            this.addCoordsIn4Quadrants(center, distance, coordinates);
             // Add points in all 8 quadrants of the enlargement circle
             coordinates.push({ x: x + center.x, y: y + center.y });
             coordinates.push({ x: -x + center.x, y: y + center.y });
@@ -94,6 +95,7 @@ export class BmpSubtractorService {
             coordinates.push({ x: -x + center.x, y: -y + center.y });
 
             if (x !== y) {
+                this.addCoordsIn4Quadrants(center, this.invertCoord(distance), coordinates);
                 coordinates.push({ x: y + center.x, y: x + center.y });
                 coordinates.push({ x: -y + center.x, y: x + center.y });
                 coordinates.push({ x: y + center.x, y: -x + center.y });
@@ -104,7 +106,14 @@ export class BmpSubtractorService {
         return coordinates;
     }
 
-    private addInitial4Pixels(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
+    private invertCoord(coord: Coordinate): Coordinate {
+        const tempX = coord.x;
+        coord.x = coord.y;
+        coord.y = tempX;
+        return coord;
+    }
+
+    private addInitial4Coords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
         coordinates.push({ x: center.x + distance.x, y: center.y });
         coordinates.push({ x: center.x - distance.x, y: center.y });
         coordinates.push({ x: center.x, y: center.y + distance.x });
@@ -114,6 +123,14 @@ export class BmpSubtractorService {
     private isInsidePerimeter(perimeter: number): boolean {
         return perimeter <= 0;
     }
+
+    private addCoordsIn4Quadrants(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
+        coordinates.push({ x: center.x + distance.x, y: center.y + distance.y });
+        coordinates.push({ x: center.x - distance.x, y: center.y + distance.y });
+        coordinates.push({ x: center.x + distance.x, y: center.y - distance.y });
+        coordinates.push({ x: center.x - distance.x, y: center.y - distance.y });
+    }
+
     private distance(px1: Coordinate, px2: Coordinate) {
         let dx = px2.x - px1.x;
         dx = dx * dx;

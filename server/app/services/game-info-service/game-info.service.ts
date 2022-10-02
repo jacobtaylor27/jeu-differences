@@ -4,7 +4,6 @@ import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpret
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
-import { DEFAULT_SCORE } from '@app/services/game-info-service/game-info.service.contants';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
@@ -36,8 +35,8 @@ export class GameService {
 
     async addGame(game: GameInfo): Promise<void> {
         if (game.id === undefined) game.id = this.idGeneratorService.generateNewId();
-        if (game.soloScore === undefined) game.soloScore = DEFAULT_SCORE;
-        if (game.multiplayerScore === undefined) game.multiplayerScore = DEFAULT_SCORE;
+        if (game.soloScore === undefined) game.soloScore = [];
+        if (game.multiplayerScore === undefined) game.multiplayerScore = [];
         const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, this.srcPath);
         const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, this.srcPath);
         const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);

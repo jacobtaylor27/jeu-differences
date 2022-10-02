@@ -10,7 +10,7 @@ export class BmpSubtractorService {
             throw new Error('Both images do not have the same height or width');
         }
 
-        const resultImage: Bmp = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Bmp.convertPixelsToRaw(modifiedImage.getPixels()));
+        const resultImage: Bmp = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Pixel.convertPixelsToRaw(modifiedImage.getPixels()));
 
         for (let i = 0; i < originalImage.getPixels().length; i++) {
             for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
@@ -35,7 +35,7 @@ export class BmpSubtractorService {
         resultCoordinates.forEach((coordinate) => {
             pixelResult[coordinate.x][coordinate.y].setBlack();
         });
-        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Bmp.convertPixelsToRaw(pixelResult));
+        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToRaw(pixelResult));
     }
 
     private getCoordinatesAfterEnlargement(originalCoordinates: Coordinate[], radius: number): Coordinate[] {

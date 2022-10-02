@@ -14,21 +14,9 @@ export class Bmp {
         this.height = height;
         this.width = width;
     }
-    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
-        const raw: number[] = [];
-        pixelMatrix.forEach((lineOfPixels) => {
-            lineOfPixels.forEach((pixel) => {
-                raw.push(pixel.a);
-                raw.push(pixel.r);
-                raw.push(pixel.g);
-                raw.push(pixel.b);
-            });
-        });
-        return raw;
-    }
 
     async getPixelBuffer(): Promise<Buffer> {
-        const rawPixels: number[] = Bmp.convertPixelsToRaw(this.pixels);
+        const rawPixels: number[] = Pixel.convertPixelsToRaw(this.pixels);
         return Buffer.from(rawPixels);
     }
 

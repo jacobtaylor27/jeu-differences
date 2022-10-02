@@ -57,8 +57,8 @@ export class CreateGamePageComponent implements AfterViewInit {
         return difference;
     }
 
-    async createSourceImageFromCanvas(): Promise<ImageBitmap> {
-        return await createImageBitmap(this.sourceImg.nativeElement);
+    createSourceImageFromCanvas(): ImageData {
+        return (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
     }
 
     manageErrorInForm(validationImageErrors: string) {
@@ -79,6 +79,45 @@ export class CreateGamePageComponent implements AfterViewInit {
         });
     }
 
+    isGameValid() {
+        const original: ImageData = this.createSourceImageFromCanvas();
+        return this.http
+            .post<{ numberDifference: number; image: ImageData }>(
+                VALID_GAME,
+                {
+                    width: original.width,
+                    original: { width: original.width, height: original.height, data: Array.from(original.data) },
+                    modify: { width: this.imageDifference.width, height: this.imageDifference.height, data: Array.from(this.imageDifference.data) },
+                    differenceRadius: (this.form.get('expansionRadius') as FormControl).value,
+                },
+                { observe: 'response' },
+            )
+            .pipe(
+                catchError((response: HttpErrorResponse) => {
+                    switch (response.status) {
+                        case HttpStatusCode.NotAcceptable:
+                            if (!response.error) {
+                                break;
+                            }
+                            this.manageErrorInForm(`Il faut entre 3 et 9 differences. Il y en a ${response.error.numberDifference}`);
+                            break;
+                        case HttpStatusCode.NotFound:
+                            this.manageErrorInForm("La server n'as pas pu identifier les differences");
+                            break;
+                        case HttpStatusCode.BadRequest:
+                            this.manageErrorInForm('Il manque des parametres pour pouvoir trouver les differences');
+                            break;
+                    }
+                    return of(null);
+                }),
+            )
+            .subscribe((response: HttpResponse<{ numberDifference: number; image: ImageData }> | null) => {
+                if (!response || !response.body) {
+                    return;
+                }
+                this.validateForm(response.body.numberDifference as number, response.body.image as ImageData);
+            });
+    }
     // set submit function but it will be done with the route
     async onSubmit() {
         this.isGameValid();

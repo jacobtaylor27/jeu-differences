@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game-card-buttons.component';
+import { GameScoreComponent } from '@app/components/game-score/game-score.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { GameCardButtonsComponent } from '../game-card-buttons/game-card-buttons.component';
-import { GameScoreComponent } from '../game-score/game-score.component';
 import { GameCardComponent } from './game-card.component';
 
 const GAME_CARD: GameCard = {

@@ -6,12 +6,18 @@ import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameInfo } from '@common/game-info';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Bmp } from '@app/classes/bmp/bmp';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 
 @Service()
 export class GameController {
     router: Router;
 
-    constructor(private gameManager: GameManagerService, private gameInfo: GameService, private gameValidation: GameValidation) {
+    constructor(
+        private gameManager: GameManagerService,
+        private gameInfo: GameService,
+        private gameValidation: GameValidation,
+        private bmpSubtractor: BmpSubtractorService,
+    ) {
         this.configureRouter();
     }
 
@@ -158,11 +164,19 @@ export class GameController {
                 const original = new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]);
                 const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]);
                 const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius);
+                const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius);
                 res.status(
                     (await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius))
                         ? StatusCodes.ACCEPTED
                         : StatusCodes.NOT_ACCEPTABLE,
-                ).send({ numberDifference });
+                ).send({
+                    numberDifference,
+                    image: {
+                        width: differenceImage.getWidth(),
+                        height: differenceImage.getHeight(),
+                        data: Bmp.convertPixelsToRaw(differenceImage.getPixels()),
+                    },
+                });
             } catch (e) {
                 res.status(StatusCodes.NOT_FOUND).send();
             }

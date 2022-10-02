@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
 
-describe('IdGenerator Service', () => {
+describe.only('IdGenerator Service', () => {
     let idGeneratorService: IdGeneratorService;
 
     beforeEach(() => {
@@ -11,6 +11,8 @@ describe('IdGenerator Service', () => {
     });
 
     it('generateNewId() should generate an id', () => {
-        expect(idGeneratorService.generateNewId()).to.be.instanceOf('string');
+        const firstId = idGeneratorService.generateNewId();
+        const secondId = idGeneratorService.generateNewId();
+        expect(firstId).to.not.deep.equal(secondId);
     });
 });

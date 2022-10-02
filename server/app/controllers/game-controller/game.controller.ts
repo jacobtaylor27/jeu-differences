@@ -1,12 +1,12 @@
-import { StatusCodes } from 'http-status-codes';
-import { Service } from 'typedi';
-import { Request, Response, Router } from 'express';
-import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
-import { GameService } from '@app/services/game-info-service/game-info.service';
-import { GameInfo } from '@common/game-info';
-import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
+import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
+import { GameInfo } from '@common/game-info';
+import { Request, Response, Router } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { Service } from 'typedi';
 
 @Service()
 export class GameController {
@@ -172,11 +172,7 @@ export class GameController {
                         : StatusCodes.NOT_ACCEPTABLE,
                 ).send({
                     numberDifference,
-                    image: {
-                        width: differenceImage.getWidth(),
-                        height: differenceImage.getHeight(),
-                        data: Bmp.convertPixelsToRaw(differenceImage.getPixels()),
-                    },
+                    image: await differenceImage.toImageData(),
                 });
             } catch (e) {
                 res.status(StatusCodes.NOT_FOUND).send();

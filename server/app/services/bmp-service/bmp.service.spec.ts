@@ -23,13 +23,13 @@ describe('Bmp service', async () => {
         bmpDecoderService = Container.get(BmpDecoderService);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toImageData());
-        fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1.bmp'), buffer.data);
-        fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2.bmp'), buffer.data);
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1.bmp'), buffer.data);
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2.bmp'), buffer.data);
     });
 
-    after(() => {
-        fs.unlink(path.join(tmpdir(), ID_PREFIX + '1.bmp'));
-        fs.unlink(path.join(tmpdir(), ID_PREFIX + '2.bmp'));
+    after(async () => {
+        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1.bmp'));
+        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2.bmp'));
         Sinon.restore();
     });
 

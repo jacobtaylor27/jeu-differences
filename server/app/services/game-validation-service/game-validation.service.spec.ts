@@ -37,6 +37,19 @@ describe('GameValidation', () => {
         expect(await gameValidation.differenceBmp({} as Bmp, {} as Bmp, 0)).to.equal(null);
     });
 
+
+    it('should return if the game is valid', async () => {
+        const expectedReject = 'bmp decode failed';
+        bmpDecoder.decodeArrayBufferToBmp.rejects(expectedReject);
+        gameValidation.isGameValid({} as ArrayBuffer, {} as ArrayBuffer, 0).catch((reason) => expect(reason).to.equal(expectedReject));
+        bmpDecoder.decodeArrayBufferToBmp.resolves();
+        const isNbDifferenceValid = stub(gameValidation, 'isNbDifferenceValid').rejects(expectedReject);
+        gameValidation.isGameValid({} as ArrayBuffer, {} as ArrayBuffer, 0).catch((reason) => expect(reason).to.equal(expectedReject));
+        const expectedDifferenceValid = true;
+        isNbDifferenceValid.resolves(expectedDifferenceValid);
+        expect(await gameValidation.isGameValid({} as ArrayBuffer, {} as ArrayBuffer, 0)).to.equal(expectedDifferenceValid);
+    });
+
     afterEach(() => {
         restore();
     });

@@ -1,11 +1,13 @@
 <ul class="highscores">
-    <li class="title-{{ isMultiplayer }}"><b>{{ title }}</b></li>
+    <li class="title-{{ isMultiplayer }}">
+        <b>{{ title }}</b>
+    </li>
     <div class="score-content" *ngIf="hasScores(); else noScores">
-        <li *ngFor="let score of scores">
-            {{ score.playersName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}
-        </li>
+        <li *ngFor="let score of scores">{{ score.playerName.substring(0, 8) }} &mdash; {{ formatScoreTime(score.time) }}</li>
     </div>
     <ng-template #noScores>
-        <li class="empty-scores" *ngFor="let i of [1, 2, 3]"><em>{{ 'Joueur ' + i }} &mdash; 00:00</em></li>
+        <li class="empty-scores" *ngFor="let i of [1, 2, 3]">
+            <em>{{ 'Joueur ' + i }} &mdash; 00:00</em>
+        </li>
     </ng-template>
 </ul>

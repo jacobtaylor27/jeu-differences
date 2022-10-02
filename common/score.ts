@@ -1,4 +1,4 @@
 export interface Score {
-    playersName: string;
+    playerName: string;
     time: number;
 }

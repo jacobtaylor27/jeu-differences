@@ -5,6 +5,8 @@ import { Service } from 'typedi';
 
 @Service()
 export class BmpSubtractorService {
+    WIDTH: number = 640;
+    HEIGHT = 420;
     async getDifferenceBMP(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
@@ -102,6 +104,18 @@ export class BmpSubtractorService {
 
     private invertDistance(distance: Coordinate) {
         return { x: distance.y, y: distance.x };
+    }
+
+    private isValidCoordinate(coordinate: Coordinate) {
+        return this.isXCoordinateValide(coordinate.x) && this.isYCoordinateValide(coordinate.y);
+    }
+
+    private isXCoordinateValide(x: number) {
+        return x >= 0 && x <= this.WIDTH;
+    }
+
+    private isYCoordinateValide(y: number) {
+        return y >= 0 && y <= this.HEIGHT;
     }
 
     private addInitial4Coords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {

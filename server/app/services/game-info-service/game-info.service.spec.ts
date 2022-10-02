@@ -17,7 +17,7 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 import { Container } from 'typedi';
 
-describe.only('GameInfo service', async () => {
+describe('GameInfo service', async () => {
     let gameService: GameService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
@@ -75,7 +75,6 @@ describe.only('GameInfo service', async () => {
 
     it('addGame(game) should add a game to the game collection, getAllGames() should return them', async () => {
         const game: GameInfo = {
-            id: '1',
             idOriginalBmp: '2',
             idEditedBmp: '3',
             idDifferenceBmp: '4',

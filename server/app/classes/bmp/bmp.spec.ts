@@ -55,7 +55,7 @@ describe('Bmp', () => {
         const expectedBuffer: Buffer = Buffer.from(rawData);
         const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
-        expect(await bmpProduced.toBuffer()).to.deep.equal(expectedBuffer);
+        expect(await bmpProduced.getPixelBuffer()).to.deep.equal(expectedBuffer);
     });
 
     it('convertRawToPixels() should convert an array of numbers into pixels', async () => {

@@ -23,7 +23,7 @@ export class Bmp {
     async toImageData(): Promise<ImageData> {
         const width: number = this.width;
         const height = this.height;
-        const data = JSON.parse((await this.getPixelBuffer()).toString());
+        const data = new Uint8ClampedArray(await this.getPixelBuffer());
         const colorSpace = 'srgb';
         const imageData: ImageData = {
             colorSpace,

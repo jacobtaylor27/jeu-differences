@@ -1,10 +1,10 @@
+import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
 import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { Bmp } from './bmp';
 
-describe.only('Bmp', () => {
+describe('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
         const expectedWidth = 2;
         const expectedHeight = 2;
@@ -55,7 +55,7 @@ describe.only('Bmp', () => {
         const expectedBuffer: Buffer = Buffer.from(rawData);
         const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
-        expect(await bmpProduced.getPixelBuffer()).to.deep.equal(expectedBuffer);
+        expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(expectedBuffer);
     });
 
     it('convertRawToPixels() should convert an array of numbers into pixels', async () => {
@@ -67,19 +67,17 @@ describe.only('Bmp', () => {
             [pixel, pixel],
             [pixel, pixel],
         ];
-        const bmp = new Bmp(width, height, rawData);
-        expect(bmp['convertRawToPixels'](rawData, width, height)).to.deep.equal(pixels);
+        const bmpObj = new Bmp(width, height, rawData);
+        expect(bmpObj['convertRawToPixels'](rawData, width, height)).to.deep.equal(pixels);
     });
 
     it('toImageData() should convert the data from the bmp object into an ImageData format', async () => {
-        const defaultWith = 2;
-        const defaultHeight = 2;
+        const width = 2;
+        const height = 2;
         const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
-        const bmpObj = new Bmp(defaultWith, defaultHeight, defaultRawData);
+        const bmpObj = new Bmp(width, height, defaultRawData);
 
-        const width = defaultWith;
-        const height = defaultHeight;
-        const data = new Uint8ClampedArray(await bmpObj.getPixelBuffer());
+        const data = new Uint8ClampedArray(await bmpObj['getPixelBuffer']());
 
         const colorSpace = 'srgb';
         const imageDataExpected: ImageData = {
@@ -88,7 +86,8 @@ describe.only('Bmp', () => {
             height,
             data,
         };
-
         expect(await bmpObj.toImageData()).to.deep.equal(imageDataExpected);
     });
+
+    it('toBmpImageData() should convert the data from the bmp object into an bmp.ImageData format', async () => {});
 });

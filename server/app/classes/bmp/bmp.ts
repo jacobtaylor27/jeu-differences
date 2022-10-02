@@ -15,11 +15,6 @@ export class Bmp {
         this.width = width;
     }
 
-    async getPixelBuffer(): Promise<Buffer> {
-        const rawPixels: number[] = Pixel.convertPixelsToRaw(this.pixels);
-        return Buffer.from(rawPixels);
-    }
-
     async toImageData(): Promise<ImageData> {
         const width: number = this.width;
         const height = this.height;
@@ -43,7 +38,7 @@ export class Bmp {
             height,
             data,
         };
-        return imageData;
+        return bmp.encode(imageData);
     }
 
     getWidth(): number {
@@ -56,6 +51,11 @@ export class Bmp {
 
     getPixels(): Pixel[][] {
         return this.pixels;
+    }
+
+    private async getPixelBuffer(): Promise<Buffer> {
+        const rawPixels: number[] = Pixel.convertPixelsToRaw(this.pixels);
+        return Buffer.from(rawPixels);
     }
 
     private convertRawToPixels(rawData: number[], width: number, height: number): Pixel[][] {

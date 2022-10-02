@@ -1,11 +1,11 @@
-import { restore, createStubInstance, SinonStubbedInstance, stub } from 'sinon';
-import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
-import { expect } from 'chai';
-import { GameValidation } from './game-validation.service';
-import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
-import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
-import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
+import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
+import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
+import { Coordinate } from '@common/coordinate';
+import { expect } from 'chai';
+import { createStubInstance, restore, SinonStubbedInstance, stub } from 'sinon';
+import { GameValidation } from './game-validation.service';
 
 describe('GameValidation', () => {
     let gameValidation: GameValidation;
@@ -22,7 +22,7 @@ describe('GameValidation', () => {
     });
 
     it('should get the number of difference', async () => {
-        const expectedDifferences = [[{} as BmpCoordinate]];
+        const expectedDifferences = [[{} as Coordinate]];
         bmpDifferenceInterpreterSpyObj.getCoordinates.resolves(expectedDifferences);
         expect(await gameValidation.numberDifference({} as Bmp)).to.equal(expectedDifferences.length);
         bmpDifferenceInterpreterSpyObj.getCoordinates.rejects();
@@ -48,20 +48,20 @@ describe('GameValidation', () => {
         bmpDifferenceInterpreterSpyObj.getCoordinates.resolves([]);
         expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(false);
 
-        bmpDifferenceInterpreterSpyObj.getCoordinates.resolves([[{} as BmpCoordinate], [{} as BmpCoordinate], [{} as BmpCoordinate]]);
+        bmpDifferenceInterpreterSpyObj.getCoordinates.resolves([[{} as Coordinate], [{} as Coordinate], [{} as Coordinate]]);
         expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(true);
 
         bmpDifferenceInterpreterSpyObj.getCoordinates.resolves([
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
-            [{} as BmpCoordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
+            [{} as Coordinate],
         ]);
         expect(await gameValidation.isNbDifferenceValid({} as Bmp, {} as Bmp, 0)).to.equal(false);
     });

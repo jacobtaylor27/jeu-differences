@@ -10,7 +10,7 @@ export class BmpEncoderService {
         const width: number = bmpObj.getWidth();
         const height: number = bmpObj.getHeight();
         const data: Buffer = await bmpObj.getPixelBuffer();
-        const bmpData = {
+        const bmpData: bmp.ImageData = {
             width,
             height,
             data,

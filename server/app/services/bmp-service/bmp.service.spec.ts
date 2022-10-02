@@ -22,7 +22,7 @@ describe('Bmp service', async () => {
         bmpService = Container.get(BmpService);
         bmpDecoderService = Container.get(BmpDecoderService);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
-        const buffer = bmp.encode(await bmpObj.toImageData());
+        const buffer = bmp.encode(await bmpObj.toBmpImageData());
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
     });
@@ -53,7 +53,7 @@ describe('Bmp service', async () => {
         await bmpService.deleteBmpById('1', tmpdir());
         expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(1);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
-        const buffer = bmp.encode(await bmpObj.toImageData());
+        const buffer = bmp.encode(await bmpObj.toBmpImageData());
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
     });
 

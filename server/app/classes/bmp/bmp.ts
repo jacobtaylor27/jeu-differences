@@ -32,15 +32,30 @@ export class Bmp {
         return Buffer.from(rawPixels);
     }
 
-    async toImageData(): Promise<bmp.ImageData> {
+    async toImageData(): Promise<ImageData> {
         const width: number = this.width;
         const height = this.height;
-        const data = await this.getPixelBuffer();
-        return {
+        const data = JSON.parse((await this.getPixelBuffer()).toString());
+        const colorSpace = 'srgb';
+        const imageData: ImageData = {
+            colorSpace,
             width,
             height,
             data,
         };
+        return imageData;
+    }
+
+    async toBmpImageData(): Promise<bmp.ImageData> {
+        const width: number = this.width;
+        const height = this.height;
+        const data = await this.getPixelBuffer();
+        const imageData: bmp.ImageData = {
+            width,
+            height,
+            data,
+        };
+        return imageData;
     }
 
     getWidth(): number {

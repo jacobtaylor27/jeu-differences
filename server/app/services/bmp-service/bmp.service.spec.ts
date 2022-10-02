@@ -35,12 +35,14 @@ describe.only('Bmp service', async () => {
         const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(tmpdir() + '/' + id + '.bmp');
         await expect(bmpService.getBmpById(id, tmpdir())).to.eventually.deep.equal(btmDecoded);
     });
-    /*
-    it("getBmpById(id) should return undefined if the id doesn't exist", async () => {
-        const invalidId = 'invalid-id-test-1000';
-        await expect(bmpService.getBmpById(invalidId, tmpdir())).to.eventually.deep.equal(undefined);
-    });
 
+    it("getBmpById(id) should return throw an exception if the id doesn't exist", async () => {
+        const invalidId = 'invalid-id-test-1000';
+        await expect(bmpService.getBmpById(invalidId, tmpdir()))
+            .to.eventually.be.rejectedWith("Couldn't get the bmp by id")
+            .and.be.an.instanceof(Error);
+    });
+    /*
     it('getAllBmps()) should return all of the files in the Bmp format', async () => {
         const bmp1 = await bmpService.getBmpById('test_bmp_modified', tmpdir());
         const bmp2 = await bmpService.getBmpById('bmp_test_2x2', tmpdir());

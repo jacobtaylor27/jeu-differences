@@ -14,7 +14,6 @@ export class BmpService {
     }
     async getBmpById(bmpId: string, filepath: string): Promise<Bmp> {
         const fullpath: string = path.join(filepath, bmpId + '.bmp');
-        console.log(fullpath);
         if (!fs.existsSync(fullpath)) throw new Error("Couldn't get the bmp by id");
         return await this.bmpDecoderService.decodeBIntoBmp(fullpath);
     }

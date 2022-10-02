@@ -5,6 +5,7 @@ import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
+import { Canvas } from '@app/enums/canvas';
 @Component({
     selector: 'app-draw-canvas',
     templateUrl: './draw-canvas.component.html',
@@ -43,7 +44,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.drawImage(this.img.nativeElement, 0, 0);
         ctx.drawImage(this.canvas.nativeElement, 0, 0);
-        this.drawService.$differenceImage.next(await createImageBitmap(this.noContentCanvas.nativeElement));
+        this.drawService.$differenceImage.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
     }
 
     // https://daily-dev-tips.com/posts/javascript-mouse-drawing-on-the-canvas/

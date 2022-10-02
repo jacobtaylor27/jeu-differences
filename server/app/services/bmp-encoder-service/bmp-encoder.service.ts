@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { Pixel } from '@app/interface/pixel';
+import { Pixel } from '@app/classes/pixel/pixel';
 import { FileManagerService } from '@app/services/file-manager-service/file-manager.service';
 import * as bmp from 'bmp-js';
 import { Service } from 'typedi';
@@ -34,8 +34,6 @@ export class BmpEncoderService {
         return Buffer.from(rawPixels);
     }
     private async isFileExtensionValid(filename: string): Promise<boolean> {
-        // prettier-ignore
-        // eslint-disable-next-line
-        return filename.match('^.*\.(bmp)$') !== null;
+        return filename.match('^.*.(bmp)$') !== null;
     }
 }

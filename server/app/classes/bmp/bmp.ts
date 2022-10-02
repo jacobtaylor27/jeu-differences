@@ -1,6 +1,6 @@
+import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
-import { Pixel } from '@app/interface/pixel';
 export class Bmp {
     private width: number;
     private height: number;
@@ -51,13 +51,8 @@ export class Bmp {
         return pixels;
     }
 
-    private getPixel(pixel: number[]): Pixel {
-        return {
-            a: pixel[PIXEL_OFFSET.intensity],
-            r: pixel[PIXEL_OFFSET.red],
-            g: pixel[PIXEL_OFFSET.green],
-            b: pixel[PIXEL_OFFSET.blue],
-        };
+    private getPixel(pixelBuffered: number[]): Pixel {
+        return new Pixel(pixelBuffered[PIXEL_OFFSET.red], pixelBuffered[PIXEL_OFFSET.green], pixelBuffered[PIXEL_OFFSET.blue]);
     }
 
     private assertParameters(width: number, height: number, rawData: number[]): void {

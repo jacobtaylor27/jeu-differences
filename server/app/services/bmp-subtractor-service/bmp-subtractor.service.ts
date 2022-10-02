@@ -73,12 +73,7 @@ export class BmpSubtractorService {
         while (this.isInQuadrant(distance)) {
             distance.y++;
 
-            if (this.isInsidePerimeter(perimeter)) {
-                perimeter = perimeter + 2 * distance.y + 1;
-            } else {
-                distance.x--;
-                perimeter = perimeter + 2 * distance.y - 2 * distance.x + 1;
-            }
+            perimeter = this.incrementPerimeter(perimeter, distance);
             if (this.isOutsideQuadrant(distance)) {
                 break;
             }
@@ -119,6 +114,16 @@ export class BmpSubtractorService {
 
     private isNotEquidistant(distance: Coordinate) {
         return distance.x !== distance.y;
+    }
+
+    private incrementPerimeter(perimeter: number, distance: Coordinate): number {
+        if (this.isInsidePerimeter(perimeter)) {
+            perimeter = perimeter + 2 * distance.y + 1;
+        } else {
+            distance.x--;
+            perimeter = perimeter + 2 * distance.y - 2 * distance.x + 1;
+        }
+        return perimeter;
     }
 
     private addCoordToArray(coord: Coordinate, coordinates: Coordinate[]) {

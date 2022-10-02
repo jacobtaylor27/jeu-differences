@@ -32,7 +32,7 @@ export class CreateGamePageComponent implements AfterViewInit {
             this.sourceImg.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
         });
         this.toolBoxService.$resetSource.subscribe(() => {
-            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
+            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.x, SIZE.y);
         });
     }
 

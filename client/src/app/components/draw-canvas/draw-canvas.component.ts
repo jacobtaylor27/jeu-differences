@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 @Component({
     selector: 'app-draw-canvas',
     templateUrl: './draw-canvas.component.html',
@@ -29,8 +29,8 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.img.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
         });
         this.toolBoxService.$resetDiff.subscribe(() => {
-            (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
-            (this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
+            (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.x, SIZE.y);
+            (this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.x, SIZE.y);
         });
     }
 

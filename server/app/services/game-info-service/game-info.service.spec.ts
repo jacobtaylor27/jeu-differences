@@ -46,11 +46,13 @@ describe('GameInfo service', async () => {
         const buffer = bmp.encode(await bmpObj.toBmpImageData());
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '3' + BMP_EXTENSION), buffer.data);
     });
 
     afterEach(async () => {
         await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
         await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
+        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '3' + BMP_EXTENSION));
         await databaseService.close();
     });
 
@@ -71,8 +73,9 @@ describe('GameInfo service', async () => {
 
     it('addGame(game) should add a game to the game collection, getAllGames() should return them', async () => {
         const game: GameInfo = {
-            idOriginalBmp: '1',
-            idEditedBmp: '2',
+            id: '1',
+            idOriginalBmp: '2',
+            idEditedBmp: '3',
             name: 'Mark',
             differenceRadius: 1,
             differences: [],

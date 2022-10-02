@@ -11,6 +11,8 @@ import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 @Service()
 export class GameService {
+    private srcPath: string = DEFAULT_BMP_ASSET_PATH;
+
     // eslint-disable-next-line max-params
     constructor(
         private readonly databaseService: DatabaseService,
@@ -36,8 +38,8 @@ export class GameService {
         game.id = this.idGeneratorService.generateNewId();
         game.soloScore = DEFAULT_SCORE;
         game.multiplayerScore = DEFAULT_SCORE;
-        const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, DEFAULT_BMP_ASSET_PATH);
-        const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, DEFAULT_BMP_ASSET_PATH);
+        const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, this.srcPath);
+        const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, this.srcPath);
         const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
         game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
         await this.collection.insertOne(game);

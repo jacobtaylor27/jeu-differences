@@ -8,7 +8,6 @@ import { DatabaseServiceMock } from '@app/services/database-service/database.ser
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { GameInfo } from '@common/game-info';
-import { Score } from '@common/score';
 import * as bmp from 'bmp-js';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
@@ -39,6 +38,7 @@ describe('GameInfo service', async () => {
         bmpDecoderService = Container.get(BmpDecoderService);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         gameService = new GameService(databaseService as any, bmpService, bmpSubtractorService, bmpDifferenceService, idGeneratorService);
+        gameService['srcPath'] = tmpdir();
         await databaseService.start(DB_URL);
         await databaseService.populateDatabase();
 
@@ -47,12 +47,14 @@ describe('GameInfo service', async () => {
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '3' + BMP_EXTENSION), buffer.data);
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '4' + BMP_EXTENSION), buffer.data);
     });
 
     afterEach(async () => {
         await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
         await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
         await fs.unlink(path.join(tmpdir(), ID_PREFIX + '3' + BMP_EXTENSION));
+        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '4' + BMP_EXTENSION));
         await databaseService.close();
     });
 
@@ -76,6 +78,7 @@ describe('GameInfo service', async () => {
             id: '1',
             idOriginalBmp: '2',
             idEditedBmp: '3',
+            idDifferenceBmp: '4',
             name: 'Mark',
             differenceRadius: 1,
             differences: [],
@@ -86,17 +89,11 @@ describe('GameInfo service', async () => {
     });
 
     it("addGame(game) shouldn't add a game twice", async () => {
-        const score: Score = {
-            playerName: 'Laurie',
-            time: 22,
-        };
         const game: GameInfo = {
-            id: '2',
-            idOriginalBmp: '1',
-            idEditedBmp: '2',
-            idDifferenceBmp: '3',
-            soloScore: [score],
-            multiplayerScore: [score],
+            id: '1',
+            idOriginalBmp: '2',
+            idEditedBmp: '3',
+            idDifferenceBmp: '4',
             name: 'Laurie',
             differenceRadius: 3,
             differences: [],

@@ -63,58 +63,40 @@ export class BmpSubtractorService {
 
         // MID-POINT ALGORITHM
         distance = { x: radius, y: 0 };
-        let x = radius;
-        let y = 0;
 
         this.addInitial4Coords(center, distance, coordinates);
 
         let perimeter = 1 - radius;
 
-        while (x > y) {
-            y++;
+        while (distance.x > distance.y) {
+            distance.y++;
 
-            // Inside or on the perimeter
             if (this.isInsidePerimeter(perimeter)) {
-                perimeter = perimeter + 2 * y + 1;
-            }
-            // Outside the perimeter
-            else {
-                x--;
-                perimeter = perimeter + 2 * y - 2 * x + 1;
+                perimeter = perimeter + 2 * distance.y + 1;
+            } else {
+                distance.x--;
+                perimeter = perimeter + 2 * distance.y - 2 * distance.x + 1;
             }
             // All points done
-            if (x < y) {
+            if (distance.x < distance.y) {
                 break;
             }
 
             this.addCoordsIn4Quadrants(center, distance, coordinates);
-            // Add points in all 8 quadrants of the enlargement circle
-            coordinates.push({ x: x + center.x, y: y + center.y });
-            coordinates.push({ x: -x + center.x, y: y + center.y });
-            coordinates.push({ x: x + center.x, y: -y + center.y });
-            coordinates.push({ x: -x + center.x, y: -y + center.y });
 
-            if (x !== y) {
-                this.addCoordsIn4Quadrants(center, this.invertCoord(distance), coordinates);
-                coordinates.push({ x: y + center.x, y: x + center.y });
-                coordinates.push({ x: -y + center.x, y: x + center.y });
-                coordinates.push({ x: y + center.x, y: -x + center.y });
-                coordinates.push({ x: -y + center.x, y: -x + center.y });
+            if (this.isNotEquidistant(distance)) {
+                this.addCoordsIn4Quadrants(center, this.invertDistance(distance), coordinates);
             }
         }
 
         return coordinates;
     }
 
-    private invertCoord(coord: Coordinate): Coordinate {
-        const tempX = coord.x;
-        coord.x = coord.y;
-        coord.y = tempX;
-        return coord;
+    private invertDistance(distance: Coordinate) {
+        return { x: distance.y, y: distance.x };
     }
 
     private addInitial4Coords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
-        coordinates.push({ x: center.x + distance.x, y: center.y });
         coordinates.push({ x: center.x - distance.x, y: center.y });
         coordinates.push({ x: center.x, y: center.y + distance.x });
         coordinates.push({ x: center.x, y: center.y - distance.x });
@@ -122,6 +104,10 @@ export class BmpSubtractorService {
 
     private isInsidePerimeter(perimeter: number): boolean {
         return perimeter <= 0;
+    }
+
+    private isNotEquidistant(distance: Coordinate) {
+        return distance.x !== distance.y;
     }
 
     private addCoordsIn4Quadrants(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {

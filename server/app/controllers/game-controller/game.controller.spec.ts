@@ -134,4 +134,33 @@ describe.only('GameController', () => {
         const expectedBody = { original: new ArrayBuffer(0), modify: new ArrayBuffer(0), differenceRadius: 0 };
         return supertest(expressApp).post('/api/game/card/validation').send(expectedBody).expect(StatusCodes.NOT_ACCEPTABLE);
     });
+
+    it('should return Not Found if a problem in the attribute is detected when create a game', async () => {
+        gameValidation.isGameValid.rejects();
+        const expectedBody = { original: new ArrayBuffer(0), modify: new ArrayBuffer(0), differenceRadius: 0, name: '' };
+        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.NOT_FOUND);
+    });
+
+    it('should return Not Accepted if the game is invalid when create a game', async () => {
+        const expectedIsValid = false;
+        gameValidation.isGameValid.resolves(expectedIsValid);
+        const expectedBody = { original: new ArrayBuffer(0), modify: new ArrayBuffer(0), differenceRadius: 0, name: '' };
+        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.NOT_ACCEPTABLE);
+    });
+
+    it('should return Accepted if the game is valid', async () => {
+        const expectedIsValid = true;
+        gameValidation.isGameValid.resolves(expectedIsValid);
+        gameInfo.addGame.resolves();
+        const expectedBody = { original: new ArrayBuffer(0), modify: new ArrayBuffer(0), differenceRadius: 0, name: '' };
+        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.CREATED);
+    });
+
+    it('should return Not Acceptable if the game creation has a problem', async () => {
+        const expectedIsValid = true;
+        gameValidation.isGameValid.resolves(expectedIsValid);
+        gameInfo.addGame.rejects();
+        const expectedBody = { original: new ArrayBuffer(0), modify: new ArrayBuffer(0), differenceRadius: 0, name: '' };
+        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.NOT_ACCEPTABLE);
+    });
 });

@@ -159,15 +159,15 @@ export class GameController {
                 .catch(() => res.status(StatusCodes.NOT_FOUND).send());
         });
 
-        this.router.post('/card', (req: Request, res: Response) => {
-            if (!req.body.original || !req.body.modify || req.body.differenceRadius === undefined || !req.body.name) {
+        this.router.post('/card', async (req: Request, res: Response) => {
+            if (!req.body.original || !req.body.modify || req.body.differenceRadius === undefined || req.body.name === undefined) {
                 res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
 
             let isErrorOnGameValidation = false;
 
-            this.gameValidation
+            await this.gameValidation
                 .isGameValid(req.body.original, req.body.modify, req.body.differenceRadius)
                 .then((isValid: boolean) => {
                     if (!isValid) {

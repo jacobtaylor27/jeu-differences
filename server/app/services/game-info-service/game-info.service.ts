@@ -5,10 +5,10 @@ import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { DEFAULT_SCORE } from '@app/services/game-info-service/game-info.service.contants';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
-import { v4 } from 'uuid';
 @Service()
 export class GameService {
     // eslint-disable-next-line max-params
@@ -17,6 +17,7 @@ export class GameService {
         private readonly bmpService: BmpService,
         private readonly bmpSubtractorService: BmpSubtractorService,
         private readonly bmpDifferenceInterpreter: BmpDifferenceInterpreter,
+        private readonly idGeneratorService: IdGeneratorService,
     ) {}
 
     get collection(): Collection<GameInfo> {
@@ -31,22 +32,17 @@ export class GameService {
         return (await this.collection.find(filter).toArray())[0];
     }
 
-    async addGame(game: GameInfo): Promise<boolean> {
-        game.id = v4();
+    async addGame(game: GameInfo): Promise<void> {
+        game.id = this.idGeneratorService.generateNewId();
         game.soloScore = DEFAULT_SCORE;
         game.multiplayerScore = DEFAULT_SCORE;
-        try {
-            const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, DEFAULT_BMP_ASSET_PATH);
-            const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, DEFAULT_BMP_ASSET_PATH);
-
-            const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
-            game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
-            await this.collection.insertOne(game);
-            return true;
-        } catch (error) {
-            return false;
-        }
+        const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, DEFAULT_BMP_ASSET_PATH);
+        const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, DEFAULT_BMP_ASSET_PATH);
+        const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
+        game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
+        await this.collection.insertOne(game);
     }
+
     async deleteGameById(gameId: string): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
         return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;

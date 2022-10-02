@@ -5,9 +5,11 @@ import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-s
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub } from 'sinon';
 import { Container } from 'typedi';
 
@@ -17,13 +19,18 @@ describe('GameManagerService', () => {
     let bmpDifferenceService: BmpDifferenceInterpreter;
     let gameManager: GameManagerService;
     let gameInfoSpyObj: SinonSpiedInstance<GameService>;
+    let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
     // let differenceSpyObj: SinonSpiedInstance<BmpDifferenceInterpreter>;
 
     beforeEach(() => {
         bmpService = Container.get(BmpService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
-        const gameInfo = new GameService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService);
+        idGeneratorService = sinon.createStubInstance(IdGeneratorService);
+        idGeneratorService['generateNewId'].callsFake(() => {
+            return '5';
+        });
+        const gameInfo = new GameService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, idGeneratorService);
         const differenceService = new BmpDifferenceInterpreter();
         gameInfoSpyObj = stub(gameInfo);
         // differenceSpyObj = spy(differenceService);

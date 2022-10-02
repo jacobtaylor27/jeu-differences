@@ -11,7 +11,7 @@ export class BmpService {
         const allBmps: Bmp[] = [];
         const allFileNames: string[] = [];
         for (const bmpId of allFileNames) {
-            const bmp: Bmp = await this.bmpDecoderService.decodeBIntoBmp(filepath + bmpId + '.bmp');
+            const bmp: Bmp = await this.bmpDecoderService.decodeBIntoBmp(filepath + '/' + bmpId + '.bmp');
             allBmps.push(bmp);
         }
         return allBmps;
@@ -20,7 +20,7 @@ export class BmpService {
         const allFileNames: string[] = [];
         for (const id of allFileNames) {
             if (bmpId === id) {
-                return await this.bmpDecoderService.decodeBIntoBmp(filepath + bmpId + '.bmp');
+                return await this.bmpDecoderService.decodeBIntoBmp(filepath + '/' + bmpId + '.bmp');
             }
         }
         return undefined;
@@ -28,12 +28,12 @@ export class BmpService {
     async addBmp(bpmToConvert: ArrayBuffer, filepath: string): Promise<void> {
         const decodedBmp: Bmp = await this.bmpDecoderService.decodeArrayBufferToBmp(bpmToConvert);
         const bmpId: string = v4();
-        const fullpath = filepath + bmpId + '.bmp';
+        const fullpath = filepath + '/' + bmpId + '.bmp';
         await this.bmpEncoderService.encodeBmpIntoB(fullpath, decodedBmp);
     }
 
     async deleteBmpById(bmpId: string, filepath: string): Promise<boolean> {
-        fs.unlink(filepath + bmpId + '.bmp');
+        fs.unlink(filepath + '/' + bmpId + '.bmp');
         return false;
     }
 }

@@ -20,19 +20,19 @@ describe('Bmp service', async () => {
     beforeEach(async () => {
         bmpService = Container.get(BmpService);
         bmpDecoderService = Container.get(BmpDecoderService);
-        const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + 'test_bmp_original.bmp');
+        const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toImageData());
-        fs.writeFile(tmpdir() + '1.bmp', buffer.data);
+        fs.writeFile(tmpdir() + '/1.bmp', buffer.data);
     });
 
     after(() => {
-        fs.unlink(tmpdir() + '1.bmp');
+        fs.unlink(tmpdir() + '/1.bmp');
         Sinon.restore();
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
         const id = '1';
-        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(tmpdir() + id + '.bmp');
+        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(tmpdir() + '/' + id + '.bmp');
         await expect(bmpService.getBmpById(id, tmpdir())).to.eventually.deep.equal(btmDecoded);
     });
     /*

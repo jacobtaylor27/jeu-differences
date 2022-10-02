@@ -56,6 +56,7 @@ export class BmpSubtractorService {
     private findContourEnlargement(center: Coordinate, radius: number): Coordinate[] {
         const coordinates: Coordinate[] = new Array();
         let distance: Coordinate;
+
         if (radius === 0) {
             coordinates.push(center);
             return coordinates;
@@ -68,7 +69,7 @@ export class BmpSubtractorService {
 
         let perimeter = 1 - radius;
 
-        while (distance.x > distance.y) {
+        while (this.isInQuadrant(distance)) {
             distance.y++;
 
             if (this.isInsidePerimeter(perimeter)) {
@@ -77,8 +78,7 @@ export class BmpSubtractorService {
                 distance.x--;
                 perimeter = perimeter + 2 * distance.y - 2 * distance.x + 1;
             }
-            // All points done
-            if (distance.x < distance.y) {
+            if (this.isOutsideQuadrant(distance)) {
                 break;
             }
 
@@ -90,6 +90,14 @@ export class BmpSubtractorService {
         }
 
         return coordinates;
+    }
+
+    private isInQuadrant(distance: Coordinate) {
+        return distance.x > distance.y;
+    }
+
+    private isOutsideQuadrant(distance: Coordinate) {
+        return distance.x < distance.y;
     }
 
     private invertDistance(distance: Coordinate) {

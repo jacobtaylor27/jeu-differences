@@ -45,4 +45,14 @@ export class BmpService {
         await fs.promises.unlink(path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION));
         return false;
     }
+
+    async resetAllBmp(filepath: string): Promise<void> {
+        const files: string[] = await fs.promises.readdir(filepath);
+        for (const file of files) {
+            if (file.includes(ID_PREFIX)) {
+                const fileToAdd = file.slice(0, -BMP_EXTENSION.length).slice(ID_PREFIX.length);
+                await this.deleteBmpById(fileToAdd, filepath);
+            }
+        }
+    }
 }

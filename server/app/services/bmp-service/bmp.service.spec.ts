@@ -72,5 +72,15 @@ describe('Bmp service', async () => {
         const bmpObj = new Bmp(width, height, defaultRawData);
         await bmpService.addBmp(await bmpObj.toImageData(), tmpdir());
         await expect(bmpService.getBmpById('5', tmpdir())).to.eventually.deep.equal(bmpObj);
+        await bmpService.deleteBmpById('5', tmpdir());
+    });
+
+    it('resetAllBmp(bmp) should delete all the bmp files in the directory', async () => {
+        await bmpService.resetAllBmp(tmpdir());
+        expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(0);
+        const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
+        const buffer = bmp.encode(await bmpObj.toBmpImageData());
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
     });
 });

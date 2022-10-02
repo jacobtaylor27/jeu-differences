@@ -1,10 +1,10 @@
 import { GameContext } from '@app/classes/game-context/game-context';
+import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
-import { GameInfo } from '@common/game-info';
-import { InitGameState } from '@app/classes/init-game-state/init-game-state';
-import { v4 } from 'uuid';
 import { Coordinate } from '@common/coordinate';
+import { GameInfo } from '@common/game-info';
+import { v4 } from 'uuid';
 
 export class Game {
     players: string[];
@@ -35,7 +35,22 @@ export class Game {
         return this.context.gameState();
     }
 
-    differenceFounded(differenceCoords: Coordinate[]) {
+    findDifference(differenceCoords: Coordinate): Coordinate[] | undefined {
+        return this.info.differences.find((difference: Coordinate[]) =>
+            difference.find((coord: Coordinate) => coord.x === differenceCoords.x && coord.y === differenceCoords.y),
+        );
+    }
+
+    isDifferenceFound(differenceCoords: Coordinate) {
+        const differences = this.findDifference(differenceCoords);
+        if (!differences || this.isDifferenceAlreadyFound(differences)) {
+            return null;
+        }
+        this.addCoordinatesOnDifferenceFound(differences);
+        return differences;
+    }
+
+    addCoordinatesOnDifferenceFound(differenceCoords: Coordinate[]) {
         if (this.isDifferenceAlreadyFound(differenceCoords)) {
             return;
         }

@@ -7,12 +7,13 @@ const score: Score = {
 };
 const game1: GameInfo = {
     id: '0',
-    idOriginalBmp: 0,
-    idEditedBmp: 0,
-    idDifferenceBmp: 0,
+    idOriginalBmp: '0',
+    idEditedBmp: '0',
+    idDifferenceBmp: '0',
     soloScore: [score],
     multiplayerScore: [score],
     name: 'Mark',
+    differenceRadius: 1,
     differences: [],
 };
 

@@ -1,19 +1,36 @@
-import { SinonSpiedInstance, stub, restore } from 'sinon';
+import { Game } from '@app/classes/game/game';
+import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpService } from '@app/services/bmp-service/bmp.service';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
+import { DatabaseService } from '@app/services/database-service/database.service';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
-import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
-import { DatabaseService } from '@app/services/database-service/database.service';
-import { expect } from 'chai';
-import { Game } from '@app/classes/game/game';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
+import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
+import { expect } from 'chai';
+import * as sinon from 'sinon';
+import { restore, SinonSpiedInstance, stub } from 'sinon';
+import { Container } from 'typedi';
 
 describe('GameManagerService', () => {
+    let bmpService: BmpService;
+    let bmpSubtractorService: BmpSubtractorService;
+    let bmpDifferenceService: BmpDifferenceInterpreter;
     let gameManager: GameManagerService;
     let gameInfoSpyObj: SinonSpiedInstance<GameService>;
+    let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
     // let differenceSpyObj: SinonSpiedInstance<BmpDifferenceInterpreter>;
 
     beforeEach(() => {
-        const gameInfo = new GameService({} as DatabaseService);
+        bmpService = Container.get(BmpService);
+        bmpSubtractorService = Container.get(BmpSubtractorService);
+        bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
+        idGeneratorService = sinon.createStubInstance(IdGeneratorService);
+        idGeneratorService['generateNewId'].callsFake(() => {
+            return '5';
+        });
+        const gameInfo = new GameService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, idGeneratorService);
         const differenceService = new BmpDifferenceInterpreter();
         gameInfoSpyObj = stub(gameInfo);
         // differenceSpyObj = spy(differenceService);
@@ -77,13 +94,20 @@ describe('GameManagerService', () => {
         expect(gameManager['findGame'](expectedIdGame)).to.deep.equal(expectedGame);
     });
 
-    it('should check if a difference is found', () => {
-        const findGameSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
-        expect(gameManager.isDifference('')).to.equal(null);
+    it('should check if the game is found and the difference is not null', () => {
+        const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(null);
-        findGameSpy.callsFake(() => true);
-        expect(gameManager.isDifference('')).to.deep.equal(null);
-        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal([]);
+        const game = { isDifferenceFound: () => null } as unknown as Game;
+        findGameSpy.callsFake(() => game);
+        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(null);
+    });
+
+    it('should return the difference within a specific coord', () => {
+        const expectedDifferences = [{} as Coordinate];
+        const game = { isDifferenceFound: () => expectedDifferences } as unknown as Game;
+        const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
+        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(expectedDifferences);
+        expect(findGameSpy.called).to.equal(true);
     });
 
     afterEach(() => {

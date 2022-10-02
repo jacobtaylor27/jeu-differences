@@ -60,14 +60,19 @@ describe('GameController', () => {
 
     it('should return a array of coordinate if a difference is found ', async () => {
         const expectedDifference = [{} as Coordinate];
+        const expectedDifferenceLeft = 10;
         gameManager.isGameFound.callsFake(() => true);
-        gameManager.isDifference.callsFake(() => expectedDifference as never[]);
+        gameManager.isDifference.callsFake(() => expectedDifference);
+        gameManager.isGameOver.callsFake(() => false);
+        gameManager.differenceLeft.callsFake(() => expectedDifferenceLeft);
         return supertest(expressApp)
             .post('/api/game/difference/0')
             .send({ x: 0, y: 0 })
             .expect(StatusCodes.OK)
             .then((response) => {
-                expect(response.body).to.deep.equal({ difference: expectedDifference });
+                expect(response.body.difference).to.deep.equal(expectedDifference);
+                expect(response.body.isGameOver).to.deep.equal(false);
+                expect(response.body.differencesLeft).to.deep.equal(expectedDifferenceLeft);
             });
     });
 

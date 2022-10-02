@@ -1,9 +1,9 @@
-import { Service } from 'typedi';
+import { Bmp } from '@app/classes/bmp/bmp';
+import { Difference } from '@app/constants/game';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
-import { Bmp } from '@app/classes/bmp/bmp';
-import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
-import { Difference } from '@app/constants/game';
+import { Coordinate } from '@common/coordinate';
+import { Service } from 'typedi';
 
 @Service()
 export class GameValidation {
@@ -11,7 +11,7 @@ export class GameValidation {
 
     async numberDifference(original: Bmp, modify: Bmp, radius: number) {
         return this.differenceBmp(original, modify, radius).then(async (bmpDifferentiated: Bmp) =>
-            this.bmpDifferenceInterpreter.getCoordinates(bmpDifferentiated).then((coordinates: BmpCoordinate[][]) => coordinates.length),
+            this.bmpDifferenceInterpreter.getCoordinates(bmpDifferentiated).then((coordinates: Coordinate[][]) => coordinates.length),
         );
     }
 

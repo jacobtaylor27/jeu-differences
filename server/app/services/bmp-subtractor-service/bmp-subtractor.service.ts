@@ -83,15 +83,18 @@ export class BmpSubtractorService {
             if (this.isOutsideQuadrant(distance)) {
                 break;
             }
-
-            this.addCoordsIn4Quadrants(center, distance, coordinates);
-
-            if (this.isNotEquidistant(distance)) {
-                this.addCoordsIn4Quadrants(center, this.invertDistance(distance), coordinates);
-            }
+            this.addCoords(center, distance, coordinates);
         }
 
         return coordinates;
+    }
+
+    private addCoords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
+        this.addCoordsIn4Quadrants(center, distance, coordinates);
+
+        if (this.isNotEquidistant(distance)) {
+            this.addCoordsIn4Quadrants(center, this.invertDistance(distance), coordinates);
+        }
     }
 
     private isInQuadrant(distance: Coordinate) {

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { AdminCommandsComponent } from '@app/components/admin-commands/admin-commands.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { AdminCommandsComponent } from '../admin-commands/admin-commands.component';
 
 import { UserNameInputComponent } from './user-name-input.component';
 

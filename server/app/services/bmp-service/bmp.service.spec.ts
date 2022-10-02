@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { DEFAULT_BMP_TEST_PATH, FILE_HEADER } from '@app/constants/database';
+import { DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/constants/database';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import * as bmp from 'bmp-js';
@@ -23,19 +23,19 @@ describe.only('Bmp service', async () => {
         bmpDecoderService = Container.get(BmpDecoderService);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toImageData());
-        fs.writeFile(path.join(tmpdir(), FILE_HEADER + '1.bmp'), buffer.data);
-        fs.writeFile(path.join(tmpdir(), FILE_HEADER + '2.bmp'), buffer.data);
+        fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1.bmp'), buffer.data);
+        fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2.bmp'), buffer.data);
     });
 
     after(() => {
-        fs.unlink(path.join(tmpdir(), FILE_HEADER + '1.bmp'));
-        fs.unlink(path.join(tmpdir(), FILE_HEADER + '2.bmp'));
+        fs.unlink(path.join(tmpdir(), ID_PREFIX + '1.bmp'));
+        fs.unlink(path.join(tmpdir(), ID_PREFIX + '2.bmp'));
         Sinon.restore();
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
         const id = '1';
-        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(path.join(tmpdir(), FILE_HEADER + id + '.bmp'));
+        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(path.join(tmpdir(), ID_PREFIX + id + '.bmp'));
         await expect(bmpService.getBmpById(id, tmpdir())).to.eventually.deep.equal(btmDecoded);
     });
 
@@ -47,7 +47,7 @@ describe.only('Bmp service', async () => {
     });
 
     it('getAllBmps()) should return all of the files in the Bmp format', async () => {
-        expect(await bmpService.getAllBmps(tmpdir())).to.equal(2);
+        expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(2);
     });
     /*
 

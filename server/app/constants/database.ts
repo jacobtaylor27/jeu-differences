@@ -10,3 +10,4 @@ export const DEFAULT_BMP_ASSET_PATH = './assets/src-bmp';
 export const DEFAULT_BMP_TEST_PATH = './assets/test-bmp';
 
 export const ID_PREFIX = 'projet2-equipe-106-';
+export const BMP_EXTENSION = '.bmp';

@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/constants/database';
+import { BMP_EXTENSION, DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/constants/database';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import * as bmp from 'bmp-js';
@@ -23,19 +23,19 @@ describe('Bmp service', async () => {
         bmpDecoderService = Container.get(BmpDecoderService);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toImageData());
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1.bmp'), buffer.data);
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2.bmp'), buffer.data);
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
+        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
     });
 
     after(async () => {
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1.bmp'));
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2.bmp'));
+        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
+        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
         Sinon.restore();
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
         const id = '1';
-        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(path.join(tmpdir(), ID_PREFIX + id + '.bmp'));
+        const btmDecoded: Bmp = await bmpDecoderService.decodeBIntoBmp(path.join(tmpdir(), ID_PREFIX + id + BMP_EXTENSION));
         await expect(bmpService.getBmpById(id, tmpdir())).to.eventually.deep.equal(btmDecoded);
     });
 

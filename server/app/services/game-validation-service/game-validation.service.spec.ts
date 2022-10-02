@@ -29,6 +29,14 @@ describe('GameValidation', () => {
         expect(await gameValidation.numberDifference({} as Bmp)).to.equal(null);
     });
 
+    it('should get difference from Bmp object', async () => {
+        const expectedDifferences = {} as Bmp;
+        bmpSubtractor.getDifferenceBMP.resolves(expectedDifferences);
+        expect(await gameValidation.differenceBmp({} as Bmp, {} as Bmp, 0)).to.equal(expectedDifferences);
+        bmpSubtractor.getDifferenceBMP.rejects();
+        expect(await gameValidation.differenceBmp({} as Bmp, {} as Bmp, 0)).to.equal(null);
+    });
+
     afterEach(() => {
         restore();
     });

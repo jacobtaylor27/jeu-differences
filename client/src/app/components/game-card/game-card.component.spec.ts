@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { GameCardService } from '@app/services/game-card/game-card.service';
+import { GameCardButtonsComponent } from '../game-card-buttons/game-card-buttons.component';
+import { GameScoreComponent } from '../game-score/game-score.component';
 import { GameCardComponent } from './game-card.component';
 
 const GAME_CARD: GameCard = {
@@ -28,7 +29,7 @@ describe('GameCardComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
-            declarations: [GameCardComponent],
+            declarations: [GameCardComponent, GameScoreComponent, GameCardButtonsComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameCardComponent);

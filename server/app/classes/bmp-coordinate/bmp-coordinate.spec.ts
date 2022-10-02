@@ -28,7 +28,7 @@ describe('BmpCoordinate', () => {
     });
 
     it('toCoordinate() should convert BmpCoordinates to Coordinate', () => {
-        const coordinate = new BmpCoordinate(1, 1);
+        const coordinate = new BmpCoordinate(1, 2);
         const expectedCoordinate: Coordinate = {
             x: coordinate.getRow(),
             y: coordinate.getColumn(),

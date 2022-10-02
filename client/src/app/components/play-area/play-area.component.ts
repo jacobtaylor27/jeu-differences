@@ -29,7 +29,17 @@ export class PlayAreaComponent {
         this.buttonPressed = event.key;
     }
 
-    mouseHitDetect($event: MouseEvent, canvas: String) {
+    private isMouseDisabled() {
+        return this.differencesDetectionHandlerService.mouseIsDisabled;
+    }
+
+    onClick($event: MouseEvent, canvas: string) {
+        if (!this.isMouseDisabled()) {
+            this.mouseHitDetect($event, canvas);
+        }
+    }
+
+    mouseHitDetect($event: MouseEvent, canvas: string) {
         this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
 
         const ctx: CanvasRenderingContext2D =

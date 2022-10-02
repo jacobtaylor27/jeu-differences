@@ -1,11 +1,11 @@
 <div id="grid-container">
     <div class="wrapper">
         <canvas #img class="img" width="SIZE.X" height="SIZE.Y"></canvas>
-        <canvas #actionsGameOriginal class="canvas" (click)="mouseHitDetect($event, 'original')" [width]="width" [height]="height"></canvas>
+        <canvas #actionsGameOriginal class="canvas" (click)="onClick($event, 'original')" [width]="width" [height]="height"></canvas>
     </div>
     <div class="wrapper">
         <canvas #img2 class="img" width="SIZE.X" height="SIZE.Y"></canvas>
-        <canvas #actionsGameModified class="canvas" (click)="mouseHitDetect($event, 'modified')" [width]="width" [height]="height"></canvas>
+        <canvas #actionsGameModified class="canvas" (click)="onClick($event, 'modified')" click [width]="width" [height]="height"></canvas>
     </div>
 </div>
 <!-- <div id="mouse-position-display">

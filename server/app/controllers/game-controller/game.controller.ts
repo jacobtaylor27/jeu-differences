@@ -5,6 +5,7 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameInfo } from '@common/game-info';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
+import { Bmp } from '@app/classes/bmp/bmp';
 
 @Service()
 export class GameController {
@@ -154,7 +155,11 @@ export class GameController {
                 return;
             }
             this.gameValidation
-                .isGameValid(req.body.original, req.body.modify, req.body.differenceRadius)
+                .isNbDifferenceValid(
+                    new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]),
+                    new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]),
+                    req.body.differenceRadius,
+                )
                 .then((isValid: boolean) => res.status(isValid ? StatusCodes.ACCEPTED : StatusCodes.NOT_ACCEPTABLE).send())
                 .catch(() => res.status(StatusCodes.NOT_FOUND).send());
         });
@@ -164,11 +169,14 @@ export class GameController {
                 res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
-
             let isErrorOnGameValidation = false;
 
             await this.gameValidation
-                .isGameValid(req.body.original, req.body.modify, req.body.differenceRadius)
+                .isNbDifferenceValid(
+                    new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]),
+                    new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]),
+                    req.body.differenceRadius,
+                )
                 .then((isValid: boolean) => {
                     if (!isValid) {
                         isErrorOnGameValidation = true;

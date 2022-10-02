@@ -154,14 +154,18 @@ export class GameController {
                 res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
-            this.gameValidation
-                .isNbDifferenceValid(
-                    new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]),
-                    new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]),
-                    req.body.differenceRadius,
-                )
-                .then((isValid: boolean) => res.status(isValid ? StatusCodes.ACCEPTED : StatusCodes.NOT_ACCEPTABLE).send())
-                .catch(() => res.status(StatusCodes.NOT_FOUND).send());
+            try {
+                const original = new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]);
+                const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]);
+                const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius);
+                res.status(
+                    (await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius))
+                        ? StatusCodes.ACCEPTED
+                        : StatusCodes.NOT_ACCEPTABLE,
+                ).send({ numberDifference });
+            } catch (e) {
+                res.status(StatusCodes.NOT_FOUND).send();
+            }
         });
 
         this.router.post('/card', async (req: Request, res: Response) => {
@@ -170,11 +174,10 @@ export class GameController {
                 return;
             }
             let isErrorOnGameValidation = false;
-
             await this.gameValidation
                 .isNbDifferenceValid(
-                    new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]),
-                    new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]),
+                    new Bmp(req.body.original.width, req.body.original.height, req.body.original.data),
+                    new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data),
                     req.body.differenceRadius,
                 )
                 .then((isValid: boolean) => {

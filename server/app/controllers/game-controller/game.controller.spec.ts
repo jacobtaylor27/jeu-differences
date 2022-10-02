@@ -117,6 +117,18 @@ describe('GameController', () => {
 
     it('should return Not Found if a problem in the attribute is detected', async () => {
         gameValidation.isNbDifferenceValid.rejects();
+        gameValidation.numberDifference.rejects();
+        const expectedBody = {
+            original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            differenceRadius: 0,
+        };
+        return supertest(expressApp).post('/api/game/card/validation').send(expectedBody).expect(StatusCodes.NOT_FOUND);
+    });
+
+    it('should return Not Found if a problem in the attribute is detected', async () => {
+        gameValidation.isNbDifferenceValid.rejects();
+        gameValidation.numberDifference.resolves();
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
@@ -127,24 +139,36 @@ describe('GameController', () => {
 
     it('should return Accepted if the game is valid', async () => {
         const expectedIsValid = true;
+        const expectedNumberDifference = 4;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
+        gameValidation.numberDifference.resolves(expectedNumberDifference);
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             differenceRadius: 0,
         };
-        return supertest(expressApp).post('/api/game/card/validation').send(expectedBody).expect(StatusCodes.ACCEPTED);
+        return supertest(expressApp)
+            .post('/api/game/card/validation')
+            .send(expectedBody)
+            .expect(StatusCodes.ACCEPTED)
+            .then((response) => expect(response.body.numberDifference).to.equal(expectedNumberDifference));
     });
 
     it('should return Not Accepted if the game is invalid', async () => {
+        const expectedNumberDifference = 4;
         const expectedIsValid = false;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
+        gameValidation.numberDifference.resolves(expectedNumberDifference);
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             differenceRadius: 0,
         };
-        return supertest(expressApp).post('/api/game/card/validation').send(expectedBody).expect(StatusCodes.NOT_ACCEPTABLE);
+        return supertest(expressApp)
+            .post('/api/game/card/validation')
+            .send(expectedBody)
+            .expect(StatusCodes.NOT_ACCEPTABLE)
+            .then((response) => expect(response.body.numberDifference).to.equal(expectedNumberDifference));
     });
 
     it('should return Not Found if a problem in the attribute is detected when create a game', async () => {

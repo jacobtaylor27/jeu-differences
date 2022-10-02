@@ -14,7 +14,7 @@ import * as Sinon from 'sinon';
 import { Container } from 'typedi';
 chai.use(chaiAsPromised);
 
-describe.only('Bmp service', async () => {
+describe('Bmp service', async () => {
     let bmpService: BmpService;
     let bmpDecoderService: BmpDecoderService;
 

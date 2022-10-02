@@ -3,10 +3,10 @@ import { Pixel } from '@app/classes/pixel/pixel';
 import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 
+const WIDTH: number = 640;
+const HEIGHT = 420;
 @Service()
 export class BmpSubtractorService {
-    WIDTH: number = 640;
-    HEIGHT = 420;
     async getDifferenceBMP(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
@@ -97,11 +97,11 @@ export class BmpSubtractorService {
     }
 
     private isXCoordinateValid(x: number) {
-        return x >= 0 && x <= this.WIDTH;
+        return x >= 0 && x <= WIDTH;
     }
 
     private isYCoordinateValid(y: number) {
-        return y >= 0 && y <= this.HEIGHT;
+        return y >= 0 && y <= HEIGHT;
     }
 
     private isValidCoordinate(coordinate: Coordinate) {

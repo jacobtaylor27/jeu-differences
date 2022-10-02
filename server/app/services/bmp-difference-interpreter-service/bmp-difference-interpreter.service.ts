@@ -1,11 +1,18 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
+import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 
 @Service()
 export class BmpDifferenceInterpreter {
-    async getCoordinates(bmpDifferentiated: Bmp): Promise<BmpCoordinate[][]> {
+    async getCoordinates(bmpDifferentiated: Bmp): Promise<Coordinate[][]> {
+        return (await this.getBmpCoordinates(bmpDifferentiated)).map((bmpCoordinates) =>
+            bmpCoordinates.map((bmpCoordinate) => bmpCoordinate.toCoordinate()),
+        );
+    }
+
+    async getBmpCoordinates(bmpDifferentiated: Bmp): Promise<BmpCoordinate[][]> {
         if (!(await this.isBmpDifferentiated(bmpDifferentiated))) throw new Error('The pixels are not perfectly black or white');
 
         const differences: BmpCoordinate[][] = [];

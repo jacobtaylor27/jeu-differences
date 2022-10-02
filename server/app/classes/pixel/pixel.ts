@@ -8,11 +8,23 @@ export class Pixel {
 
     constructor(r: number, g: number, b: number) {
         if (!this.arePixelsValid(r, g, b)) throw new Error('Les pixels ne peuvent pas avoir une valeur négative');
-
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = 0;
+    }
+
+    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
+        const raw: number[] = [];
+        pixelMatrix.forEach((lineOfPixels) => {
+            lineOfPixels.forEach((pixel) => {
+                raw.push(pixel.a);
+                raw.push(pixel.r);
+                raw.push(pixel.g);
+                raw.push(pixel.b);
+            });
+        });
+        return raw;
     }
 
     isWhite() {

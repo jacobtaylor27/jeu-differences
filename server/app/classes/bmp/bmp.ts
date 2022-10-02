@@ -1,8 +1,8 @@
 import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
+import * as bmp from 'bmp-js';
 import { Buffer } from 'buffer';
-
 export class Bmp {
     private width: number;
     private height: number;
@@ -14,21 +14,24 @@ export class Bmp {
         this.height = height;
         this.width = width;
     }
-    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
-        const raw: number[] = [];
-        pixelMatrix.forEach((lineOfPixels) => {
-            lineOfPixels.forEach((pixel) => {
-                raw.push(pixel.a);
-                raw.push(pixel.r);
-                raw.push(pixel.g);
-                raw.push(pixel.b);
-            });
-        });
-        return raw;
+
+    async toImageData(): Promise<ImageData> {
+        const imageData: ImageData = {
+            colorSpace: 'srgb',
+            width: this.width,
+            height: this.height,
+            data: new Uint8ClampedArray(await this.getPixelBuffer()),
+        };
+        return imageData;
     }
 
-    async toBuffer(): Promise<Buffer> {
-        return Buffer.from(await this.getPixelsBuffered());
+    async toBmpImageData(): Promise<bmp.ImageData> {
+        const imageData: bmp.ImageData = {
+            width: this.width,
+            height: this.height,
+            data: await this.getPixelBuffer(),
+        };
+        return bmp.encode(imageData);
     }
 
     getWidth(): number {
@@ -43,8 +46,8 @@ export class Bmp {
         return this.pixels;
     }
 
-    async getPixelsBuffered(): Promise<Buffer> {
-        return Buffer.from(Bmp.convertPixelsToRaw(this.pixels));
+    private async getPixelBuffer(): Promise<Buffer> {
+        return Buffer.from(Pixel.convertPixelsToRaw(this.pixels));
     }
 
     private convertRawToPixels(rawData: number[], width: number, height: number): Pixel[][] {

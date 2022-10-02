@@ -1,13 +1,25 @@
-import { DB_GAME_COLLECTION } from '@app/constants/database';
+import { Bmp } from '@app/classes/bmp/bmp';
+import { DB_GAME_COLLECTION, DEFAULT_BMP_ASSET_PATH } from '@app/constants/database';
+import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpService } from '@app/services/bmp-service/bmp.service';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
-import { v4 } from 'uuid';
-
 @Service()
 export class GameService {
-    constructor(private readonly databaseService: DatabaseService) {}
+    private srcPath: string = DEFAULT_BMP_ASSET_PATH;
+
+    // eslint-disable-next-line max-params
+    constructor(
+        private readonly databaseService: DatabaseService,
+        private readonly bmpService: BmpService,
+        private readonly bmpSubtractorService: BmpSubtractorService,
+        private readonly bmpDifferenceInterpreter: BmpDifferenceInterpreter,
+        private readonly idGeneratorService: IdGeneratorService,
+    ) {}
 
     get collection(): Collection<GameInfo> {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
@@ -21,17 +33,23 @@ export class GameService {
         return (await this.collection.find(filter).toArray())[0];
     }
 
-    async addGame(game: GameInfo): Promise<boolean> {
-        try {
-            game.id = v4();
-            await this.collection.insertOne(game);
-            return true;
-        } catch (error) {
-            return false;
-        }
+    async addGame(game: GameInfo): Promise<void> {
+        if (game.id === undefined) game.id = this.idGeneratorService.generateNewId();
+        if (game.soloScore === undefined) game.soloScore = [];
+        if (game.multiplayerScore === undefined) game.multiplayerScore = [];
+        const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, this.srcPath);
+        const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, this.srcPath);
+        const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
+        game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
+        await this.collection.insertOne(game);
     }
+
     async deleteGameById(gameId: string): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
         return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;
+    }
+
+    async resetAllGame(): Promise<void> {
+        await this.collection.deleteMany({});
     }
 }

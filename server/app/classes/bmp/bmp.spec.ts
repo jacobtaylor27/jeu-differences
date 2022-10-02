@@ -1,8 +1,9 @@
+import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
+import * as bmp from 'bmp-js';
 import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
-import { Bmp } from './bmp';
 
 describe('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
@@ -55,7 +56,7 @@ describe('Bmp', () => {
         const expectedBuffer: Buffer = Buffer.from(rawData);
         const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
-        expect(await bmpProduced.toBuffer()).to.deep.equal(expectedBuffer);
+        expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(expectedBuffer);
     });
 
     it('convertRawToPixels() should convert an array of numbers into pixels', async () => {
@@ -67,7 +68,40 @@ describe('Bmp', () => {
             [pixel, pixel],
             [pixel, pixel],
         ];
-        const bmp = new Bmp(width, height, rawData);
-        expect(bmp['convertRawToPixels'](rawData, width, height)).to.deep.equal(pixels);
+        const bmpObj = new Bmp(width, height, rawData);
+        expect(bmpObj['convertRawToPixels'](rawData, width, height)).to.deep.equal(pixels);
+    });
+
+    it('toImageData() should convert the data from the bmp object into an ImageData format', async () => {
+        const width = 2;
+        const height = 2;
+        const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const bmpObj = new Bmp(width, height, defaultRawData);
+
+        const data = new Uint8ClampedArray(await bmpObj['getPixelBuffer']());
+
+        const colorSpace = 'srgb';
+        const imageDataExpected: ImageData = {
+            colorSpace,
+            width,
+            height,
+            data,
+        };
+        expect(await bmpObj.toImageData()).to.deep.equal(imageDataExpected);
+    });
+
+    it('toBmpImageData() should convert the data from the bmp object into an bmp.ImageData format', async () => {
+        const width = 2;
+        const height = 2;
+        const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const bmpObj = new Bmp(width, height, defaultRawData);
+        const data = await bmpObj['getPixelBuffer']();
+        const imgData: bmp.ImageData = {
+            width,
+            height,
+            data,
+        };
+        const encodedBmp = bmp.encode(imgData);
+        expect(await bmpObj.toBmpImageData()).to.deep.equal(encodedBmp);
     });
 });

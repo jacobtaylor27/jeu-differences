@@ -55,18 +55,18 @@ export class BmpSubtractorService {
 
     private findContourEnlargement(center: Coordinate, radius: number): Coordinate[] {
         const coordinates: Coordinate[] = new Array();
+        let distance: Coordinate;
         if (radius === 0) {
             coordinates.push(center);
             return coordinates;
         }
 
         // MID-POINT ALGORITHM
+        distance = { x: radius, y: 0 };
         let x = radius;
         let y = 0;
 
-        coordinates.push({ x: center.x - x, y: center.y });
-        coordinates.push({ x: center.x, y: x + center.y });
-        coordinates.push({ x: center.x, y: center.y - x });
+        this.addInitial4Pixels(center, distance, coordinates);
 
         let p = 1 - radius;
 
@@ -102,6 +102,13 @@ export class BmpSubtractorService {
         }
 
         return coordinates;
+    }
+
+    private addInitial4Pixels(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
+        coordinates.push({ x: center.x + distance.x, y: center.y });
+        coordinates.push({ x: center.x - distance.x, y: center.y });
+        coordinates.push({ x: center.x, y: center.y + distance.x });
+        coordinates.push({ x: center.x, y: center.y - distance.x });
     }
 
     private distance(px1: Coordinate, px2: Coordinate) {

@@ -4,7 +4,6 @@ import { Coordinate } from '@common/coordinate';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { describe } from 'mocha';
 import { Container } from 'typedi';
 import { BmpSubtractorService } from './bmp-subtractor.service';
 chai.use(chaiAsPromised);

@@ -1,34 +1,31 @@
 import { Injectable } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { Vec2 } from '@app/interfaces/vec2';
-import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 @Injectable({
     providedIn: 'root',
 })
 export class DifferencesDetectionHandlerService {
     wrongSound = new Audio('../assets/sounds/wronganswer.wav');
 
-    constructor(private readonly mouseHandlerService: MouseHandlerService) {}
-
-    difference($event: MouseEvent) {
-        if (this.isADifference($event)) {
+    difference(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
+        if (this.isADifference(mousePosition)) {
             this.differenceDetected();
         } else {
-            this.differenceNotDetected;
+            this.differenceNotDetected(mousePosition, ctx);
         }
     }
 
-    private isADifference($event: MouseEvent): boolean {
+    private isADifference(mousePosition: Vec2): boolean {
         // LOGIC
-        const position: Vec2 = this.mouseHandlerService.mouseHitDetect($event);
-        return position.x > 250;
+        return mousePosition.x > 250;
     }
 
     private differenceDetected() {}
 
-    private differenceNotDetected(ctx: CanvasRenderingContext2D) {
+    private differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         this.wrongSound.play();
-        ctx.fillText('Erreur !', 10, 50);
+        console.log(mousePosition.x, mousePosition.y);
+        ctx.fillText('Erreur', mousePosition.x, mousePosition.y);
         setTimeout(function () {
             ctx.clearRect(0, 0, SIZE.x, SIZE.y);
         }, 1000);

@@ -119,9 +119,13 @@ export class BmpSubtractorService {
     }
 
     private addInitial4Coords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
-        coordinates.push({ x: center.x - distance.x, y: center.y });
-        coordinates.push({ x: center.x, y: center.y + distance.x });
-        coordinates.push({ x: center.x, y: center.y - distance.x });
+        this.addCoordToArray({ x: center.x - distance.x, y: center.y }, coordinates);
+        this.addCoordToArray({ x: center.x, y: center.y + distance.x }, coordinates);
+        this.addCoordToArray({ x: center.x, y: center.y - distance.x }, coordinates);
+    }
+
+    private addCoordToArray(coord: Coordinate, coordinates: Coordinate[]) {
+        if (this.isValidCoordinate(coord)) coordinates.push(coord);
     }
 
     private isInsidePerimeter(perimeter: number): boolean {
@@ -133,10 +137,10 @@ export class BmpSubtractorService {
     }
 
     private addCoordsIn4Quadrants(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
-        coordinates.push({ x: center.x + distance.x, y: center.y + distance.y });
-        coordinates.push({ x: center.x - distance.x, y: center.y + distance.y });
-        coordinates.push({ x: center.x + distance.x, y: center.y - distance.y });
-        coordinates.push({ x: center.x - distance.x, y: center.y - distance.y });
+        this.addCoordToArray({ x: center.x + distance.x, y: center.y + distance.y }, coordinates);
+        this.addCoordToArray({ x: center.x - distance.x, y: center.y + distance.y }, coordinates);
+        this.addCoordToArray({ x: center.x + distance.x, y: center.y - distance.y }, coordinates);
+        this.addCoordToArray({ x: center.x - distance.x, y: center.y - distance.y }, coordinates);
     }
 
     private distance(px1: Coordinate, px2: Coordinate) {

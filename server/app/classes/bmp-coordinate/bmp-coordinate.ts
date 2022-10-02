@@ -10,11 +10,11 @@ export class BmpCoordinate {
         this.y = column;
     }
 
-    getRow(): number {
+    getX(): number {
         return this.x;
     }
 
-    getColumn(): number {
+    getY(): number {
         return this.y;
     }
 

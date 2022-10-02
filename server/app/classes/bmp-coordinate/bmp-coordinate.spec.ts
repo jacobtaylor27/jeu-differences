@@ -9,8 +9,8 @@ describe('BmpCoordinate', () => {
         const column = 1;
         const coordinate = new BmpCoordinate(row, column);
         expect(coordinate).to.be.instanceOf(BmpCoordinate);
-        expect(coordinate.getRow()).to.be.equal(row);
-        expect(coordinate.getColumn()).to.be.equal(column);
+        expect(coordinate.getX()).to.be.equal(row);
+        expect(coordinate.getY()).to.be.equal(column);
     });
 
     it('BmpCoordinate constructor should not allow negative coordinates', () => {
@@ -30,8 +30,8 @@ describe('BmpCoordinate', () => {
     it('toCoordinate() should convert BmpCoordinates to Coordinate', () => {
         const coordinate = new BmpCoordinate(1, 2);
         const expectedCoordinate: Coordinate = {
-            x: coordinate.getRow(),
-            y: coordinate.getColumn(),
+            x: coordinate.getX(),
+            y: coordinate.getY(),
         };
         expect(expectedCoordinate.x).to.equal(coordinate.toCoordinate().x);
         expect(expectedCoordinate.y).to.equal(coordinate.toCoordinate().y);

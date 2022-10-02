@@ -52,7 +52,7 @@ describe('GameCardComponent', () => {
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
         spyTimeFormatter = spyOn(TimeFormatter, 'getMMSSFormat');
-        component.formatScoreTime(10);
+        component.formatScoreTime(1);
         expect(spyTimeFormatter).toHaveBeenCalled();
     });
 

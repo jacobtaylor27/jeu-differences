@@ -74,13 +74,13 @@ export class BmpSubtractorService {
             y++;
 
             // Inside or on the perimeter
-            if (p <= 0) {
-                p = p + 2 * y + 1;
+            if (this.isInsidePerimeter(perimeter)) {
+                perimeter = perimeter + 2 * y + 1;
             }
             // Outside the perimeter
             else {
                 x--;
-                p = p + 2 * y - 2 * x + 1;
+                perimeter = perimeter + 2 * y - 2 * x + 1;
             }
             // All points done
             if (x < y) {
@@ -111,6 +111,9 @@ export class BmpSubtractorService {
         coordinates.push({ x: center.x, y: center.y - distance.x });
     }
 
+    private isInsidePerimeter(perimeter: number): boolean {
+        return perimeter <= 0;
+    }
     private distance(px1: Coordinate, px2: Coordinate) {
         let dx = px2.x - px1.x;
         dx = dx * dx;

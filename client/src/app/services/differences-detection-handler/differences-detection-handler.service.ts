@@ -6,6 +6,7 @@ import { Vec2 } from '@app/interfaces/vec2';
 })
 export class DifferencesDetectionHandlerService {
     wrongSound = new Audio('../assets/sounds/wronganswer.wav');
+    correctSound = new Audio('../assets/sounds/correctanswer.wav');
 
     difference(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         if (this.isADifference(mousePosition)) {
@@ -20,7 +21,9 @@ export class DifferencesDetectionHandlerService {
         return mousePosition.x > 250;
     }
 
-    private differenceDetected() {}
+    private differenceDetected() {
+        this.correctSound.play();
+    }
 
     private differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         this.wrongSound.play();

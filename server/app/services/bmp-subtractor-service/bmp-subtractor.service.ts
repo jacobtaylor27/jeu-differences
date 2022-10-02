@@ -64,7 +64,6 @@ export class BmpSubtractorService {
             return coordinates;
         }
 
-        // MID-POINT ALGORITHM
         distance = { x: radius, y: 0 };
 
         this.addInitial4Coords(center, distance, coordinates);
@@ -83,18 +82,11 @@ export class BmpSubtractorService {
             if (this.isOutsideQuadrant(distance)) {
                 break;
             }
+
             this.addCoords(center, distance, coordinates);
         }
 
         return coordinates;
-    }
-
-    private addCoords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
-        this.addCoordsIn4Quadrants(center, distance, coordinates);
-
-        if (this.isNotEquidistant(distance)) {
-            this.addCoordsIn4Quadrants(center, this.invertDistance(distance), coordinates);
-        }
     }
 
     private isInQuadrant(distance: Coordinate) {
@@ -109,10 +101,6 @@ export class BmpSubtractorService {
         return { x: distance.y, y: distance.x };
     }
 
-    private isValidCoordinate(coordinate: Coordinate) {
-        return this.isXCoordinateValid(coordinate.x) && this.isYCoordinateValid(coordinate.y);
-    }
-
     private isXCoordinateValid(x: number) {
         return x >= 0 && x <= this.WIDTH;
     }
@@ -121,14 +109,8 @@ export class BmpSubtractorService {
         return y >= 0 && y <= this.HEIGHT;
     }
 
-    private addInitial4Coords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
-        this.addCoordToArray({ x: center.x - distance.x, y: center.y }, coordinates);
-        this.addCoordToArray({ x: center.x, y: center.y + distance.x }, coordinates);
-        this.addCoordToArray({ x: center.x, y: center.y - distance.x }, coordinates);
-    }
-
-    private addCoordToArray(coord: Coordinate, coordinates: Coordinate[]) {
-        if (this.isValidCoordinate(coord)) coordinates.push(coord);
+    private isValidCoordinate(coordinate: Coordinate) {
+        return this.isXCoordinateValid(coordinate.x) && this.isYCoordinateValid(coordinate.y);
     }
 
     private isInsidePerimeter(perimeter: number): boolean {
@@ -139,11 +121,29 @@ export class BmpSubtractorService {
         return distance.x !== distance.y;
     }
 
+    private addCoordToArray(coord: Coordinate, coordinates: Coordinate[]) {
+        if (this.isValidCoordinate(coord)) coordinates.push(coord);
+    }
+
+    private addInitial4Coords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
+        this.addCoordToArray({ x: center.x - distance.x, y: center.y }, coordinates);
+        this.addCoordToArray({ x: center.x, y: center.y + distance.x }, coordinates);
+        this.addCoordToArray({ x: center.x, y: center.y - distance.x }, coordinates);
+    }
+
     private addCoordsIn4Quadrants(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
         this.addCoordToArray({ x: center.x + distance.x, y: center.y + distance.y }, coordinates);
         this.addCoordToArray({ x: center.x - distance.x, y: center.y + distance.y }, coordinates);
         this.addCoordToArray({ x: center.x + distance.x, y: center.y - distance.y }, coordinates);
         this.addCoordToArray({ x: center.x - distance.x, y: center.y - distance.y }, coordinates);
+    }
+
+    private addCoords(center: Coordinate, distance: Coordinate, coordinates: Coordinate[]) {
+        this.addCoordsIn4Quadrants(center, distance, coordinates);
+
+        if (this.isNotEquidistant(distance)) {
+            this.addCoordsIn4Quadrants(center, this.invertDistance(distance), coordinates);
+        }
     }
 
     private distance(px1: Coordinate, px2: Coordinate) {
@@ -185,6 +185,7 @@ export class BmpSubtractorService {
             pixelOriginalImg.r === pixelModifiedImg.r
         );
     }
+
     private areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {
         return originalImage.getHeight() === modifiedImage.getHeight() && originalImage.getWidth() === modifiedImage.getWidth();
     }

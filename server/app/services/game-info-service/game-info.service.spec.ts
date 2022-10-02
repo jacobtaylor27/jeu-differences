@@ -17,7 +17,7 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 import { Container } from 'typedi';
 
-describe('GameInfo service', async () => {
+describe.only('GameInfo service', async () => {
     let gameService: GameService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
@@ -84,7 +84,7 @@ describe('GameInfo service', async () => {
             differences: [],
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
-        expect(await gameService.addGame(game)).to.equal(true);
+        expect(await gameService.addGame(game));
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length + 1);
     });
 
@@ -99,9 +99,8 @@ describe('GameInfo service', async () => {
             differences: [],
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
-        expect(await gameService.addGame(game)).to.equal(true);
-        expect(await gameService.addGame(game)).to.equal(false);
-        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length + 1);
+        expect(await gameService.addGame(game));
+        await expect(gameService.addGame(game)).to.eventually.be.rejectedWith(Error);
     });
 
     it('deleteGameBy(id) should delete a game according to a specific id', async () => {
@@ -114,5 +113,10 @@ describe('GameInfo service', async () => {
         expect((await gameService.getAllGames()).length).to.equal(0);
         expect(await gameService.deleteGameById('0')).to.equal(false);
         expect(await gameService.deleteGameById('0')).to.equal(false);
+    });
+
+    it('resetAllGame() should reset all of the games', async () => {
+        await gameService.resetAllGame();
+        expect((await gameService.getAllGames()).length).to.equal(0);
     });
 });

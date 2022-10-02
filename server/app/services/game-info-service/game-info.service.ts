@@ -35,9 +35,9 @@ export class GameService {
     }
 
     async addGame(game: GameInfo): Promise<void> {
-        game.id = this.idGeneratorService.generateNewId();
-        game.soloScore = DEFAULT_SCORE;
-        game.multiplayerScore = DEFAULT_SCORE;
+        if (game.id === undefined) game.id = this.idGeneratorService.generateNewId();
+        if (game.soloScore === undefined) game.soloScore = DEFAULT_SCORE;
+        if (game.multiplayerScore === undefined) game.multiplayerScore = DEFAULT_SCORE;
         const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, this.srcPath);
         const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, this.srcPath);
         const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
@@ -48,5 +48,9 @@ export class GameService {
     async deleteGameById(gameId: string): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
         return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;
+    }
+
+    async resetAllGame(): Promise<void> {
+        await this.collection.deleteMany({});
     }
 }

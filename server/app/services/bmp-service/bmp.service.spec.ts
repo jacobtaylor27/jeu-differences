@@ -2,6 +2,7 @@ import { Bmp } from '@app/classes/bmp/bmp';
 import { BMP_EXTENSION, DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/constants/database';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import * as bmp from 'bmp-js';
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -10,6 +11,7 @@ import { promises as fs } from 'fs';
 import { describe } from 'mocha';
 import { tmpdir } from 'os';
 import * as path from 'path';
+import * as sinon from 'sinon';
 import { Container } from 'typedi';
 
 chai.use(chaiAsPromised);
@@ -17,10 +19,16 @@ chai.use(chaiAsPromised);
 describe('Bmp service', async () => {
     let bmpService: BmpService;
     let bmpDecoderService: BmpDecoderService;
+    let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
 
     beforeEach(async () => {
-        bmpService = Container.get(BmpService);
+        idGeneratorService = sinon.createStubInstance(IdGeneratorService);
+        idGeneratorService['generateNewId'].callsFake(() => {
+            return '5';
+        });
         bmpDecoderService = Container.get(BmpDecoderService);
+        bmpService = new BmpService(bmpDecoderService, idGeneratorService as IdGeneratorService);
+
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toBmpImageData());
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
@@ -63,6 +71,6 @@ describe('Bmp service', async () => {
         const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
         const bmpObj = new Bmp(width, height, defaultRawData);
         await bmpService.addBmp(await bmpObj.toImageData(), tmpdir());
-        expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(3);
+        await expect(bmpService.getBmpById('5', tmpdir())).to.eventually.deep.equal(bmpObj);
     });
 });

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
 
-describe.only('IdGenerator Service', () => {
+describe('IdGenerator Service', () => {
     let idGeneratorService: IdGeneratorService;
 
     beforeEach(() => {

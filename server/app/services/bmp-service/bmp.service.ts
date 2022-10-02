@@ -1,14 +1,14 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BMP_EXTENSION, ID_PREFIX } from '@app/constants/database';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
+import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import * as bmp from 'bmp-js';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Service } from 'typedi';
-import { v4 } from 'uuid';
 @Service()
 export class BmpService {
-    constructor(private readonly bmpDecoderService: BmpDecoderService) {}
+    constructor(private readonly bmpDecoderService: BmpDecoderService, private readonly idGeneratorService: IdGeneratorService) {}
     async getAllBmps(filepath: string): Promise<Bmp[]> {
         const allBmps: Bmp[] = [];
         const files: string[] = await fs.promises.readdir(filepath);
@@ -25,7 +25,7 @@ export class BmpService {
         if (!fs.existsSync(fullpath)) throw new Error("Couldn't get the bmp by id");
         return await this.bmpDecoderService.decodeBIntoBmp(fullpath);
     }
-    async addBmp(bpmToConvert: ImageData, filepath: string, id?: string): Promise<void> {
+    async addBmp(bpmToConvert: ImageData, filepath: string): Promise<void> {
         const data = Buffer.from(bpmToConvert.data);
         const width = bpmToConvert.width;
         const height = bpmToConvert.height;
@@ -37,7 +37,7 @@ export class BmpService {
         };
 
         const rawData = bmp.encode(bmpData);
-        const bmpId: string = v4();
+        const bmpId: string = this.idGeneratorService.generateNewId();
         const fullpath = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
         await fs.promises.writeFile(fullpath, rawData.data);
     }

@@ -1,8 +1,6 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
-
-// TODO : Avoir un fichier séparé pour les constantes!
-const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
+import { Vec2 } from '@app/interfaces/vec2';
+import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 
 @Component({
     selector: 'app-play-area',
@@ -10,20 +8,25 @@ const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent {
-    @ViewChild('actionsGame', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('actionsGameOriginal') canvasOriginal!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('actionsGameModified') canvasModified!: ElementRef<HTMLCanvasElement>;
+    mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
 
-    constructor(private readonly mouseHandlerService: MouseHandlerService) {}
+    constructor(private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService) {}
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
     }
 
-    mouseHitDetect($event: MouseEvent) {
-        // const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    mouseHitDetect($event: MouseEvent, canvas: String) {
+        this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
+        const ctx: CanvasRenderingContext2D =
+            canvas === 'original'
+                ? (this.canvasOriginal.nativeElement.getContext('2d') as CanvasRenderingContext2D)
+                : (this.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D);
 
-        console.log(this.mouseHandlerService.mouseHitDetect($event));
-        wrongSound.play();
+        this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);
     }
 }

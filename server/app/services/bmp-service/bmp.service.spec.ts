@@ -10,8 +10,8 @@ import { promises as fs } from 'fs';
 import { describe } from 'mocha';
 import { tmpdir } from 'os';
 import * as path from 'path';
-import * as Sinon from 'sinon';
 import { Container } from 'typedi';
+
 chai.use(chaiAsPromised);
 
 describe('Bmp service', async () => {
@@ -30,7 +30,6 @@ describe('Bmp service', async () => {
     after(async () => {
         await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
         await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
-        Sinon.restore();
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
@@ -56,5 +55,13 @@ describe('Bmp service', async () => {
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toImageData());
         await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
+    });
+
+    it('addBmp(bmp) should create a file and store it with a unique id', async () => {
+        const bmpArrayBuffer = await bmpDecoderService.convertBufferIntoArrayBuffer(
+            await (await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp')).toBuffer(),
+        );
+        await bmpService.addBmp(bmpArrayBuffer, tmpdir());
+        expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(3);
     });
 });

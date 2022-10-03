@@ -1,33 +1,27 @@
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GameCard } from '@app/interfaces/game-card';
 import { CommunicationService } from '../communication.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameInfosService {
+    imageWidth: number;
+    imageHeight: number;
+    imageData: number[];
+    imageName: string;
     constructor(readonly communicationService: CommunicationService) {}
 
-    fetchImgData() {
-        this.communicationService.getImgData('hello').subscribe((imgData) => {
-            this.setImageName(imgData);
-
-            return imgData;
-        });
-    }
-
-    setInfos(gameCard: GameCard, imgName: string) {
-        gameCard.gameInformation.imgName = imgName;
-    }
-
-    private setImageName(imageData: ImageData) {
-        const canvas = document.createElement('canvas');
-        canvas.width = 640;
-        canvas.height = 480;
-        const ctx = canvas.getContext('2d');
-        console.log(typeof imageData);
-        ctx?.putImageData(imageData as ImageData, 0, 0);
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        return dataUrl.replace(/^data:image\/(png|jpg);base64,/, '');
+    fetchImgData(id: string) {
+        return this.communicationService
+            .getImgData(id)
+            .subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
+                if (!response || !response.body) {
+                    return;
+                }
+                this.imageWidth = response.body.width;
+                this.imageHeight = response.body.height;
+                this.imageData = response.body.data;
+            });
     }
 }

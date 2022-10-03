@@ -1,16 +1,16 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { PIXEL_BUFFER, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
+import { EQUIVALENT_DATA, PIXEL_BUFFER_RGBA, PIXEL_BUFFER_ARGB, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
 import { Pixel } from '@app/classes/pixel/pixel';
 import * as bmp from 'bmp-js';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe('Bmp', () => {
+describe.only('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
         const bmpProduced = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
         expect(bmpProduced.getWidth()).to.equals(TEST_BMP_DATA.width);
         expect(bmpProduced.getHeight()).to.equals(TEST_BMP_DATA.height);
-        expect(bmpProduced.getPixels()).to.eql(TEST_BMP_DATA.data);
+        expect(bmpProduced.getPixels()).to.eql(EQUIVALENT_DATA);
     });
 
     it('An exception should be thrown if the width is less or equal to 0', () => {
@@ -35,7 +35,7 @@ describe('Bmp', () => {
 
     it('toBuffer() should convert a bmp file into a buffer', async () => {
         const bmpProduced = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
-        expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(Buffer.from(PIXEL_BUFFER));
+        expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(Buffer.from(PIXEL_BUFFER_ARGB));
     });
 
     it('convertRawToPixels() should convert an array of numbers into pixels', async () => {

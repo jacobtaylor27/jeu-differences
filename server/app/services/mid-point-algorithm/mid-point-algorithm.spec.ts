@@ -66,12 +66,12 @@ describe('Midpoint Algorithn', async () => {
 
     it('should increment the perimeter correctly ', () => {
         const distance: Coordinate = { x: 1, y: 3 };
-        const perimeterPostive = 1;
+        const perimeterPositive = 1;
         const expectedPerimeterPositive = 8;
         const perimeterNegative = -1;
         const expectedPerimeterNegative = 6;
 
-        expect(midpointAlgorithm['incrementPerimeter'](perimeterPostive, distance)).to.equal(expectedPerimeterPositive);
+        expect(midpointAlgorithm['incrementPerimeter'](perimeterPositive, distance)).to.equal(expectedPerimeterPositive);
         expect(midpointAlgorithm['incrementPerimeter'](perimeterNegative, distance)).to.equal(expectedPerimeterNegative);
     });
 

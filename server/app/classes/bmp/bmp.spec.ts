@@ -5,20 +5,20 @@ import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe('Bmp', () => {
+describe.only('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
         const expectedWidth = 2;
         const expectedHeight = 2;
-        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const rawData = [255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3];
 
         const pixelsExpected = [
             [
-                { a: 0, r: 1, g: 2, b: 3 },
-                { a: 0, r: 1, g: 2, b: 3 },
+                { a: 255, r: 1, g: 2, b: 3 },
+                { a: 255, r: 1, g: 2, b: 3 },
             ],
             [
-                { a: 0, r: 1, g: 2, b: 3 },
-                { a: 0, r: 1, g: 2, b: 3 },
+                { a: 255, r: 1, g: 2, b: 3 },
+                { a: 255, r: 1, g: 2, b: 3 },
             ],
         ];
 
@@ -32,7 +32,7 @@ describe('Bmp', () => {
     it('An exception should be thrown if the width is less or equal to 0', () => {
         expect(() => {
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            new Bmp(-1, 1, [0, 1, 2, 3]);
+            new Bmp(-1, 1, [255, 1, 2, 3]);
         }).to.throw(Error);
     });
 
@@ -52,7 +52,7 @@ describe('Bmp', () => {
     it('toBuffer() should convert a bmp file into a buffer', async () => {
         const expectedWidth = 2;
         const expectedHeight = 2;
-        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const rawData = [1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255];
         const expectedBuffer: Buffer = Buffer.from(rawData);
         const bmpProduced = new Bmp(expectedWidth, expectedHeight, rawData);
 
@@ -62,7 +62,7 @@ describe('Bmp', () => {
     it('convertRawToPixels() should convert an array of numbers into pixels', async () => {
         const width = 2;
         const height = 2;
-        const rawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const rawData = [255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3];
         const pixel: Pixel = new Pixel(1, 2, 3);
         const pixels: Pixel[][] = [
             [pixel, pixel],
@@ -75,7 +75,7 @@ describe('Bmp', () => {
     it('toImageData() should convert the data from the bmp object into an ImageData format', async () => {
         const width = 2;
         const height = 2;
-        const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const defaultRawData = [255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3];
         const bmpObj = new Bmp(width, height, defaultRawData);
 
         const data = new Uint8ClampedArray(await bmpObj['getPixelBuffer']());
@@ -93,7 +93,7 @@ describe('Bmp', () => {
     it('toBmpImageData() should convert the data from the bmp object into an bmp.ImageData format', async () => {
         const width = 2;
         const height = 2;
-        const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const defaultRawData = [255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3];
         const bmpObj = new Bmp(width, height, defaultRawData);
         const data = await bmpObj['getPixelBuffer']();
         const imgData: bmp.ImageData = {

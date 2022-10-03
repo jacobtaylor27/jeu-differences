@@ -9,7 +9,7 @@ import { TEST_2X2_BMP, TEST_2X3_BMP, TEST_3X2_BMP } from './bmp-decoder-service.
 
 chai.use(chaiAsPromised);
 
-describe.only('Bmp decoder service', () => {
+describe('Bmp decoder service', () => {
     let bmpDecoderService: BmpDecoderService;
 
     beforeEach(async () => {

@@ -7,22 +7,10 @@ import { describe } from 'mocha';
 
 describe('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
-        const pixelsExpected = [
-            [
-                { a: 255, r: 1, g: 2, b: 3 },
-                { a: 255, r: 1, g: 2, b: 3 },
-            ],
-            [
-                { a: 255, r: 1, g: 2, b: 3 },
-                { a: 255, r: 1, g: 2, b: 3 },
-            ],
-        ];
-
         const bmpProduced = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
-
         expect(bmpProduced.getWidth()).to.equals(TEST_BMP_DATA.width);
         expect(bmpProduced.getHeight()).to.equals(TEST_BMP_DATA.height);
-        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
+        expect(bmpProduced.getPixels()).to.eql(TEST_BMP_DATA.data);
     });
 
     it('An exception should be thrown if the width is less or equal to 0', () => {

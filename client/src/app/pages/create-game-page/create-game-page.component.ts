@@ -73,7 +73,7 @@ export class CreateGamePageComponent implements AfterViewInit {
         });
     }
 
-    validateForm(nbDifference: number, differenceImage: ImageData) {
+    validateForm(nbDifference: number, differenceImage: number[]) {
         this.dialog.open(DialogCreateGameComponent, {
             data: {
                 expansionRadius: (this.form.get('expansionRadius') as FormControl).value,
@@ -120,10 +120,7 @@ export class CreateGamePageComponent implements AfterViewInit {
                 if (!response || !response.body) {
                     return;
                 }
-                this.validateForm(
-                    response.body.numberDifference as number,
-                    new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, { colorSpace: 'srgb' }),
-                );
+                this.validateForm(response.body.numberDifference as number, response.body.data);
             });
     }
     // set submit function but it will be done with the route

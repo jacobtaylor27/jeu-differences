@@ -15,7 +15,20 @@ export class Pixel {
         this.a = MAX_VALUE_PIXEL;
     }
 
-    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
+    static convertPixelsToARGB(pixelMatrix: Pixel[][]): number[] {
+        const raw: number[] = [];
+        pixelMatrix.forEach((lineOfPixels) => {
+            lineOfPixels.forEach((pixel) => {
+                raw.push(pixel.a);
+                raw.push(pixel.r);
+                raw.push(pixel.g);
+                raw.push(pixel.b);
+            });
+        });
+        return raw;
+    }
+
+    static convertPixelsToRGBA(pixelMatrix: Pixel[][]): number[] {
         const raw: number[] = [];
         pixelMatrix.forEach((lineOfPixels) => {
             lineOfPixels.forEach((pixel) => {

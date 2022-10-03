@@ -4,10 +4,10 @@ export class BmpCoordinate {
     private x: number;
     private y: number;
 
-    constructor(row: number, column: number) {
-        if (!this.areParametersValid(row, column)) throw new Error("The coordinates can't be negative");
-        this.x = row;
-        this.y = column;
+    constructor(x: number, y: number) {
+        if (!this.areParametersValid(x, y)) throw new Error("The coordinates can't be negative");
+        this.x = x;
+        this.y = y;
     }
 
     getX(): number {

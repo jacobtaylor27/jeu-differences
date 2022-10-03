@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
@@ -9,12 +8,11 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
 })
 export class AdminPageComponent implements OnInit {
     favoriteTheme: string = 'deeppurple-amber-theme';
-    gameCards: GameCard[] = [];
 
     constructor(private readonly gameCarouselService: GameCarouselService) {}
 
     ngOnInit(): void {
-        this.gameCards = this.gameCarouselService.getCards();
+        this.gameCarouselService.fetchCardsFromServer();
         this.resetStartingRange();
         this.makeCardsAdminMode();
     }

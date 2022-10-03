@@ -1,24 +1,20 @@
 import { HttpResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { CardRange } from '@app/interfaces/range';
 import { GameInfo } from '@common/game-info';
-import { CommunicationService } from '../communication.service';
+import { CommunicationService } from '@app/services/communication.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class GameCardHandlerService implements OnInit {
+export class GameCardHandlerService {
+    gamesInfo: GameInfo[];
     private activeCardsRange: CardRange = { start: 0, end: 3 };
     private gameCards: GameCard[] = [];
-    gamesInfo: GameInfo[];
 
-    constructor(private readonly communicationService: CommunicationService) {}
-
-    ngOnInit(): void {
-        // this.fetchGameInformation();
-        // this.mapInformationToGameCard();
-        // this.setActiveCards(this.activeCardsRange);
+    constructor(private readonly communicationService: CommunicationService) {
+        this.fetchGameInformation();
     }
 
     fetchGameInformation(): void {
@@ -26,12 +22,14 @@ export class GameCardHandlerService implements OnInit {
             if (!response || !response.body) {
                 return;
             }
-            console.log('ALLO');
             this.gamesInfo = response.body.games;
         });
+        // this.mapInformationToGameCard();
     }
 
     mapInformationToGameCard() {
+        this.gameCards = [];
+
         for (const gameInfo of this.gamesInfo) {
             const newCard: GameCard = {
                 gameInformation: gameInfo,
@@ -40,7 +38,6 @@ export class GameCardHandlerService implements OnInit {
             };
             this.gameCards.push(newCard);
         }
-        console.log(this.gameCards);
     }
 
     getGameCards(): GameCard[] {
@@ -89,6 +86,10 @@ export class GameCardHandlerService implements OnInit {
 
     setActiveCards(range: CardRange): void {
         this.hideAllCards();
+
+        if (range.end > this.gameCards.length - 1) {
+            range.end = this.gameCards.length - 1;
+        }
 
         for (let i = range.start; i <= range.end; i++) {
             this.gameCards[i].isShown = true;

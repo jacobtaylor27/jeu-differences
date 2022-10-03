@@ -4,7 +4,7 @@ import { Service } from 'typedi';
 
 @Service()
 export class MidpointAlgorithm {
-    public findEnlargementArea(center: BmpCoordinate, radius: number) {
+    findEnlargementArea(center: BmpCoordinate, radius: number) {
         return this.findInsideAreaEnlargement(center, radius, this.findContourEnlargement(center, radius));
     }
 

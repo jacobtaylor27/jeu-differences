@@ -1,7 +1,7 @@
+import { DEFAULT_BMP_ASSET_PATH } from '@app/constants/database';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
-import { DateService } from '@app/services/date-service/date.service';
-import { Message } from '@common/message';
 import { Request, Response, Router } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 
 @Service()
@@ -15,22 +15,18 @@ export class BmpController {
     private configureRouter(): void {
         this.router = Router();
 
-        this.router.get('/id', (req: Request, res: Response) => {
-            
-
-
-            this.dateService
-                .currentTime()
-                .then((time: Message) => {
-                    res.json(time);
-                })
-                .catch((reason: unknown) => {
-                    const errorMessage: Message = {
-                        title: 'Error',
-                        body: reason as string,
-                    };
-                    res.json(errorMessage);
-                });
+        this.router.get('/:id', async (req: Request, res: Response) => {
+            if (!req.params.id) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+                return;
+            }
+            try {
+                const bmpRequested = await this.bmpService.getBmpById(req.params.id, DEFAULT_BMP_ASSET_PATH);
+                const bmpData = { imgData: await bmpRequested.toImageData() };
+                res.status(StatusCodes.CREATED).send(bmpData);
+            } catch (error) {
+                res.status(StatusCodes.NOT_FOUND).send();
+            }
         });
     }
 }

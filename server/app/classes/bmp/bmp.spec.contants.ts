@@ -5,3 +5,5 @@ export const TEST_BMP_DATA = {
     height: 2,
     data: [255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3],
 };
+
+export const PIXEL_BUFFER = [1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255];

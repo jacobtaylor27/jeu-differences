@@ -1,12 +1,11 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
+import { PIXEL_BUFFER, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
 import { Pixel } from '@app/classes/pixel/pixel';
 import * as bmp from 'bmp-js';
-import { Buffer } from 'buffer';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe.only('Bmp', () => {
+describe('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
         const pixelsExpected = [
             [
@@ -47,10 +46,8 @@ describe.only('Bmp', () => {
     });
 
     it('toBuffer() should convert a bmp file into a buffer', async () => {
-        const expectedBuffer: Buffer = Buffer.from(TEST_BMP_DATA.data);
         const bmpProduced = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
-
-        expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(expectedBuffer);
+        expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(Buffer.from(PIXEL_BUFFER));
     });
 
     it('convertRawToPixels() should convert an array of numbers into pixels', async () => {

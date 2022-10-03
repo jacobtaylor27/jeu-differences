@@ -27,6 +27,13 @@ describe.only('Database service', () => {
         sinon.restore();
     });
 
+    it('initializeGameCollection() should be called when first intialized the game collection', async () => {
+        await databaseService.start();
+        const spy = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
+        await databaseService.start();
+        expect(spy.calledOnce).to.equal(false);
+    });
+
     it('start(uri) should allow the connection to the database', async () => {
         await databaseService.start(uri);
         expect(databaseService['client']).to.not.equal(undefined);
@@ -48,19 +55,5 @@ describe.only('Database service', () => {
         const spy = sinon.spy(databaseService, 'populateDatabase');
         await databaseService.start();
         expect(spy.calledOnce).to.equal(true);
-    });
-    it('initializeGameCollection() should be called when first intialized the game collection', async () => {
-        await databaseService.start();
-        const spy = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
-        await databaseService.start();
-        expect(spy.calledOnce).to.equal(false);
-    });
-
-    it('initializeGameCollection() should not be called if the database is already intialised', async () => {
-        const spyInitialize = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
-        const spyPopulate = sinon.spy(databaseService, 'populateDatabase');
-        await databaseService.start();
-        expect(spyPopulate.calledOnce).to.equal(true);
-        expect(spyInitialize.calledOnce).to.equal(true);
     });
 });

@@ -29,8 +29,11 @@ export class DatabaseService {
     }
 
     async populateDatabase(): Promise<void> {
-        if ((await this.db.collection(DB_GAME_COLLECTION).countDocuments()) === 0) {
+        const collections = await this.db.listCollections({ name: DB_GAME_COLLECTION }).toArray();
+        if (collections.length === 0) {
             await this.db.createCollection(DB_GAME_COLLECTION);
+        }
+        if ((await this.db.collection(DB_GAME_COLLECTION).countDocuments()) === 0) {
             await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
         }
     }

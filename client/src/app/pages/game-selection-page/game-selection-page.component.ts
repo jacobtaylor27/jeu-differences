@@ -20,10 +20,6 @@ export class GameSelectionPageComponent implements OnInit {
         this.makeCardsSelectMode();
     }
 
-    // ngAfterViewInit(): void {
-    //     console.log(this.fetchImgData());
-    // }
-
     getNumberOfGames(): number {
         return this.gameCarouselService.getCarouselLength();
     }

@@ -1,5 +1,7 @@
+import { ImgData } from '@common/img-data';
+
 /* eslint-disable @typescript-eslint/naming-convention */
-export const EXPECTED_IMG_DATA = {
+export const EXPECTED_IMG_DATA: ImgData = {
     imgData: {
         colorSpace: 'srgb',
         width: 2,

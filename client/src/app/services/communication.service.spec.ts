@@ -2,6 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { CommunicationService } from '@app/services/communication.service';
 import { EXPECTED_IMG_DATA } from '@app/services/communication.service.spec.constants';
+import { ImgData } from '@common/img-data';
 import { Message } from '@common/message';
 
 describe('CommunicationService', () => {
@@ -88,17 +89,17 @@ describe('CommunicationService', () => {
     });
 
     it('should return expected imgData (HttpClient called once)', () => {
-        // check the content of the mocked call
-        service.getImgData().subscribe({
-            next: (response: Message) => {
-                expect(response.imgData).toEqual(EXPECTED_IMG_DATA.imgData);
+        const expectedImgData: ImgData = EXPECTED_IMG_DATA;
+
+        service.getImgData('hello').subscribe({
+            next: (response: ImgData) => {
+                expect(response.imgData).toEqual(expectedImgData.imgData);
             },
             error: fail,
         });
 
-        const req = httpMock.expectOne(`${baseUrl}/example`);
+        const req = httpMock.expectOne(`${baseUrl}/bmp/hello`);
         expect(req.request.method).toBe('GET');
-        // actually send the request
-        req.flush(expectedMessage);
+        req.flush(expectedImgData);
     });
 });

@@ -29,7 +29,9 @@ export class DatabaseService {
     }
 
     async populateDatabase(): Promise<void> {
-        this.db.createCollection(DB_GAME_COLLECTION);
+        if ((await this.db.collection(DB_GAME_COLLECTION).countDocuments()) === 0) {
+            this.db.createCollection(DB_GAME_COLLECTION);
+        }
         await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
     }
 

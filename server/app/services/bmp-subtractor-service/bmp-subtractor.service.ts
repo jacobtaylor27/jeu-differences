@@ -1,10 +1,13 @@
+import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
-import { Coordinate } from '@common/coordinate';
+import { MidpointAlgorithm } from '@app/services/mid-point-algorithm/mid-point-algorithm';
 import { Service } from 'typedi';
 
 @Service()
 export class BmpSubtractorService {
+    constructor(private midpointAlgorithm: MidpointAlgorithm) {}
+
     async getDifferenceBMP(originalImage: Bmp, modifiedImage: Bmp, radius: number): Promise<Bmp> {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
@@ -30,105 +33,32 @@ export class BmpSubtractorService {
 
         if (radius === 0) return originalImage;
 
-        const resultCoordinates: Coordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
+        const resultCoordinates: BmpCoordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coordinate) => {
-            pixelResult[coordinate.x][coordinate.y].setBlack();
+            pixelResult[coordinate.getX()][coordinate.getY()].setBlack();
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToRaw(pixelResult));
     }
 
-    private getCoordinatesAfterEnlargement(originalCoordinates: Coordinate[], radius: number): Coordinate[] {
-        const resultCoordinates: Coordinate[] = [];
+    private getCoordinatesAfterEnlargement(originalCoordinates: BmpCoordinate[], radius: number): BmpCoordinate[] {
+        const resultCoordinates: BmpCoordinate[] = [];
         originalCoordinates.forEach((coordinate) => {
-            const result = this.findEnlargementArea(coordinate, radius);
+            const result = this.midpointAlgorithm.findEnlargementArea(coordinate, radius);
             result.forEach((coord) => {
-                resultCoordinates.push(coord);
+                resultCoordinates.push(new BmpCoordinate(coord.getX(), coord.getY()));
             });
         });
         return resultCoordinates;
     }
 
-    private findEnlargementArea(center: Coordinate, radius: number) {
-        return this.findInsideAreaEnlargement(center, radius, this.findContourEnlargement(center, radius));
-    }
-
-    private findContourEnlargement(center: Coordinate, radius: number): Coordinate[] {
-        const coordinates: Coordinate[] = new Array();
-        if (radius === 0) {
-            coordinates.push(center);
-            return coordinates;
-        }
-
-        // MID-POINT ALGORITHM
-        let x = radius;
-        let y = 0;
-
-        coordinates.push({ x: center.x - x, y: center.y });
-        coordinates.push({ x: center.x, y: x + center.y });
-        coordinates.push({ x: center.x, y: center.y - x });
-
-        let p = 1 - radius;
-
-        while (x > y) {
-            y++;
-
-            // Inside or on the perimeter
-            if (p <= 0) {
-                p = p + 2 * y + 1;
-            }
-            // Outside the perimeter
-            else {
-                x--;
-                p = p + 2 * y - 2 * x + 1;
-            }
-            // All points done
-            if (x < y) {
-                break;
-            }
-
-            // Add points in all 8 quadrants of the enlargement circle
-            coordinates.push({ x: x + center.x, y: y + center.y });
-            coordinates.push({ x: -x + center.x, y: y + center.y });
-            coordinates.push({ x: x + center.x, y: -y + center.y });
-            coordinates.push({ x: -x + center.x, y: -y + center.y });
-
-            if (x !== y) {
-                coordinates.push({ x: y + center.x, y: x + center.y });
-                coordinates.push({ x: -y + center.x, y: x + center.y });
-                coordinates.push({ x: y + center.x, y: -x + center.y });
-                coordinates.push({ x: -y + center.x, y: -x + center.y });
-            }
-        }
-
-        return coordinates;
-    }
-
-    private distance(px1: Coordinate, px2: Coordinate) {
-        let dx = px2.x - px1.x;
-        dx = dx * dx;
-        let dy = px2.y - px1.y;
-        dy = dy * dy;
-        return Math.sqrt(dx + dy);
-    }
-
-    private findInsideAreaEnlargement(coord: Coordinate, radius: number, coordinates: Coordinate[]) {
-        for (let j = coord.x - radius; j <= coord.x + radius; j++) {
-            for (let k = coord.y - radius; k <= coord.y + radius; k++) {
-                if (this.distance({ x: j, y: k }, { x: coord.x, y: coord.y }) <= radius) coordinates.push({ x: j, y: k });
-            }
-        }
-
-        return coordinates;
-    }
-
-    private getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Coordinate[] {
-        const coordinatesOfBlackPixels: Coordinate[] = [];
+    private getBlackPixelsFromOriginalImage(differenceBmp: Bmp): BmpCoordinate[] {
+        const coordinatesOfBlackPixels: BmpCoordinate[] = [];
         const pixels: Pixel[][] = differenceBmp.getPixels();
         for (let i = 0; i < pixels.length; i++) {
             for (let j = 0; j < pixels[i].length; j++) {
                 if (pixels[i][j].isBlack()) {
-                    coordinatesOfBlackPixels.push({ x: i, y: j });
+                    coordinatesOfBlackPixels.push(new BmpCoordinate(i, j));
                 }
             }
         }
@@ -143,6 +73,7 @@ export class BmpSubtractorService {
             pixelOriginalImg.r === pixelModifiedImg.r
         );
     }
+
     private areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {
         return originalImage.getHeight() === modifiedImage.getHeight() && originalImage.getWidth() === modifiedImage.getWidth();
     }

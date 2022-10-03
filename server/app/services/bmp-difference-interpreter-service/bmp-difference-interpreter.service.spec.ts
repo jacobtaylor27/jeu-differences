@@ -85,12 +85,12 @@ describe('Bmp difference interpreter service', async () => {
         const expectedCoordinates: BmpCoordinate[][] = [firstDifference, secondDifference];
         expect(interpretedBmp).to.eql(expectedCoordinates);
         interpretedBmp[0].forEach((coordinate, index) => {
-            expect(coordinate.x).to.deep.equal(firstDifference[index].getRow());
-            expect(coordinate.y).to.deep.equal(firstDifference[index].getColumn());
+            expect(coordinate.x).to.deep.equal(firstDifference[index].getX());
+            expect(coordinate.y).to.deep.equal(firstDifference[index].getY());
         });
         interpretedBmp[1].forEach((coordinate, index) => {
-            expect(coordinate.x).to.deep.equal(secondDifference[index].getRow());
-            expect(coordinate.y).to.deep.equal(secondDifference[index].getColumn());
+            expect(coordinate.x).to.deep.equal(secondDifference[index].getX());
+            expect(coordinate.y).to.deep.equal(secondDifference[index].getY());
         });
     });
 

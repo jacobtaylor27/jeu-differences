@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { AppMaterialModule } from '@app/modules/material.module';
-import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
-import { Subject } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 describe('DialogResetComponent', () => {
     let component: DialogResetComponent;

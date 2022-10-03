@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
-import { GameInfosService } from '@app/services/game-infos-handler/game-infos.service';
 
 @Component({
     selector: 'app-game-selection-page',
@@ -13,7 +12,7 @@ export class GameSelectionPageComponent implements OnInit {
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(readonly gameCarouselService: GameCarouselService, gameInfosService: GameInfosService) {}
+    constructor(readonly gameCarouselService: GameCarouselService) {}
 
     ngOnInit(): void {
         this.gameCards = this.gameCarouselService.getCards();

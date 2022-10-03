@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 
 @Component({
     selector: 'app-game-carousel',
@@ -11,9 +12,11 @@ export class GameCarouselComponent implements OnInit {
     @Input() gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(private readonly gameCarouselService: GameCarouselService) {}
+    constructor(private readonly gameCarouselService: GameCarouselService, readonly gameCardHandlerService: GameCardHandlerService) {}
 
     ngOnInit(): void {
+        this.gameCardHandlerService.fetchGameInformation();
+        this.gameCardHandlerService.mapInformationToGameCard();
         this.gameCards = this.gameCarouselService.getCards();
         this.resetStartingRange();
     }

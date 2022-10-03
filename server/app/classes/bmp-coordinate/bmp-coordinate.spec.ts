@@ -14,17 +14,23 @@ describe('BmpCoordinate', () => {
     });
 
     it('BmpCoordinate constructor should not allow negative coordinates', () => {
-        expect(() => {
-            // eslint-disable-next-line
-            new BmpCoordinate(-1, 1);
-        }).to.throw(Error);
+        const coordinate = new BmpCoordinate(-1, 1);
+        expect(coordinate.getX()).to.equal(undefined);
     });
 
     it('BmpCoordinate constructor should not allow negative coordinates', () => {
-        expect(() => {
-            // eslint-disable-next-line
-            new BmpCoordinate(1, -1);
-        }).to.throw(Error);
+        const coordinate = new BmpCoordinate(1, -1);
+        expect(coordinate.getX()).to.equal(undefined);
+    });
+
+    it('BmpCoordinate constructor should not allow outside bounds coordinates', () => {
+        const coordinate = new BmpCoordinate(641, 1);
+        expect(coordinate.getX()).to.equal(undefined);
+    });
+
+    it('BmpCoordinate constructor should not allow outside bounds coordinates', () => {
+        const coordinate = new BmpCoordinate(1, 481);
+        expect(coordinate.getX()).to.equal(undefined);
     });
 
     it('toCoordinate() should convert BmpCoordinates to Coordinate', () => {

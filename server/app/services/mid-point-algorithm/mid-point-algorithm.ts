@@ -48,7 +48,7 @@ export class MidpointAlgorithm {
         return { x: distance.y, y: distance.x };
     }
 
-    private isInsidePerimeter(perimeter: number): boolean {
+    private perimeterIsNegative(perimeter: number): boolean {
         return perimeter <= 0;
     }
 
@@ -57,27 +57,32 @@ export class MidpointAlgorithm {
     }
 
     private incrementPerimeter(perimeter: number, distance: Coordinate): number {
-        if (this.isInsidePerimeter(perimeter)) {
-            perimeter = perimeter + 2 * distance.y + 1;
+        if (this.perimeterIsNegative(perimeter)) {
+            return perimeter + 2 * distance.y + 1;
         } else {
             distance.x--;
-            perimeter = perimeter + 2 * distance.y - 2 * distance.x + 1;
+            return perimeter + 2 * distance.y - 2 * distance.x + 1;
         }
-        return perimeter;
+    }
+
+    private addCoord(coordinate: BmpCoordinate, coordinates: BmpCoordinate[]) {
+        if (coordinate.getX() !== undefined && coordinate.getY() !== undefined) {
+            coordinates.push(coordinate);
+        }
     }
 
     private addInitial4Coords(center: BmpCoordinate, distance: Coordinate, coordinates: BmpCoordinate[]) {
-        coordinates.push(new BmpCoordinate(center.getX() + distance.x, center.getY()));
-        coordinates.push(new BmpCoordinate(center.getX() - distance.x, center.getY()));
-        coordinates.push(new BmpCoordinate(center.getX(), center.getY() + distance.x));
-        coordinates.push(new BmpCoordinate(center.getX(), center.getY() - distance.x));
+        this.addCoord(new BmpCoordinate(center.getX() + distance.x, center.getY()), coordinates);
+        this.addCoord(new BmpCoordinate(center.getX() - distance.x, center.getY()), coordinates);
+        this.addCoord(new BmpCoordinate(center.getX(), center.getY() + distance.x), coordinates);
+        this.addCoord(new BmpCoordinate(center.getX(), center.getY() - distance.x), coordinates);
     }
 
     private addCoordsIn4Quadrants(center: BmpCoordinate, distance: Coordinate, coordinates: BmpCoordinate[]) {
-        coordinates.push(new BmpCoordinate(center.getX() + distance.x, center.getY() + distance.y));
-        coordinates.push(new BmpCoordinate(center.getX() - distance.x, center.getY() + distance.y));
-        coordinates.push(new BmpCoordinate(center.getX() + distance.x, center.getY() - distance.y));
-        coordinates.push(new BmpCoordinate(center.getX() - distance.x, center.getY() - distance.y));
+        this.addCoord(new BmpCoordinate(center.getX() + distance.x, center.getY() + distance.y), coordinates);
+        this.addCoord(new BmpCoordinate(center.getX() - distance.x, center.getY() + distance.y), coordinates);
+        this.addCoord(new BmpCoordinate(center.getX() + distance.x, center.getY() - distance.y), coordinates);
+        this.addCoord(new BmpCoordinate(center.getX() - distance.x, center.getY() - distance.y), coordinates);
     }
 
     private addCoords(center: BmpCoordinate, distance: Coordinate, coordinates: BmpCoordinate[]) {

@@ -15,6 +15,18 @@ export class Bmp {
         this.width = width;
     }
 
+    static async convertRGBAToARGB(data: number[]): Promise<number[]> {
+        const rgba = [];
+        const nbCaracterRGBA = 4;
+        for (let i = 0; i < data.length / nbCaracterRGBA; i++) {
+            rgba.push(data[i * nbCaracterRGBA + 3]);
+            rgba.push(data[i * nbCaracterRGBA]);
+            rgba.push(data[i * nbCaracterRGBA + 1]);
+            rgba.push(data[i * nbCaracterRGBA + 2]);
+        }
+        return rgba;
+    }
+
     async toImageData(): Promise<ImageData> {
         const imageData: ImageData = {
             colorSpace: 'srgb',

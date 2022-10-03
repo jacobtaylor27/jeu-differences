@@ -3,35 +3,42 @@ import { Coordinate } from '@common/coordinate';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 describe('BmpCoordinate', () => {
     it('BmpCoordinate constructor should create a coordinate with positive values', () => {
         const row = 0;
         const column = 1;
         const coordinate = new BmpCoordinate(row, column);
         expect(coordinate).to.be.instanceOf(BmpCoordinate);
-        expect(coordinate.getRow()).to.be.equal(row);
-        expect(coordinate.getColumn()).to.be.equal(column);
+        expect(coordinate.getX()).to.be.equal(row);
+        expect(coordinate.getY()).to.be.equal(column);
     });
 
     it('BmpCoordinate constructor should not allow negative coordinates', () => {
-        expect(() => {
-            // eslint-disable-next-line
-            new BmpCoordinate(-1, 1);
-        }).to.throw(Error);
+        const coordinate = new BmpCoordinate(-1, 1);
+        expect(coordinate.getX()).to.equal(undefined);
     });
 
     it('BmpCoordinate constructor should not allow negative coordinates', () => {
-        expect(() => {
-            // eslint-disable-next-line
-            new BmpCoordinate(1, -1);
-        }).to.throw(Error);
+        const coordinate = new BmpCoordinate(1, -1);
+        expect(coordinate.getX()).to.equal(undefined);
+    });
+
+    it('BmpCoordinate constructor should not allow outside bounds coordinates', () => {
+        const coordinate = new BmpCoordinate(641, 1);
+        expect(coordinate.getX()).to.equal(undefined);
+    });
+
+    it('BmpCoordinate constructor should not allow outside bounds coordinates', () => {
+        const coordinate = new BmpCoordinate(1, 481);
+        expect(coordinate.getX()).to.equal(undefined);
     });
 
     it('toCoordinate() should convert BmpCoordinates to Coordinate', () => {
         const coordinate = new BmpCoordinate(1, 2);
         const expectedCoordinate: Coordinate = {
-            x: coordinate.getRow(),
-            y: coordinate.getColumn(),
+            x: coordinate.getX(),
+            y: coordinate.getY(),
         };
         expect(expectedCoordinate.x).to.equal(coordinate.toCoordinate().x);
         expect(expectedCoordinate.y).to.equal(coordinate.toCoordinate().y);

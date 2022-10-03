@@ -30,7 +30,7 @@ export class MidpointAlgorithm {
                 break;
             }
 
-            this.addCoords(center, distance, coordinates);
+            this.addAllCoords(center, distance, coordinates);
         }
 
         return coordinates;
@@ -85,7 +85,7 @@ export class MidpointAlgorithm {
         this.addCoord(new BmpCoordinate(center.getX() - distance.x, center.getY() - distance.y), coordinates);
     }
 
-    private addCoords(center: BmpCoordinate, distance: Coordinate, coordinates: BmpCoordinate[]) {
+    private addAllCoords(center: BmpCoordinate, distance: Coordinate, coordinates: BmpCoordinate[]) {
         this.addCoordsIn4Quadrants(center, distance, coordinates);
 
         if (this.isNotEquidistant(distance)) {

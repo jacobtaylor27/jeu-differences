@@ -36,10 +36,6 @@ export class DatabaseService {
     }
 
     private async initializeGameCollection(collectionName: string, game: GameInfo[]): Promise<void> {
-        const collection = this.client.db(DB_NAME).collection(collectionName);
-        const documents = await collection.find({}).toArray();
-        if (documents.length === 0) {
-            await collection.insertMany(game);
-        }
+        await this.client.db(DB_NAME).collection(collectionName).insertMany(game);
     }
 }

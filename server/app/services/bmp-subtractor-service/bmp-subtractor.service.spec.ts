@@ -1,6 +1,7 @@
+import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
-import { Coordinate } from '@common/coordinate';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -8,9 +9,10 @@ import { Container } from 'typedi';
 import { BmpSubtractorService } from './bmp-subtractor.service';
 chai.use(chaiAsPromised);
 
-describe('Bmp subractor service', async () => {
+describe.only('Bmp subractor service', async () => {
     let bmpDecoderService: BmpDecoderService;
     let bmpSubtractorService: BmpSubtractorService;
+    let bmpEncoderService: BmpEncoderService;
 
     let bmp2x2: Bmp;
     let bmp2x3: Bmp;
@@ -18,6 +20,7 @@ describe('Bmp subractor service', async () => {
     beforeEach(async () => {
         bmpDecoderService = Container.get(BmpDecoderService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
+        bmpEncoderService = Container.get(BmpEncoderService);
 
         bmp2x2 = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/bmp_test_2x2.bmp');
         bmp2x3 = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/bmp_test_2x3.bmp');
@@ -68,9 +71,9 @@ describe('Bmp subractor service', async () => {
 
     it('Should return center value if radius is 0', () => {
         const radius = 0;
-        const center: Coordinate = { x: 1, y: 1 };
+        const center: BmpCoordinate = new BmpCoordinate(1, 1);
         const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        const expected: Coordinate[] = new Array();
+        const expected: BmpCoordinate[] = new Array();
         expected.push(center);
         expect(result.length).to.equal(expected.length);
         expect(result[0]).to.equal(expected[0]);
@@ -78,7 +81,7 @@ describe('Bmp subractor service', async () => {
 
     it('Should return array of coordinates of length bigger than 1 if radius > 0', () => {
         const radius = 3;
-        const center: Coordinate = { x: 1, y: 1 };
+        const center: BmpCoordinate = new BmpCoordinate(1, 1);
         const result = bmpSubtractorService['findContourEnlargement'](center, radius);
         expect(result.length).to.greaterThan(1);
     });
@@ -114,6 +117,7 @@ describe('Bmp subractor service', async () => {
         const blackBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
         const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-15px.bmp');
         const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius);
+        bmpEncoderService.encodeBmpIntoB('./assets/src-bmp/something.bmp', bmpResulting);
         expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
     });
 });

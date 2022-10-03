@@ -1,6 +1,7 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Coordinate } from '@common/coordinate';
 import { expect } from 'chai';
+import { describe } from 'mocha';
 import { Container } from 'typedi';
 import { MidpointAlgorithm } from './mid-point-algorithm';
 
@@ -26,18 +27,18 @@ describe('Midpoint Algorithn', async () => {
         const distanceCorrect: Coordinate = { x: 3, y: 1 };
         const distanceCIncorrect: Coordinate = { x: 1, y: 3 };
         const distanceCIncorrect2: Coordinate = { x: 1, y: 1 };
-        expect(midpointAlgorithm['isInQuadrant'](distanceCorrect)).to.be.true;
-        expect(midpointAlgorithm['isInQuadrant'](distanceCIncorrect)).to.be.false;
-        expect(midpointAlgorithm['isInQuadrant'](distanceCIncorrect2)).to.be.false;
+        expect(midpointAlgorithm['isInQuadrant'](distanceCorrect));
+        expect(!midpointAlgorithm['isInQuadrant'](distanceCIncorrect));
+        expect(!midpointAlgorithm['isInQuadrant'](distanceCIncorrect2));
     });
 
     it('Should return correct value is outside Quadrant', () => {
         const distanceCorrect: Coordinate = { x: 1, y: 3 };
         const distanceCIncorrect: Coordinate = { x: 3, y: 1 };
         const distanceCIncorrect2: Coordinate = { x: 1, y: 1 };
-        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCorrect)).to.be.true;
-        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect)).to.be.false;
-        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect2)).to.be.false;
+        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCorrect));
+        expect(!midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect));
+        expect(!midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect2));
     });
 
     it('Should invert the distance coordinates', () => {
@@ -50,19 +51,19 @@ describe('Midpoint Algorithn', async () => {
     });
 
     it('Should return correct value if perimeter is negative', () => {
-        const perimeterCorrect: number = -1;
-        const perimeterCorrect2: number = 0;
-        const perimeterIncorrect: number = 1;
-        expect(midpointAlgorithm['perimeterIsNegative'](perimeterCorrect)).to.be.true;
-        expect(midpointAlgorithm['perimeterIsNegative'](perimeterCorrect2)).to.be.true;
-        expect(midpointAlgorithm['perimeterIsNegative'](perimeterIncorrect)).to.be.false;
+        const perimeterCorrect = -1;
+        const perimeterCorrect2 = 0;
+        const perimeterIncorrect = 1;
+        expect(midpointAlgorithm['perimeterIsNegative'](perimeterCorrect));
+        expect(!midpointAlgorithm['perimeterIsNegative'](perimeterCorrect2));
+        expect(!midpointAlgorithm['perimeterIsNegative'](perimeterIncorrect));
     });
 
     it('Should return true if is not equidistant', () => {
         const distanceEquidistant: Coordinate = { x: 1, y: 1 };
         const distanceNotEquidistant: Coordinate = { x: 1, y: 3 };
-        expect(midpointAlgorithm['isNotEquidistant'](distanceNotEquidistant)).to.be.true;
-        expect(midpointAlgorithm['isNotEquidistant'](distanceEquidistant)).to.be.false;
+        expect(midpointAlgorithm['isNotEquidistant'](distanceNotEquidistant));
+        expect(!midpointAlgorithm['isNotEquidistant'](distanceEquidistant));
     });
 
     it('should increment the perimeter correctly ', () => {
@@ -79,7 +80,7 @@ describe('Midpoint Algorithn', async () => {
     it('should add all four initial coordinates ', () => {
         const center: BmpCoordinate = new BmpCoordinate(2, 2);
         const distance: Coordinate = { x: 1, y: 3 };
-        let coordinates: BmpCoordinate[] = [];
+        const coordinates: BmpCoordinate[] = [];
         midpointAlgorithm['addInitial4Coords'](center, distance, coordinates);
 
         expect(coordinates.length).to.equal(4);
@@ -96,7 +97,7 @@ describe('Midpoint Algorithn', async () => {
     it('should not add coord if coord is negative', () => {
         const center: BmpCoordinate = new BmpCoordinate(0, 0);
         const distance: Coordinate = { x: 1, y: 3 };
-        let coordinates: BmpCoordinate[] = [];
+        const coordinates: BmpCoordinate[] = [];
         midpointAlgorithm['addInitial4Coords'](center, distance, coordinates);
 
         expect(coordinates.length).to.equal(2);
@@ -105,7 +106,7 @@ describe('Midpoint Algorithn', async () => {
     it('should not add coord if coord is outside bound', () => {
         const center: BmpCoordinate = new BmpCoordinate(640, 480);
         const distance: Coordinate = { x: 1, y: 3 };
-        let coordinates: BmpCoordinate[] = [];
+        const coordinates: BmpCoordinate[] = [];
         midpointAlgorithm['addInitial4Coords'](center, distance, coordinates);
 
         expect(coordinates.length).to.equal(2);

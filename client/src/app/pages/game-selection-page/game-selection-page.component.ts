@@ -13,9 +13,7 @@ export class GameSelectionPageComponent implements OnInit {
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(readonly gameCarouselService: GameCarouselService, gameInfosService: GameInfosService) {
-        console.log(gameInfosService.fetchImgData());
-    }
+    constructor(readonly gameCarouselService: GameCarouselService, gameInfosService: GameInfosService) {}
 
     ngOnInit(): void {
         this.gameCards = this.gameCarouselService.getCards();

@@ -32,15 +32,16 @@ export class DatabaseServiceMock {
         }
     }
     async populateDatabase(): Promise<void> {
-        this.db.createCollection(DB_GAME_COLLECTION);
-        await this.initializeGameInfoCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
+        const collections = await this.db.listCollections({ name: DB_GAME_COLLECTION }).toArray();
+        if (collections.length === 0) {
+            await this.db.createCollection(DB_GAME_COLLECTION);
+        }
+        if ((await this.db.collection(DB_GAME_COLLECTION).countDocuments()) === 0) {
+            await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
+        }
     }
 
-    private async initializeGameInfoCollection(collectionName: string, game: GameInfo[]): Promise<void> {
-        const collection = this.client.db(DB_NAME).collection(collectionName);
-        const documents = await collection.find({}).toArray();
-        if (documents.length === 0) {
-            await collection.insertMany(game);
-        }
+    private async initializeGameCollection(collectionName: string, game: GameInfo[]): Promise<void> {
+        await this.client.db(DB_NAME).collection(collectionName).insertMany(game);
     }
 }

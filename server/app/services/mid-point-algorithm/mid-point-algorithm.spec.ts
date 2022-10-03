@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { Container } from 'typedi';
 import { MidpointAlgorithm } from './mid-point-algorithm';
 
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 describe('Midpoint Algorithn', async () => {
     let midpointAlgorithm: MidpointAlgorithm;
 

@@ -3,6 +3,7 @@ import { Coordinate } from '@common/coordinate';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 describe('BmpCoordinate', () => {
     it('BmpCoordinate constructor should create a coordinate with positive values', () => {
         const row = 0;

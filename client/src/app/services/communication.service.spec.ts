@@ -91,6 +91,7 @@ describe('CommunicationService', () => {
     it('should return expected imgData (HttpClient called once)', () => {
         const expectedImgData: ImgData = EXPECTED_IMG_DATA;
 
+        // TODO: make a better test with something else than 'hello'
         service.getImgData('hello').subscribe({
             next: (response: ImgData) => {
                 expect(response.imgData).toEqual(expectedImgData.imgData);

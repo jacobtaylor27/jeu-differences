@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TimeFormatter } from '@app/classes/time-formatter';
+import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game-card-buttons.component';
+import { GameScoreComponent } from '@app/components/game-score/game-score.component';
+import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCardComponent } from './game-card.component';
-import { GameCard } from '@app/interfaces/game-card';
 
 const GAME_CARD: GameCard = {
     gameInformation: {
@@ -23,11 +26,18 @@ const GAME_CARD: GameCard = {
 describe('GameCardComponent', () => {
     let component: GameCardComponent;
     let fixture: ComponentFixture<GameCardComponent>;
+    let spyTimeFormatter: jasmine.SpyObj<TimeFormatter>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
-            declarations: [GameCardComponent],
+            declarations: [GameCardComponent, GameScoreComponent, GameCardButtonsComponent],
+            providers: [
+                {
+                    provide: TimeFormatter,
+                    useValue: spyTimeFormatter,
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameCardComponent);
@@ -38,6 +48,12 @@ describe('GameCardComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
+        spyTimeFormatter = spyOn(TimeFormatter, 'getMMSSFormat');
+        component.formatScoreTime(1);
+        expect(spyTimeFormatter).toHaveBeenCalled();
     });
 
     it('getGameName should return the name of the game', () => {

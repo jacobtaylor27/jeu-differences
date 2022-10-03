@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { AdminCommandsComponent } from '@app/components/admin-commands/admin-commands.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 
 import { UserNameInputComponent } from './user-name-input.component';
@@ -10,8 +12,8 @@ describe('UserNameInputComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [UserNameInputComponent],
-            imports: [AppMaterialModule, NoopAnimationsModule],
+            declarations: [UserNameInputComponent, AdminCommandsComponent],
+            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(UserNameInputComponent);

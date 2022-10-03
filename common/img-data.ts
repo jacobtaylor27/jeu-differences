@@ -1,3 +1,3 @@
 export interface ImgData {
-    img: ImageData;
+    imgData: Object;
 }

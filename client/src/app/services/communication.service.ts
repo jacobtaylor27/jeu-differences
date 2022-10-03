@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
@@ -21,10 +21,8 @@ export class CommunicationService {
         return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
     }
 
-    getImgData(id: string): Observable<{ width: number; height: number; data: number[] }> {
-        return this.http
-            .get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' })
-            .pipe(catchError(this.handleError<any>('getImgData')));
+    getImgData(id: string): Observable<HttpResponse<{ width: number; height: number; data: number[] }>> {
+        return this.http.get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' }).pipe();
     }
 
     basicPost(message: Message): Observable<void> {

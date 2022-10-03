@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { EQUIVALENT_DATA, PIXEL_BUFFER_RGBA, PIXEL_BUFFER_ARGB, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
+import { EQUIVALENT_DATA, PIXEL_BUFFER_ARGB, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
 import { Pixel } from '@app/classes/pixel/pixel';
 import * as bmp from 'bmp-js';
 import { expect } from 'chai';
@@ -56,7 +56,7 @@ describe.only('Bmp', () => {
             colorSpace,
             width: TEST_BMP_DATA.width,
             height: TEST_BMP_DATA.height,
-            data: new Uint8ClampedArray(await bmpObj['getPixelBuffer']()),
+            data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToRGBA(bmpObj.getPixels()))),
         };
         expect(await bmpObj.toImageData()).to.deep.equal(imageDataExpected);
     });

@@ -1,4 +1,3 @@
-import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import * as chai from 'chai';
@@ -64,38 +63,6 @@ describe('Bmp subractor service', async () => {
         await expect(bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, radius))
             .to.eventually.be.rejectedWith('radius should be greater or equal to zero')
             .and.be.an.instanceOf(Error);
-    });
-
-    it('Should return center value if radius is 0', () => {
-        const radius = 0;
-        const center: BmpCoordinate = new BmpCoordinate(10, 10);
-        const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        const expected: BmpCoordinate[] = [];
-        expected.push(center);
-        expect(result.length).to.equal(expected.length);
-        expect(result[0].getX()).to.equal(expected[0].getX());
-        expect(result[0].getY()).to.equal(expected[0].getY());
-    });
-
-    it('Should not stop if negative values are capture', () => {
-        const radius = 3;
-        const center: BmpCoordinate = new BmpCoordinate(1, 1);
-        const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        expect(result.length).to.greaterThan(1);
-    });
-
-    it('Should not stop if outside bounds values are capture', () => {
-        const radius = 3;
-        const center: BmpCoordinate = new BmpCoordinate(639, 479);
-        const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        expect(result.length).to.greaterThan(1);
-    });
-
-    it('Should return array of coordinates of length bigger than 1 if radius > 0', () => {
-        const radius = 3;
-        const center: BmpCoordinate = new BmpCoordinate(10, 10);
-        const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        expect(result.length).to.greaterThan(1);
     });
 
     it('Should apply 0 pixel enlargement radius for a given image ', async () => {

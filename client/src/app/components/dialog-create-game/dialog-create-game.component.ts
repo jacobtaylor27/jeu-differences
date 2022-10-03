@@ -26,11 +26,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         const ctx = this.differentImage.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        ctx.putImageData(
-            new ImageData(new Uint8ClampedArray(this.data.differenceImage.data), this.data.differenceImage.width, this.data.differenceImage.height),
-            0,
-            0,
-        );
+        ctx.putImageData(this.data.differenceImage, 0, 0);
     }
     createGame() {
         return;

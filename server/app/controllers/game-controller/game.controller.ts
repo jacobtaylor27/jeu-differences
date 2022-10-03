@@ -166,13 +166,16 @@ export class GameController {
                 const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]);
                 const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius);
                 const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius);
+                const difference = await differenceImage.toImageData();
                 res.status(
                     (await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius))
                         ? StatusCodes.ACCEPTED
                         : StatusCodes.NOT_ACCEPTABLE,
                 ).send({
                     numberDifference,
-                    image: await differenceImage.toImageData(),
+                    width: difference.width,
+                    height: difference.height,
+                    data: Array.from(difference.data),
                 });
             } catch (e) {
                 res.status(StatusCodes.NOT_FOUND).send();

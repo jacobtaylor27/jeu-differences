@@ -21,8 +21,10 @@ export class CommunicationService {
         return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
     }
 
-    getImgData(id: string): Observable<ImageData> {
-        return this.http.get<ImageData>(`${this.baseUrl}/bmp/${id}`).pipe(catchError(this.handleError<ImageData>('getImgData')));
+    getImgData(id: string): Observable<{ width: number; height: number; data: number[] }> {
+        return this.http
+            .get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' })
+            .pipe(catchError(this.handleError<any>('getImgData')));
     }
 
     basicPost(message: Message): Observable<void> {

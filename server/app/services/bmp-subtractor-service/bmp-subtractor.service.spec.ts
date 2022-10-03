@@ -1,5 +1,6 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
+import { TEST_2X2_BMP_RADIUS_0PX } from '@app/services/bmp-subtractor-service/bmp-subtractor.service.spec.constants';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -23,25 +24,10 @@ describe('Bmp subractor service', async () => {
     });
 
     it('Should produce a white bmp if two images are similar', async () => {
-        const expectedWidth = 2;
-        const expectedHeight = 2;
-        const pixelsExpected = [
-            [
-                { a: 0, r: 255, g: 255, b: 255 },
-                { a: 0, r: 255, g: 255, b: 255 },
-            ],
-            [
-                { a: 0, r: 255, g: 255, b: 255 },
-                { a: 0, r: 255, g: 255, b: 255 },
-            ],
-        ];
-        const radius = 0;
-
-        const bmpProduced = await bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, radius);
-
-        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
-        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
-        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
+        const bmpProduced = await bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, 0);
+        expect(bmpProduced.getWidth()).to.deep.equal(TEST_2X2_BMP_RADIUS_0PX.width);
+        expect(bmpProduced.getHeight()).to.deep.equal(TEST_2X2_BMP_RADIUS_0PX.height);
+        expect(bmpProduced.getPixels()).to.deep.equal(TEST_2X2_BMP_RADIUS_0PX.pixelsExpected);
     });
 
     it('Should throw an error if the height of the two images is not the same', async () => {

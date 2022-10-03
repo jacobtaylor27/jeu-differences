@@ -71,17 +71,18 @@ describe.only('Bmp subractor service', async () => {
 
     it('Should return center value if radius is 0', () => {
         const radius = 0;
-        const center: BmpCoordinate = new BmpCoordinate(1, 1);
+        const center: BmpCoordinate = new BmpCoordinate(10, 10);
         const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        const expected: BmpCoordinate[] = new Array();
+        const expected: BmpCoordinate[] = [];
         expected.push(center);
         expect(result.length).to.equal(expected.length);
-        expect(result[0]).to.equal(expected[0]);
+        expect(result[0].getX()).to.equal(expected[0].getX());
+        expect(result[0].getY()).to.equal(expected[0].getY());
     });
 
     it('Should return array of coordinates of length bigger than 1 if radius > 0', () => {
         const radius = 3;
-        const center: BmpCoordinate = new BmpCoordinate(1, 1);
+        const center: BmpCoordinate = new BmpCoordinate(10, 10);
         const result = bmpSubtractorService['findContourEnlargement'](center, radius);
         expect(result.length).to.greaterThan(1);
     });

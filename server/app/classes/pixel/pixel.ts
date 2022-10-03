@@ -11,7 +11,7 @@ export class Pixel {
         this.r = r;
         this.g = g;
         this.b = b;
-        this.a = 0;
+        this.a = 255;
     }
 
     static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
@@ -22,6 +22,19 @@ export class Pixel {
                 raw.push(pixel.r);
                 raw.push(pixel.g);
                 raw.push(pixel.b);
+            });
+        });
+        return raw;
+    }
+
+    static convertPixelsToRaw1(pixelMatrix: Pixel[][]): number[] {
+        const raw: number[] = [];
+        pixelMatrix.forEach((lineOfPixels) => {
+            lineOfPixels.forEach((pixel) => {
+                raw.push(pixel.r);
+                raw.push(pixel.g);
+                raw.push(pixel.b);
+                raw.push(pixel.a);
             });
         });
         return raw;

@@ -32,7 +32,12 @@ export class BmpSubtractorService {
 
         const resultCoordinates: Coordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
+        const maxWidth = 640;
+        const maxHeight = 480;
         resultCoordinates.forEach((coordinate) => {
+            if (coordinate.x < 0 || coordinate.x > maxWidth || coordinate.y < 0 || coordinate.y > maxHeight || !pixelResult[coordinate.x]) {
+                return;
+            }
             pixelResult[coordinate.x][coordinate.y].setBlack();
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToRaw(pixelResult));
@@ -40,9 +45,14 @@ export class BmpSubtractorService {
 
     private getCoordinatesAfterEnlargement(originalCoordinates: Coordinate[], radius: number): Coordinate[] {
         const resultCoordinates: Coordinate[] = [];
+        const maxWidth = 640;
+        const maxHeight = 480;
         originalCoordinates.forEach((coordinate) => {
             const result = this.findEnlargementArea(coordinate, radius);
-            result.forEach((coord) => {
+            result.forEach((coord: Coordinate) => {
+                if ((coord.x < 0 && coord.x > maxWidth) || (coord.y < 0 && coord.y > maxHeight)) {
+                    return;
+                }
                 resultCoordinates.push(coord);
             });
         });

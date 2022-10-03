@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
-import { CommunicationService } from '@app/services/communication.service';
+import { GameInfosService } from '@app/services/game-infos-handler/game-infos.service';
 
 @Component({
     selector: 'app-game-selection-page',
@@ -13,8 +13,8 @@ export class GameSelectionPageComponent implements OnInit {
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {
-        this.fetchImgData();
+    constructor(readonly gameCarouselService: GameCarouselService, gameInfosService: GameInfosService) {
+        console.log(gameInfosService.fetchImgData());
     }
 
     ngOnInit(): void {
@@ -40,12 +40,5 @@ export class GameSelectionPageComponent implements OnInit {
 
     formatScoreTime(scoreTime: number): string {
         return TimeFormatter.getMMSSFormat(scoreTime);
-    }
-
-    fetchImgData() {
-        console.log('this is called');
-        this.communicationService.getImgData('hello').subscribe((imgData) => {
-            console.log(imgData);
-        });
     }
 }

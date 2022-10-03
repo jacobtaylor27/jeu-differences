@@ -1,8 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CommunicationService } from '@app/services/communication.service';
-import { EXPECTED_IMG_DATA } from '@app/services/communication.service.spec.constants';
-import { ImgData } from '@common/img-data';
 import { Message } from '@common/message';
 
 describe('CommunicationService', () => {
@@ -88,19 +86,19 @@ describe('CommunicationService', () => {
         req.error(new ProgressEvent('Random error occurred'));
     });
 
-    it('should return expected imgData (HttpClient called once)', () => {
-        const expectedImgData: ImgData = EXPECTED_IMG_DATA;
+    // it('should return expected imgData (HttpClient called once)', () => {
+    //     const expectedImgData: ImgData = EXPECTED_IMG_DATA;
 
-        // TODO: make a better test with something else than 'hello'
-        service.getImgData('hello').subscribe({
-            next: (response: ImgData) => {
-                expect(response.imgData).toEqual(expectedImgData.imgData);
-            },
-            error: fail,
-        });
+    //     // TODO: make a better test with something else than 'hello'
+    //     service.getImgData('hello').subscribe({
+    //         next: (response: ImgData) => {
+    //             expect(response.imgData).toEqual(expectedImgData.imgData);
+    //         },
+    //         error: fail,
+    //     });
 
-        const req = httpMock.expectOne(`${baseUrl}/bmp/hello`);
-        expect(req.request.method).toBe('GET');
-        req.flush(expectedImgData);
-    });
+    //     const req = httpMock.expectOne(`${baseUrl}/bmp/hello`);
+    //     expect(req.request.method).toBe('GET');
+    //     req.flush(expectedImgData);
+    // });
 });

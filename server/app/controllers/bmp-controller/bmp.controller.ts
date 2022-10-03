@@ -22,7 +22,7 @@ export class BmpController {
             }
             try {
                 const bmpRequested = await this.bmpService.getBmpById(req.params.id, DEFAULT_BMP_ASSET_PATH);
-                const bmpData = { imgData: await bmpRequested.toImageData() };
+                const bmpData = { ImageData: await bmpRequested.toImageData() };
                 res.status(StatusCodes.CREATED).send(bmpData);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send();

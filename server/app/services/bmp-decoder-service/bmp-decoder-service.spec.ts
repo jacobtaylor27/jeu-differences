@@ -19,7 +19,6 @@ describe.only('Bmp decoder service', () => {
     it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 2x2', async () => {
         const filepath = './assets/test-bmp/bmp_test_2x2.bmp';
         const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
-
         expect(bmpProduced.getWidth()).to.equals(TEST_2X2_BMP.file[0].length);
         expect(bmpProduced.getHeight()).to.equals(TEST_2X2_BMP.file.length);
         expect(bmpProduced.getPixels()).to.eql(TEST_2X2_BMP.file);

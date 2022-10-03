@@ -4,7 +4,6 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
-import { SIZE } from '@app/constants/canvas';
 import { VALID_GAME } from '@app/constants/server';
 import { Canvas } from '@app/enums/canvas';
 import { Theme } from '@app/enums/theme';
@@ -35,12 +34,19 @@ export class CreateGamePageComponent implements AfterViewInit {
         this.toolBoxService.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
             this.sourceImg.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
         });
-        this.toolBoxService.$resetSource.subscribe(() => {
-            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
-        });
+        const resetCanvas = () => {
+            const ctx = this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            ctx.rect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        };
+
+        this.toolBoxService.$resetSource.subscribe(() => resetCanvas());
         this.drawService.$differenceImage.subscribe((newImageDifference: ImageData) => {
             this.imageDifference = newImageDifference;
         });
+        this.toolBoxService.$resetDiff.next();
+        resetCanvas();
     }
 
     differenceValidator(): ValidatorFn {
@@ -82,10 +88,9 @@ export class CreateGamePageComponent implements AfterViewInit {
     isGameValid() {
         const original: ImageData = this.createSourceImageFromCanvas();
         return this.http
-            .post<{ numberDifference: number; image: ImageData }>(
+            .post<{ numberDifference: number; width: number; height: number; data: number[] }>(
                 VALID_GAME,
                 {
-                    width: original.width,
                     original: { width: original.width, height: original.height, data: Array.from(original.data) },
                     modify: { width: this.imageDifference.width, height: this.imageDifference.height, data: Array.from(this.imageDifference.data) },
                     differenceRadius: (this.form.get('expansionRadius') as FormControl).value,
@@ -111,11 +116,15 @@ export class CreateGamePageComponent implements AfterViewInit {
                     return of(null);
                 }),
             )
-            .subscribe((response: HttpResponse<{ numberDifference: number; image: ImageData }> | null) => {
+            .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {
                 if (!response || !response.body) {
                     return;
                 }
-                this.validateForm(response.body.numberDifference as number, response.body.image as ImageData);
+                console.log(response.body.data);
+                this.validateForm(
+                    response.body.numberDifference as number,
+                    new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, { colorSpace: 'srgb' }),
+                );
             });
     }
     // set submit function but it will be done with the route

@@ -1,8 +1,8 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
+import { MidpointAlgorithm } from '@app/services/mid-point-algorithm/mid-point-algorithm';
 import { Service } from 'typedi';
-import { MidpointAlgorithm } from '../mid-point-algorithm/mid-point-algorithm';
 
 @Service()
 export class BmpSubtractorService {

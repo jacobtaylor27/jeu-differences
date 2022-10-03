@@ -56,7 +56,7 @@ describe('Bmp', () => {
             colorSpace,
             width: TEST_BMP_DATA.width,
             height: TEST_BMP_DATA.height,
-            data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToRGBA(bmpObj.getPixels()))),
+            data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToBGRA(bmpObj.getPixels()))),
         };
         expect(await bmpObj.toImageData()).to.deep.equal(imageDataExpected);
     });

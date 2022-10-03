@@ -24,7 +24,7 @@ export class GameCardComponent implements OnInit {
     }
 
     getImageName() {
-        this.imageData$ = this.communicationService.getImgData(this.gameCard.gameInformation.imgName);
+        this.imageData$ = this.communicationService.getImgData(this.gameCard.gameInformation.idOriginalBmp);
         this.imageData$.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
             if (!response || !response.body) {
                 return;
@@ -57,18 +57,18 @@ export class GameCardComponent implements OnInit {
     }
 
     getMultiplayerScores(): Score[] {
-        return this.gameCard.gameInformation.scoresMultiplayer;
+        return this.gameCard.gameInformation.multiplayerScore;
     }
 
     getSinglePlayerScores(): Score[] {
-        return this.gameCard.gameInformation.scoresSolo;
+        return this.gameCard.gameInformation.soloScore;
     }
 
     hasMultiplayerScores(): boolean {
-        return this.gameCard.gameInformation.scoresMultiplayer.length > 0;
+        return this.gameCard.gameInformation.multiplayerScore.length > 0;
     }
 
     hasSinglePlayerScores(): boolean {
-        return this.gameCard.gameInformation.scoresSolo.length > 0;
+        return this.gameCard.gameInformation.soloScore.length > 0;
     }
 }

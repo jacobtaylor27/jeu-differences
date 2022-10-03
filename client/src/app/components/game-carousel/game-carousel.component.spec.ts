@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { GameCardComponent } from '@app/components/game-card/game-card.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { GameCarouselComponent } from './game-carousel.component';
@@ -20,7 +21,7 @@ describe('GameCarouselComponent', () => {
         ]);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
-            declarations: [GameCarouselComponent],
+            declarations: [GameCarouselComponent, GameCardComponent],
             providers: [
                 {
                     provide: GameCarouselService,

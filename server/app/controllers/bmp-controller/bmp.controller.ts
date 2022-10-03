@@ -22,8 +22,11 @@ export class BmpController {
             }
             try {
                 const bmpRequested = await this.bmpService.getBmpById(req.params.id, DEFAULT_BMP_ASSET_PATH);
-                const bmpData = { ImageData: await bmpRequested.toImageData() };
-                res.status(StatusCodes.CREATED).send(bmpData);
+                res.status(StatusCodes.CREATED).send({
+                    width: bmpRequested.getWidth(),
+                    height: bmpRequested.getHeight(),
+                    data: Array.from((await bmpRequested.toImageData()).data),
+                });
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send();
             }

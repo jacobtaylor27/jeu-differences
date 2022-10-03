@@ -3,7 +3,6 @@ import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-s
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
-import { GameInfo } from '@common/game-info';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
@@ -134,27 +133,6 @@ export class GameController {
             }
         });
         */
-        this.router.get('/cards', (req: Request, res: Response) => {
-            this.gameInfo
-                .getAllGames()
-                .then((games: GameInfo[]) => {
-                    res.status(StatusCodes.OK).send({ games });
-                })
-                .catch(() => {
-                    res.status(StatusCodes.NOT_FOUND).send();
-                });
-        });
-
-        this.router.get('/cards/:id', (req: Request, res: Response) => {
-            this.gameInfo
-                .getGameById(req.params.id)
-                .then((games: GameInfo) => {
-                    res.status(StatusCodes.OK).send({ games });
-                })
-                .catch(() => {
-                    res.status(StatusCodes.NOT_FOUND).send();
-                });
-        });
 
         this.router.post('/card/validation', async (req: Request, res: Response) => {
             if (!req.body.original || !req.body.modify || req.body.differenceRadius === undefined) {
@@ -164,18 +142,17 @@ export class GameController {
             try {
                 const original = new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]);
                 const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]);
-                const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius);
-                const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius);
-                const difference = await differenceImage.toImageData();
+                const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius as number);
+                const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius as number);
                 res.status(
-                    (await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius))
+                    (await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius as number))
                         ? StatusCodes.ACCEPTED
                         : StatusCodes.NOT_ACCEPTABLE,
                 ).send({
                     numberDifference,
-                    width: difference.width,
-                    height: difference.height,
-                    data: Array.from(difference.data),
+                    width: differenceImage.getWidth(),
+                    height: differenceImage.getHeight(),
+                    data: Array.from((await differenceImage.toImageData()).data),
                 });
             } catch (e) {
                 res.status(StatusCodes.NOT_FOUND).send();
@@ -188,12 +165,10 @@ export class GameController {
                 return;
             }
             let isErrorOnGameValidation = false;
+            const original = new Bmp(req.body.original.width, req.body.original.height, req.body.original.data);
+            const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data);
             await this.gameValidation
-                .isNbDifferenceValid(
-                    new Bmp(req.body.original.width, req.body.original.height, req.body.original.data),
-                    new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data),
-                    req.body.differenceRadius,
-                )
+                .isNbDifferenceValid(original, modify, req.body.differenceRadius)
                 .then((isValid: boolean) => {
                     if (!isValid) {
                         isErrorOnGameValidation = true;
@@ -209,7 +184,7 @@ export class GameController {
             }
 
             this.gameInfo
-                .addGame({} as GameInfo)
+                .addGameWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
                 .then(() => {
                     res.status(StatusCodes.CREATED).send();
                 })

@@ -1,23 +1,46 @@
-import { Injectable } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { Injectable, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { CardRange } from '@app/interfaces/range';
-import { Score } from '@common/score';
+import { GameInfo } from '@common/game-info';
+import { CommunicationService } from '../communication.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class GameCardHandlerService {
+export class GameCardHandlerService implements OnInit {
     private activeCardsRange: CardRange = { start: 0, end: 3 };
     private gameCards: GameCard[] = [];
+    gamesInfo: GameInfo[];
 
-    constructor() {
-        this.fetchGameCards();
-        this.setActiveCards(this.activeCardsRange);
+    constructor(private readonly communicationService: CommunicationService) {}
+
+    ngOnInit(): void {
+        // this.fetchGameInformation();
+        // this.mapInformationToGameCard();
+        // this.setActiveCards(this.activeCardsRange);
     }
 
-    fetchGameCards(): void {
-        // generate fake cards until we have a proper database access
-        this.gameCards = this.generateFakeCards();
+    fetchGameInformation(): void {
+        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: GameInfo[] }>) => {
+            if (!response || !response.body) {
+                return;
+            }
+            console.log('ALLO');
+            this.gamesInfo = response.body.games;
+        });
+    }
+
+    mapInformationToGameCard() {
+        for (const gameInfo of this.gamesInfo) {
+            const newCard: GameCard = {
+                gameInformation: gameInfo,
+                isAdminCard: false,
+                isShown: false,
+            };
+            this.gameCards.push(newCard);
+        }
+        console.log(this.gameCards);
     }
 
     getGameCards(): GameCard[] {
@@ -98,55 +121,13 @@ export class GameCardHandlerService {
 
     resetHighScores(game: GameCard) {
         const index = this.gameCards.indexOf(game);
-        this.gameCards[index].gameInformation.scoresMultiplayer = [];
-        this.gameCards[index].gameInformation.scoresSolo = [];
+        this.gameCards[index].gameInformation.multiplayerScore = [];
+        this.gameCards[index].gameInformation.soloScore = [];
     }
 
     resetAllHighScores(): void {
         for (const card of this.gameCards) {
             this.resetHighScores(card);
         }
-    }
-
-    // will be removed once we have a proper database access
-    generateFakeCards(): GameCard[] {
-        const DEFAULT_NB_OF_CARDS = 18;
-        const DEFAULT_SCORES: number[] = [1, 2, 3];
-        const soloScores = this.initializeScores(DEFAULT_SCORES);
-        const multiplayerScores = this.initializeScores(DEFAULT_SCORES);
-        const cards: GameCard[] = [];
-
-        for (let i = 0; i < DEFAULT_NB_OF_CARDS; i++) {
-            const newCard: GameCard = {
-                gameInformation: {
-                    name: 'Game ' + i,
-                    // image from api of correct size
-                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-                    imgName: 'original',
-                    scoresSolo: soloScores,
-                    scoresMultiplayer: multiplayerScores,
-                },
-                isAdminCard: false,
-                isShown: false,
-            };
-            cards.push(newCard);
-        }
-
-        return cards;
-    }
-
-    // will be removed or modified once we have a proper database access
-    initializeScores(score: number[]): Score[] {
-        const scores: Score[] = [];
-
-        for (let i = 0; i < score.length; i++) {
-            const arbitraryNb = 5;
-            scores.push({
-                playerName: 'Player ' + i,
-                time: score[i] * arbitraryNb,
-            });
-        }
-
-        return scores;
     }
 }

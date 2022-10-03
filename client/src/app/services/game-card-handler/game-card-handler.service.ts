@@ -122,7 +122,7 @@ export class GameCardHandlerService {
                     name: 'Game ' + i,
                     // image from api of correct size
                     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-                    imgName: `https://picsum.photos/id/${i * 8}/640/480`,
+                    imgName: 'original',
                     scoresSolo: soloScores,
                     scoresMultiplayer: multiplayerScores,
                 },

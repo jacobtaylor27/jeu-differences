@@ -93,7 +93,7 @@ export class CreateGamePageComponent implements AfterViewInit {
                 {
                     original: { width: original.width, height: original.height, data: Array.from(original.data) },
                     modify: { width: this.imageDifference.width, height: this.imageDifference.height, data: Array.from(this.imageDifference.data) },
-                    differenceRadius: (this.form.get('expansionRadius') as FormControl).value,
+                    differenceRadius: (this.form.get('expansionRadius') as FormControl).value as number,
                 },
                 { observe: 'response' },
             )
@@ -120,7 +120,6 @@ export class CreateGamePageComponent implements AfterViewInit {
                 if (!response || !response.body) {
                     return;
                 }
-                console.log(response.body.data);
                 this.validateForm(
                     response.body.numberDifference as number,
                     new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, { colorSpace: 'srgb' }),

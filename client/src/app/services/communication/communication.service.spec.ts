@@ -1,7 +1,9 @@
+import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { VALID_GAME } from '@app/constants/server';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { GameInfo } from '@common/game-info';
 import { Message } from '@common/message';
 
 describe('CommunicationService', () => {
@@ -58,6 +60,30 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(`${baseUrl}/game`);
         expect(req.request.method).toBe('GET');
         req.flush(expectedMessage);
+    });
+
+    it('should get image data when game card is loaded', () => {
+        service.getImgData('original').subscribe({
+            next: (response: HttpResponse<{ width: number; height: number; data: number[] }>) => {
+                expect(response.body).toEqual({ width: 0, height: 0, data: [] });
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/bmp/original`);
+        expect(req.request.method).toBe('GET');
+    });
+
+    it('should get games info when select or admin page is loaded', () => {
+        service.getAllGameInfos().subscribe({
+            next: (response: HttpResponse<{ games: GameInfo[] }>) => {
+                expect(response.body).toEqual({ games: [] });
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/cards`);
+        expect(req.request.method).toBe('GET');
     });
 
     it('should not return any message when sending a POST request (HttpClient called once)', () => {
@@ -124,4 +150,20 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('POST');
         req.error(new ProgressEvent('Random error occurred'));
     });
+
+    // it('should return expected imgData (HttpClient called once)', () => {
+    //     const expectedImgData: ImgData = EXPECTED_IMG_DATA;
+
+    //     // TODO: make a better test with something else than 'hello'
+    //     service.getImgData('hello').subscribe({
+    //         next: (response: ImgData) => {
+    //             expect(response.imgData).toEqual(expectedImgData.imgData);
+    //         },
+    //         error: fail,
+    //     });
+
+    //     const req = httpMock.expectOne(`${baseUrl}/bmp/hello`);
+    //     expect(req.request.method).toBe('GET');
+    //     req.flush(expectedImgData);
+    // });
 });

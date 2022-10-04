@@ -8,16 +8,33 @@ import { GameCardService } from './game-card.service';
 
 const GAME_CARD: GameCard = {
     gameInformation: {
+        id: '1',
         name: 'test',
-        imgName: 'imageName',
-        scoresSolo: [
-            { playerName: 'solo1', time: 60 },
-            { playerName: 'solo2', time: 90 },
+        idOriginalBmp: '1',
+        idEditedBmp: '1',
+        idDifferenceBmp: '1',
+        soloScore: [
+            {
+                playerName: 'test2',
+                time: 10,
+            },
+            {
+                playerName: 'test',
+                time: 10,
+            },
         ],
-        scoresMultiplayer: [
-            { playerName: 'multi1', time: 125 },
-            { playerName: 'multi2', time: 12 },
+        multiplayerScore: [
+            {
+                playerName: 'test2',
+                time: 10,
+            },
+            {
+                playerName: 'test',
+                time: 10,
+            },
         ],
+        differenceRadius: 3,
+        differences: [],
     },
     isShown: true,
     isAdminCard: true,

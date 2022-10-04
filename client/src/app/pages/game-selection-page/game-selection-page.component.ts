@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
-import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
@@ -8,16 +7,10 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
     templateUrl: './game-selection-page.component.html',
     styleUrls: ['./game-selection-page.component.scss'],
 })
-export class GameSelectionPageComponent implements OnInit {
-    gameCards: GameCard[] = [];
+export class GameSelectionPageComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(readonly gameCarouselService: GameCarouselService) {}
-
-    ngOnInit(): void {
-        this.gameCards = this.gameCarouselService.getCards();
-        this.makeCardsSelectMode();
-    }
 
     getNumberOfGames(): number {
         return this.gameCarouselService.getCarouselLength();
@@ -25,10 +18,6 @@ export class GameSelectionPageComponent implements OnInit {
 
     hasGames(): boolean {
         return this.gameCarouselService.hasCards();
-    }
-
-    makeCardsSelectMode(): void {
-        this.gameCarouselService.setCardMode();
     }
 
     formatScoreTime(scoreTime: number): string {

@@ -84,6 +84,8 @@ describe('GameInfo service', async () => {
             name: 'Mark',
             differenceRadius: 1,
             differences: [],
+            soloScore: [],
+            multiplayerScore: [],
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
         expect(await gameService.addGame(game));
@@ -92,13 +94,14 @@ describe('GameInfo service', async () => {
 
     it("addGame(game) shouldn't add a game twice", async () => {
         const game: GameInfo = {
-            id: '1',
             idOriginalBmp: '2',
             idEditedBmp: '3',
             idDifferenceBmp: '4',
             name: 'Laurie',
             differenceRadius: 3,
             differences: [],
+            soloScore: [],
+            multiplayerScore: [],
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
         expect(await gameService.addGame(game));

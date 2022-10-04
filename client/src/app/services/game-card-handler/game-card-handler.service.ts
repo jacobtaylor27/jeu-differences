@@ -62,11 +62,13 @@ export class GameCardHandlerService {
     setActiveCards(range: CardRange): void {
         this.hideAllCards();
 
+        let end = range.end;
+
         if (range.end > this.gameCards.length - 1) {
-            range.end = this.gameCards.length - 1;
+            end = this.gameCards.length - 1;
         }
 
-        for (let i = range.start; i <= range.end; i++) {
+        for (let i = range.start; i <= end; i++) {
             this.gameCards[i].isShown = true;
         }
     }

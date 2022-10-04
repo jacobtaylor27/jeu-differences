@@ -1,16 +1,15 @@
-import { HttpClient, HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
-import { VALID_GAME } from '@app/constants/server';
 import { Canvas } from '@app/enums/canvas';
 import { Theme } from '@app/enums/theme';
 import { Vec2 } from '@app/interfaces/vec2';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { catchError, of } from 'rxjs';
 
 @Component({
     selector: 'app-create-game-page',
@@ -24,7 +23,13 @@ export class CreateGamePageComponent implements AfterViewInit {
     theme: typeof Theme = Theme;
     imageDifference: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
 
-    constructor(private toolBoxService: ToolBoxService, public dialog: MatDialog, private drawService: DrawService, private http: HttpClient) {
+    // eslint-disable-next-line max-params
+    constructor(
+        private toolBoxService: ToolBoxService,
+        public dialog: MatDialog,
+        private drawService: DrawService,
+        private communication: CommunicationService,
+    ) {
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
         });
@@ -32,7 +37,7 @@ export class CreateGamePageComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.toolBoxService.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
-            this.sourceImg.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
+            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
         });
         const resetCanvas = () => {
             const ctx = this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -40,7 +45,6 @@ export class CreateGamePageComponent implements AfterViewInit {
             ctx.fillStyle = 'white';
             ctx.fill();
         };
-
         this.toolBoxService.$resetSource.subscribe(() => resetCanvas());
         this.drawService.$differenceImage.subscribe((newImageDifference: ImageData) => {
             this.imageDifference = newImageDifference;
@@ -87,44 +91,14 @@ export class CreateGamePageComponent implements AfterViewInit {
 
     isGameValid() {
         const original: ImageData = this.createSourceImageFromCanvas();
-        return this.http
-            .post<{ numberDifference: number; width: number; height: number; data: number[] }>(
-                VALID_GAME,
-                {
-                    original: { width: original.width, height: original.height, data: Array.from(original.data) },
-                    modify: { width: this.imageDifference.width, height: this.imageDifference.height, data: Array.from(this.imageDifference.data) },
-                    differenceRadius: (this.form.get('expansionRadius') as FormControl).value as number,
-                },
-                { observe: 'response' },
-            )
-            .pipe(
-                catchError((response: HttpErrorResponse) => {
-                    switch (response.status) {
-                        case HttpStatusCode.NotAcceptable:
-                            if (!response.error) {
-                                break;
-                            }
-                            this.manageErrorInForm(`Il faut entre 3 et 9 differences. Il y en a ${response.error.numberDifference}`);
-                            break;
-                        case HttpStatusCode.NotFound:
-                            this.manageErrorInForm("La server n'as pas pu identifier les differences");
-                            break;
-                        case HttpStatusCode.BadRequest:
-                            this.manageErrorInForm('Il manque des parametres pour pouvoir trouver les differences');
-                            break;
-                    }
-                    return of(null);
-                }),
-            )
+        return this.communication
+            .validateGame(original, this.imageDifference, (this.form.get('expansionRadius') as FormControl).value as number)
             .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {
                 if (!response || !response.body) {
+                    this.manageErrorInForm('Il faut entre 3 et 9 differences');
                     return;
                 }
                 this.validateForm(response.body.numberDifference as number, response.body.data);
             });
-    }
-    // set submit function but it will be done with the route
-    async onSubmit() {
-        this.isGameValid();
     }
 }

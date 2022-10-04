@@ -62,7 +62,7 @@ export class CommunicationService {
 
     createGameRoom(playerName: string, gameMode: GameMode, gameId: string) {
         return this.http
-            .post<{ id: string }>(`${this.baseUrl}/game/difference/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
+            .post<{ id: string }>(`${this.baseUrl}/game/create/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
             .pipe(
                 catchError((response) => {
                     console.log(response);

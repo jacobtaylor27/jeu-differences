@@ -56,7 +56,7 @@ export class PlayAreaComponent implements AfterViewInit {
     }
 
     mouseHitDetect($event: MouseEvent, canvas: string) {
-        this.getDifferenceValidation('original', this.mousePosition);
+        this.getDifferenceValidation(this.gameId, this.mousePosition);
         this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
         const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
         this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);

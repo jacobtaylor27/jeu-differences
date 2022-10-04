@@ -1,7 +1,7 @@
 import { Coordinate } from './coordinate';
 import { Score } from './score';
 export interface GameInfo {
-    id: string;
+    id?: string;
     name: string;
     idOriginalBmp: string;
     idEditedBmp: string;

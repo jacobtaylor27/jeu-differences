@@ -76,44 +76,49 @@ describe('GameCardComponent', () => {
     });
 
     it('should create', () => {
-        // expect(component).toBeTruthy();
+        expect(component).toBeTruthy();
     });
 
     it('should get the base64 image name', () => {
-        // expect(spyCommunicationService.getImgData).toHaveBeenCalled();
+        expect(spyCommunicationService.getImgData).toHaveBeenCalled();
     });
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
-        // spyTimeFormatter = spyOn(TimeFormatter, 'getMMSSFormat');
-        // component.formatScoreTime(1);
-        // expect(spyTimeFormatter).toHaveBeenCalled();
+        spyTimeFormatter = spyOn(TimeFormatter, 'getMMSSFormat');
+        component.formatScoreTime(1);
+        expect(spyTimeFormatter).toHaveBeenCalled();
     });
 
     it('getGameName should return the name of the game', () => {
-        // expect(component.getGameName()).toEqual('test');
+        expect(component.getGameName()).toEqual('test');
     });
 
     it('isAdminCard should return true if the card is in admin mode', () => {
-        // expect(component.isAdminCard()).toEqual(true);
+        expect(component.isAdminCard()).toEqual(true);
     });
 
     it('getMultiplayerScores should return the multiplayer scores for a given game', () => {
-        // const scores = component.getMultiplayerScores();
-        // expect(scores).toBeDefined();
-        // expect(scores.length).toEqual(2);
+        const scores = component.getMultiplayerScores();
+        expect(scores).toBeDefined();
+        expect(scores.length).toEqual(2);
     });
 
     it('getSinglePlayerScores should return the single player scores for a given game', () => {
-        // const scores = component.getSinglePlayerScores();
-        // expect(scores).toBeDefined();
-        // expect(scores.length).toEqual(2);
+        const scores = component.getSinglePlayerScores();
+        expect(scores).toBeDefined();
+        expect(scores.length).toEqual(2);
     });
 
     it('hasMultiplayerScores should return true if the game has a multiplayer score', () => {
-        // expect(component.hasMultiplayerScores()).toEqual(true);
+        expect(component.hasMultiplayerScores()).toEqual(true);
     });
 
     it('hasSinglePlayerScores should return true if the game has a single player score', () => {
-        // expect(component.hasSinglePlayerScores()).toEqual(true);
+        expect(component.hasSinglePlayerScores()).toEqual(true);
+    });
+
+    it('should get the image namecall getImageData from communication service', () => {
+        // spyOn(spyCommunicationService, 'getImgData').and.returnValue(of());
+        // component.getImageName();
     });
 });

@@ -1,3 +1,4 @@
+import { Bmp } from '@app/classes/bmp/bmp';
 import { BMP_EXTENSION, DB_URL, DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game-info';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
@@ -7,6 +8,7 @@ import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-s
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
+import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
 import * as bmp from 'bmp-js';
 import { expect } from 'chai';
@@ -15,9 +17,10 @@ import { describe } from 'mocha';
 import { tmpdir } from 'os';
 import * as path from 'path';
 import * as sinon from 'sinon';
+import { stub } from 'sinon';
 import { Container } from 'typedi';
 
-describe('GameInfo service', async () => {
+describe.only('GameInfo service', async () => {
     let gameService: GameService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
@@ -117,5 +120,18 @@ describe('GameInfo service', async () => {
     it('resetAllGame() should reset all of the games', async () => {
         await gameService.resetAllGame();
         expect((await gameService.getAllGames()).length).to.equal(0);
+    });
+
+    it('should create a game from Bmp', async () => {
+        const expectedCoordinates = [[{} as Coordinate]];
+        const expectedId = '';
+        stub(bmpService, 'addBmp').resolves(expectedId);
+        stub(bmpDifferenceService, 'getCoordinates').resolves(expectedCoordinates);
+        stub(bmpSubtractorService, 'getDifferenceBMP').resolves({} as Bmp);
+        const addGameSpy = stub(gameService, 'addGame').resolves();
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        gameService.addGameWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0).then(() => {
+            expect(addGameSpy.called).to.equal(true);
+        });
     });
 });

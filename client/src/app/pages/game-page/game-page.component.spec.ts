@@ -10,6 +10,8 @@ import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-c
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { GameMode } from '@common/game-mode';
 import { of } from 'rxjs';
 import { GamePageComponent } from './game-page.component';
 import SpyObj = jasmine.SpyObj;
@@ -18,10 +20,21 @@ describe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
     let communicationServiceSpy: SpyObj<CommunicationService>;
+    let gameInformationHandlerServiceSpy: SpyObj<GameInformationHandlerService>;
 
     beforeEach(async () => {
-        communicationServiceSpy = jasmine.createSpyObj('ExampleService', ['getTimeValue']);
+        communicationServiceSpy = jasmine.createSpyObj('ExampleService', ['getTimeValue', 'getImgData']);
+        gameInformationHandlerServiceSpy = jasmine.createSpyObj('GameInformationHandlerService', [
+            'getGameMode',
+            'getGameName',
+            'getPlayerName',
+            'getOriginalBmp',
+            'getOriginalBmpId',
+            'getModifiedBmpId',
+            'getGameInformation',
+        ]);
         communicationServiceSpy.getTimeValue.and.returnValue(of({ title: '', body: '' }));
+        communicationServiceSpy.getImgData.and.returnValue(of());
 
         await TestBed.configureTestingModule({
             declarations: [
@@ -35,13 +48,32 @@ describe('GamePageComponent', () => {
                 TimerStopwatchComponent,
             ],
             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
-            providers: [{ provide: CommunicationService, useValue: communicationServiceSpy }],
+            providers: [
+                { provide: CommunicationService, useValue: communicationServiceSpy },
+                {
+                    provide: GameInformationHandlerService,
+                    useValue: gameInformationHandlerServiceSpy,
+                },
+            ],
         }).compileComponents();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(GamePageComponent);
         component = fixture.componentInstance;
+        gameInformationHandlerServiceSpy.gameInformation = {
+            id: '1',
+            name: 'test',
+            idOriginalBmp: 'original',
+            idEditedBmp: 'edited',
+            idDifferenceBmp: 'difference',
+            soloScore: [],
+            multiplayerScore: [],
+            differenceRadius: 2,
+            differences: [],
+        };
+        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
+        gameInformationHandlerServiceSpy.playerName = 'test';
         fixture.detectChanges();
     });
 

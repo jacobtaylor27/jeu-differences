@@ -41,7 +41,16 @@ export class GameService {
         );
         const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
         const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
-        await this.addGame({ name, idOriginalBmp, idEditedBmp, differenceRadius: radius, differences, idDifferenceBmp });
+        await this.addGame({
+            name,
+            idOriginalBmp,
+            idEditedBmp,
+            differenceRadius: radius,
+            differences,
+            idDifferenceBmp,
+            soloScore: [],
+            multiplayerScore: [],
+        });
     }
 
     async addGame(game: GameInfo): Promise<void> {

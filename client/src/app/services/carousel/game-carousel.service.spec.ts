@@ -19,6 +19,7 @@ describe('GameCarouselService', () => {
             'hasPreviousCards',
             'hasNextCards',
             'setCardMode',
+            'setCards',
         ]);
         TestBed.configureTestingModule({
             providers: [{ provide: GameCardHandlerService, useValue: spyGameCardHandlerService }],
@@ -33,6 +34,11 @@ describe('GameCarouselService', () => {
     it('getCards should return an array of game cards by calling getGameCards', () => {
         service.getCards();
         expect(spyGameCardHandlerService.getGameCards).toHaveBeenCalled();
+    });
+
+    it('should call setCards from game card handler service', () => {
+        service.setCards([]);
+        expect(spyGameCardHandlerService.setCards).toHaveBeenCalled();
     });
 
     it('getCarouselLength should call getNumberOfCards and return a number', () => {

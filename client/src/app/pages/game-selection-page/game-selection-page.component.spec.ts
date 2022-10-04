@@ -32,11 +32,6 @@ describe('GameSelectionPageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('makeCardsSelectMode should call setCardMode from gameCarouselService', () => {
-        component.makeCardsSelectMode();
-        expect(spyGameCarouselService.setCardMode).toHaveBeenCalled();
-    });
-
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
         expect(component.formatScoreTime(1)).toEqual('00:01');
     });

@@ -1,11 +1,13 @@
+import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
-import { SIZE } from '@app/constants/canvas';
+import { Canvas } from '@app/enums/canvas';
 import { Theme } from '@app/enums/theme';
 import { Vec2 } from '@app/interfaces/vec2';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
@@ -19,9 +21,15 @@ export class CreateGamePageComponent implements AfterViewInit {
 
     form: FormGroup;
     theme: typeof Theme = Theme;
-    imageDifference: ImageBitmap;
+    imageDifference: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
 
-    constructor(private toolBoxService: ToolBoxService, public dialog: MatDialog, private drawService: DrawService) {
+    // eslint-disable-next-line max-params
+    constructor(
+        private toolBoxService: ToolBoxService,
+        public dialog: MatDialog,
+        private drawService: DrawService,
+        private communication: CommunicationService,
+    ) {
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
         });
@@ -29,14 +37,20 @@ export class CreateGamePageComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.toolBoxService.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
-            this.sourceImg.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
+            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
         });
-        this.toolBoxService.$resetSource.subscribe(() => {
-            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, SIZE.y, SIZE.x);
-        });
-        this.drawService.$differenceImage.subscribe((newImageDifference: ImageBitmap) => {
+        const resetCanvas = () => {
+            const ctx = this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            ctx.rect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        };
+        this.toolBoxService.$resetSource.subscribe(() => resetCanvas());
+        this.drawService.$differenceImage.subscribe((newImageDifference: ImageData) => {
             this.imageDifference = newImageDifference;
         });
+        this.toolBoxService.$resetDiff.next();
+        resetCanvas();
     }
 
     differenceValidator(): ValidatorFn {
@@ -53,33 +67,38 @@ export class CreateGamePageComponent implements AfterViewInit {
         return difference;
     }
 
-    async createSourceImageFromCanvas(): Promise<ImageBitmap> {
-        return await createImageBitmap(this.sourceImg.nativeElement);
+    createSourceImageFromCanvas(): ImageData {
+        return (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
     }
 
-    manageErrorInForm() {
-        const errorsMessages = Object.entries(this.form.controls)
-            .filter(([, control]) => !control.valid)
-            .map(([name]) => name + ' is not valid');
-        this.dialog.open(DialogFormsErrorComponent, { data: { formTitle: 'Create Game Form', errorMessages: errorsMessages } });
+    manageErrorInForm(validationImageErrors: string) {
+        this.dialog.open(DialogFormsErrorComponent, {
+            data: { formTitle: 'Create Game Form', errorMessages: [validationImageErrors] },
+        });
     }
 
-    async validateForm() {
+    validateForm(nbDifference: number, differenceImage: number[]) {
         this.dialog.open(DialogCreateGameComponent, {
             data: {
                 expansionRadius: (this.form.get('expansionRadius') as FormControl).value,
-                src: await this.createSourceImageFromCanvas(),
+                src: this.createSourceImageFromCanvas(),
                 difference: this.imageDifference,
+                nbDifference,
+                differenceImage,
             },
         });
     }
 
-    // set submit function but it will be done with the route
-    async onSubmit() {
-        if (!this.form.valid) {
-            this.manageErrorInForm();
-            return;
-        }
-        await this.validateForm();
+    isGameValid() {
+        const original: ImageData = this.createSourceImageFromCanvas();
+        return this.communication
+            .validateGame(original, this.imageDifference, parseInt((this.form.get('expansionRadius') as FormControl).value, 10))
+            .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {
+                if (!response || !response.body) {
+                    this.manageErrorInForm('Il faut entre 3 et 9 differences');
+                    return;
+                }
+                this.validateForm(response.body.numberDifference as number, response.body.data);
+            });
     }
 }

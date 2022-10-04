@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class DrawService {
-    $differenceImage: Subject<ImageBitmap>;
+    $differenceImage: Subject<ImageData>;
     constructor() {
         this.$differenceImage = new Subject();
     }

@@ -9,7 +9,7 @@ import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { CommunicationService } from '@app/services/communication.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { of } from 'rxjs';
 import { GamePageComponent } from './game-page.component';
 import SpyObj = jasmine.SpyObj;

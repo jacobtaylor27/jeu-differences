@@ -33,6 +33,26 @@ export class GameService {
         return (await this.collection.find(filter).toArray())[0];
     }
 
+    async addGameWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void> {
+        const idOriginalBmp = await this.bmpService.addBmp(await images.original.toImageData(), DEFAULT_BMP_ASSET_PATH);
+        const idEditedBmp = await this.bmpService.addBmp(await images.modify.toImageData(), DEFAULT_BMP_ASSET_PATH);
+        const differences = await this.bmpDifferenceInterpreter.getCoordinates(
+            await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius),
+        );
+        const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
+        const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
+        await this.addGame({
+            name,
+            idOriginalBmp,
+            idEditedBmp,
+            differenceRadius: radius,
+            differences,
+            idDifferenceBmp,
+            soloScore: [],
+            multiplayerScore: [],
+        });
+    }
+
     async addGame(game: GameInfo): Promise<void> {
         if (game.id === undefined) game.id = this.idGeneratorService.generateNewId();
         // if (game.soloScore === undefined) game.soloScore = [];

@@ -165,8 +165,8 @@ export class GameController {
                 return;
             }
             let isErrorOnGameValidation = false;
-            const original = new Bmp(req.body.original.width, req.body.original.height, req.body.original.data);
-            const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data);
+            const original = new Bmp(req.body.original.width, req.body.original.height, await Bmp.convertRGBAToARGB(req.body.original.data));
+            const modify = new Bmp(req.body.modify.width, req.body.modify.height, await Bmp.convertRGBAToARGB(req.body.modify.data));
             await this.gameValidation
                 .isNbDifferenceValid(original, modify, req.body.differenceRadius)
                 .then((isValid: boolean) => {

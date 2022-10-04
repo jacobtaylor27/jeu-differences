@@ -1,4 +1,6 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AdminCommandsComponent } from '@app/components/admin-commands/admin-commands.component';
 import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game-card-buttons.component';
 import { GameCardComponent } from '@app/components/game-card/game-card.component';
@@ -22,7 +24,8 @@ describe('AdminPageComponent', () => {
                 GameCardButtonsComponent,
                 GameScoreComponent,
             ],
-            imports: [AppMaterialModule],
+            imports: [AppMaterialModule, RouterTestingModule],
+            providers: [HttpHandler, HttpClient],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminPageComponent);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { Vec2 } from '@app/interfaces/vec2';
@@ -17,6 +18,8 @@ export class PlayAreaComponent implements AfterViewInit {
     mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
 
+    constructor(private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService) {}
+
     get width(): number {
         return SIZE.x;
     }
@@ -25,16 +28,29 @@ export class PlayAreaComponent implements AfterViewInit {
         return SIZE.y;
     }
 
-    constructor(private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService) {}
+    @HostListener('keydown', ['$event'])
+    buttonDetect(event: KeyboardEvent) {
+        this.buttonPressed = event.key;
+    }
 
     ngAfterViewInit(): void {
         this.displayImage();
         this.displayImageModified();
     }
 
-    @HostListener('keydown', ['$event'])
-    buttonDetect(event: KeyboardEvent) {
-        this.buttonPressed = event.key;
+    onClick($event: MouseEvent, canvas: string) {
+        if (!this.isMouseDisabled()) {
+            this.mouseHitDetect($event, canvas);
+        }
+    }
+
+    mouseHitDetect($event: MouseEvent, canvas: string) {
+        this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
+
+        const ctx: CanvasRenderingContext2D =
+            canvas === 'original' ? this.getContextOriginal() : (this.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+
+        this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);
     }
 
     getContextOriginal() {
@@ -81,20 +97,5 @@ export class PlayAreaComponent implements AfterViewInit {
 
     private isMouseDisabled() {
         return this.differencesDetectionHandlerService.mouseIsDisabled;
-    }
-
-    onClick($event: MouseEvent, canvas: string) {
-        if (!this.isMouseDisabled()) {
-            this.mouseHitDetect($event, canvas);
-        }
-    }
-
-    mouseHitDetect($event: MouseEvent, canvas: string) {
-        this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
-
-        const ctx: CanvasRenderingContext2D =
-            canvas === 'original' ? this.getContextOriginal() : (this.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-
-        this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);
     }
 }

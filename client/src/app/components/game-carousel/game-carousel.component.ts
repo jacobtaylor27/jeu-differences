@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewChecked, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication.service';
@@ -10,18 +10,17 @@ import { GameInfo } from '@common/game-info';
     templateUrl: './game-carousel.component.html',
     styleUrls: ['./game-carousel.component.scss'],
 })
-export class GameCarouselComponent implements OnInit, AfterViewChecked {
-    @Input() gameCards: GameCard[] = [];
+export class GameCarouselComponent implements OnInit {
+    @Input() isAdmin: boolean = false;
+    gameCards: GameCard[] = [];
+    gamesInfo: GameInfo[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
-    gamesInfo: GameInfo[];
 
     constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
 
     ngOnInit(): void {
         this.fetchGameInformation();
     }
-
-    ngAfterViewChecked(): void {}
 
     fetchGameInformation(): void {
         this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: GameInfo[] }>) => {
@@ -32,7 +31,7 @@ export class GameCarouselComponent implements OnInit, AfterViewChecked {
             for (const gameInfo of this.gamesInfo) {
                 const newCard: GameCard = {
                     gameInformation: gameInfo,
-                    isAdminCard: false,
+                    isAdminCard: this.isAdmin,
                     isShown: false,
                 };
                 this.gameCards.push(newCard);

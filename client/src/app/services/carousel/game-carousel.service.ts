@@ -12,9 +12,8 @@ export class GameCarouselService {
         return this.gameCardHandlerService.getGameCards();
     }
 
-    fetchCardsFromServer(): void {
-        this.gameCardHandlerService.fetchGameInformation();
-        this.gameCardHandlerService.mapInformationToGameCard();
+    setCards(cards: GameCard[]) {
+        this.gameCardHandlerService.setCards(cards);
     }
 
     getCarouselLength(): number {

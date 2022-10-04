@@ -3,6 +3,7 @@ import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Coordinate } from '@common/coordinate';
+import { GameInfo } from '@common/game-info';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
@@ -77,6 +78,38 @@ describe('GameController', () => {
 
     it('should return an error if the difference query is not set', async () => {
         return supertest(expressApp).post('/api/game/difference/0').send({}).expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should fetch all games cards of the database', async () => {
+        const expectedGameCards = [{} as GameInfo, {} as GameInfo];
+        gameInfo.getAllGames.resolves(expectedGameCards);
+        return supertest(expressApp)
+            .get('/api/game/cards')
+            .expect(StatusCodes.OK)
+            .then((response) => {
+                expect(response.body).to.deep.equal({ games: expectedGameCards });
+            });
+    });
+
+    it('should return nothing if the games cards is empty', async () => {
+        gameInfo.getAllGames.rejects();
+        return supertest(expressApp).get('/api/game/cards').expect(StatusCodes.NOT_FOUND);
+    });
+
+    it('should fetch a games card of the database', async () => {
+        const expectedGameCard = {} as GameInfo;
+        gameInfo.getGameById.resolves(expectedGameCard);
+        return supertest(expressApp)
+            .get('/api/game/cards/0')
+            .expect(StatusCodes.OK)
+            .then((response) => {
+                expect(response.body).to.deep.equal({ games: expectedGameCard });
+            });
+    });
+
+    it('should return Not Found if the game does not exist', async () => {
+        gameInfo.getGameById.rejects();
+        return supertest(expressApp).get('/api/game/cards/0').expect(StatusCodes.NOT_FOUND);
     });
 
     it('should return a bad request if one of the attribute needed is not here to validate a new game card', async () => {

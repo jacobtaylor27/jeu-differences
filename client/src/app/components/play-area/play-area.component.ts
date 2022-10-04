@@ -20,12 +20,15 @@ export class PlayAreaComponent implements AfterViewInit {
 
     mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
+    gameId: string;
 
     constructor(
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
-    ) {}
+    ) {
+        this.createGameRoom();
+    }
 
     get width(): number {
         return SIZE.x;
@@ -96,6 +99,22 @@ export class PlayAreaComponent implements AfterViewInit {
 
             ctx.putImageData(image, 0, 0);
         });
+    }
+
+    createGameRoom() {
+        this.communicationService
+            .createGameRoom(
+                this.gameInfoHandlerService.getPlayerName(),
+                this.gameInfoHandlerService.getGameMode(),
+                this.gameInfoHandlerService.getGameInformation().id as string,
+            )
+            .subscribe((response: HttpResponse<{ id: string }> | null) => {
+                if (!response || !response.body) {
+                    return;
+                }
+                console.log(response.body.id);
+                this.gameId = response.body.id;
+            });
     }
 
     getDifferenceValidation(id: string, mousePosition: Vec2) {

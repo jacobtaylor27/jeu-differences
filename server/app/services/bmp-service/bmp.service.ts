@@ -26,14 +26,10 @@ export class BmpService {
         return await this.bmpDecoderService.decodeBIntoBmp(fullpath);
     }
     async addBmp(bpmToConvert: ImageData, filepath: string): Promise<string> {
-        const data = Buffer.from(bpmToConvert.data);
-        const width = bpmToConvert.width;
-        const height = bpmToConvert.height;
-
         const bmpData = {
-            data,
-            width,
-            height,
+            data: Buffer.from(await Bmp.convertRGBAToARGB(Array.from(bpmToConvert.data))),
+            width: bpmToConvert.width,
+            height: bpmToConvert.height,
         };
 
         const rawData = bmp.encode(bmpData);

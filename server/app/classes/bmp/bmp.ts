@@ -15,12 +15,24 @@ export class Bmp {
         this.width = width;
     }
 
+    static async convertRGBAToARGB(data: number[]): Promise<number[]> {
+        const rgba = [];
+        const nbCaracterRGBA = 4;
+        for (let i = 0; i < data.length / nbCaracterRGBA; i++) {
+            rgba.push(data[i * nbCaracterRGBA + 3]);
+            rgba.push(data[i * nbCaracterRGBA + 2]);
+            rgba.push(data[i * nbCaracterRGBA + 1]);
+            rgba.push(data[i * nbCaracterRGBA]);
+        }
+        return rgba;
+    }
+
     async toImageData(): Promise<ImageData> {
         const imageData: ImageData = {
             colorSpace: 'srgb',
             width: this.width,
             height: this.height,
-            data: new Uint8ClampedArray(await this.getPixelBuffer()),
+            data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToBGRA(this.pixels))),
         };
         return imageData;
     }
@@ -47,7 +59,7 @@ export class Bmp {
     }
 
     private async getPixelBuffer(): Promise<Buffer> {
-        return Buffer.from(Pixel.convertPixelsToRaw(this.pixels));
+        return Buffer.from(Pixel.convertPixelsToARGB(this.pixels));
     }
 
     private convertRawToPixels(rawData: number[], width: number, height: number): Pixel[][] {

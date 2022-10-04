@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { promises as fs } from 'fs';
 import { describe } from 'mocha';
+import { TEST_2X2_BMP, TEST_2X3_BMP, TEST_3X2_BMP } from './bmp-decoder-service.spec.contants';
 
 chai.use(chaiAsPromised);
 
@@ -16,67 +17,27 @@ describe('Bmp decoder service', () => {
     });
 
     it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 2x2', async () => {
-        const pixelsExpected = [
-            [
-                { a: 0, r: 0, g: 0, b: 255 },
-                { a: 0, r: 255, g: 0, b: 0 },
-            ],
-            [
-                { a: 0, r: 0, g: 255, b: 0 },
-                { a: 0, r: 255, g: 255, b: 255 },
-            ],
-        ];
-
         const filepath = './assets/test-bmp/bmp_test_2x2.bmp';
         const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
-
-        expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
-        expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
-        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(TEST_2X2_BMP.file[0].length);
+        expect(bmpProduced.getHeight()).to.equals(TEST_2X2_BMP.file.length);
+        expect(bmpProduced.getPixels()).to.eql(TEST_2X2_BMP.file);
     });
 
     it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 3x2', async () => {
-        const pixelsExpected = [
-            [
-                { a: 0, r: 0, g: 0, b: 255 },
-                { a: 0, r: 255, g: 0, b: 0 },
-                { a: 0, r: 128, g: 0, b: 128 },
-            ],
-            [
-                { a: 0, r: 192, g: 192, b: 192 },
-                { a: 0, r: 255, g: 255, b: 0 },
-                { a: 0, r: 0, g: 255, b: 255 },
-            ],
-        ];
-
         const filepath = './assets/test-bmp/bmp_test_3x2.bmp';
         const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
-        expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
-        expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
-        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(TEST_3X2_BMP.file[0].length);
+        expect(bmpProduced.getHeight()).to.equals(TEST_3X2_BMP.file.length);
+        expect(bmpProduced.getPixels()).to.eql(TEST_3X2_BMP.file);
     });
 
     it('decodeBIntoBmp(...) Should create an object Bmp based on bmp file of size 2x3', async () => {
-        const pixelsExpected = [
-            [
-                { a: 0, r: 0, g: 0, b: 255 },
-                { a: 0, r: 255, g: 0, b: 0 },
-            ],
-            [
-                { a: 0, r: 0, g: 255, b: 0 },
-                { a: 0, r: 255, g: 0, b: 255 },
-            ],
-            [
-                { a: 0, r: 192, g: 192, b: 192 },
-                { a: 0, r: 128, g: 128, b: 128 },
-            ],
-        ];
-
         const filepath = './assets/test-bmp/bmp_test_2x3.bmp';
         const bmpProduced = await bmpDecoderService.decodeBIntoBmp(filepath);
-        expect(bmpProduced.getWidth()).to.equals(pixelsExpected[0].length);
-        expect(bmpProduced.getHeight()).to.equals(pixelsExpected.length);
-        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
+        expect(bmpProduced.getWidth()).to.equals(TEST_2X3_BMP.file[0].length);
+        expect(bmpProduced.getHeight()).to.equals(TEST_2X3_BMP.file.length);
+        expect(bmpProduced.getPixels()).to.eql(TEST_2X3_BMP.file);
     });
 
     it('decodeBIntoBmp(...) Should throw an error if the path is incorrect', async () => {

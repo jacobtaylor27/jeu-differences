@@ -1,10 +1,9 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
-import { Coordinate } from '@common/coordinate';
+import { TEST_2X2_BMP_RADIUS_0PX } from '@app/services/bmp-subtractor-service/bmp-subtractor.service.spec.constants';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { describe } from 'mocha';
 import { Container } from 'typedi';
 import { BmpSubtractorService } from './bmp-subtractor.service';
 chai.use(chaiAsPromised);
@@ -25,25 +24,10 @@ describe('Bmp subractor service', async () => {
     });
 
     it('Should produce a white bmp if two images are similar', async () => {
-        const expectedWidth = 2;
-        const expectedHeight = 2;
-        const pixelsExpected = [
-            [
-                { a: 0, r: 255, g: 255, b: 255 },
-                { a: 0, r: 255, g: 255, b: 255 },
-            ],
-            [
-                { a: 0, r: 255, g: 255, b: 255 },
-                { a: 0, r: 255, g: 255, b: 255 },
-            ],
-        ];
-        const radius = 0;
-
-        const bmpProduced = await bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, radius);
-
-        expect(bmpProduced.getWidth()).to.equals(expectedWidth);
-        expect(bmpProduced.getHeight()).to.equals(expectedHeight);
-        expect(bmpProduced.getPixels()).to.eql(pixelsExpected);
+        const bmpProduced = await bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, 0);
+        expect(bmpProduced.getWidth()).to.deep.equal(TEST_2X2_BMP_RADIUS_0PX.width);
+        expect(bmpProduced.getHeight()).to.deep.equal(TEST_2X2_BMP_RADIUS_0PX.height);
+        expect(bmpProduced.getPixels()).to.deep.equal(TEST_2X2_BMP_RADIUS_0PX.pixelsExpected);
     });
 
     it('Should throw an error if the height of the two images is not the same', async () => {
@@ -65,23 +49,6 @@ describe('Bmp subractor service', async () => {
         await expect(bmpSubtractorService.getDifferenceBMP(bmp2x2, bmp2x2, radius))
             .to.eventually.be.rejectedWith('radius should be greater or equal to zero')
             .and.be.an.instanceOf(Error);
-    });
-
-    it('Should return center value if radius is 0', () => {
-        const radius = 0;
-        const center: Coordinate = { x: 1, y: 1 };
-        const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        const expected: Coordinate[] = new Array();
-        expected.push(center);
-        expect(result.length).to.equal(expected.length);
-        expect(result[0]).to.equal(expected[0]);
-    });
-
-    it('Should return array of coordinates of length bigger than 1 if radius > 0', () => {
-        const radius = 3;
-        const center: Coordinate = { x: 1, y: 1 };
-        const result = bmpSubtractorService['findContourEnlargement'](center, radius);
-        expect(result.length).to.greaterThan(1);
     });
 
     it('Should apply 0 pixel enlargement radius for a given image ', async () => {

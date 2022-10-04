@@ -1,3 +1,4 @@
+import { MAX_VALUE_PIXEL } from '@app/constants/encoding';
 import { PIXEL_COLOR } from '@app/constants/pixel-color';
 
 export class Pixel {
@@ -11,10 +12,10 @@ export class Pixel {
         this.r = r;
         this.g = g;
         this.b = b;
-        this.a = 255;
+        this.a = MAX_VALUE_PIXEL;
     }
 
-    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
+    static convertPixelsToARGB(pixelMatrix: Pixel[][]): number[] {
         const raw: number[] = [];
         pixelMatrix.forEach((lineOfPixels) => {
             lineOfPixels.forEach((pixel) => {
@@ -27,13 +28,13 @@ export class Pixel {
         return raw;
     }
 
-    static convertPixelsToRaw1(pixelMatrix: Pixel[][]): number[] {
+    static convertPixelsToBGRA(pixelMatrix: Pixel[][]): number[] {
         const raw: number[] = [];
         pixelMatrix.forEach((lineOfPixels) => {
             lineOfPixels.forEach((pixel) => {
-                raw.push(pixel.r);
-                raw.push(pixel.g);
                 raw.push(pixel.b);
+                raw.push(pixel.g);
+                raw.push(pixel.r);
                 raw.push(pixel.a);
             });
         });

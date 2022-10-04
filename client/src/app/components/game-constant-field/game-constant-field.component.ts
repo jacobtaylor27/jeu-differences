@@ -8,9 +8,4 @@ import { Component, Input } from '@angular/core';
 export class GameConstantFieldComponent {
     @Input() value: number;
     @Input() label: string;
-
-    constructor() {
-        // eslint-disable-next-line no-console
-        console.log('GameConstantFieldComponent constructor');
-    }
 }

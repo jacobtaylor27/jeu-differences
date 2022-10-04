@@ -1,20 +1,25 @@
 import { Coordinate } from '@common/coordinate';
 
+const HEIGHT = 480;
+const WIDTH = 640;
+
 export class BmpCoordinate {
     private x: number;
     private y: number;
 
-    constructor(row: number, column: number) {
-        if (!this.areParametersValid(row, column)) throw new Error("The coordinates can't be negative");
-        this.x = row;
-        this.y = column;
+    constructor(x: number, y: number) {
+        if (!this.areParametersValid(x, y)) {
+            return;
+        }
+        this.x = x;
+        this.y = y;
     }
 
-    getRow(): number {
+    getX(): number {
         return this.x;
     }
 
-    getColumn(): number {
+    getY(): number {
         return this.y;
     }
 
@@ -25,7 +30,15 @@ export class BmpCoordinate {
         };
     }
 
-    private areParametersValid(row: number, column: number): boolean {
-        return row >= 0 && column >= 0;
+    private areParametersValid(x: number, y: number): boolean {
+        return this.isXCoordinateValid(x) && this.isYCoordinateValid(y);
+    }
+
+    private isXCoordinateValid(x: number) {
+        return x >= 0 && x <= WIDTH;
+    }
+
+    private isYCoordinateValid(y: number) {
+        return y >= 0 && y <= HEIGHT;
     }
 }

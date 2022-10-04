@@ -6,6 +6,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 import { MongoParseError } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import * as sinon from 'sinon';
 chai.use(chaiAsPromised);
 
 describe('Database service', () => {
@@ -23,6 +24,14 @@ describe('Database service', () => {
         if (databaseService['client']) {
             await databaseService.close();
         }
+        sinon.restore();
+    });
+
+    it('initializeGameCollection() should be called when first intialized the game collection', async () => {
+        await databaseService.start();
+        const spy = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
+        await databaseService.start();
+        expect(spy.calledOnce).to.equal(false);
     });
 
     it('start(uri) should allow the connection to the database', async () => {
@@ -40,5 +49,11 @@ describe('Database service', () => {
     it('start(uri) should throw an exception given a bad uri', async () => {
         const badUri = 'badUri00';
         await expect(databaseService.start(badUri)).to.eventually.be.rejectedWith(Error).to.be.instanceof(MongoParseError);
+    });
+
+    it('populateDatabase() should populate the database correctly', async () => {
+        const spy = sinon.spy(databaseService, 'populateDatabase');
+        await databaseService.start();
+        expect(spy.calledOnce).to.equal(true);
     });
 });

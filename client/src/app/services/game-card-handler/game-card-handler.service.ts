@@ -1,9 +1,7 @@
-import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { CardRange } from '@app/interfaces/range';
 import { GameInfo } from '@common/game-info';
-import { CommunicationService } from '@app/services/communication.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,35 +11,12 @@ export class GameCardHandlerService {
     private activeCardsRange: CardRange = { start: 0, end: 3 };
     private gameCards: GameCard[] = [];
 
-    constructor(private readonly communicationService: CommunicationService) {
-        this.fetchGameInformation();
-    }
-
-    fetchGameInformation(): void {
-        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: GameInfo[] }>) => {
-            if (!response || !response.body) {
-                return;
-            }
-            this.gamesInfo = response.body.games;
-        });
-        // this.mapInformationToGameCard();
-    }
-
-    mapInformationToGameCard() {
-        this.gameCards = [];
-
-        for (const gameInfo of this.gamesInfo) {
-            const newCard: GameCard = {
-                gameInformation: gameInfo,
-                isAdminCard: false,
-                isShown: false,
-            };
-            this.gameCards.push(newCard);
-        }
-    }
-
     getGameCards(): GameCard[] {
         return this.gameCards;
+    }
+
+    setCards(cards: GameCard[]) {
+        this.gameCards = cards;
     }
 
     getActiveCardsRange(): CardRange {

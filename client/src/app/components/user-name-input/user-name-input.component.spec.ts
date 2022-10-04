@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AdminCommandsComponent } from '@app/components/admin-commands/admin-commands.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -11,19 +13,21 @@ import { UserNameInputComponent } from './user-name-input.component';
 describe('UserNameInputComponent', () => {
     let component: UserNameInputComponent;
     let fixture: ComponentFixture<UserNameInputComponent>;
-    let spyRouter: jasmine.SpyObj<Router>;
-    let spyGameInformationHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
+    let router: Router;
+    // let spyGameInformationHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
+    const dialogMock = {
+        close: () => {},
+    };
 
     beforeEach(async () => {
-        spyRouter = jasmine.createSpyObj('Router', ['navigate']);
-        spyGameInformationHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName']);
+        // spyGameInformationHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName']);
         await TestBed.configureTestingModule({
             declarations: [UserNameInputComponent, AdminCommandsComponent],
-            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule],
+            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
             providers: [
                 {
-                    provide: Router,
-                    useValue: jasmine.createSpyObj('Router', ['navigate']),
+                    provide: MatDialogRef,
+                    useValue: dialogMock,
                 },
                 {
                     provide: GameInformationHandlerService,
@@ -33,6 +37,7 @@ describe('UserNameInputComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(UserNameInputComponent);
+        router = TestBed.inject(Router);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -53,14 +58,9 @@ describe('UserNameInputComponent', () => {
     });
 
     it('should redirect on game page on continue click', () => {
+        const spyRouter = spyOn(router, 'navigate');
         component.playerName = 'test';
         component.onClickContinue();
-        expect(spyRouter.navigate).toHaveBeenCalledWith(['/game']);
-        expect(spyGameInformationHandlerService.setPlayerName).toHaveBeenCalled();
-
-        component.playerName = '';
-        component.onClickContinue();
-        expect(spyRouter.navigate).not.toHaveBeenCalledWith(['/game']);
-        expect(spyGameInformationHandlerService.setPlayerName).not.toHaveBeenCalled();
+        expect(spyRouter).toHaveBeenCalledWith(['/game']);
     });
 });

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
+import { DEFAULT_DRAW_CLIENT, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
@@ -18,7 +18,8 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
-    pencil: Pencil = DEFAULT_PENCIL;
+    pencil: Pencil;
+    // pencil: Pencil = DEFAULT_PENCIL;
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
@@ -69,7 +70,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     async draw(event: MouseEvent) {
-        if (!this.isClick) {
+        if (!this.isClick || !this.pencil) {
             return;
         }
         if (this.pencil.state !== Tool.Pencil) {

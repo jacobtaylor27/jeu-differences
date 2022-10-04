@@ -1,18 +1,10 @@
 <div id="grid-container">
     <div class="wrapper">
-        <canvas #imgModified class="img" width="SIZE.X" height="SIZE.Y"></canvas>
+        <canvas #imgModified class="img" [width]="width" [height]="height"></canvas>
         <canvas #actionsGameModified class="canvas" (click)="onClick($event, 'modified')" [width]="width" [height]="height"></canvas>
     </div>
     <div class="wrapper">
-        <canvas #imgOriginal class="img" width="SIZE.X" height="SIZE.Y"></canvas>
+        <canvas #imgOriginal class="img" [width]="width" [height]="height"></canvas>
         <canvas #actionsGameOriginal class="canvas" (click)="onClick($event, 'original')" click [width]="width" [height]="height"></canvas>
     </div>
 </div>
-<!-- <div id="mouse-position-display">
-    <p>Cliquez sur la grille pour avoir la position de la souris</p>
-    <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
-    <p *ngIf="mousePosition.y !== 0">Y : {{ mousePosition.y }}</p>
-    <hr />
-    <p>Appuyez sur une touche du clavier pour la détecter</p>
-    <p *ngIf="buttonPressed !== ''">Touche : {{ buttonPressed }}</p>
-</div> -->

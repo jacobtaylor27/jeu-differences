@@ -27,6 +27,14 @@ export class GameInformationHandlerService {
         this.playerName = name;
     }
 
+    getOriginalBmpId(): string {
+        return this.gameInformation.idOriginalBmp;
+    }
+
+    getModifiedBmpId(): string {
+        return this.gameInformation.idEditedBmp;
+    }
+
     setGameInformation(gameInformation: GameInfo): void {
         this.gameInformation = gameInformation;
     }

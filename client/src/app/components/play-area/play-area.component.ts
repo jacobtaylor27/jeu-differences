@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { Vec2 } from '@app/interfaces/vec2';
+import { CommunicationService } from '@app/services/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
 @Component({
     selector: 'app-play-area',
@@ -18,7 +21,11 @@ export class PlayAreaComponent implements AfterViewInit {
     mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
 
-    constructor(private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService) {}
+    constructor(
+        private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
+        private readonly gameInfoHandlerService: GameInformationHandlerService,
+        private readonly communicationService: CommunicationService,
+    ) {}
 
     get width(): number {
         return SIZE.x;
@@ -35,7 +42,7 @@ export class PlayAreaComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.displayImage();
-        this.displayImageModified();
+        this.displayImage(false);
     }
 
     onClick($event: MouseEvent, canvas: string) {
@@ -46,53 +53,47 @@ export class PlayAreaComponent implements AfterViewInit {
 
     mouseHitDetect($event: MouseEvent, canvas: string) {
         this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
-
-        const ctx: CanvasRenderingContext2D =
-            canvas === 'original' ? this.getContextOriginal() : (this.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-
+        const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
         this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);
+    }
+
+    getContextImgOriginal() {
+        return this.canvasImgOriginal.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    }
+
+    getContextImgModified() {
+        return this.canvasImgModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
     }
 
     getContextOriginal() {
         return this.canvasOriginal.nativeElement.getContext('2d') as CanvasRenderingContext2D;
     }
 
-    async displayImage() {
-        const ctx = this.canvasImgOriginal.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const imageData = new ImageData(640, 480);
-        for (let i = 0; i < imageData.data.length; i += 4) {
-            // Percentage in the x direction, times 255
-            const x = 100;
-            // Percentage in the y direction, times 255
-            const y = 100;
-
-            // Modify pixel data
-            imageData.data[i + 0] = x;
-            imageData.data[i + 1] = y;
-            imageData.data[i + 2] = 255 - x;
-            imageData.data[i + 3] = 255;
-        }
-
-        ctx.putImageData(imageData, 0, 0);
+    getContextModified() {
+        return this.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
     }
 
-    async displayImageModified() {
-        const ctx = this.canvasImgModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const imageData = new ImageData(640, 480);
-        for (let i = 0; i < imageData.data.length; i += 4) {
-            // Percentage in the x direction, times 255
-            const x = 100;
-            // Percentage in the y direction, times 255
-            const y = 100;
+    getImageData(source: string) {
+        return this.communicationService.getImgData(source);
+    }
 
-            // Modify pixel data
-            imageData.data[i + 0] = x;
-            imageData.data[i + 1] = y;
-            imageData.data[i + 2] = 255 - x;
-            imageData.data[i + 3] = 255;
-        }
+    displayImage(isOriginalImage: boolean = true): void {
+        const originalImageData = isOriginalImage
+            ? this.getImageData(this.gameInfoHandlerService.getOriginalBmpId())
+            : this.getImageData(this.gameInfoHandlerService.getModifiedBmpId());
 
-        ctx.putImageData(imageData, 0, 0);
+        const ctx = isOriginalImage ? this.getContextImgOriginal() : this.getContextImgModified();
+
+        originalImageData.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
+            if (!response || !response.body) {
+                return;
+            }
+            const image: ImageData = new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, {
+                colorSpace: 'srgb',
+            });
+
+            ctx.putImageData(image, 0, 0);
+        });
     }
 
     private isMouseDisabled() {

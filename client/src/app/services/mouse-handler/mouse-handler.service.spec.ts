@@ -19,7 +19,7 @@ describe('MouseHandlerService', () => {
             clientX: 10,
             clientY: 10,
         } as MouseEvent;
-        console.log(service.mouseHitDetect(mouseEvent).x);
+        /* eslint-disable @typescript-eslint/no-magic-numbers */
         expect(service.mouseHitDetect(mouseEvent).x).toEqual(10);
         expect(service.mouseHitDetect(mouseEvent).y).toEqual(10);
     });

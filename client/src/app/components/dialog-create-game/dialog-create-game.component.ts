@@ -1,11 +1,11 @@
 // import { HttpClient } from '@angular/common/http';
-import { HttpClient, HttpResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CREATE_GAME } from '@app/constants/server';
 import { Canvas } from '@app/enums/canvas';
 import { Theme } from '@app/enums/theme';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { catchError, of } from 'rxjs';
 
 @Component({
@@ -26,42 +26,29 @@ export class DialogCreateGameComponent implements AfterViewInit {
             nbDifference: number;
             differenceImage: number[];
         },
-        private http: HttpClient,
+        private communication: CommunicationService,
     ) {}
 
     ngAfterViewInit() {
         const ctx = this.differentImage.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.putImageData(new ImageData(new Uint8ClampedArray(this.data.differenceImage), Canvas.WIDTH, Canvas.HEIGHT, { colorSpace: 'srgb' }), 0, 0);
     }
+
     createGame() {
-        this.http
-            .post<Record<string, never>>(
-                CREATE_GAME,
-                {
-                    original: { width: this.data.src.width, height: this.data.src.height, data: Array.from(this.data.src.data) },
-                    modify: { width: this.data.difference.width, height: this.data.difference.height, data: Array.from(this.data.difference.data) },
-                    differenceRadius: this.data.expansionRadius,
-                    name: (this.form.get('name') as FormControl).value,
-                },
-                { observe: 'response' },
+        this.communication
+            .createGame(
+                { original: this.data.src, modify: this.data.difference },
+                this.data.expansionRadius,
+                (this.form.get('name') as FormControl).value,
             )
             .pipe(
                 catchError(() => {
-                    console.log('Le serveur a eu un probleme pour sauvegarder le jeu');
                     return of(null);
                 }),
             )
             .subscribe((response: HttpResponse<Record<string, never>> | null) => {
                 if (!response) {
                     return;
-                }
-                switch (response.status) {
-                    case HttpStatusCode.Created:
-                        console.log('Le jeu est cree');
-                        break;
-                    default:
-                        console.log('Le jeu n a pas ete accepter');
-                        break;
                 }
             });
     }

@@ -1,5 +1,5 @@
 import { HttpException } from '@app/classes/http/http.exception';
-import { CountdownTimerController } from '@app/controllers/coutdown-timer-controller/countdown-timer.controller';
+import { CountdownTimerController } from '@app/controllers/countdown-timer-controller/countdown-timer.controller';
 import { DateController } from '@app/controllers/date-controller/date.controller';
 import { ExampleController } from '@app/controllers/example-controller/example.controller';
 import { GameController } from '@app/controllers/game-controller/game.controller';
@@ -10,6 +10,7 @@ import { StatusCodes } from 'http-status-codes';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
+import { BmpController } from './controllers/bmp-controller/bmp.controller';
 
 @Service()
 export class Application {
@@ -22,6 +23,7 @@ export class Application {
         private readonly exampleController: ExampleController,
         private readonly dateController: DateController,
         private readonly gameController: GameController,
+        private readonly bmpController: BmpController,
         private readonly countDownController: CountdownTimerController,
     ) {
         this.app = express();
@@ -48,6 +50,7 @@ export class Application {
         this.app.use('/api/example', this.exampleController.router);
         this.app.use('/api/date', this.dateController.router);
         this.app.use('/api/game', this.countDownController.router);
+        this.app.use('/api/bmp', this.bmpController.router);
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
         });

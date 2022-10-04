@@ -6,16 +6,33 @@ import { GameCardButtonsComponent } from './game-card-buttons.component';
 
 const GAME_CARD: GameCard = {
     gameInformation: {
+        id: '1',
         name: 'test',
-        imgName: 'imageName',
-        scoresSolo: [
-            { playersName: 'solo1', time: 60 },
-            { playersName: 'solo2', time: 90 },
+        idOriginalBmp: '1',
+        idEditedBmp: '1',
+        idDifferenceBmp: '1',
+        soloScore: [
+            {
+                playerName: 'test2',
+                time: 10,
+            },
+            {
+                playerName: 'test',
+                time: 10,
+            },
         ],
-        scoresMultiplayer: [
-            { playersName: 'multi1', time: 125 },
-            { playersName: 'multi2', time: 12 },
+        multiplayerScore: [
+            {
+                playerName: 'test2',
+                time: 10,
+            },
+            {
+                playerName: 'test',
+                time: 10,
+            },
         ],
+        differenceRadius: 3,
+        differences: [],
     },
     isShown: true,
     isAdminCard: true,

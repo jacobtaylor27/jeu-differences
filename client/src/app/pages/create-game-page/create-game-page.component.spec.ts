@@ -60,16 +60,6 @@ describe('CreateGamePageComponent', () => {
         });
     });
 
-    it('should post the game settings when the form is valid', () => {
-        const formSpyObj = jasmine.createSpyObj('FormGroup', ['get', 'valid']);
-        formSpyObj.get.and.callFake(() => new FormControl());
-        const nbTimesFormGetCall = 4;
-        component.form = formSpyObj;
-        component.onSubmit();
-        expect(httpSpyObj.post).toHaveBeenCalled();
-        expect(formSpyObj.get).toHaveBeenCalledTimes(nbTimesFormGetCall);
-    });
-
     it('should differenceValidator return null if the number of difference is not < 10 and > 2 ', () => {
         const calcDiffSpy = spyOn(component, 'calculateDifference').and.callFake(() => 0);
         const mockControl = { value: 'test' } as FormControl;
@@ -100,6 +90,25 @@ describe('CreateGamePageComponent', () => {
         });
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
+    });
+
+    it('should create the source image from the canvas', async () => {
+        const expectedBmpImage = {} as ImageBitmap;
+        const spyCreateBmpImage = spyOn(window, 'createImageBitmap').and.resolveTo(expectedBmpImage);
+        expect(await component.createSourceImageFromCanvas()).toEqual(expectedBmpImage);
+        expect(spyCreateBmpImage).toHaveBeenCalled();
+    });
+
+    it('should open a dialog to validate the game settings', async () => {
+        await component.validateForm();
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+    });
+
+    it('should open the validate dialog if the form is valid', async () => {
+        spyOnProperty(component.form, 'valid').and.returnValue(true);
+        const spyValidateFormDialog = spyOn(component, 'validateForm');
+        await component.onSubmit();
+        expect(spyValidateFormDialog).toHaveBeenCalled();
     });
 
     it('should subscribe to get the new image and draw it', async () => {

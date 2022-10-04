@@ -1,5 +1,5 @@
 <mat-card-actions class="game-card-buttons">
-    <div class="admin-buttons" *ngIf="isAdminCard(); else selectPage">
+    <div class="admin-buttons" *ngIf="gameCard.isAdminCard; else selectPage">
         <button  mat-fab color="primary" [disabled]="true" matTooltip="Supprimer le jeu" aria-label="Boutton supprimer" (click)="onClickDeleteGame(gameCard)">
             <mat-icon>delete</mat-icon>
         </button>

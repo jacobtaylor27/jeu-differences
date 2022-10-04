@@ -1,10 +1,13 @@
-import { Contact } from '@app/interface/contact';
+import { DB_NAME } from '@app/constants/database';
 import { DatabaseService } from '@app/services/database-service/database.service';
+import * as chai from 'chai';
 import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import { describe } from 'mocha';
+import { MongoParseError } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-
-const COLLECTION_NAME = 'highscores';
-const DB_NAME = 'seven-differences';
+import * as sinon from 'sinon';
+chai.use(chaiAsPromised);
 
 describe('Database service', () => {
     let mongoServer: MongoMemoryServer;
@@ -21,61 +24,36 @@ describe('Database service', () => {
         if (databaseService['client']) {
             await databaseService.close();
         }
+        sinon.restore();
+    });
+
+    it('initializeGameCollection() should be called when first intialized the game collection', async () => {
+        await databaseService.start();
+        const spy = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
+        await databaseService.start();
+        expect(spy.calledOnce).to.equal(false);
     });
 
     it('start(uri) should allow the connection to the database', async () => {
         await databaseService.start(uri);
         expect(databaseService['client']).to.not.equal(undefined);
-        expect(databaseService['db'].databaseName).to.equal(DB_NAME);
+        expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
 
     it('start() should also allow the connection to the database ', async () => {
         await databaseService.start();
         expect(databaseService['client']).to.not.equal(undefined);
-        expect(databaseService['db'].databaseName).to.equal(DB_NAME);
+        expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
 
     it('start(uri) should throw an exception given a bad uri', async () => {
         const badUri = 'badUri00';
-        try {
-            await databaseService.start(badUri);
-        } catch (e) {
-            expect(e).to.be.instanceof(Error);
-        }
+        await expect(databaseService.start(badUri)).to.eventually.be.rejectedWith(Error).to.be.instanceof(MongoParseError);
     });
 
-    it('populateDatabase(...) should allow to populate the database with a collection', async () => {
-        const contact1: Contact = { id: 1, name: 'Test', email: 'a@b.ca', message: 'test' };
-        const contact2: Contact = { id: 2, name: 'Test', email: 'a@b.ca', message: 'test' };
-        const contacts: Contact[] = [contact1, contact2];
-
-        await databaseService.start(uri);
-        await databaseService.database.createCollection(COLLECTION_NAME);
-        await databaseService.populateDatabase(COLLECTION_NAME, contacts);
-        const insertedContacts = await databaseService.database.collection(COLLECTION_NAME).find({}).toArray();
-
-        expect(insertedContacts.length).to.equal(2);
-        insertedContacts.forEach((contact, index) => {
-            expect(contacts[index].email).to.be.equal(contact.email);
-            expect(contacts[index].id).to.be.equal(contact.id);
-            expect(contacts[index].message).to.be.equal(contact.message);
-            expect(contacts[index].name).to.be.equal(contact.name);
-        });
-    });
-
-    it('populateDatabase(...) should not populate a collection if data exists', async () => {
-        const contact1 = { id: 1, name: 'Test', email: 'a@b.ca', message: 'test' };
-        const contact2 = { id: 2, name: 'Test', email: 'a@b.ca', message: 'test' };
-
-        await databaseService.start(uri);
-        await databaseService.database.createCollection(COLLECTION_NAME);
-        await databaseService.database.collection(COLLECTION_NAME).insertOne(contact1);
-        await databaseService.populateDatabase(COLLECTION_NAME, [contact1, contact2]);
-        const insertedContacts = await databaseService.database.collection(COLLECTION_NAME).find({}).toArray();
-        expect(insertedContacts.length).equal(1);
-    });
-
-    it('useless test', async () => {
-        expect(await databaseService.getGames()).to.deep.equal([]);
+    it('populateDatabase() should populate the database correctly', async () => {
+        const spy = sinon.spy(databaseService, 'populateDatabase');
+        await databaseService.start();
+        expect(spy.calledOnce).to.equal(true);
     });
 });

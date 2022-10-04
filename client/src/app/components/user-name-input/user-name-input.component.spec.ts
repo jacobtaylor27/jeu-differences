@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { AdminCommandsComponent } from '@app/components/admin-commands/admin-commands.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
@@ -16,8 +18,8 @@ describe('UserNameInputComponent', () => {
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
         spyGameInformationHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName']);
         await TestBed.configureTestingModule({
-            declarations: [UserNameInputComponent],
-            imports: [AppMaterialModule, NoopAnimationsModule],
+            declarations: [UserNameInputComponent, AdminCommandsComponent],
+            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule],
             providers: [
                 {
                     provide: Router,

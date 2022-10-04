@@ -1,6 +1,8 @@
+import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
-import { Pixel } from '@app/interface/pixel';
+import * as bmp from 'bmp-js';
+import { Buffer } from 'buffer';
 export class Bmp {
     private width: number;
     private height: number;
@@ -8,22 +10,42 @@ export class Bmp {
 
     constructor(width: number, height: number, rawData: number[]) {
         this.assertParameters(width, height, rawData);
+        this.pixels = this.convertRawToPixels(rawData, width, height);
         this.height = height;
         this.width = width;
-        this.pixels = this.convertRawToPixels(rawData);
     }
-    static convertPixelsToRaw(pixelMatrix: Pixel[][]): number[] {
-        const raw: number[] = [];
-        pixelMatrix.forEach((lineOfPixels) => {
-            lineOfPixels.forEach((pixel) => {
-                raw.push(pixel.a);
-                raw.push(pixel.b);
-                raw.push(pixel.g);
-                raw.push(pixel.r);
-            });
-        });
-        return raw;
+
+    static async convertRGBAToARGB(data: number[]): Promise<number[]> {
+        const rgba = [];
+        const nbCaracterRGBA = 4;
+        for (let i = 0; i < data.length / nbCaracterRGBA; i++) {
+            rgba.push(data[i * nbCaracterRGBA + 3]);
+            rgba.push(data[i * nbCaracterRGBA + 2]);
+            rgba.push(data[i * nbCaracterRGBA + 1]);
+            rgba.push(data[i * nbCaracterRGBA]);
+        }
+        return rgba;
     }
+
+    async toImageData(): Promise<ImageData> {
+        const imageData: ImageData = {
+            colorSpace: 'srgb',
+            width: this.width,
+            height: this.height,
+            data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToBGRA(this.pixels))),
+        };
+        return imageData;
+    }
+
+    async toBmpImageData(): Promise<bmp.ImageData> {
+        const imageData: bmp.ImageData = {
+            width: this.width,
+            height: this.height,
+            data: await this.getPixelBuffer(),
+        };
+        return bmp.encode(imageData);
+    }
+
     getWidth(): number {
         return this.width;
     }
@@ -36,13 +58,17 @@ export class Bmp {
         return this.pixels;
     }
 
-    private convertRawToPixels(rawData: number[]): Pixel[][] {
+    private async getPixelBuffer(): Promise<Buffer> {
+        return Buffer.from(Pixel.convertPixelsToARGB(this.pixels));
+    }
+
+    private convertRawToPixels(rawData: number[], width: number, height: number): Pixel[][] {
         const pixels = [];
-        for (let i = 0; i < this.height; i++) {
+        for (let i = 0; i < height; i++) {
             const scanLine = [];
 
-            for (let j = 0; j < this.width; j++) {
-                const beginRange = (i * this.width + j) * PIXEL_DEPT;
+            for (let j = 0; j < width; j++) {
+                const beginRange = (i * width + j) * PIXEL_DEPT;
                 const pixel: Pixel = this.getPixel(rawData.slice(beginRange, beginRange + PIXEL_DEPT));
                 scanLine.push(pixel);
             }
@@ -51,13 +77,8 @@ export class Bmp {
         return pixels;
     }
 
-    private getPixel(pixel: number[]): Pixel {
-        return {
-            a: pixel[PIXEL_OFFSET.intensity],
-            r: pixel[PIXEL_OFFSET.red],
-            g: pixel[PIXEL_OFFSET.green],
-            b: pixel[PIXEL_OFFSET.blue],
-        };
+    private getPixel(pixelBuffered: number[]): Pixel {
+        return new Pixel(pixelBuffered[PIXEL_OFFSET.red], pixelBuffered[PIXEL_OFFSET.green], pixelBuffered[PIXEL_OFFSET.blue]);
     }
 
     private assertParameters(width: number, height: number, rawData: number[]): void {

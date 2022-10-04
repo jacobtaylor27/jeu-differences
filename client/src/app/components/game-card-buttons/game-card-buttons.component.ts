@@ -13,10 +13,6 @@ export class GameCardButtonsComponent {
 
     constructor(private readonly gameCardService: GameCardService, private readonly gameInfoHandlerService: GameInformationHandlerService) {}
 
-    isAdminCard(): boolean {
-        return this.gameCard.isAdminCard;
-    }
-
     onClickDeleteGame(game: GameCard): void {
         this.gameCardService.deleteGame(game);
     }

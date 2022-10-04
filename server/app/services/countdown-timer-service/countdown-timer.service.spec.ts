@@ -1,5 +1,6 @@
 import { CountdownTimerService } from '@app/services/countdown-timer-service/countdown-timer.service';
 import { expect } from 'chai';
+import { describe } from 'mocha';
 import { Container } from 'typedi';
 
 describe('Countdown timer Service', () => {

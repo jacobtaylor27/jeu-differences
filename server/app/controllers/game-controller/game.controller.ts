@@ -1,11 +1,15 @@
-import { Router } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
+import { Request, Response, Router } from 'express';
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameInfo } from '@common/game-info';
 
 @Service()
 export class GameController {
     router: Router;
 
-    constructor() {
+    constructor(private gameManager: GameManagerService, private gameInfo: GameService) {
         this.configureRouter();
     }
 
@@ -121,11 +125,62 @@ export class GameController {
             }
         });
         */
-
-        /*
-        this.router.post('/', (req: Request, res: Response) => {
+        this.router.get('/cards', (req: Request, res: Response) => {
+            this.gameInfo
+                .getAllGames()
+                .then((games: GameInfo[]) => {
+                    res.status(StatusCodes.OK).send({ games });
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_FOUND).send();
+                });
         });
-        */
+
+        this.router.get('/cards/:id', (req: Request, res: Response) => {
+            this.gameInfo
+                .getGameById(req.params.id)
+                .then((games: GameInfo) => {
+                    res.status(StatusCodes.OK).send({ games });
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_FOUND).send();
+                });
+        });
+
+        this.router.post('/create/:id', (req: Request, res: Response) => {
+            if (!req.body.players || req.body.players.length === 0 || !req.body.mode || !req.params.id) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+                return;
+            }
+            this.gameManager
+                .createGame(req.body.players, req.body.mode as string, req.params.id as string)
+                .then((gameId: string) => {
+                    res.status(StatusCodes.CREATED).send({ id: gameId });
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_FOUND).send();
+                });
+        });
+
+        this.router.post('/difference/:id', (req: Request, res: Response) => {
+            if (req.body.x === undefined || req.body.y === undefined || !this.gameManager.isGameFound(req.params.id)) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+                return;
+            }
+            const difference = this.gameManager.isDifference(req.params.id as string, {
+                x: req.body.x,
+                y: req.body.y,
+            });
+            if (difference === null) {
+                res.status(StatusCodes.NOT_FOUND).send();
+                return;
+            }
+            res.status(StatusCodes.OK).send({
+                difference,
+                isGameOver: this.gameManager.isGameOver(req.params.id),
+                differencesLeft: this.gameManager.differenceLeft(req.params.id),
+            });
+        });
 
         /*
         this.router.get('/validate/bmp', (req: Request, res: Response) => {

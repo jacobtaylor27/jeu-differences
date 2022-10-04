@@ -39,7 +39,9 @@ export class GameService {
         const differences = await this.bmpDifferenceInterpreter.getCoordinates(
             await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius),
         );
-        this.addGame({ name, idOriginalBmp, idEditedBmp, differenceRadius: radius, differences });
+        const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
+        const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
+        this.addGame({ name, idOriginalBmp, idEditedBmp, differenceRadius: radius, differences, idDifferenceBmp });
     }
 
     async addGame(game: GameInfo): Promise<void> {

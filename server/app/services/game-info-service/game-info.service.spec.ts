@@ -20,7 +20,7 @@ import * as sinon from 'sinon';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
 
-describe.only('GameInfo service', async () => {
+describe('GameInfo service', async () => {
     let gameService: GameService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
@@ -127,10 +127,14 @@ describe.only('GameInfo service', async () => {
         const expectedId = '';
         stub(bmpService, 'addBmp').resolves(expectedId);
         stub(bmpDifferenceService, 'getCoordinates').resolves(expectedCoordinates);
-        stub(bmpSubtractorService, 'getDifferenceBMP').resolves({} as Bmp);
+        stub(bmpSubtractorService, 'getDifferenceBMP').resolves({
+            toImageData: () => {
+                return { width: 0, height: 0, data: new Uint8ClampedArray(), colorSpace: 'srgb' };
+            },
+        } as unknown as Bmp);
         const addGameSpy = stub(gameService, 'addGame').resolves();
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        gameService.addGameWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0).then(() => {
+        await gameService.addGameWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0).then(() => {
             expect(addGameSpy.called).to.equal(true);
         });
     });

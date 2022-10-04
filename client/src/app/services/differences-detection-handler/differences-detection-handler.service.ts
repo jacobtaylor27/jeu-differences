@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
@@ -7,7 +8,6 @@ import { Coordinate } from '@common/coordinate';
 export class DifferencesDetectionHandlerService {
     mouseIsDisabled: boolean = false;
 
-    constructor() {}
     difference(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         if (this.isADifference(mousePosition)) {
             this.differenceDetected(ctx, mousePosition);
@@ -43,19 +43,19 @@ export class DifferencesDetectionHandlerService {
 
     private displayDifferenceTemp(ctx: CanvasRenderingContext2D, mousePosition: Vec2) {
         const coords: Coordinate[] = [
-            { row: mousePosition.x, column: mousePosition.y },
-            { row: mousePosition.x + 1, column: mousePosition.y },
-            { row: mousePosition.x + 2, column: mousePosition.y },
-            { row: mousePosition.x + 3, column: mousePosition.y },
-            { row: mousePosition.x + 4, column: mousePosition.y },
-            { row: mousePosition.x + 5, column: mousePosition.y },
-            { row: mousePosition.x + 6, column: mousePosition.y },
-            { row: mousePosition.x + 7, column: mousePosition.y },
-            { row: mousePosition.x + 8, column: mousePosition.y },
+            { x: mousePosition.x, y: mousePosition.y },
+            { x: mousePosition.x + 1, y: mousePosition.y },
+            { x: mousePosition.x + 2, y: mousePosition.y },
+            { x: mousePosition.x + 3, y: mousePosition.y },
+            { x: mousePosition.x + 4, y: mousePosition.y },
+            { x: mousePosition.x + 5, y: mousePosition.y },
+            { x: mousePosition.x + 6, y: mousePosition.y },
+            { x: mousePosition.x + 7, y: mousePosition.y },
+            { x: mousePosition.x + 8, y: mousePosition.y },
         ];
 
         let counter = 0;
-        let a = setInterval(function () {
+        const a = setInterval(() => {
             ctx.clearRect(mousePosition.x, mousePosition.y, 8 + 5, 1 + 5);
             if (counter === 5) {
                 clearInterval(a);
@@ -63,7 +63,7 @@ export class DifferencesDetectionHandlerService {
             if (counter % 2 === 0) {
                 ctx.fillStyle = 'white';
                 for (const coordinate of coords) {
-                    ctx.fillRect(coordinate.row, coordinate.column, 5, 5);
+                    ctx.fillRect(coordinate.x, coordinate.y, 5, 5);
                 }
             }
 

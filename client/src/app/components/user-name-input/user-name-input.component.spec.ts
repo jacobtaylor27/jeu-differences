@@ -63,4 +63,12 @@ describe('UserNameInputComponent', () => {
         component.onClickContinue();
         expect(spyRouter).toHaveBeenCalledWith(['/game']);
     });
+
+    it('should act like click when enter key is pressed', () => {
+        const spyRouter = spyOn(router, 'navigate');
+        component.playerName = 'test';
+        const key = { key: 'Enter' } as KeyboardEvent;
+        component.onDialogClick(key);
+        expect(spyRouter).toHaveBeenCalledWith(['/game']);
+    });
 });

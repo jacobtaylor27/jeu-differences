@@ -45,8 +45,9 @@ export class PlayAreaComponent implements AfterViewInit {
         this.displayImage(false);
     }
 
+    // eslint-disable-next-line no-unused-vars
     onClick($event: MouseEvent, canvas: string) {
-        //if (!this.isMouseDisabled()) {
+        // if (!this.isMouseDisabled()) {
         // this.mouseHitDetect($event, canvas);
         // }
     }

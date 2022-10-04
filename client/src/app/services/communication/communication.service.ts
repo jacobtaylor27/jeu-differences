@@ -83,8 +83,7 @@ export class CommunicationService {
                 { observe: 'response' },
             )
             .pipe(
-                catchError((response) => {
-                    console.log(response);
+                catchError(() => {
                     return of(null);
                 }),
             );

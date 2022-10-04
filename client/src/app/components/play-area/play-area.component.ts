@@ -57,9 +57,8 @@ export class PlayAreaComponent implements AfterViewInit {
 
     mouseHitDetect($event: MouseEvent, canvas: string) {
         this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
-        this.getDifferenceValidation(this.gameId, this.mousePosition);
         const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
-        this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);
+        this.getDifferenceValidation(this.gameId, this.mousePosition, ctx);
     }
 
     getContextImgOriginal() {
@@ -117,16 +116,16 @@ export class PlayAreaComponent implements AfterViewInit {
             });
     }
 
-    getDifferenceValidation(id: string, mousePosition: Vec2) {
-        console.log('POST');
+    getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         return this.communicationService
             .validateCoordinates(id, mousePosition)
             .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
                 if (!response || !response.body) {
-                    console.log('!response');
+                    this.differencesDetectionHandlerService.differenceNotDetected(mousePosition, ctx);
                     return;
                 }
-                console.log(response.body);
+
+                this.differencesDetectionHandlerService.differenceDetected(mousePosition, ctx, response.body.difference);
             });
     }
 

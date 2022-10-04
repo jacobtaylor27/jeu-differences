@@ -3,7 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { Vec2 } from '@app/interfaces/vec2';
-import { CommunicationService } from '@app/services/communication.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
@@ -45,11 +45,11 @@ export class PlayAreaComponent implements AfterViewInit {
         this.displayImage(false);
     }
 
-    // onClick($event: MouseEvent, canvas: string) {
-    //     if (!this.isMouseDisabled()) {
-    //         this.mouseHitDetect($event, canvas);
-    //     }
-    // }
+    onClick($event: MouseEvent, canvas: string) {
+        if (!this.isMouseDisabled()) {
+            this.mouseHitDetect($event, canvas);
+        }
+    }
 
     mouseHitDetect($event: MouseEvent, canvas: string) {
         this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
@@ -96,7 +96,7 @@ export class PlayAreaComponent implements AfterViewInit {
         });
     }
 
-    // private isMouseDisabled() {
-    //     return this.differencesDetectionHandlerService.mouseIsDisabled;
-    // }
+    private isMouseDisabled() {
+        return this.differencesDetectionHandlerService.mouseIsDisabled;
+    }
 }

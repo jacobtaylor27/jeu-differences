@@ -9,7 +9,7 @@ import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { CommunicationService } from '@app/services/communication.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { GameMode } from '@common/game-mode';
 import { of } from 'rxjs';

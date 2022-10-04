@@ -6,7 +6,7 @@ import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { CommunicationService } from '@app/services/communication.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { of } from 'rxjs';
 // import { CommunicationService } from '@app/services/communication.service';
 import { GameCardComponent } from './game-card.component';

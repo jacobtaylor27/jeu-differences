@@ -79,9 +79,9 @@ describe('Bmp difference interpreter service', async () => {
         const decodedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);
         const interpretedBmp: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(decodedBmp);
         // eslint-disable-next-line
-        const firstDifference: BmpCoordinate[] = [new BmpCoordinate(0, 0), new BmpCoordinate(0, 1), new BmpCoordinate(1, 0)];
+        const firstDifference: BmpCoordinate[] = [new BmpCoordinate(0, 0), new BmpCoordinate(1, 0), new BmpCoordinate(0, 1)];
         // eslint-disable-next-line
-        const secondDifference: BmpCoordinate[] = [new BmpCoordinate(0, 5), new BmpCoordinate(1, 4), new BmpCoordinate(1, 5)];
+        const secondDifference: BmpCoordinate[] = [new BmpCoordinate(5, 0), new BmpCoordinate(4, 1), new BmpCoordinate(5, 1)];
         const expectedCoordinates: BmpCoordinate[][] = [firstDifference, secondDifference];
         expect(interpretedBmp).to.eql(expectedCoordinates);
         interpretedBmp[0].forEach((coordinate, index) => {
@@ -100,5 +100,13 @@ describe('Bmp difference interpreter service', async () => {
         const nbOfDifference = 10;
         const differences: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpDecoded);
         expect(differences.length).to.equal(nbOfDifference);
+    });
+
+    it('The coordinates returned should be in a specific order', async () => {
+        const filepath = './assets/test-bmp/coordinates_verifier.bmp';
+        const bmpDecoded = await bmpDecoderService.decodeBIntoBmp(filepath);
+        const coordinatedExpedted: BmpCoordinate[][] = [[new BmpCoordinate(0, 0), new BmpCoordinate(1, 0)]];
+        const differences: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpDecoded);
+        expect(differences).to.deep.equal(coordinatedExpedted);
     });
 });

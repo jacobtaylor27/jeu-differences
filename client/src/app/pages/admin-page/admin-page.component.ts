@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component } from '@angular/core';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
@@ -6,15 +6,14 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
     templateUrl: './admin-page.component.html',
     styleUrls: ['./admin-page.component.scss'],
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent implements AfterViewChecked {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(private readonly gameCarouselService: GameCarouselService) {}
 
-    ngOnInit(): void {
-        this.gameCarouselService.fetchCardsFromServer();
-        this.resetStartingRange();
+    ngAfterViewChecked(): void {
         this.makeCardsAdminMode();
+        this.resetStartingRange();
     }
 
     makeCardsAdminMode(): void {

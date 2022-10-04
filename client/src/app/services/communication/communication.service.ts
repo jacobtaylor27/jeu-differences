@@ -1,6 +1,8 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CREATE_GAME, VALID_GAME } from '@app/constants/server';
+import { Vec2 } from '@app/interfaces/vec2';
+import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
@@ -55,6 +57,24 @@ export class CommunicationService {
             },
             { observe: 'response' },
         );
+    }
+
+    validateCoordinates(id: string, coordinate: Vec2) {
+        return this.http
+            .post<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>(
+                `${this.baseUrl}/difference/${id}`,
+                {
+                    x: coordinate.x,
+                    y: coordinate.y,
+                },
+                { observe: 'response' },
+            )
+            .pipe(
+                catchError((response) => {
+                    console.log(response);
+                    return of(null);
+                }),
+            );
     }
 
     getImgData(id: string): Observable<HttpResponse<{ width: number; height: number; data: number[] }>> {

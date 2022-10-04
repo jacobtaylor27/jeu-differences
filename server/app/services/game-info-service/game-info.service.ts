@@ -35,8 +35,8 @@ export class GameService {
 
     async addGame(game: GameInfo): Promise<void> {
         if (game.id === undefined) game.id = this.idGeneratorService.generateNewId();
-        if (game.soloScore === undefined) game.soloScore = [];
-        if (game.multiplayerScore === undefined) game.multiplayerScore = [];
+        // if (game.soloScore === undefined) game.soloScore = [];
+        // if (game.multiplayerScore === undefined) game.multiplayerScore = [];
         const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, this.srcPath);
         const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, this.srcPath);
         const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);

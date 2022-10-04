@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CREATE_GAME, VALID_GAME } from '@app/constants/server';
+import { GameInfo } from '@common/game-info';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -55,6 +56,15 @@ export class CommunicationService {
             { observe: 'response' },
         );
     }
+
+    getImgData(id: string): Observable<HttpResponse<{ width: number; height: number; data: number[] }>> {
+        return this.http.get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' }).pipe();
+    }
+
+    getAllGameInfos(): Observable<HttpResponse<{ games: GameInfo[] }>> {
+        return this.http.get<{ games: GameInfo[] }>(`${this.baseUrl}/game/cards`, { observe: 'response' }).pipe();
+    }
+
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }

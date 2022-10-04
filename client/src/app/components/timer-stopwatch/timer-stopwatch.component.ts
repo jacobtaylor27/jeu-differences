@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
 import { TimerService } from '@app/services/timer.service';
 import { Subscription, timer } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Subscription, timer } from 'rxjs';
     templateUrl: './timer-stopwatch.component.html',
     styleUrls: ['./timer-stopwatch.component.scss'],
 })
-export class TimerStopwatchComponent implements OnInit, OnDestroy {
+export class TimerStopwatchComponent implements AfterViewInit, OnDestroy {
     @Input() clueAskedCounter: number;
 
     timerDisplay: string;
@@ -17,7 +17,7 @@ export class TimerStopwatchComponent implements OnInit, OnDestroy {
 
     constructor(private readonly timerService: TimerService) {}
 
-    ngOnInit(): void {
+    ngAfterViewInit(): void {
         this.startTimer();
     }
 

@@ -5,19 +5,27 @@ import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
+    let spyGameInfosService: jasmine.SpyObj<GameInformationHandlerService>;
 
     beforeEach(async () => {
+        spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['getGameName', 'setPlayerName', 'getGameMode', 'getPlayerName']);
+
         await TestBed.configureTestingModule({
             declarations: [SidebarComponent, CluesAreaComponent, TimerStopwatchComponent, TimerCountdownComponent, DifferencesAreaComponent],
             imports: [AppMaterialModule],
+            providers: [
+                {
+                    provide: GameInformationHandlerService,
+                    useValue: spyGameInfosService,
+                },
+            ],
         }).compileComponents();
-    });
 
-    beforeEach(() => {
         fixture = TestBed.createComponent(SidebarComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

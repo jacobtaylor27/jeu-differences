@@ -124,7 +124,7 @@ export class GameCardHandlerService {
                     // image from api of correct size
                     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
                     // imgName: `https://picsum.photos/id/${i * 8}/640/480`,
-                    imgName: this.createImage(),
+                    imgName: '',
                     scoresSolo: soloScores,
                     scoresMultiplayer: multiplayerScores,
                 },
@@ -135,30 +135,6 @@ export class GameCardHandlerService {
         }
 
         return cards;
-    }
-
-    createImage(): string {
-        const canvas = document.createElement('canvas');
-        canvas.width = 640;
-        canvas.height = 480;
-        const ctx = canvas.getContext('2d');
-        const imageData = new ImageData(640, 480);
-        for (let i = 0; i < imageData.data.length; i += 4) {
-            // Percentage in the x direction, times 255
-            const x = ((i % 400) / 200) * 255;
-            // Percentage in the y direction, times 255
-            const y = (Math.ceil(i / 200) / 100) * 255;
-
-            // Modify pixel data
-            imageData.data[i + 0] = x;
-            imageData.data[i + 1] = y;
-            imageData.data[i + 2] = 255 - x;
-            imageData.data[i + 3] = 255;
-        }
-
-        ctx?.putImageData(imageData, 0, 0);
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        return dataUrl.replace(/^data:image\/(png|jpg);base64,/, '');
     }
 
     // will be removed or modified once we have a proper database access

@@ -6,7 +6,7 @@ import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-
+import { Coordinate } from '@common/coordinate';
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -47,12 +47,13 @@ export class PlayAreaComponent implements AfterViewInit {
 
     // eslint-disable-next-line no-unused-vars
     onClick($event: MouseEvent, canvas: string) {
-        // if (!this.isMouseDisabled()) {
-        // this.mouseHitDetect($event, canvas);
-        // }
+        if (!this.isMouseDisabled()) {
+            this.mouseHitDetect($event, canvas);
+        }
     }
 
     mouseHitDetect($event: MouseEvent, canvas: string) {
+        this.getDifferenceValidation('original', this.mousePosition);
         this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
         const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
         this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);
@@ -97,7 +98,20 @@ export class PlayAreaComponent implements AfterViewInit {
         });
     }
 
-    // private isMouseDisabled() {
-    //     return this.differencesDetectionHandlerService.mouseIsDisabled;
-    // }
+    getDifferenceValidation(id: string, mousePosition: Vec2) {
+        console.log('POST');
+        return this.communicationService
+            .validateCoordinates(id, mousePosition)
+            .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
+                if (!response || !response.body) {
+                    console.log('!response');
+                    return;
+                }
+                console.log(response.body);
+            });
+    }
+
+    private isMouseDisabled() {
+        return this.differencesDetectionHandlerService.mouseIsDisabled;
+    }
 }

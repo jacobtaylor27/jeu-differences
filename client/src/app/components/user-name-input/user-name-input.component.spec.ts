@@ -15,8 +15,8 @@ describe('UserNameInputComponent', () => {
     let fixture: ComponentFixture<UserNameInputComponent>;
     let router: Router;
     // let spyGameInformationHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const dialogMock = {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         close: () => {},
     };
 

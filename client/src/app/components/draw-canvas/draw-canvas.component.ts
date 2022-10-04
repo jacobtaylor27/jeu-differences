@@ -28,23 +28,28 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.toolBoxService.$uploadImageInDiff.subscribe(async (newImage: ImageBitmap) => {
-            this.img.nativeElement.getContext('2d')?.drawImage(newImage, 0, 0);
+            (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
             this.updateImage();
         });
-
-        const resetCanvas = () => {
-            (this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-            const contextImage = this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            contextImage.rect(0, 0, SIZE.y, SIZE.x);
-            contextImage.fillStyle = 'white';
-            contextImage.fill();
-            this.updateImage();
-        };
-
-        this.toolBoxService.$resetDiff.subscribe(() => resetCanvas());
-        resetCanvas();
+        this.toolBoxService.$resetDiff.subscribe(() =>
+            this.resetCanvas(
+                this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+                this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+            ),
+        );
+        this.resetCanvas(
+            this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+            this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+        );
     }
 
+    resetCanvas(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
+        ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        ctxImage.rect(0, 0, SIZE.y, SIZE.x);
+        ctxImage.fillStyle = 'white';
+        ctxImage.fill();
+        this.updateImage();
+    }
     updateImage() {
         const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.drawImage(this.img.nativeElement, 0, 0);
@@ -80,7 +85,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         ctx.rect(this.coordDraw.x, this.coordDraw.y, this.pencil.width, this.pencil.width);
         ctx.fillStyle = 'white';
         ctx.fill();
-        await this.updateImage();
+        this.updateImage();
     }
 
     async drawPoint(event: MouseEvent) {

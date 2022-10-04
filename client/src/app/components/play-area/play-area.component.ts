@@ -46,9 +46,9 @@ export class PlayAreaComponent implements AfterViewInit {
     }
 
     onClick($event: MouseEvent, canvas: string) {
-        if (!this.isMouseDisabled()) {
-            this.mouseHitDetect($event, canvas);
-        }
+        //if (!this.isMouseDisabled()) {
+        // this.mouseHitDetect($event, canvas);
+        // }
     }
 
     mouseHitDetect($event: MouseEvent, canvas: string) {
@@ -96,7 +96,7 @@ export class PlayAreaComponent implements AfterViewInit {
         });
     }
 
-    private isMouseDisabled() {
-        return this.differencesDetectionHandlerService.mouseIsDisabled;
-    }
+    // private isMouseDisabled() {
+    //     return this.differencesDetectionHandlerService.mouseIsDisabled;
+    // }
 }

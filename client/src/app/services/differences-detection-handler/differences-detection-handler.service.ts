@@ -22,8 +22,8 @@ export class DifferencesDetectionHandlerService {
     }
 
     private differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
-        const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
-        wrongSound.play();
+        //const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
+        // wrongSound.play();
         ctx.fillText('Erreur', mousePosition.x, mousePosition.y, 30);
         this.mouseIsDisabled = true;
 
@@ -35,8 +35,8 @@ export class DifferencesDetectionHandlerService {
     }
 
     private differenceDetected(ctx: CanvasRenderingContext2D, mousePosition: Vec2) {
-        const correctSound = new Audio('../assets/sounds/correctanswer.wav');
-        correctSound.play();
+        // const correctSound = new Audio('../assets/sounds/correctanswer.wav');
+        // correctSound.play();
 
         this.displayDifferenceTemp(ctx, mousePosition);
     }

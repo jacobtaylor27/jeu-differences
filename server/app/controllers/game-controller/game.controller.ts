@@ -231,12 +231,12 @@ export class GameController {
                 });
         });
 
-        this.router.post('/difference/:id', (req: Request, res: Response) => {
-            if (req.body.x === undefined || req.body.y === undefined || !this.gameManager.isGameFound(req.params.id)) {
+        this.router.post('/difference', (req: Request, res: Response) => {
+            if (req.body.x === undefined || req.body.y === undefined || !this.gameManager.isGameFound(req.body.id)) {
                 res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
-            const difference = this.gameManager.isDifference(req.params.id as string, {
+            const difference = this.gameManager.isDifference(req.body.id as string, {
                 x: req.body.x,
                 y: req.body.y,
             });

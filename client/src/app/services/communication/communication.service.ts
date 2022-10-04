@@ -74,10 +74,11 @@ export class CommunicationService {
     validateCoordinates(id: string, coordinate: Vec2) {
         return this.http
             .post<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>(
-                `${this.baseUrl}/game/difference/${id}`,
+                `${this.baseUrl}/game/difference`,
                 {
                     x: coordinate.x,
                     y: coordinate.y,
+                    id,
                 },
                 { observe: 'response' },
             )

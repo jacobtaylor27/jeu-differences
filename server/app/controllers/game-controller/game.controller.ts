@@ -1,15 +1,23 @@
+import { Bmp } from '@app/classes/bmp/bmp';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
+import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
+import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
-import { Request, Response, Router } from 'express';
-import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
-import { GameService } from '@app/services/game-info-service/game-info.service';
-import { GameInfo } from '@common/game-info';
 
 @Service()
 export class GameController {
     router: Router;
-
-    constructor(private gameManager: GameManagerService, private gameInfo: GameService) {
+    // justification: nous avons encapsule la logique dans different service. Le controller s occupe d appeler ces service
+    // eslint-disable-next-line max-params
+    constructor(
+        private gameManager: GameManagerService,
+        private gameInfo: GameService,
+        private gameValidation: GameValidation,
+        private bmpSubtractor: BmpSubtractorService,
+    ) {
         this.configureRouter();
     }
 
@@ -125,25 +133,63 @@ export class GameController {
             }
         });
         */
-        this.router.get('/cards', (req: Request, res: Response) => {
-            this.gameInfo
-                .getAllGames()
-                .then((games: GameInfo[]) => {
-                    res.status(StatusCodes.OK).send({ games });
-                })
-                .catch(() => {
-                    res.status(StatusCodes.NOT_FOUND).send();
+
+        this.router.post('/card/validation', async (req: Request, res: Response) => {
+            if (!req.body.original || !req.body.modify || req.body.differenceRadius === undefined) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+                return;
+            }
+            try {
+                const original = new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]);
+                const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]);
+                const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius as number);
+                const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius as number);
+                res.status(
+                    (await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius as number))
+                        ? StatusCodes.ACCEPTED
+                        : StatusCodes.NOT_ACCEPTABLE,
+                ).send({
+                    numberDifference,
+                    width: differenceImage.getWidth(),
+                    height: differenceImage.getHeight(),
+                    data: Array.from((await differenceImage.toImageData()).data),
                 });
+            } catch (e) {
+                res.status(StatusCodes.NOT_FOUND).send();
+            }
         });
 
-        this.router.get('/cards/:id', (req: Request, res: Response) => {
-            this.gameInfo
-                .getGameById(req.params.id)
-                .then((games: GameInfo) => {
-                    res.status(StatusCodes.OK).send({ games });
+        this.router.post('/card', async (req: Request, res: Response) => {
+            if (!req.body.original || !req.body.modify || req.body.differenceRadius === undefined || req.body.name === undefined) {
+                res.status(StatusCodes.BAD_REQUEST).send();
+                return;
+            }
+            let isErrorOnGameValidation = false;
+            const original = new Bmp(req.body.original.width, req.body.original.height, await Bmp.convertRGBAToARGB(req.body.original.data));
+            const modify = new Bmp(req.body.modify.width, req.body.modify.height, await Bmp.convertRGBAToARGB(req.body.modify.data));
+            await this.gameValidation
+                .isNbDifferenceValid(original, modify, req.body.differenceRadius)
+                .then((isValid: boolean) => {
+                    if (!isValid) {
+                        isErrorOnGameValidation = true;
+                        res.status(StatusCodes.NOT_ACCEPTABLE).send();
+                    }
                 })
                 .catch(() => {
+                    isErrorOnGameValidation = true;
                     res.status(StatusCodes.NOT_FOUND).send();
+                });
+            if (isErrorOnGameValidation) {
+                return;
+            }
+
+            this.gameInfo
+                .addGameWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
+                .then(() => {
+                    res.status(StatusCodes.CREATED).send();
+                })
+                .catch(() => {
+                    res.status(StatusCodes.NOT_ACCEPTABLE).send();
                 });
         });
 

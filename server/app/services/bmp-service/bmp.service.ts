@@ -25,7 +25,7 @@ export class BmpService {
         if (!fs.existsSync(fullpath)) throw new Error("Couldn't get the bmp by id");
         return await this.bmpDecoderService.decodeBIntoBmp(fullpath);
     }
-    async addBmp(bpmToConvert: ImageData, filepath: string): Promise<void> {
+    async addBmp(bpmToConvert: ImageData, filepath: string): Promise<string> {
         const bmpData = {
             data: Buffer.from(await Bmp.convertRGBAToARGB(Array.from(bpmToConvert.data))),
             width: bpmToConvert.width,
@@ -36,6 +36,7 @@ export class BmpService {
         const bmpId: string = this.idGeneratorService.generateNewId();
         const fullpath = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
         await fs.promises.writeFile(fullpath, rawData.data);
+        return bmpId;
     }
     async deleteBmpById(bmpId: string, filepath: string): Promise<boolean> {
         await fs.promises.unlink(path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION));

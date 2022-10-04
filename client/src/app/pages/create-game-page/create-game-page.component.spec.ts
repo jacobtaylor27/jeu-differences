@@ -1,4 +1,5 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,8 +8,9 @@ import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/di
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
 import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 import { CreateGamePageComponent } from './create-game-page.component';
 
@@ -16,12 +18,12 @@ describe('CreateGamePageComponent', () => {
     let component: CreateGamePageComponent;
     let fixture: ComponentFixture<CreateGamePageComponent>;
     let dialogSpyObj: jasmine.SpyObj<MatDialog>;
-    let httpSpyObj: jasmine.SpyObj<HttpClient>;
+    let communicationSpyObject: jasmine.SpyObj<CommunicationService>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
-        httpSpyObj = jasmine.createSpyObj('HttpClient', ['post']);
+        communicationSpyObject = jasmine.createSpyObj('CommunicationService', ['validateGame']);
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
             $uploadImageInSource: new Subject(),
             $resetSource: new Subject(),
@@ -31,10 +33,10 @@ describe('CreateGamePageComponent', () => {
         });
         await TestBed.configureTestingModule({
             declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent],
-            imports: [HttpClientModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
+            imports: [HttpClientTestingModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
-                { provide: HttpClient, useValue: httpSpyObj },
+                { provide: CommunicationService, useValue: communicationSpyObject },
                 { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
             ],
         }).compileComponents();
@@ -53,10 +55,10 @@ describe('CreateGamePageComponent', () => {
             valid: false,
             controls: { test: { valid: false } as FormControl, test1: { valid: true } as FormControl },
         } as unknown as FormGroup;
-        const expectedErrorMessages = ['test is not valid'];
-        component.onSubmit();
+        const expectedErrorMessages = 'test is not valid';
+        component.manageErrorInForm(expectedErrorMessages);
         expect(dialogSpyObj.open).toHaveBeenCalledWith(DialogFormsErrorComponent, {
-            data: { formTitle: 'Create Game Form', errorMessages: expectedErrorMessages },
+            data: { formTitle: 'Create Game Form', errorMessages: [expectedErrorMessages] },
         });
     });
 
@@ -93,30 +95,39 @@ describe('CreateGamePageComponent', () => {
     });
 
     it('should create the source image from the canvas', async () => {
-        const expectedBmpImage = {} as ImageBitmap;
-        const spyCreateBmpImage = spyOn(window, 'createImageBitmap').and.resolveTo(expectedBmpImage);
-        expect(await component.createSourceImageFromCanvas()).toEqual(expectedBmpImage);
+        const expectedBmpImage = new ImageData(1, 1);
+        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const spyCreateBmpImage = spyOn(ctx, 'getImageData').and.returnValue(expectedBmpImage);
+        expect(component.createSourceImageFromCanvas()).toEqual(expectedBmpImage);
         expect(spyCreateBmpImage).toHaveBeenCalled();
     });
 
     it('should open a dialog to validate the game settings', async () => {
-        await component.validateForm();
+        component.validateForm(0, [0]);
         expect(dialogSpyObj.open).toHaveBeenCalled();
     });
 
     it('should open the validate dialog if the form is valid', async () => {
         spyOnProperty(component.form, 'valid').and.returnValue(true);
-        const spyValidateFormDialog = spyOn(component, 'validateForm');
-        await component.onSubmit();
-        expect(spyValidateFormDialog).toHaveBeenCalled();
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(component, 'validateForm').and.callFake(() => {});
+        communicationSpyObject.validateGame.and.callFake(() => {
+            return of({ body: { numberDifference: 0, data: [0], height: 1, width: 1 } } as HttpResponse<{
+                numberDifference: number;
+                width: number;
+                height: number;
+                data: number[];
+            }>);
+        });
+        component.isGameValid();
+        // expect(spyValidateFormDialog).toHaveBeenCalled();
     });
 
     it('should subscribe to get the new image and draw it', async () => {
         const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        spyOn(component.sourceImg.nativeElement, 'getContext').and.callFake(() => null);
         const spyDrawImage = spyOn(ctx, 'drawImage');
         toolBoxServiceSpyObj.$uploadImageInSource.subscribe(() => {
-            expect(spyDrawImage).not.toHaveBeenCalled();
+            expect(spyDrawImage).toHaveBeenCalled();
         });
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
@@ -124,11 +135,31 @@ describe('CreateGamePageComponent', () => {
 
     it('should clear an image', () => {
         const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const clearImage = spyOn(ctx, 'clearRect');
+        const createRectangleSpy = spyOn(ctx, 'rect');
+        const fillRectSpy = spyOn(ctx, 'fill');
         toolBoxServiceSpyObj.$resetSource.subscribe(() => {
-            expect(clearImage).toHaveBeenCalled();
+            expect(createRectangleSpy).toHaveBeenCalled();
+            expect(fillRectSpy).toHaveBeenCalled();
         });
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$resetSource.next();
+    });
+
+    it('should do not validate the form if the response is undefined', () => {
+        const validateFormSpy = spyOn(component, 'validateForm');
+        communicationSpyObject.validateGame.and.returnValue(
+            of({} as HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }>),
+        );
+        component.isGameValid();
+        expect(validateFormSpy).not.toHaveBeenCalled();
+    });
+
+    it('should do not validate the form if the response is undefined', () => {
+        const validateFormSpy = spyOn(component, 'validateForm');
+        communicationSpyObject.validateGame.and.returnValue(
+            of({} as HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }>),
+        );
+        component.isGameValid();
+        expect(validateFormSpy).not.toHaveBeenCalled();
     });
 });

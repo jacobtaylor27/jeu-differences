@@ -1,21 +1,56 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { Vec2 } from '@app/interfaces/vec2';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { GameMode } from '@common/game-mode';
 
 describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
+    let gameInformationHandlerServiceSpy: jasmine.SpyObj<GameInformationHandlerService>;
+
     let mouseEvent: MouseEvent;
 
     beforeEach(async () => {
+        gameInformationHandlerServiceSpy = jasmine.createSpyObj('GameInformationHandlerService', [
+            'getGameMode',
+            'getGameName',
+            'getPlayerName',
+            'getOriginalBmp',
+            'getOriginalBmpId',
+            'getModifiedBmpId',
+            'getGameInformation',
+        ]);
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
+            imports: [RouterTestingModule, HttpClientModule],
+            providers: [
+                {
+                    provide: GameInformationHandlerService,
+                    useValue: gameInformationHandlerServiceSpy,
+                },
+            ],
         }).compileComponents();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(PlayAreaComponent);
         component = fixture.componentInstance;
+        gameInformationHandlerServiceSpy.gameInformation = {
+            id: '1',
+            name: 'test',
+            idOriginalBmp: 'original',
+            idEditedBmp: 'edited',
+            idDifferenceBmp: 'difference',
+            soloScore: [],
+            multiplayerScore: [],
+            differenceRadius: 2,
+            differences: [],
+        };
+        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
+        gameInformationHandlerServiceSpy.playerName = 'test';
         fixture.detectChanges();
     });
 
@@ -30,20 +65,7 @@ describe('PlayAreaComponent', () => {
             offsetY: expectedPosition.y,
             button: 0,
         } as MouseEvent;
-        component.mouseHitDetect(mouseEvent);
-        expect(component.mousePosition).toEqual(expectedPosition);
-    });
-
-    /* eslint-disable @typescript-eslint/no-magic-numbers -- Add reason */
-    it('mouseHitDetect should not change the mouse position if it is not a left click', () => {
-        const expectedPosition: Vec2 = { x: 0, y: 0 };
-        mouseEvent = {
-            offsetX: expectedPosition.x + 10,
-            offsetY: expectedPosition.y + 10,
-            button: 1,
-        } as MouseEvent;
-        component.mouseHitDetect(mouseEvent);
-        expect(component.mousePosition).not.toEqual({ x: mouseEvent.offsetX, y: mouseEvent.offsetY });
+        component.mouseHitDetect(mouseEvent, 'original');
         expect(component.mousePosition).toEqual(expectedPosition);
     });
 

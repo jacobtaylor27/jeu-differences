@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCardService } from '@app/services/game-card/game-card.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
 @Component({
     selector: 'app-game-card-buttons',
@@ -10,7 +11,7 @@ import { GameCardService } from '@app/services/game-card/game-card.service';
 export class GameCardButtonsComponent {
     @Input() gameCard: GameCard;
 
-    constructor(private readonly gameCardService: GameCardService) {}
+    constructor(private readonly gameCardService: GameCardService, private readonly gameInfoHandlerService: GameInformationHandlerService) {}
 
     onClickDeleteGame(game: GameCard): void {
         this.gameCardService.deleteGame(game);
@@ -21,6 +22,7 @@ export class GameCardButtonsComponent {
     }
 
     onClickPlayGame(): void {
+        this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
         this.gameCardService.openNameDialog();
     }
 }

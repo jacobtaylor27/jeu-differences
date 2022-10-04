@@ -92,7 +92,7 @@ export class CreateGamePageComponent implements AfterViewInit {
     isGameValid() {
         const original: ImageData = this.createSourceImageFromCanvas();
         return this.communication
-            .validateGame(original, this.imageDifference, (this.form.get('expansionRadius') as FormControl).value as number)
+            .validateGame(original, this.imageDifference, parseInt((this.form.get('expansionRadius') as FormControl).value, 10))
             .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {
                 if (!response || !response.body) {
                     this.manageErrorInForm('Il faut entre 3 et 9 differences');

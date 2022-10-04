@@ -1,21 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { AfterViewChecked, Component, Input, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { CommunicationService } from '@app/services/communication.service';
+import { GameInfo } from '@common/game-info';
 
 @Component({
     selector: 'app-game-carousel',
     templateUrl: './game-carousel.component.html',
     styleUrls: ['./game-carousel.component.scss'],
 })
-export class GameCarouselComponent implements OnInit {
-    gameCards: GameCard[] = [];
+export class GameCarouselComponent implements OnInit, AfterViewChecked {
+    @Input() gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
+    gamesInfo: GameInfo[];
 
-    constructor(private readonly gameCarouselService: GameCarouselService) {}
+    constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
 
     ngOnInit(): void {
-        this.gameCards = this.gameCarouselService.getCards();
-        this.resetStartingRange();
+        this.fetchGameInformation();
+    }
+
+    ngAfterViewChecked(): void {}
+
+    fetchGameInformation(): void {
+        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: GameInfo[] }>) => {
+            if (!response || !response.body) {
+                return;
+            }
+            this.gamesInfo = response.body.games;
+            for (const gameInfo of this.gamesInfo) {
+                const newCard: GameCard = {
+                    gameInformation: gameInfo,
+                    isAdminCard: false,
+                    isShown: false,
+                };
+                this.gameCards.push(newCard);
+            }
+            this.gameCarouselService.setCards(this.gameCards);
+            this.resetStartingRange();
+        });
     }
 
     hasCards(): boolean {

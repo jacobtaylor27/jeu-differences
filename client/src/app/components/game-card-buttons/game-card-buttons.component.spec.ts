@@ -1,4 +1,6 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCardService } from '@app/services/game-card/game-card.service';
@@ -47,9 +49,11 @@ describe('GameCardButtonsComponent', () => {
         spyGameCardService = jasmine.createSpyObj('GameCardService', ['openNameDialog', 'deleteGame', 'resetHighScores']);
 
         await TestBed.configureTestingModule({
-            imports: [AppMaterialModule],
+            imports: [AppMaterialModule, RouterTestingModule],
             declarations: [GameCardButtonsComponent],
             providers: [
+                HttpHandler,
+                HttpClient,
                 {
                     provide: GameCardService,
                     useValue: spyGameCardService,

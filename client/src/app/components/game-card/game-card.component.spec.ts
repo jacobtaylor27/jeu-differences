@@ -4,13 +4,14 @@ import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationService } from '@app/services/communication.service';
 import { GameCardComponent } from './game-card.component';
 
 const GAME_CARD: GameCard = {
     gameInformation: {
         id: '1',
         name: 'test',
-        idOriginalBmp: '1',
+        idOriginalBmp: 'imageName',
         idEditedBmp: '1',
         idDifferenceBmp: '1',
         soloScore: [
@@ -44,8 +45,10 @@ describe('GameCardComponent', () => {
     let component: GameCardComponent;
     let fixture: ComponentFixture<GameCardComponent>;
     let spyTimeFormatter: jasmine.SpyObj<TimeFormatter>;
+    let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
     beforeEach(async () => {
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getImgData']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
             declarations: [GameCardComponent, GameScoreComponent, GameCardButtonsComponent],
@@ -53,6 +56,10 @@ describe('GameCardComponent', () => {
                 {
                     provide: TimeFormatter,
                     useValue: spyTimeFormatter,
+                },
+                {
+                    provide: CommunicationService,
+                    useValue: spyCommunicationService,
                 },
             ],
         }).compileComponents();
@@ -65,6 +72,10 @@ describe('GameCardComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should get the base64 image name', () => {
+        expect(spyCommunicationService.getImgData).toHaveBeenCalled();
     });
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {

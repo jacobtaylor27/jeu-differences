@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 export class GameCardComponent implements OnInit {
     @Input() gameCard: GameCard;
     favoriteTheme: string = 'deeppurple-amber-theme';
-    imageData$: Observable<any>;
+    imageData$: Observable<HttpResponse<{ width: number; height: number; data: number[] }>>;
     imageSrc: string;
 
     constructor(private readonly communicationService: CommunicationService) {}

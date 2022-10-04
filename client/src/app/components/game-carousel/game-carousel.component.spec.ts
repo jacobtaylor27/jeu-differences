@@ -2,12 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameCardComponent } from '@app/components/game-card/game-card.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { CommunicationService } from '@app/services/communication.service';
 import { GameCarouselComponent } from './game-carousel.component';
 
 describe('GameCarouselComponent', () => {
     let component: GameCarouselComponent;
     let fixture: ComponentFixture<GameCarouselComponent>;
     let spyGameCarouselService: GameCarouselService;
+    let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
     beforeEach(async () => {
         spyGameCarouselService = jasmine.createSpyObj('GameCarouselService', [
@@ -19,6 +21,7 @@ describe('GameCarouselComponent', () => {
             'hasNextCards',
             'hasCards',
         ]);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
             declarations: [GameCarouselComponent, GameCardComponent],
@@ -26,6 +29,10 @@ describe('GameCarouselComponent', () => {
                 {
                     provide: GameCarouselService,
                     useValue: spyGameCarouselService,
+                },
+                {
+                    provide: CommunicationService,
+                    useValue: spyCommunicationService,
                 },
             ],
         }).compileComponents();

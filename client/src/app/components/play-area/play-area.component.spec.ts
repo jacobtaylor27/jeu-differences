@@ -30,7 +30,7 @@ describe('PlayAreaComponent', () => {
             offsetY: expectedPosition.y,
             button: 0,
         } as MouseEvent;
-        component.mouseHitDetect(mouseEvent);
+        component.mouseHitDetect(mouseEvent, 'original');
         expect(component.mousePosition).toEqual(expectedPosition);
     });
 
@@ -42,7 +42,7 @@ describe('PlayAreaComponent', () => {
             offsetY: expectedPosition.y + 10,
             button: 1,
         } as MouseEvent;
-        component.mouseHitDetect(mouseEvent);
+        component.mouseHitDetect(mouseEvent, 'original');
         expect(component.mousePosition).not.toEqual({ x: mouseEvent.offsetX, y: mouseEvent.offsetY });
         expect(component.mousePosition).toEqual(expectedPosition);
     });

@@ -48,9 +48,4 @@ describe('GamePageComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
-    it('should call getTime when page is loaded', () => {
-        component.getTimerValue();
-        expect(communicationServiceSpy.getTimeValue).toHaveBeenCalled();
-    });
 });

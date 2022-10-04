@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
@@ -7,13 +7,12 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
     templateUrl: './game-selection-page.component.html',
     styleUrls: ['./game-selection-page.component.scss'],
 })
-export class GameSelectionPageComponent implements OnInit {
+export class GameSelectionPageComponent implements AfterViewChecked {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(readonly gameCarouselService: GameCarouselService) {}
 
-    ngOnInit(): void {
-        this.gameCarouselService.fetchCardsFromServer();
+    ngAfterViewChecked(): void {
         this.makeCardsSelectMode();
     }
 

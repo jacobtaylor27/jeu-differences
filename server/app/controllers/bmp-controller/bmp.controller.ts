@@ -16,10 +16,6 @@ export class BmpController {
         this.router = Router();
 
         this.router.get('/:id', async (req: Request, res: Response) => {
-            if (!req.params.id) {
-                res.status(StatusCodes.BAD_REQUEST).send();
-                return;
-            }
             try {
                 const bmpRequested = await this.bmpService.getBmpById(req.params.id, DEFAULT_BMP_ASSET_PATH);
                 res.status(StatusCodes.CREATED).send({

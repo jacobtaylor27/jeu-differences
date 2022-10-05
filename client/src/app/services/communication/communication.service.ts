@@ -1,7 +1,10 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CREATE_GAME, VALID_GAME } from '@app/constants/server';
+import { Vec2 } from '@app/interfaces/vec2';
+import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
+import { GameMode } from '@common/game-mode';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -55,6 +58,34 @@ export class CommunicationService {
             },
             { observe: 'response' },
         );
+    }
+
+    createGameRoom(playerName: string, gameMode: GameMode, gameId: string) {
+        return this.http
+            .post<{ id: string }>(`${this.baseUrl}/game/create/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
+            .pipe(
+                catchError(() => {
+                    return of(null);
+                }),
+            );
+    }
+
+    validateCoordinates(id: string, coordinate: Vec2) {
+        return this.http
+            .post<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>(
+                `${this.baseUrl}/game/difference`,
+                {
+                    x: coordinate.x,
+                    y: coordinate.y,
+                    id,
+                },
+                { observe: 'response' },
+            )
+            .pipe(
+                catchError(() => {
+                    return of(null);
+                }),
+            );
     }
 
     getImgData(id: string): Observable<HttpResponse<{ width: number; height: number; data: number[] }>> {

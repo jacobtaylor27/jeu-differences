@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SIZE } from '@app/constants/canvas';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-
+import { TimerService } from '@app/services/timer.service';
+import { Coordinate } from '@common/coordinate';
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -17,15 +19,24 @@ export class PlayAreaComponent implements AfterViewInit {
     @ViewChild('actionsGameModified') canvasModified!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgOriginal') canvasImgOriginal!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModified') canvasImgModified!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModifiedWODifference') canvasImgDifference!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('gameOverDialog')
+    private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
 
     mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
+    gameId: string;
 
+    // eslint-disable-next-line max-params
     constructor(
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
-    ) {}
+        private readonly timerService: TimerService,
+        private readonly matDialog: MatDialog,
+    ) {
+        this.createGameRoom();
+    }
 
     get width(): number {
         return SIZE.x;
@@ -41,21 +52,22 @@ export class PlayAreaComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.displayImage();
-        this.displayImage(false);
+        this.displayImage(true, this.getContextImgOriginal());
+        this.displayImage(false, this.getContextImgModified());
+        this.displayImage(true, this.getContextDifferences());
     }
 
     // eslint-disable-next-line no-unused-vars
     onClick($event: MouseEvent, canvas: string) {
-        // if (!this.isMouseDisabled()) {
-        // this.mouseHitDetect($event, canvas);
-        // }
+        if (!this.isMouseDisabled()) {
+            this.mouseHitDetect($event, canvas);
+        }
     }
 
     mouseHitDetect($event: MouseEvent, canvas: string) {
         this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
         const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
-        this.differencesDetectionHandlerService.difference(this.mousePosition, ctx);
+        this.getDifferenceValidation(this.gameId, this.mousePosition, ctx);
     }
 
     getContextImgOriginal() {
@@ -74,16 +86,18 @@ export class PlayAreaComponent implements AfterViewInit {
         return this.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
     }
 
+    getContextDifferences() {
+        return this.canvasImgDifference.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    }
+
     getImageData(source: string) {
         return this.communicationService.getImgData(source);
     }
 
-    displayImage(isOriginalImage: boolean = true): void {
+    displayImage(isOriginalImage: boolean = true, ctx: CanvasRenderingContext2D): void {
         const originalImageData = isOriginalImage
             ? this.getImageData(this.gameInfoHandlerService.getOriginalBmpId())
             : this.getImageData(this.gameInfoHandlerService.getModifiedBmpId());
-
-        const ctx = isOriginalImage ? this.getContextImgOriginal() : this.getContextImgModified();
 
         originalImageData.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
             if (!response || !response.body) {
@@ -97,7 +111,47 @@ export class PlayAreaComponent implements AfterViewInit {
         });
     }
 
-    // private isMouseDisabled() {
-    //     return this.differencesDetectionHandlerService.mouseIsDisabled;
-    // }
+    createGameRoom() {
+        this.communicationService
+            .createGameRoom(
+                this.gameInfoHandlerService.getPlayerName(),
+                this.gameInfoHandlerService.getGameMode(),
+                this.gameInfoHandlerService.getGameInformation().id as string,
+            )
+            .subscribe((response: HttpResponse<{ id: string }> | null) => {
+                if (!response || !response.body) {
+                    return;
+                }
+                this.gameId = response.body.id;
+            });
+    }
+
+    getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
+        return this.communicationService
+            .validateCoordinates(id, mousePosition)
+            .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
+                if (!response || !response.body) {
+                    this.differencesDetectionHandlerService.differenceNotDetected(mousePosition, ctx);
+                    return;
+                }
+
+                this.differencesDetectionHandlerService.setNumberDifferencesFound(
+                    response.body.differencesLeft,
+                    this.gameInfoHandlerService.gameInformation.differences.length,
+                );
+                this.timerService.setNbOfDifferencesFound();
+                if (response.body.isGameOver) {
+                    this.differencesDetectionHandlerService.setGameOver();
+                    const dialogConfig = new MatDialogConfig();
+                    dialogConfig.disableClose = true;
+                    dialogConfig.minWidth = '50%';
+                    this.matDialog.open(this.gameOverDialogRef, dialogConfig);
+                }
+                this.differencesDetectionHandlerService.differenceDetected(ctx, this.getContextImgModified(), response.body.difference);
+            });
+    }
+
+    private isMouseDisabled() {
+        return this.differencesDetectionHandlerService.mouseIsDisabled;
+    }
 }

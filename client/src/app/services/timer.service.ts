@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimerService {
+    differenceFind: Subject<void> = new Subject();
+    gameOver: Subject<void> = new Subject();
+    nbOfDifferencesFound: number = 0;
     private timer: number;
     private isCountdown: boolean = false;
     private secondsDisplay: string;
@@ -15,6 +19,14 @@ export class TimerService {
 
     setCountdown() {
         this.isCountdown = true;
+    }
+
+    setNbOfDifferencesFound() {
+        this.nbOfDifferencesFound += 1;
+    }
+
+    resetNbDifferencesFound() {
+        this.nbOfDifferencesFound = 0;
     }
 
     calculateSecondsLeft(totalSeconds: number): number {

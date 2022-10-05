@@ -21,7 +21,6 @@ export class GameManagerService {
     isDifference(gameId: string, coord: Coordinate) {
         const game = this.findGame(gameId);
         if (!game) {
-            console.log('GAME NOT FOUND');
             return null;
         }
         return game.isDifferenceFound(coord);
@@ -40,7 +39,6 @@ export class GameManagerService {
     }
 
     private findGame(gameId: string): Game | undefined {
-        console.log(gameId);
         return this.games.find((game: Game) => game.identifier === gameId);
     }
 }

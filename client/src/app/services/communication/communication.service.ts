@@ -64,8 +64,7 @@ export class CommunicationService {
         return this.http
             .post<{ id: string }>(`${this.baseUrl}/game/create/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
             .pipe(
-                catchError((response) => {
-                    console.log(response);
+                catchError(() => {
                     return of(null);
                 }),
             );

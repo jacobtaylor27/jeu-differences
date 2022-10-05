@@ -6,6 +6,7 @@ import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
 @Component({
     selector: 'app-play-area',
@@ -26,6 +27,7 @@ export class PlayAreaComponent implements AfterViewInit {
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
+        private readonly timerService: TimerService,
     ) {
         this.createGameRoom();
     }
@@ -124,7 +126,9 @@ export class PlayAreaComponent implements AfterViewInit {
                     this.differencesDetectionHandlerService.differenceNotDetected(mousePosition, ctx);
                     return;
                 }
+                this.gameInfoHandlerService.gameInformation;
 
+                this.timerService.setNbOfDifferencesFound();
                 this.differencesDetectionHandlerService.differenceDetected(mousePosition, ctx, response.body.difference);
             });
     }

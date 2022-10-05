@@ -8,6 +8,7 @@ export class TimerService {
     private isCountdown: boolean = false;
     private secondsDisplay: string;
     private minutesDisplay: string;
+    nbOfDifferencesFound: number = 0;
 
     setTimer(timer: number) {
         this.timer = timer;
@@ -15,6 +16,14 @@ export class TimerService {
 
     setCountdown() {
         this.isCountdown = true;
+    }
+
+    setNbOfDifferencesFound() {
+        this.nbOfDifferencesFound += 1;
+    }
+
+    resetNbDifferencesFound() {
+        this.nbOfDifferencesFound = 0;
     }
 
     calculateSecondsLeft(totalSeconds: number): number {

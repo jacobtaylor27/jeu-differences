@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
-import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -69,6 +68,18 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.isClick = false;
     }
 
+    // eslint-disable-next-line no-unused-vars
+    async draw(event: MouseEvent) {
+        return;
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    async erase(event: MouseEvent) {
+        return;
+    }
+
+    /*
+    // Deactivated for sprint 1, but already works
     async draw(event: MouseEvent) {
         if (!this.isClick || !this.pencil) {
             return;
@@ -101,4 +112,5 @@ export class DrawCanvasComponent implements AfterViewInit {
         ctx.stroke();
         await this.updateImage();
     }
+    */
 }

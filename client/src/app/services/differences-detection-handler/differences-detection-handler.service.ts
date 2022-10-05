@@ -7,6 +7,13 @@ import { Coordinate } from '@common/coordinate';
 })
 export class DifferencesDetectionHandlerService {
     mouseIsDisabled: boolean = false;
+    nbDifferencesFound: number;
+    nbTotalDifferences: number;
+
+    setNumberDifferencesFound(nbDifferencesLeft: number, nbTotalDifference: number) {
+        this.nbTotalDifferences = nbTotalDifference;
+        this.nbDifferencesFound = nbTotalDifference - nbDifferencesLeft;
+    }
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         const wrongSound = new Audio('../assets/sounds/wronganswer.wav');

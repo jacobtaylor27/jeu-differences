@@ -117,7 +117,6 @@ export class PlayAreaComponent implements AfterViewInit {
                 if (!response || !response.body) {
                     return;
                 }
-                console.log(response.body.id);
                 this.gameId = response.body.id;
             });
     }
@@ -132,7 +131,10 @@ export class PlayAreaComponent implements AfterViewInit {
                 }
                 this.gameInfoHandlerService.gameInformation;
 
-                console.log(response.body.differencesLeft);
+                this.differencesDetectionHandlerService.setNumberDifferencesFound(
+                    response.body.differencesLeft,
+                    this.gameInfoHandlerService.gameInformation.differences.length,
+                );
                 this.timerService.setNbOfDifferencesFound();
                 this.differencesDetectionHandlerService.differenceDetected(ctx, this.getContextImgModified(), response.body.difference);
             });

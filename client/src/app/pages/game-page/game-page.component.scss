@@ -1,15 +1,40 @@
-.container {
-    height: 100%;
-    display: flex;
+// .container {
+//     display: flex;
+//     justify-content: space-around;
+//     align-items: center;
+// }
+.page {
+    min-height: 100vh;
+    height: auto;
 }
 
 .play-area-container {
-    overflow: auto;
-    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    margin-left: 1vw;
+    margin-right: 1vw;
 }
 
 .play-area {
     display: grid;
     width: min-content;
     outline: none;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+}
+
+// .image {
+//     border: 3px solid black;
+// }
+
+.filler {
+    flex: 1 1 auto;
 }

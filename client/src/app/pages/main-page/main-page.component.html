@@ -1,22 +1,26 @@
-<div class="container justified">
-    <h1 class="header-item">Bienvenue au cours {{ title }}</h1>
-    <img src="https://bit.ly/3QofL1J" alt="Logo Projet" />
-    <section id="server-message" class="justified">
-        <p>Petit message du serveur : {{ message.getValue() }}</p>
-        <div class="justified">
-            <button class="button" (click)="getMessagesFromServer()">Récupérer un message du serveur</button>
-            <button class="button" (click)="sendTimeToServer()">Envoyer un message au serveur</button>
-            <button class="button" routerLink="/material">Voir la page démo Angular Material</button>
-        </div>
-    </section>
+<div class="grid-container">
+    <div class="grid-item" [ngClass]="favoriteTheme">
+        <h1 class="game-title">
+            {{ title }}
+            <mat-icon class="game-logo">search</mat-icon>
+        </h1>
+        <ul>
+            <li>
+                <button mat-flat-button color="primary" routerLink="/select" (click)="onClickPlayClassic()">Classique</button>
+            </li>
+            <li>
+                <button mat-flat-button color="primary" routerLink="/select" (click)="onClickPlayLimited()">Temps limité</button>
+            </li>
+            <li>
+                <button mat-flat-button color="primary" routerLink="/admin">Administration</button>
+            </li>
+        </ul>
+        <h2 class="team-number">Equipe 106 :</h2>
+        <p><span>Jacob Taylor, </span> <span>Karim El Hosni, </span> <span>Thierry Beaulieu,</span></p>
+        <p><span>Laurie Bédard-Côté, </span> <span>Xavier Jouslin.</span></p>
+    </div>
 
-    <button class="button" routerLink="/game">Jouer!</button>
-
-    <footer class="footer-item">
-        <h4 class="team-name">Équipe Poly</h4>
-        <p>
-            <span>Coéquipier #1</span>, <span>Coéquipier #2</span>, <span>Coéquipier #3</span>, 
-            <span>Coéquipier #4</span>, <span>Coéquipier #5</span>, <span>Coéquipier #6</span>
-        </p>
-    </footer>
+    <div class="grid-item">
+        <img src="../../../assets/img/quote.png" alt="photo pour jeu de différences" />
+    </div>
 </div>

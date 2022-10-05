@@ -10,11 +10,22 @@ export class DifferencesDetectionHandlerService {
     mouseIsDisabled: boolean = false;
     nbDifferencesFound: number;
     nbTotalDifferences: number;
+    isGameOver: boolean = false;
+
     constructor(private timer: TimerService) {}
+
+    setGameOver() {
+        this.isGameOver = true;
+    }
 
     setNumberDifferencesFound(nbDifferencesLeft: number, nbTotalDifference: number) {
         this.nbTotalDifferences = nbTotalDifference;
         this.nbDifferencesFound = nbTotalDifference - nbDifferencesLeft;
+    }
+
+    resetNumberDifferencesFound() {
+        this.nbTotalDifferences = 0;
+        this.nbDifferencesFound = 0;
     }
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
@@ -35,6 +46,7 @@ export class DifferencesDetectionHandlerService {
         const correctSound = new Audio('../assets/sounds/correctanswer.wav');
         correctSound.play();
         this.timer.differenceFind.next();
+        this.timer.gameOver.next();
 
         this.displayDifferenceTemp(ctx, coords);
         this.clearDifference(ctxModified, coords);

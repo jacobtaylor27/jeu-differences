@@ -19,12 +19,12 @@ describe('TimerStopwatchComponent', () => {
     });
 
     it('should create', () => {
-        component.ngOnInit();
+        component.ngAfterViewInit();
         expect(component).toBeTruthy();
     });
 
     it('should start at 00 : 00', fakeAsync(() => {
-        component.ngOnInit();
+        component.ngAfterViewInit();
         tick(1);
         expect(component.timerDisplay).toEqual('00 : 00');
         discardPeriodicTasks();
@@ -33,7 +33,7 @@ describe('TimerStopwatchComponent', () => {
     it('should increment every second', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
         const calculateTimeSpy = spyOn(Object.getPrototypeOf(componentInstance), 'calculateTime');
-        componentInstance.ngOnInit();
+        componentInstance.ngAfterViewInit();
         tick(0);
         expect(calculateTimeSpy).toHaveBeenCalledTimes(0);
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
@@ -48,7 +48,7 @@ describe('TimerStopwatchComponent', () => {
     it('should increment every second', fakeAsync(() => {
         const componentInstance = fixture.componentInstance;
         const stopTimerSpy = spyOn(Object.getPrototypeOf(componentInstance), 'stopTimer');
-        componentInstance.ngOnInit();
+        componentInstance.ngAfterViewInit();
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
         tick(1000);
         component.ngOnDestroy();

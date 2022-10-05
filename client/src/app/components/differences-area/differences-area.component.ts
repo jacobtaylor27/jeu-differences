@@ -19,14 +19,16 @@ export class DifferencesAreaComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.differenceDetectionHandler.resetNumberDifferencesFound();
         this.setNbDifferencesFound();
     }
 
-    private setNbDifferencesFound() {
+    setNbDifferencesFound() {
         if (!this.differenceDetectionHandler.nbDifferencesFound) {
             this.nbDifferences = '0 / ' + this.gameInformationHandlerService.gameInformation.differences.length;
         } else {
             this.nbDifferences = this.differenceDetectionHandler.nbDifferencesFound + ' / ' + this.differenceDetectionHandler.nbTotalDifferences;
         }
+        return this.nbDifferences;
     }
 }

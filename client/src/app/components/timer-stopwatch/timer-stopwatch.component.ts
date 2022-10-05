@@ -20,6 +20,10 @@ export class TimerStopwatchComponent implements AfterViewInit, OnDestroy {
         timerService.differenceFind.subscribe(() => {
             this.differenceFind++;
         });
+
+        timerService.gameOver.subscribe(() => {
+            this.stopTimer();
+        });
     }
 
     ngAfterViewInit(): void {
@@ -27,10 +31,6 @@ export class TimerStopwatchComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.previousNbFound = 0;
-        // this.previousNbFound = 0;
-        // this.secondsTotal = 0;
-        // this.penaltyTime = 0;
         this.timerService.resetNbDifferencesFound();
         this.stopTimer();
     }

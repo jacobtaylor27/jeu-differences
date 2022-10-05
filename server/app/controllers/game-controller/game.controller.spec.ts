@@ -55,7 +55,7 @@ describe('GameController', () => {
     it('should return Not Found if no difference found ', async () => {
         gameManager.isGameFound.callsFake(() => true);
         gameManager.isDifference.callsFake(() => null);
-        return supertest(expressApp).post('/api/game/difference/0').send({ x: 0, y: 0 }).expect(StatusCodes.NOT_FOUND);
+        return supertest(expressApp).post('/api/game/difference').send({ id: '', x: 0, y: 0 }).expect(StatusCodes.NOT_FOUND);
     });
 
     it('should return a array of coordinate if a difference is found ', async () => {
@@ -66,8 +66,8 @@ describe('GameController', () => {
         gameManager.isGameOver.callsFake(() => false);
         gameManager.differenceLeft.callsFake(() => expectedDifferenceLeft);
         return supertest(expressApp)
-            .post('/api/game/difference/0')
-            .send({ x: 0, y: 0 })
+            .post('/api/game/difference')
+            .send({ id: '', x: 0, y: 0 })
             .expect(StatusCodes.OK)
             .then((response) => {
                 expect(response.body.difference).to.deep.equal(expectedDifference);
@@ -77,7 +77,7 @@ describe('GameController', () => {
     });
 
     it('should return an error if the difference query is not set', async () => {
-        return supertest(expressApp).post('/api/game/difference/0').send({}).expect(StatusCodes.BAD_REQUEST);
+        return supertest(expressApp).post('/api/game/difference').send({}).expect(StatusCodes.BAD_REQUEST);
     });
 
     it('should fetch all games cards of the database', async () => {

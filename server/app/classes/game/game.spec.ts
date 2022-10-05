@@ -1,6 +1,6 @@
+import { FindDifferenceState } from '@app/classes/find-difference-state/find-difference-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
-import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-one-tour-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { Coordinate } from '@common/coordinate';
@@ -28,7 +28,7 @@ describe('Game', () => {
     });
 
     it('should create a game with specific mode, players and game information', () => {
-        const expectedGameState = new PlayerOneTourState();
+        const expectedGameState = new FindDifferenceState();
         const newGame = new Game(expectedMode, expectedPlayers, expectedGameInfo);
         expect(newGame.information).to.deep.equal(expectedGameInfo);
         expect(newGame['players']).to.deep.equal(expectedPlayers);

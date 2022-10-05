@@ -27,6 +27,7 @@ export class PlayAreaComponent implements AfterViewInit {
     buttonPressed = '';
     gameId: string;
 
+    // eslint-disable-next-line max-params
     constructor(
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,

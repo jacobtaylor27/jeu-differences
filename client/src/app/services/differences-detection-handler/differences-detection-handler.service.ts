@@ -46,7 +46,9 @@ export class DifferencesDetectionHandlerService {
         const correctSound = new Audio('../assets/sounds/correctanswer.wav');
         correctSound.play();
         this.timer.differenceFind.next();
-        this.timer.gameOver.next();
+        if (this.isGameOver) {
+            this.timer.gameOver.next();
+        }
 
         this.displayDifferenceTemp(ctx, coords);
         this.clearDifference(ctxModified, coords);

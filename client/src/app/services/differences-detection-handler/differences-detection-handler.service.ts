@@ -10,7 +10,13 @@ export class DifferencesDetectionHandlerService {
     mouseIsDisabled: boolean = false;
     nbDifferencesFound: number;
     nbTotalDifferences: number;
+    isGameOver: boolean = false;
+
     constructor(private timer: TimerService) {}
+
+    setGameOver() {
+        this.isGameOver = true;
+    }
 
     setNumberDifferencesFound(nbDifferencesLeft: number, nbTotalDifference: number) {
         this.nbTotalDifferences = nbTotalDifference;
@@ -35,6 +41,7 @@ export class DifferencesDetectionHandlerService {
         const correctSound = new Audio('../assets/sounds/correctanswer.wav');
         correctSound.play();
         this.timer.differenceFind.next();
+        this.timer.gameOver.next();
 
         this.displayDifferenceTemp(ctx, coords);
         this.clearDifference(ctxModified, coords);

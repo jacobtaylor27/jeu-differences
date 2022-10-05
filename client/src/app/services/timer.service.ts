@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class TimerService {
     differenceFind: Subject<void> = new Subject();
+    gameOver: Subject<void> = new Subject();
     nbOfDifferencesFound: number = 0;
     private timer: number;
     private isCountdown: boolean = false;

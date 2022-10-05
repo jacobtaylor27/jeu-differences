@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SIZE } from '@app/constants/canvas';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -19,6 +20,8 @@ export class PlayAreaComponent implements AfterViewInit {
     @ViewChild('imgOriginal') canvasImgOriginal!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModified') canvasImgModified!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModifiedWODifference') canvasImgDifference!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('gameOverDialog')
+    private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
 
     mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
@@ -29,6 +32,7 @@ export class PlayAreaComponent implements AfterViewInit {
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
         private readonly timerService: TimerService,
+        private readonly matDialog: MatDialog,
     ) {
         this.createGameRoom();
     }
@@ -136,7 +140,14 @@ export class PlayAreaComponent implements AfterViewInit {
                     this.gameInfoHandlerService.gameInformation.differences.length,
                 );
                 this.timerService.setNbOfDifferencesFound();
+                console.log(response.body.isGameOver);
                 this.differencesDetectionHandlerService.differenceDetected(ctx, this.getContextImgModified(), response.body.difference);
+                if (response.body.isGameOver) {
+                    const dialogConfig = new MatDialogConfig();
+                    dialogConfig.disableClose = true;
+                    dialogConfig.minWidth = '50%';
+                    this.matDialog.open(this.gameOverDialogRef, dialogConfig);
+                }
             });
     }
 

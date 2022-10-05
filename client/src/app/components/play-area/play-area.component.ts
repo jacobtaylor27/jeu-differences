@@ -133,14 +133,12 @@ export class PlayAreaComponent implements AfterViewInit {
                     this.differencesDetectionHandlerService.differenceNotDetected(mousePosition, ctx);
                     return;
                 }
-                this.gameInfoHandlerService.gameInformation;
 
                 this.differencesDetectionHandlerService.setNumberDifferencesFound(
                     response.body.differencesLeft,
                     this.gameInfoHandlerService.gameInformation.differences.length,
                 );
                 this.timerService.setNbOfDifferencesFound();
-                console.log(response.body.isGameOver);
                 if (response.body.isGameOver) {
                     this.differencesDetectionHandlerService.setGameOver();
                     const dialogConfig = new MatDialogConfig();

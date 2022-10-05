@@ -1,6 +1,8 @@
 <div id="grid-container">
     <div class="wrapper">
+        <canvas #imgModifiedWODifference class="img" [width]="width" [height]="height"></canvas>
         <canvas #imgModified class="img" [width]="width" [height]="height"></canvas>
+
         <canvas #actionsGameModified class="canvas" (click)="onClick($event, 'modified')" [width]="width" [height]="height"></canvas>
     </div>
     <div class="wrapper">

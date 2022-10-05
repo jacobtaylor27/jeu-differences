@@ -18,6 +18,7 @@ export class PlayAreaComponent implements AfterViewInit {
     @ViewChild('actionsGameModified') canvasModified!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgOriginal') canvasImgOriginal!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModified') canvasImgModified!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModifiedWODifference') canvasImgDifference!: ElementRef<HTMLCanvasElement>;
 
     mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
@@ -46,8 +47,9 @@ export class PlayAreaComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.displayImage();
-        this.displayImage(false);
+        this.displayImage(true, this.getContextImgOriginal());
+        this.displayImage(false, this.getContextImgModified());
+        this.displayImage(true, this.getContextDifferences());
     }
 
     // eslint-disable-next-line no-unused-vars
@@ -79,16 +81,18 @@ export class PlayAreaComponent implements AfterViewInit {
         return this.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
     }
 
+    getContextDifferences() {
+        return this.canvasImgDifference.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    }
+
     getImageData(source: string) {
         return this.communicationService.getImgData(source);
     }
 
-    displayImage(isOriginalImage: boolean = true): void {
+    displayImage(isOriginalImage: boolean = true, ctx: CanvasRenderingContext2D): void {
         const originalImageData = isOriginalImage
             ? this.getImageData(this.gameInfoHandlerService.getOriginalBmpId())
             : this.getImageData(this.gameInfoHandlerService.getModifiedBmpId());
-
-        const ctx = isOriginalImage ? this.getContextImgOriginal() : this.getContextImgModified();
 
         originalImageData.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
             if (!response || !response.body) {
@@ -128,8 +132,9 @@ export class PlayAreaComponent implements AfterViewInit {
                 }
                 this.gameInfoHandlerService.gameInformation;
 
+                console.log(response.body.differencesLeft);
                 this.timerService.setNbOfDifferencesFound();
-                this.differencesDetectionHandlerService.differenceDetected(mousePosition, ctx, response.body.difference);
+                this.differencesDetectionHandlerService.differenceDetected(ctx, this.getContextImgModified(), response.body.difference);
             });
     }
 

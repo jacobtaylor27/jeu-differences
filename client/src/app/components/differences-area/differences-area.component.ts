@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
@@ -7,7 +7,7 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
     templateUrl: './differences-area.component.html',
     styleUrls: ['./differences-area.component.scss'],
 })
-export class DifferencesAreaComponent implements AfterViewChecked {
+export class DifferencesAreaComponent implements OnInit {
     name: string;
     nbDifferences: string;
 
@@ -18,7 +18,7 @@ export class DifferencesAreaComponent implements AfterViewChecked {
         this.name = this.gameInformationHandlerService.getPlayerName();
     }
 
-    ngAfterViewChecked(): void {
+    ngOnInit(): void {
         this.setNbDifferencesFound();
     }
 

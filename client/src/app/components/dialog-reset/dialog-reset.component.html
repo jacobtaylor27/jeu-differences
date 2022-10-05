@@ -1,18 +1,18 @@
-<h2 mat-dialog-title>Reinitialiser une image</h2>
+<h2 mat-dialog-title>Réinitialiser une image</h2>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-dialog-content>
         <mat-form-field>
-        <mat-label>Quelles type d'image doit etre reinitialiser?</mat-label>
-        <mat-select formControlName="reset">
-            <mat-option value=""></mat-option>
-            <mat-option [value]="typePropagateCanvasEvent.Difference">Image des difference</mat-option>
-            <mat-option [value]="typePropagateCanvasEvent.Source">Image sources</mat-option>
-            <mat-option [value]="typePropagateCanvasEvent.Both">Les deux types</mat-option>
-        </mat-select>
+            <mat-label>Quelles type d'image doit etre réinitialiser?</mat-label>
+            <mat-select formControlName="reset">
+                <mat-option value=""></mat-option>
+                <mat-option [value]="typePropagateCanvasEvent.Difference">Tableau à dessin</mat-option>
+                <mat-option [value]="typePropagateCanvasEvent.Source">Tableau comparatif</mat-option>
+                <mat-option [value]="typePropagateCanvasEvent.Both">Tableau à dessin et Tableau comparatif</mat-option>
+            </mat-select>
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button type="button" mat-button mat-dialog-close>Cancel</button>
-        <button type="button" [mat-dialog-close]="true" type="submit" [disabled]="this.form.valid ? null: 'disabled'">Reinitialiser</button>
+        <button type="button" [mat-dialog-close]="true" type="submit" [disabled]="this.form.valid ? null : 'disabled'">Reinitialiser</button>
     </mat-dialog-actions>
 </form>

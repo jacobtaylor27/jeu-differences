@@ -5,16 +5,16 @@
         </button>
         <span>CRÉATION DE PARTIE</span>
     </mat-toolbar>
-
+    <div class="space-under-title-bar"></div>
     <form [formGroup]="this.form" (ngSubmit)="isGameValid()">
         <div class="img-container">
             <div class="drawImg">
-                <label for="imgDiff">Titre: Canvas éditeur </label>
+                <label for="imgDiff">Tableau à dessin </label>
                 <app-draw-canvas id="imgDiff"></app-draw-canvas>
             </div>
 
             <div class="drawImg">
-                <label for="sourceImg">Titre: Image Source</label>
+                <label for="sourceImg">Tableau comparatif</label>
                 <canvas id="sourceImg" class="img" width="640px" height="480px" alt="Image Source" #sourceImg></canvas>
             </div>
         </div>
@@ -32,7 +32,7 @@
                         <option value="15">15px rayon d'elargissement</option>
                     </select>
                 </mat-form-field>
-                <button mat-flat-button color="primary" (click)="this.isGameValid()" type="button">Valider</button>
+                <button mat-flat-button color="primary" (click)="this.isGameValid()" #onSubmit type="button">Valider</button>
             </div>
         </div>
     </form>

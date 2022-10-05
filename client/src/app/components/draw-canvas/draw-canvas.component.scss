@@ -2,7 +2,7 @@
     z-index: 0;
     box-sizing: border-box;
     position: relative;
-    box-shadow: 0px 0px 0px 2px #000000;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px, rgba(0, 0, 0, 0.45) 0px 1px 3px;
     width: 640px;
     height: 480px;
 }
@@ -14,7 +14,7 @@
 
 #noContentCanvas {
     position: absolute;
-    z-index:-2;
+    z-index: -2;
 }
 .canvas-container {
     width: 640px;

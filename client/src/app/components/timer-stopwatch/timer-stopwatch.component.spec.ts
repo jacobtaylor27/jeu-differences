@@ -19,12 +19,12 @@ describe('TimerStopwatchComponent', () => {
     });
 
     it('should create', () => {
-        component.ngAfterViewInit;
+        component.ngAfterViewInit();
         expect(component).toBeTruthy();
     });
 
     it('should start at 00 : 00', fakeAsync(() => {
-        component.ngAfterViewInit;
+        component.ngAfterViewInit();
         tick(1);
         expect(component.timerDisplay).toEqual('00 : 00');
         discardPeriodicTasks();

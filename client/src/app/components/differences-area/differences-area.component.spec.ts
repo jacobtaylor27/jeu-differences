@@ -32,7 +32,7 @@ describe('DifferencesAreaComponent', () => {
 
         fixture = TestBed.createComponent(DifferencesAreaComponent);
         component = fixture.componentInstance;
-        (spyGameInfosService.gameInformation = {
+        spyGameInfosService.gameInformation = {
             id: '1',
             name: 'test',
             idOriginalBmp: 'imageName',
@@ -60,8 +60,8 @@ describe('DifferencesAreaComponent', () => {
             ],
             differenceRadius: 3,
             differences: [],
-        }),
-            fixture.detectChanges();
+        };
+        fixture.detectChanges();
     });
 
     it('should create', () => {

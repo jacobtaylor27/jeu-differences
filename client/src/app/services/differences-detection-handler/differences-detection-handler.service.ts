@@ -23,6 +23,11 @@ export class DifferencesDetectionHandlerService {
         this.nbDifferencesFound = nbTotalDifference - nbDifferencesLeft;
     }
 
+    resetNumberDifferencesFound() {
+        this.nbTotalDifferences = 0;
+        this.nbDifferencesFound = 0;
+    }
+
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
         wrongSound.play();

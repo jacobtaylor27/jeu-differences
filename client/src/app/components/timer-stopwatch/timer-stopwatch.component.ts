@@ -14,8 +14,13 @@ export class TimerStopwatchComponent implements AfterViewInit, OnDestroy {
 
     private secondsTotal: number;
     private sub: Subscription;
+    private differenceFind: number = 0;
 
-    constructor(private readonly timerService: TimerService) {}
+    constructor(private readonly timerService: TimerService) {
+        timerService.differenceFind.subscribe(() => {
+            this.differenceFind++;
+        });
+    }
 
     ngAfterViewInit(): void {
         this.startTimer();
@@ -40,6 +45,6 @@ export class TimerStopwatchComponent implements AfterViewInit, OnDestroy {
 
     private calculateTime(seconds: number) {
         /* eslint-disable @typescript-eslint/no-magic-numbers -- fixed value for now but will change later on */
-        this.secondsTotal = seconds + this.clueAskedCounter * 5;
+        this.secondsTotal = seconds - 5 * this.differenceFind + this.clueAskedCounter * 5;
     }
 }

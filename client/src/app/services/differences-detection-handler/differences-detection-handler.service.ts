@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/interfaces/vec2';
+import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
 @Injectable({
     providedIn: 'root',
 })
 export class DifferencesDetectionHandlerService {
     mouseIsDisabled: boolean = false;
+    constructor(private timer: TimerService) {}
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
@@ -25,7 +27,7 @@ export class DifferencesDetectionHandlerService {
     differenceDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
         const correctSound = new Audio('../assets/sounds/correctanswer.wav');
         correctSound.play();
-
+        this.timer.differenceFind.next();
         this.displayDifferenceTemp(ctx, mousePosition, coords);
     }
 

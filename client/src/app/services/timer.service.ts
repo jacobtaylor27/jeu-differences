@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimerService {
+    differenceFind: Subject<void> = new Subject();
     private timer: number;
     private isCountdown: boolean = false;
     private secondsDisplay: string;
     private minutesDisplay: string;
-
     setTimer(timer: number) {
         this.timer = timer;
     }

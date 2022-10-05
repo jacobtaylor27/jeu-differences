@@ -1,5 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { Vec2 } from '@app/interfaces/vec2';
@@ -10,6 +11,10 @@ describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
     let gameInformationHandlerServiceSpy: jasmine.SpyObj<GameInformationHandlerService>;
+    const dialogMock = {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        close: () => {},
+    };
 
     let mouseEvent: MouseEvent;
 
@@ -25,8 +30,13 @@ describe('PlayAreaComponent', () => {
         ]);
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
-            imports: [RouterTestingModule, HttpClientModule],
+            imports: [RouterTestingModule, HttpClientModule, MatDialogModule],
+
             providers: [
+                {
+                    provide: MatDialogRef,
+                    useValue: dialogMock,
+                },
                 {
                     provide: GameInformationHandlerService,
                     useValue: gameInformationHandlerServiceSpy,

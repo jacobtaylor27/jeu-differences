@@ -6,16 +6,26 @@ import { Subject } from 'rxjs';
 })
 export class TimerService {
     differenceFind: Subject<void> = new Subject();
+    nbOfDifferencesFound: number = 0;
     private timer: number;
     private isCountdown: boolean = false;
     private secondsDisplay: string;
     private minutesDisplay: string;
+
     setTimer(timer: number) {
         this.timer = timer;
     }
 
     setCountdown() {
         this.isCountdown = true;
+    }
+
+    setNbOfDifferencesFound() {
+        this.nbOfDifferencesFound += 1;
+    }
+
+    resetNbDifferencesFound() {
+        this.nbOfDifferencesFound = 0;
     }
 
     calculateSecondsLeft(totalSeconds: number): number {

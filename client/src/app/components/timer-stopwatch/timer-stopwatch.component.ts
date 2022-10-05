@@ -27,6 +27,11 @@ export class TimerStopwatchComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        // this.previousNbFound = 0;
+        // this.previousNbFound = 0;
+        // this.secondsTotal = 0;
+        // this.penaltyTime = 0;
+        this.timerService.resetNbDifferencesFound();
         this.stopTimer();
     }
 
@@ -43,8 +48,12 @@ export class TimerStopwatchComponent implements AfterViewInit, OnDestroy {
         this.sub.unsubscribe();
     }
 
+    // private setPreviousNbDifference(nb: number) {
+    //     this.previousNbFound = nb;
+    // }
+
     private calculateTime(seconds: number) {
         /* eslint-disable @typescript-eslint/no-magic-numbers -- fixed value for now but will change later on */
-        this.secondsTotal = seconds - 5 * this.differenceFind + this.clueAskedCounter * 5;
+        this.secondsTotal = seconds - 5 * this.differenceFind;
     }
 }

@@ -8,7 +8,14 @@ import { Coordinate } from '@common/coordinate';
 })
 export class DifferencesDetectionHandlerService {
     mouseIsDisabled: boolean = false;
+    nbDifferencesFound: number;
+    nbTotalDifferences: number;
     constructor(private timer: TimerService) {}
+
+    setNumberDifferencesFound(nbDifferencesLeft: number, nbTotalDifference: number) {
+        this.nbTotalDifferences = nbTotalDifference;
+        this.nbDifferencesFound = nbTotalDifference - nbDifferencesLeft;
+    }
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
@@ -24,14 +31,16 @@ export class DifferencesDetectionHandlerService {
         }, 1000);
     }
 
-    differenceDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
+    differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
         const correctSound = new Audio('../assets/sounds/correctanswer.wav');
         correctSound.play();
         this.timer.differenceFind.next();
-        this.displayDifferenceTemp(ctx, mousePosition, coords);
+
+        this.displayDifferenceTemp(ctx, coords);
+        this.clearDifference(ctxModified, coords);
     }
 
-    private displayDifferenceTemp(ctx: CanvasRenderingContext2D, mousePosition: Vec2, coords: Coordinate[]) {
+    private displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
         let counter = 0;
         const a = setInterval(() => {
             for (const coordinate of coords) {
@@ -49,5 +58,11 @@ export class DifferencesDetectionHandlerService {
 
             counter++;
         }, 500);
+    }
+
+    private clearDifference(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
+        for (const coordinate of coords) {
+            ctx.clearRect(coordinate.x, coordinate.y, 1, 1);
+        }
     }
 }

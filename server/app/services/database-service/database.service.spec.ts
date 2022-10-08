@@ -9,7 +9,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
 chai.use(chaiAsPromised);
 
-describe('Database service', () => {
+describe.only('Database service', () => {
     let mongoServer: MongoMemoryServer;
     let databaseService: DatabaseService;
     let uri = '';
@@ -56,4 +56,12 @@ describe('Database service', () => {
         await databaseService.start();
         expect(spy.calledOnce).to.equal(true);
     });
+
+    it('doesCollectionExists(collectionName) should return true if the collection exists', async () => {});
+
+    it("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {});
+
+    it("isCollectionEmpty(collectionName) should return true if the collection doesn't contain documents", async () => {});
+
+    it('isCollectionEmpty(collectionName) should return false if the collection contains documents', async () => {});
 });

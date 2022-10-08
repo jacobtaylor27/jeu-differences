@@ -29,13 +29,20 @@ export class DatabaseService {
     }
 
     async populateDatabase(): Promise<void> {
-        const collections = await this.db.listCollections({ name: DB_GAME_COLLECTION }).toArray();
-        if (collections.length === 0) {
+        if (!(await this.doesCollectionExists(DB_GAME_COLLECTION))) {
             await this.db.createCollection(DB_GAME_COLLECTION);
         }
-        if ((await this.db.collection(DB_GAME_COLLECTION).countDocuments()) === 0) {
+        if (await this.isCollectionEmpty(DB_GAME_COLLECTION)) {
             await this.initializeGameCollection(DB_GAME_COLLECTION, DEFAULT_GAME);
         }
+    }
+
+    private async doesCollectionExists(collectionName: string): Promise<boolean> {
+        return (await this.db.listCollections({ name: collectionName }).toArray()).length === 0;
+    }
+
+    private async isCollectionEmpty(collectionName: string): Promise<boolean> {
+        return (await this.db.collection(collectionName).countDocuments()) === 0;
     }
 
     private async initializeGameCollection(collectionName: string, game: GameInfo[]): Promise<void> {

@@ -38,7 +38,7 @@ export class DatabaseService {
     }
 
     private async doesCollectionExists(collectionName: string): Promise<boolean> {
-        return (await this.db.listCollections({ name: collectionName }).toArray()).length === 0;
+        return !((await this.db.listCollections({ name: collectionName }).toArray()).length === 0);
     }
 
     private async isCollectionEmpty(collectionName: string): Promise<boolean> {

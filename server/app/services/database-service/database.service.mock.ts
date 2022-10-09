@@ -1,5 +1,6 @@
 import { DB_GAME_COLLECTION, DB_NAME } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game-info';
+import { GameInfo } from '@common/game-info';
 import { Db, MongoClient } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 export class DatabaseServiceMock {

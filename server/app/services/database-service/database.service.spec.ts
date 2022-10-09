@@ -27,11 +27,8 @@ describe.only('Database service', () => {
         sinon.restore();
     });
 
-    it('initializeGameCollection() should be called when first intialized the game collection', async () => {
-        await databaseService.start();
-        const spy = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
-        await databaseService.start();
-        expect(spy.calledOnce).to.equal(false);
+    it('There should be no client before starting the db', async () => {
+        expect(databaseService['client']).to.equal(undefined);
     });
 
     it('start(uri) should allow the connection to the database', async () => {
@@ -52,6 +49,13 @@ describe.only('Database service', () => {
     });
 
     it('start() should return the current object', async () => {});
+
+    it('initializeGameCollection() should be called when first intialized the game collection', async () => {
+        await databaseService.start();
+        const spy = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
+        await databaseService.start();
+        expect(spy.calledOnce).to.equal(false);
+    });
 
     it("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {});
 

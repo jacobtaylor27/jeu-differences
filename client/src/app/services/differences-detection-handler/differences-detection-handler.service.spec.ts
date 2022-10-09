@@ -1,8 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { SIZE } from '@app/constants/canvas';
 
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
-describe('DifferencesDetectionHandlerService', () => {
+fdescribe('DifferencesDetectionHandlerService', () => {
     let service: DifferencesDetectionHandlerService;
 
     beforeEach(() => {

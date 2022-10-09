@@ -82,4 +82,12 @@ describe('DifferencesAreaComponent', () => {
 
         expect(component.setNbDifferencesFound()).toEqual('1 / 5');
     });
+
+    it('should set the nb of differences when game is over', () => {
+        differenceDetectionHandlerSpy.isGameOver = true;
+        differenceDetectionHandlerSpy.nbTotalDifferences = 5;
+        differenceDetectionHandlerSpy.nbDifferencesFound = 5;
+
+        expect(component.setNbDifferencesFound()).toEqual('5 / 5');
+    });
 });

@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, VALID_GAME } from '@app/constants/server';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInfo } from '@common/game-info';
 import { Message } from '@common/message';
@@ -134,6 +134,31 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(VALID_GAME);
         expect(req.request.method).toBe('POST');
         req.error(new ProgressEvent('Random error occurred'));
+    });
+
+    it('should send a request to create a game', () => {
+        service
+            .createGame(
+                {
+                    original: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                    modify: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                },
+                3,
+                '',
+            )
+            .subscribe({
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                next: () => {},
+                error: fail,
+            });
+        const req = httpMock.expectOne(CREATE_GAME);
+        expect(req.request.method).toBe('POST');
+        req.flush({
+            original: { width: 0, height: 0, data: Array.from([]) },
+            modify: { width: 0, height: 0, data: Array.from([]) },
+            differenceRadius: 0,
+            name: '',
+        });
     });
 
     // it('should return expected message (timer) when game page is loaded', () => {

@@ -68,13 +68,27 @@ describe.only('Database service', () => {
         expect(spy.calledOnce).to.equal(false);
     });
 
-    it('initializeGameCollection() should be called when starting the database for the first time', async () => {});
+    it('isCollectionEmpty(collectionName) should return true when first starting the database', async () => {
+        await databaseService.start();
+        await expect(databaseService['isCollectionEmpty'](DB_GAME_COLLECTION)).to.eventually.equal(true);
+    });
 
-    it('initializeGameCollection() should not be called when starting the database for a second time', async () => {});
+    it('isCollectionEmpty(collectionName) should return false after populating the db', async () => {});
 
-    it("isCollectionEmpty(collectionName) should return true if the collection doesn't contain documents", async () => {});
+    it('initializeGameCollection() should be called when calling populateDatabase for the first time', async () => {
+        await databaseService.start();
+        const spy = sinon.spy(databaseService['initializeGameCollection']);
+        await databaseService.populateDatabase();
+        expect(spy.calledOnce).to.equal(true);
+    });
 
-    it('isCollectionEmpty(collectionName) should return false if the collection contains documents', async () => {});
+    it('initializeGameCollection() should not be called when calling populateDatabase for a second time', async () => {
+        await databaseService.start();
+        await databaseService.populateDatabase();
+        const spy = sinon.spy(databaseService['initializeGameCollection']);
+        await databaseService.populateDatabase();
+        expect(spy.calledOnce).to.equal(false);
+    });
 
     it('The games in the db should correspond to the ones added ', async () => {});
 });

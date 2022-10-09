@@ -53,10 +53,7 @@ describe.only('Database service', () => {
 
     it('start() should return the current object', async () => {});
 
-    it.only("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {
-        await databaseService.start();
-        await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(false);
-    });
+    it("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {});
 
     it('doesCollectionExists(collectionName) should return true if the collection does exist', async () => {
         await databaseService.start();

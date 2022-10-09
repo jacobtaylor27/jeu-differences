@@ -25,4 +25,12 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(service.nbDifferencesFound).toEqual(2);
         expect(service.nbTotalDifferences).toEqual(3);
     });
+
+    it('should reset number differences found', () => {
+        service.nbDifferencesFound = 5;
+        service.nbTotalDifferences = 5;
+        service.resetNumberDifferencesFound();
+        expect(service.nbDifferencesFound).toEqual(0);
+        expect(service.nbTotalDifferences).toEqual(0);
+    });
 });

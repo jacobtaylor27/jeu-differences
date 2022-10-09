@@ -19,4 +19,10 @@ describe('DifferencesDetectionHandlerService', () => {
         service.setGameOver();
         expect(service.isGameOver).toBeTruthy();
     });
+
+    it('should set number of differences found', () => {
+        service.setNumberDifferencesFound(1, 3);
+        expect(service.nbDifferencesFound).toEqual(2);
+        expect(service.nbTotalDifferences).toEqual(3);
+    });
 });

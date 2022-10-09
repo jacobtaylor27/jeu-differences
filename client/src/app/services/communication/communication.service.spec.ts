@@ -192,6 +192,17 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('POST');
     });
 
+    it('should handle http error when create a game room', () => {
+        service.createGameRoom('playername', GameMode.Classic, 'gameid').subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(CREATE_GAME_ROOM + '/gameid');
+        expect(req.request.method).toBe('POST');
+        req.error(new ProgressEvent('Random error occurred'));
+    });
+
     // it('should return expected message (timer) when game page is loaded', () => {
     //     const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
     //     service.getTimeValue().subscribe({

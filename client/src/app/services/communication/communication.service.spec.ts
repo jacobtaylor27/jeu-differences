@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { CREATE_GAME, CREATE_GAME_ROOM, VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInfo } from '@common/game-info';
 import { GameMode } from '@common/game-mode';
@@ -201,6 +201,17 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(CREATE_GAME_ROOM + '/gameid');
         expect(req.request.method).toBe('POST');
         req.error(new ProgressEvent('Random error occurred'));
+    });
+
+    it('should send a request to validate coordinates', () => {
+        service.validateCoordinates('gameid', { x: 0, y: 0 }).subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(VALIDATE_COORD);
+        expect(req.request.method).toBe('POST');
+        req.flush({ x: 0, y: 0, id: '' });
     });
 
     // it('should return expected message (timer) when game page is loaded', () => {

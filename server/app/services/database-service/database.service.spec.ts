@@ -1,21 +1,20 @@
 import { DB_GAME_COLLECTION, DB_NAME } from '@app/constants/database';
-import { DatabaseService } from '@app/services/database-service/database.service';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
-import { MongoParseError } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
+import { DatabaseServiceMock } from './database.service.mock';
 chai.use(chaiAsPromised);
 
 describe.only('Database service', () => {
     let mongoServer: MongoMemoryServer;
-    let databaseService: DatabaseService;
+    let databaseService: DatabaseServiceMock;
     let uri = '';
 
     beforeEach(async () => {
-        databaseService = new DatabaseService();
+        databaseService = new DatabaseServiceMock();
         mongoServer = await MongoMemoryServer.create();
         uri = mongoServer.getUri();
     });
@@ -31,33 +30,22 @@ describe.only('Database service', () => {
         expect(databaseService['client']).to.equal(undefined);
     });
 
-    it('start(uri) should allow the connection to the database', async () => {
+    it('start(uri) should create a client and a database with a given name', async () => {
         await databaseService.start(uri);
         expect(databaseService['client']).to.not.equal(undefined);
         expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
 
-    it('start() should also allow the connection to the database ', async () => {
+    it('start() should create a client and a database with a given name', async () => {
         await databaseService.start();
         expect(databaseService['client']).to.not.equal(undefined);
         expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
 
-    it('start(uri) should throw an exception given a bad uri', async () => {
-        const badUri = 'badUri00';
-        await expect(databaseService.start(badUri)).to.eventually.be.rejectedWith(Error).to.be.instanceof(MongoParseError);
-    });
-
-    it('start() should return the current object', async () => {});
-
-    it('initializeGameCollection() should be called when first intialized the game collection', async () => {
+    it("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {
         await databaseService.start();
-        const spy = sinon.spy(Object.getPrototypeOf(databaseService), 'initializeGameCollection');
-        await databaseService.start();
-        expect(spy.calledOnce).to.equal(false);
+        await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(false);
     });
-
-    it("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {});
 
     it('doesCollectionExists(collectionName) should return true if the collection does exist', async () => {
         await databaseService.start();
@@ -65,14 +53,20 @@ describe.only('Database service', () => {
         await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(true);
     });
 
-    it('createCollection() should be called when starting the database for the first time', async () => {
+    it('createCollection() should be called when calling populateDatabase for the first time', async () => {
         await databaseService.start();
         const spy = sinon.spy(databaseService['db'], 'createCollection');
         await databaseService.populateDatabase();
         expect(spy.calledOnce).to.equal(true);
     });
 
-    it('createCollection() should not be called when starting the database for the second time', async () => {});
+    it('createCollection() should not be called when calling populateDatabase for the second time', async () => {
+        await databaseService.start();
+        await databaseService.populateDatabase();
+        const spy = sinon.spy(databaseService['db'], 'createCollection');
+        await databaseService.populateDatabase();
+        expect(spy.calledOnce).to.equal(false);
+    });
 
     it('initializeGameCollection() should be called when starting the database for the first time', async () => {});
 

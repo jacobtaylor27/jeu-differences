@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CREATE_GAME, VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, CREATE_GAME_ROOM, VALID_GAME } from '@app/constants/server';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
@@ -64,7 +64,7 @@ export class CommunicationService {
 
     createGameRoom(playerName: string, gameMode: GameMode, gameId: string) {
         return this.http
-            .post<{ id: string }>(`${this.baseUrl}/game/create/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
+            .post<{ id: string }>(`${CREATE_GAME_ROOM}/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
             .pipe(
                 catchError(() => {
                     return of(null);

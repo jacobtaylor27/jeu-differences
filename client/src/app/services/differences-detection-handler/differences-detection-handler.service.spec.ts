@@ -33,4 +33,12 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(service.nbDifferencesFound).toEqual(0);
         expect(service.nbTotalDifferences).toEqual(0);
     });
+
+    it('should play sound', () => {
+        // Needs help
+        const spy = spyOn(service, 'playWrongSound');
+
+        service.playWrongSound();
+        expect(spy).toHaveBeenCalled();
+    });
 });

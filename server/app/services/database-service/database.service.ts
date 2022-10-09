@@ -21,7 +21,6 @@ export class DatabaseService {
         } catch (error) {
             throw new MongoParseError(error);
         }
-        await this.populateDatabase();
     }
 
     async close(): Promise<void> {

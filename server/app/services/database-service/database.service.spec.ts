@@ -1,4 +1,4 @@
-import { DB_NAME } from '@app/constants/database';
+import { DB_GAME_COLLECTION, DB_NAME } from '@app/constants/database';
 import { DatabaseService } from '@app/services/database-service/database.service';
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -51,17 +51,35 @@ describe.only('Database service', () => {
         await expect(databaseService.start(badUri)).to.eventually.be.rejectedWith(Error).to.be.instanceof(MongoParseError);
     });
 
-    it('populateDatabase() should populate the database correctly', async () => {
-        const spy = sinon.spy(databaseService, 'populateDatabase');
+    it('start() should return the current object', async () => {});
+
+    it.only("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {
         await databaseService.start();
+        await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(false);
+    });
+
+    it('doesCollectionExists(collectionName) should return true if the collection does exist', async () => {
+        await databaseService.start();
+        await databaseService.populateDatabase();
+        await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(true);
+    });
+
+    it('createCollection() should be called when starting the database for the first time', async () => {
+        await databaseService.start();
+        const spy = sinon.spy(databaseService['db'], 'createCollection');
+        await databaseService.populateDatabase();
         expect(spy.calledOnce).to.equal(true);
     });
 
-    it('doesCollectionExists(collectionName) should return true if the collection exists', async () => {});
+    it('createCollection() should not be called when starting the database for the second time', async () => {});
 
-    it("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {});
+    it('initializeGameCollection() should be called when starting the database for the first time', async () => {});
+
+    it('initializeGameCollection() should not be called when starting the database for a second time', async () => {});
 
     it("isCollectionEmpty(collectionName) should return true if the collection doesn't contain documents", async () => {});
 
     it('isCollectionEmpty(collectionName) should return false if the collection contains documents', async () => {});
+
+    it('The games in the db should correspond to the ones added ', async () => {});
 });

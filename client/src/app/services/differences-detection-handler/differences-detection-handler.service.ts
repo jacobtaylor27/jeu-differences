@@ -28,9 +28,13 @@ export class DifferencesDetectionHandlerService {
         this.nbDifferencesFound = 0;
     }
 
-    differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
+    playWrongSound() {
         const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
         wrongSound.play();
+    }
+
+    differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
+        this.playWrongSound();
         ctx.fillStyle = 'red';
         ctx.fillText('Erreur', mousePosition.x, mousePosition.y, 30);
         this.mouseIsDisabled = true;

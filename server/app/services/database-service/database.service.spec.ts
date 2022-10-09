@@ -42,25 +42,25 @@ describe.only('Database service', () => {
         expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
 
-    it("doesCollectionExists(collectionName) should return false if the collection doesn't exist", async () => {
+    it("doesCollectionExists(collectionName) should return false if a collection doesn't exist", async () => {
         await databaseService.start();
         await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(false);
     });
 
-    it('doesCollectionExists(collectionName) should return true if the collection does exist', async () => {
+    it('doesCollectionExists(collectionName) should return true if a collection does exist', async () => {
         await databaseService.start();
         await databaseService.populateDatabase();
         await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(true);
     });
 
-    it('createCollection() should be called when calling populateDatabase for the first time', async () => {
+    it('createCollection() should be called when there is no collection in the db', async () => {
         await databaseService.start();
         const spy = sinon.spy(databaseService['db'], 'createCollection');
         await databaseService.populateDatabase();
         expect(spy.calledOnce).to.equal(true);
     });
 
-    it('createCollection() should not be called when calling populateDatabase for the second time', async () => {
+    it('createCollection() should not be called when a collection already exists', async () => {
         await databaseService.start();
         await databaseService.populateDatabase();
         const spy = sinon.spy(databaseService['db'], 'createCollection');
@@ -68,12 +68,16 @@ describe.only('Database service', () => {
         expect(spy.calledOnce).to.equal(false);
     });
 
-    it('isCollectionEmpty(collectionName) should return true when first starting the database', async () => {
+    it('isCollectionEmpty(collectionName) should return true when the collection is empty', async () => {
         await databaseService.start();
         await expect(databaseService['isCollectionEmpty'](DB_GAME_COLLECTION)).to.eventually.equal(true);
     });
 
-    it('isCollectionEmpty(collectionName) should return false after populating the db', async () => {});
+    it('isCollectionEmpty(collectionName) should return false after populating the db', async () => {
+        await databaseService.start();
+        await databaseService.populateDatabase();
+        await expect(databaseService['isCollectionEmpty'](DB_GAME_COLLECTION)).to.eventually.equal(false);
+    });
 
     it('initializeGameCollection() should be called when calling populateDatabase for the first time', async () => {
         await databaseService.start();

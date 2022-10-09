@@ -47,21 +47,6 @@ describe('CommunicationService', () => {
         req.flush(expectedMessage);
     });
 
-    // it('should return expected message (timer) when game page is loaded', () => {
-    //     const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
-    //     service.getTimeValue().subscribe({
-    //         next: (response: Message) => {
-    //             expect(response.title).toEqual(expectedMessage.title);
-    //             expect(response.body).toEqual(expectedMessage.body);
-    //         },
-    //         error: fail,
-    //     });
-
-    //     const req = httpMock.expectOne(`${baseUrl}/game`);
-    //     expect(req.request.method).toBe('GET');
-    //     req.flush(expectedMessage);
-    // });
-
     it('should get image data when game card is loaded', () => {
         service.getImgData('original').subscribe({
             next: (response: HttpResponse<{ width: number; height: number; data: number[] }>) => {
@@ -151,19 +136,18 @@ describe('CommunicationService', () => {
         req.error(new ProgressEvent('Random error occurred'));
     });
 
-    // it('should return expected imgData (HttpClient called once)', () => {
-    //     const expectedImgData: ImgData = EXPECTED_IMG_DATA;
-
-    //     // TODO: make a better test with something else than 'hello'
-    //     service.getImgData('hello').subscribe({
-    //         next: (response: ImgData) => {
-    //             expect(response.imgData).toEqual(expectedImgData.imgData);
+    // it('should return expected message (timer) when game page is loaded', () => {
+    //     const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
+    //     service.getTimeValue().subscribe({
+    //         next: (response: Message) => {
+    //             expect(response.title).toEqual(expectedMessage.title);
+    //             expect(response.body).toEqual(expectedMessage.body);
     //         },
     //         error: fail,
     //     });
 
-    //     const req = httpMock.expectOne(`${baseUrl}/bmp/hello`);
+    //     const req = httpMock.expectOne(`${baseUrl}/game`);
     //     expect(req.request.method).toBe('GET');
-    //     req.flush(expectedImgData);
+    //     req.flush(expectedMessage);
     // });
 });

@@ -80,7 +80,7 @@ export class CreateGamePageComponent implements AfterViewInit {
     validateForm(nbDifference: number, differenceImage: number[]) {
         this.dialog.open(DialogCreateGameComponent, {
             data: {
-                expansionRadius: (this.form.get('expansionRadius') as FormControl).value,
+                expansionRadius: parseInt((this.form.get('expansionRadius') as FormControl).value, 10),
                 src: this.createSourceImageFromCanvas(),
                 difference: this.imageDifference,
                 nbDifference,

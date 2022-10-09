@@ -28,7 +28,7 @@ describe('DifferencesAreaComponent', () => {
                 },
                 {
                     provide: DifferencesDetectionHandlerService,
-                    differenceDetectionHandlerSpy,
+                    useValue: differenceDetectionHandlerSpy,
                 },
             ],
         }).compileComponents();

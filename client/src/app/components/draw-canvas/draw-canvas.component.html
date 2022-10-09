@@ -1,5 +1,5 @@
 <div class="canvas-container">
     <canvas id="noContentCanvas" #noContentCanvas hidden width="640px" height="480px"></canvas>
     <canvas id="img" #imageDifference width="640px" height="480px"></canvas>
-    <canvas id="canvas" #paint (mousedown)="start($event)" (mousemove)="draw($event).then()" (mouseup)="stop()" width="640px" height="480px"></canvas>
+    <canvas id="canvas" #paint (mousedown)="start($event)" (mousemove)="draw($event)" (mouseup)="stop()" width="640px" height="480px"></canvas>
 </div>

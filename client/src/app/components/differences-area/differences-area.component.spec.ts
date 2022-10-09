@@ -70,4 +70,8 @@ describe('DifferencesAreaComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-});
+
+    it('should set the nb of differences found at the beginning of the game', () => {
+        spyGameInfosService.gameInformation.differences.length = 4;
+        expect(component.setNbDifferencesFound()).toEqual('0 / 4');
+    });

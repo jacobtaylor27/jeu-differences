@@ -13,4 +13,10 @@ describe('DifferencesDetectionHandlerService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+
+    it('it should set the gameOver', () => {
+        expect(service.isGameOver).toBeFalsy();
+        service.setGameOver();
+        expect(service.isGameOver).toBeTruthy();
+    });
 });

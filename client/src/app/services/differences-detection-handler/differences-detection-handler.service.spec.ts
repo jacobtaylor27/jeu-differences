@@ -50,4 +50,15 @@ describe('DifferencesDetectionHandlerService', () => {
         service.differenceNotDetected({ x: 0, y: 0 }, ctx);
         expect(spy).toHaveBeenCalledTimes(1);
     });
+
+    it('should disabled mouse for one second when difference not detected', fakeAsync(() => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const mousePosition = { x: 0, y: 0 };
+        expect(service.mouseIsDisabled).toBeFalsy();
+        service.differenceNotDetected(mousePosition, ctx);
+        expect(service.mouseIsDisabled).toBeTruthy();
+        tick(1000);
+        expect(service.mouseIsDisabled).toBeFalsy();
+    }));
 });

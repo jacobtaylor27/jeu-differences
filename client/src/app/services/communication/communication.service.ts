@@ -22,10 +22,6 @@ export class CommunicationService {
         return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
     }
 
-    getTimeValue(): Observable<Message> {
-        return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
-    }
-
     basicPost(message: Message): Observable<void> {
         return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
     }
@@ -99,4 +95,8 @@ export class CommunicationService {
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }
+
+    // getTimeValue(): Observable<Message> {
+    //     return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
+    // }
 }

@@ -14,7 +14,10 @@ describe('DifferencesAreaComponent', () => {
 
     beforeEach(async () => {
         spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameInformation', 'getPlayerName']);
-        differenceDetectionHandlerSpy = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['resetNumberDifferencesFound']);
+        differenceDetectionHandlerSpy = jasmine.createSpyObj('DifferencesDetectionHandlerService', [
+            'resetNumberDifferencesFound',
+            'setNumberDifferencesFound',
+        ]);
         await TestBed.configureTestingModule({
             declarations: [DifferencesAreaComponent, TimerStopwatchComponent],
             imports: [AppMaterialModule],

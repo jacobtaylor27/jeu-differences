@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CREATE_GAME, CREATE_GAME_ROOM, VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
@@ -75,7 +75,7 @@ export class CommunicationService {
     validateCoordinates(id: string, coordinate: Vec2) {
         return this.http
             .post<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>(
-                `${this.baseUrl}/game/difference`,
+                VALIDATE_COORD,
                 {
                     x: coordinate.x,
                     y: coordinate.y,

@@ -44,16 +44,22 @@ export class CommunicationService {
             );
     }
     createGame(image: { original: ImageData; modify: ImageData }, radius: number, name: string) {
-        return this.http.post<Record<string, never>>(
-            CREATE_GAME,
-            {
-                original: { width: image.original.width, height: image.original.height, data: Array.from(image.original.data) },
-                modify: { width: image.modify.width, height: image.modify.height, data: Array.from(image.modify.data) },
-                differenceRadius: radius,
-                name,
-            },
-            { observe: 'response' },
-        );
+        return this.http
+            .post<Record<string, never>>(
+                CREATE_GAME,
+                {
+                    original: { width: image.original.width, height: image.original.height, data: Array.from(image.original.data) },
+                    modify: { width: image.modify.width, height: image.modify.height, data: Array.from(image.modify.data) },
+                    differenceRadius: radius,
+                    name,
+                },
+                { observe: 'response' },
+            )
+            .pipe(
+                catchError(() => {
+                    return of(null);
+                }),
+            );
     }
 
     createGameRoom(playerName: string, gameMode: GameMode, gameId: string) {

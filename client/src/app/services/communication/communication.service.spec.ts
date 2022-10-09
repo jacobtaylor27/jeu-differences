@@ -161,6 +161,26 @@ describe('CommunicationService', () => {
         });
     });
 
+    it('should handle http error when create a game', () => {
+        service
+            .createGame(
+                {
+                    original: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                    modify: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                },
+                3,
+                '',
+            )
+            .subscribe({
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                next: () => {},
+                error: fail,
+            });
+        const req = httpMock.expectOne(CREATE_GAME);
+        expect(req.request.method).toBe('POST');
+        req.error(new ProgressEvent('Random error occurred'));
+    });
+
     // it('should return expected message (timer) when game page is loaded', () => {
     //     const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
     //     service.getTimeValue().subscribe({

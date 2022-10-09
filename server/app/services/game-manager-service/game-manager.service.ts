@@ -1,10 +1,9 @@
-import { GameService } from '@app/services/game-info-service/game-info.service';
-import { Service } from 'typedi';
-// import { Coordinate } from '@common/coordinate';
 import { Game } from '@app/classes/game/game';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { GameService } from '@app/services/game-info-service/game-info.service';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
+import { Service } from 'typedi';
 
 @Service()
 export class GameManagerService {
@@ -20,10 +19,7 @@ export class GameManagerService {
 
     isDifference(gameId: string, coord: Coordinate) {
         const game = this.findGame(gameId);
-        if (!game) {
-            return null;
-        }
-        return game.isDifferenceFound(coord);
+        return !game ? null : game.isDifferenceFound(coord);
     }
 
     isGameFound(gameId: string) {

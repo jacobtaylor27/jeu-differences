@@ -75,3 +75,11 @@ describe('DifferencesAreaComponent', () => {
         spyGameInfosService.gameInformation.differences.length = 4;
         expect(component.setNbDifferencesFound()).toEqual('0 / 4');
     });
+
+    it('should set the nb of differences found during the game', () => {
+        differenceDetectionHandlerSpy.nbTotalDifferences = 5;
+        differenceDetectionHandlerSpy.nbDifferencesFound = 1;
+
+        expect(component.setNbDifferencesFound()).toEqual('1 / 5');
+    });
+});

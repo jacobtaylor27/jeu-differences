@@ -1,12 +1,11 @@
 import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { Canvas } from '@app/enums/canvas';
 import { Theme } from '@app/enums/theme';
-import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
@@ -36,35 +35,22 @@ export class CreateGamePageComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.toolBoxService.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
-            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
-        });
-        const resetCanvas = () => {
-            const ctx = this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            ctx.rect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-            ctx.fillStyle = 'white';
-            ctx.fill();
-        };
-        this.toolBoxService.$resetSource.subscribe(() => resetCanvas());
+        this.toolBoxService.$uploadImageInSource.subscribe((newImage: ImageBitmap) =>
+            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0),
+        );
+
+        this.toolBoxService.$resetSource.subscribe(() => this.resetCanvas(this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D));
         this.drawService.$differenceImage.subscribe((newImageDifference: ImageData) => {
             this.imageDifference = newImageDifference;
         });
         this.toolBoxService.$resetDiff.next();
-        resetCanvas();
+        this.resetCanvas(this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D);
     }
 
-    differenceValidator(): ValidatorFn {
-        return (control: AbstractControl): ValidationErrors | null => {
-            const numberDifference = this.calculateDifference();
-            const difference: Vec2 = { x: 2, y: 10 };
-            return numberDifference < difference.y && numberDifference > difference.x ? { difference: { value: control.value } } : null;
-        };
-    }
-
-    calculateDifference() {
-        // remove this line and add the validation function when is done
-        const difference = 5;
-        return difference;
+    resetCanvas(ctx: CanvasRenderingContext2D) {
+        ctx.rect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        ctx.fillStyle = 'white';
+        ctx.fill();
     }
 
     createSourceImageFromCanvas(): ImageData {

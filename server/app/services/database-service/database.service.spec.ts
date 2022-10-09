@@ -79,7 +79,7 @@ describe.only('Database service', () => {
         await expect(databaseService['isCollectionEmpty'](DB_GAME_COLLECTION)).to.eventually.equal(false);
     });
 
-    it('initializeGameCollection() should be called when calling populateDatabase for the first time', async () => {
+    it.only('initializeGameCollection() should be called when the gameCollection is empty', async () => {
         await databaseService.start();
         const spy = sinon.spy(databaseService['initializeGameCollection']);
         await databaseService.populateDatabase();

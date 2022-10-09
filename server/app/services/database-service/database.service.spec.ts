@@ -79,20 +79,5 @@ describe.only('Database service', () => {
         await expect(databaseService['isCollectionEmpty'](DB_GAME_COLLECTION)).to.eventually.equal(false);
     });
 
-    it.only('initializeGameCollection() should be called when the gameCollection is empty', async () => {
-        await databaseService.start();
-        const spy = sinon.spy(databaseService['initializeGameCollection']);
-        await databaseService.populateDatabase();
-        expect(spy.calledOnce).to.equal(true);
-    });
-
-    it('initializeGameCollection() should not be called when calling populateDatabase for a second time', async () => {
-        await databaseService.start();
-        await databaseService.populateDatabase();
-        const spy = sinon.spy(databaseService['initializeGameCollection']);
-        await databaseService.populateDatabase();
-        expect(spy.calledOnce).to.equal(false);
-    });
-
     it('The games in the db should correspond to the ones added ', async () => {});
 });

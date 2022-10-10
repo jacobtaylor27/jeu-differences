@@ -37,7 +37,7 @@ fdescribe('DifferencesDetectionHandlerService', () => {
     });
 
     it('should play sound', () => {
-        // Needs help
+        // Needs help :(
         let spy = spyOn(service, 'playWrongSound');
 
         service.playWrongSound();

@@ -33,6 +33,11 @@ export class DifferencesDetectionHandlerService {
         wrongSound.play();
     }
 
+    playCorrectSound() {
+        const correctSound = new Audio('../assets/sounds/correctanswer.wav');
+        correctSound.play();
+    }
+
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         this.playWrongSound();
         ctx.fillStyle = 'red';

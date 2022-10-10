@@ -29,13 +29,14 @@ export class DifferencesDetectionHandlerService {
     }
 
     playWrongSound() {
-        const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
-        wrongSound.play();
+        this.playSound(new Audio('../assets/sounds/wronganswer.wav'));
     }
 
     playCorrectSound() {
-        const correctSound = new Audio('../assets/sounds/correctanswer.wav');
-        correctSound.play();
+        this.playSound(new Audio('../assets/sounds/correctanswer.wav'));
+    }
+    playSound(sound: HTMLAudioElement) {
+        sound.play();
     }
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {

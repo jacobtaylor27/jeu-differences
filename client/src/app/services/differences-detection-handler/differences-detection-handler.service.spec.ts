@@ -1,7 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SIZE } from '@app/constants/canvas';
-
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 fdescribe('DifferencesDetectionHandlerService', () => {
@@ -37,33 +36,49 @@ fdescribe('DifferencesDetectionHandlerService', () => {
     });
 
     it('should play sound', () => {
-        // Needs help :(
-        let spy = spyOn(service, 'playWrongSound');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const expectedAudio = { play: () => {} } as HTMLAudioElement;
+        const spy = spyOn(expectedAudio, 'play');
 
+        service.playSound(expectedAudio);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should play wrong sound', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyPlaySound = spyOn(service, 'playSound').and.callFake(() => {});
         service.playWrongSound();
-        expect(spy).toHaveBeenCalled();
+        expect(spyPlaySound).toHaveBeenCalled();
+    });
 
-        spy = spyOn(service, 'playCorrectSound');
-
+    it('should play correct sound', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyPlaySound = spyOn(service, 'playSound').and.callFake(() => {});
         service.playCorrectSound();
-        expect(spy).toHaveBeenCalled();
+        expect(spyPlaySound).toHaveBeenCalled();
     });
 
     it('should play wrong sound when difference not detected', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        const spy = spyOn(service, 'playWrongSound');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spy = spyOn(service, 'playWrongSound').and.callFake(() => {});
         service.differenceNotDetected({ x: 0, y: 0 }, ctx);
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should disabled mouse for one second when difference not detected', fakeAsync(() => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         const mousePosition = { x: 0, y: 0 };
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyWrongPlaySound = spyOn(service, 'playWrongSound').and.callFake(() => {});
+        const spyFillText = spyOn(ctx, 'fillText');
         expect(service.mouseIsDisabled).toBeFalsy();
         service.differenceNotDetected(mousePosition, ctx);
+        expect(spyWrongPlaySound).toHaveBeenCalled();
+        expect(spyFillText).toHaveBeenCalled();
         expect(service.mouseIsDisabled).toBeTruthy();
         tick(1000);
         expect(service.mouseIsDisabled).toBeFalsy();
@@ -71,22 +86,24 @@ fdescribe('DifferencesDetectionHandlerService', () => {
 
     it('should play correct sound when difference not detected', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        const spy = spyOn(service, 'playCorrectSound');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spy = spyOn(service, 'playCorrectSound').and.callFake(() => {});
         service.differenceDetected(ctx, ctx, []);
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should call display and clear ctx', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        const spyDisplay = spyOn<DifferencesDetectionHandlerService, any>(service, 'displayDifferenceTemp');
-        const spyClear = spyOn<DifferencesDetectionHandlerService, any>(service, 'clearDifference');
-
+        const spyDisplay = spyOn(Object.getPrototypeOf(service), 'displayDifferenceTemp');
+        const spyClear = spyOn(Object.getPrototypeOf(service), 'clearDifference');
+        const spyPlayCorrectSound = spyOn(service, 'playCorrectSound');
         service.differenceDetected(ctx, ctx, []);
 
+        expect(spyPlayCorrectSound).toHaveBeenCalled();
         expect(spyDisplay).toHaveBeenCalled();
         expect(spyClear).toHaveBeenCalled();
 
@@ -99,21 +116,21 @@ fdescribe('DifferencesDetectionHandlerService', () => {
     it('should draw on canvas', fakeAsync(() => {
         // NEED HELP : j'arrive pas a call fillRect
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
         const clearRectSpy = spyOn(ctx, 'clearRect');
-        // const fillRectSpy = spyOn(ctx, 'fillRect');
+        const fillRectSpy = spyOn(ctx, 'fillRect');
 
-        service['clearDifference'](ctx, [{ x: 1, y: 3 }]);
+        service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }]);
+        tick(1500);
+        expect(fillRectSpy).toHaveBeenCalled();
+        tick(1500);
         expect(clearRectSpy).toHaveBeenCalled();
-
-        // tick(2500);
-        // expect(fillRectSpy).toHaveBeenCalled();
     }));
 
     it('should clear on canvas', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
         const clearRectSpy = spyOn(ctx, 'clearRect');
         service['clearDifference'](ctx, [{ x: 1, y: 3 }]);

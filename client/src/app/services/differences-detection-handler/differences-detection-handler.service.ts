@@ -64,12 +64,12 @@ export class DifferencesDetectionHandlerService {
 
     private displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
         let counter = 0;
-        const a = setInterval(() => {
+        const interval = setInterval(() => {
             for (const coordinate of coords) {
                 ctx.clearRect(coordinate.x, coordinate.y, 1, 1);
             }
             if (counter === 5) {
-                clearInterval(a);
+                clearInterval(interval);
             }
             if (counter % 2 === 0) {
                 ctx.fillStyle = 'yellow';

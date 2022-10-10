@@ -4,7 +4,7 @@ import { GameStatus } from '@app/enum/game-status';
 
 export class InitTimerState extends GameState {
     next(): void {
-        this.context.transitionTo(new FindDifferenceState());
+        this.context.transitionTo(new FindDifferenceState()); // change to switch limited or classic mode different state machine
     }
 
     status(): GameStatus {

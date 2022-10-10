@@ -35,6 +35,7 @@ export class DifferencesDetectionHandlerService {
     playCorrectSound() {
         this.playSound(new Audio('../assets/sounds/correctanswer.wav'));
     }
+
     playSound(sound: HTMLAudioElement) {
         sound.play();
     }

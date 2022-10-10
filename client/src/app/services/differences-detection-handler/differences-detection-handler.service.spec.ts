@@ -78,4 +78,16 @@ fdescribe('DifferencesDetectionHandlerService', () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
+    it('should call display and clear ctx', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        const spyDisplay = spyOn<DifferencesDetectionHandlerService, any>(service, 'displayDifferenceTemp');
+        const spyClear = spyOn<DifferencesDetectionHandlerService, any>(service, 'clearDifference');
+
+        service.differenceDetected(ctx, ctx, []);
+
+        expect(spyDisplay).toHaveBeenCalled();
+        expect(spyClear).toHaveBeenCalled();
+    });
 });

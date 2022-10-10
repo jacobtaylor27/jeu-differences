@@ -52,8 +52,7 @@ export class DifferencesDetectionHandlerService {
     }
 
     differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
-        const correctSound = new Audio('../assets/sounds/correctanswer.wav');
-        correctSound.play();
+        this.playCorrectSound();
         this.timer.differenceFind.next();
         if (this.isGameOver) {
             this.timer.gameOver.next();

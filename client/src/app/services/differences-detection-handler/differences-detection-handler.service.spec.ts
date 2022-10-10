@@ -90,4 +90,12 @@ fdescribe('DifferencesDetectionHandlerService', () => {
         expect(spyDisplay).toHaveBeenCalled();
         expect(spyClear).toHaveBeenCalled();
     });
+    it('should clear on canvas', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        const clearRectSpy = spyOn(ctx, 'clearRect');
+        service['clearDifference'](ctx, [{ x: 1, y: 3 }]);
+        expect(clearRectSpy).toHaveBeenCalled();
+    });
 });

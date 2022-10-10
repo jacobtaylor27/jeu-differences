@@ -38,13 +38,18 @@ fdescribe('DifferencesDetectionHandlerService', () => {
 
     it('should play sound', () => {
         // Needs help
-        const spy = spyOn(service, 'playWrongSound');
+        let spy = spyOn(service, 'playWrongSound');
 
         service.playWrongSound();
         expect(spy).toHaveBeenCalled();
+
+        spy = spyOn(service, 'playCorrectSound');
+
+        service.playCorrectSound();
+        expect(spy).toHaveBeenCalled();
     });
 
-    it('should create play wrong sound when difference not detected', () => {
+    it('should play wrong sound when difference not detected', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 

@@ -68,4 +68,14 @@ fdescribe('DifferencesDetectionHandlerService', () => {
         tick(1000);
         expect(service.mouseIsDisabled).toBeFalsy();
     }));
+
+    it('should play correct sound when difference not detected', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        const spy = spyOn(service, 'playCorrectSound');
+        service.differenceDetected(ctx, ctx, []);
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
 });

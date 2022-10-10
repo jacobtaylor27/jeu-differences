@@ -89,6 +89,11 @@ fdescribe('DifferencesDetectionHandlerService', () => {
 
         expect(spyDisplay).toHaveBeenCalled();
         expect(spyClear).toHaveBeenCalled();
+
+        service.isGameOver = true;
+        service.differenceDetected(ctx, ctx, []);
+        expect(spyDisplay).toHaveBeenCalled();
+        expect(spyClear).toHaveBeenCalled();
     });
 
     it('should draw on canvas', fakeAsync(() => {

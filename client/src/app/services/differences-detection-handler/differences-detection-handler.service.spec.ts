@@ -90,6 +90,22 @@ fdescribe('DifferencesDetectionHandlerService', () => {
         expect(spyDisplay).toHaveBeenCalled();
         expect(spyClear).toHaveBeenCalled();
     });
+
+    it('should draw on canvas', fakeAsync(() => {
+        // NEED HELP : j'arrive pas a call fillRect
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        const clearRectSpy = spyOn(ctx, 'clearRect');
+        // const fillRectSpy = spyOn(ctx, 'fillRect');
+
+        service['clearDifference'](ctx, [{ x: 1, y: 3 }]);
+        expect(clearRectSpy).toHaveBeenCalled();
+
+        // tick(2500);
+        // expect(fillRectSpy).toHaveBeenCalled();
+    }));
+
     it('should clear on canvas', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;

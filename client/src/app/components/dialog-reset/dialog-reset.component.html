@@ -2,7 +2,7 @@
 <form (ngSubmit)="onSubmit()">
     <mat-dialog-content>
         <mat-list role="list">
-            <h3>Selectioner les canvas que vous réinitialiser</h3>
+            <h3>Sélectionner les canvas que vous voulez réinitialiser</h3>
             <app-canvas-selector (canvasSelector)="this.isCanvasReset = $event"></app-canvas-selector>
         </mat-list>
     </mat-dialog-content>

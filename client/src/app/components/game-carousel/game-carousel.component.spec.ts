@@ -51,6 +51,7 @@ describe('GameCarouselComponent', () => {
 
     it('should fetch game information on init', () => {
         const spyFetch = spyOn(component, 'fetchGameInformation');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         spyFetch.and.callFake(() => {});
         component.ngOnInit();
         expect(spyFetch).toHaveBeenCalled();

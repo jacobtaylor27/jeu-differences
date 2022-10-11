@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CanvasSelectorComponent } from '@app/components/canvas-selector/canvas-selector.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
 import { AdminPageComponent } from '@app/pages/admin-page/admin-page.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
@@ -17,6 +18,7 @@ const routes: Routes = [
     { path: 'material', component: MaterialPageComponent },
     { path: 'draw', component: DrawCanvasComponent },
     { path: 'admin', component: AdminPageComponent },
+    { path: 'canvas', component: CanvasSelectorComponent },
     { path: '**', redirectTo: '/home' },
 ];
 

@@ -174,8 +174,9 @@ describe('CommunicationService', () => {
             )
             .subscribe({
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
-                next: () => {},
-                error: fail,
+                next: (response) => {
+                    expect(response).toBeNull();
+                },
             });
         const req = httpMock.expectOne(CREATE_GAME);
         expect(req.request.method).toBe('POST');
@@ -194,9 +195,9 @@ describe('CommunicationService', () => {
 
     it('should handle http error when create a game room', () => {
         service.createGameRoom('playername', GameMode.Classic, 'gameid').subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            next: () => {},
-            error: fail,
+            next: (response) => {
+                expect(response).toBeNull();
+            },
         });
         const req = httpMock.expectOne(CREATE_GAME_ROOM + '/gameid');
         expect(req.request.method).toBe('POST');
@@ -216,8 +217,9 @@ describe('CommunicationService', () => {
 
     it('should handle http error when validate coord', () => {
         service.validateCoordinates('gameid', { x: 0, y: 0 }).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            next: () => {},
+            next: (response) => {
+                expect(response).toBeNull();
+            },
             error: fail,
         });
         const req = httpMock.expectOne(VALIDATE_COORD);

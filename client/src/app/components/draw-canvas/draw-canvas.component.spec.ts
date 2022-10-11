@@ -1,6 +1,6 @@
 import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT } from '@app/constants/canvas';
+import { DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -36,6 +36,14 @@ describe('DrawCanvasComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should get the width of the canvas', () => {
+        expect(component.width).toEqual(SIZE.x);
+    });
+
+    it('should get the height of the canvas', () => {
+        expect(component.height).toEqual(SIZE.y);
     });
 
     it('start should change the click state and call to reposition the pointer', () => {

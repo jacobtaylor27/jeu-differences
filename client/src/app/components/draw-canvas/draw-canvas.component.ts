@@ -26,6 +26,14 @@ export class DrawCanvasComponent implements AfterViewInit {
         });
     }
 
+    get width() {
+        return SIZE.x;
+    }
+
+    get height() {
+        return SIZE.y;
+    }
+
     ngAfterViewInit() {
         this.toolBoxService.$uploadImageInDiff.subscribe(async (newImage: ImageBitmap) => {
             (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
@@ -42,7 +50,6 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
         );
     }
-
     reset(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
         this.resetCanvas(ctxCanvas);
         this.resetImage(ctxImage);

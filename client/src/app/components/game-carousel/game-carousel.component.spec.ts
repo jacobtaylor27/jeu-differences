@@ -2,7 +2,7 @@
 // import { GameCardComponent } from '@app/components/game-card/game-card.component';
 // import { AppMaterialModule } from '@app/modules/material.module';
 // import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
-// import { CommunicationService } from '@app/services/communication.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
 // import { GameCarouselComponent } from './game-carousel.component';
 
 // describe('GameCarouselComponent', () => {

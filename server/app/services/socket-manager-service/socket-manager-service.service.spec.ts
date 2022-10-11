@@ -14,6 +14,13 @@ describe('SocketManager', () => {
         service = server['socketManager'];
     });
 
+
+    it('set the server', () => {
+        service.server = server['server'];
+        expect(service['sio']).to.not.equal(undefined);
+    });
+
+    });
     afterEach(() => {
         restore();
     });

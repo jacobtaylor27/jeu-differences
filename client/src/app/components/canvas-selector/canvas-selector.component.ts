@@ -12,7 +12,13 @@ export class CanvasSelectorComponent {
     size: Vec2 = { x: 300, y: 300 };
     isCanvasSelect = { draw: false, compare: false };
 
-}
+    select(typeCanvas: string, event: Event) {
+        const ctx: CanvasRenderingContext2D = (event.target as HTMLCanvasElement).getContext('2d') as CanvasRenderingContext2D;
+        const canvasState = this.canvasManager(ctx, typeCanvas);
+        this.isCanvasSelect.compare = typeCanvas === 'compare' ? canvasState : this.isCanvasSelect.compare;
+        this.isCanvasSelect.draw = typeCanvas === 'draw' ? canvasState : this.isCanvasSelect.draw;
+    }
+
     erase(ctx: CanvasRenderingContext2D) {
         ctx.clearRect(0, 0, this.size.x, this.size.y);
     }

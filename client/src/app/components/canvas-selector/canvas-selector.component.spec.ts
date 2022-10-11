@@ -28,3 +28,11 @@ describe('CanvasSelectorComponent', () => {
         expect(spyFill).toHaveBeenCalled();
         expect(spyRect).toHaveBeenCalled();
     });
+
+    it('should erase the rectangle', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const expectedCtx = { clearRect: () => {} } as unknown as CanvasRenderingContext2D;
+        const spyClearRect = spyOn(expectedCtx, 'clearRect');
+        component.erase(expectedCtx);
+        expect(spyClearRect).toHaveBeenCalled();
+    });

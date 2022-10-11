@@ -68,6 +68,7 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 -> 1 second  */
     it('should disabled mouse for one second when difference not detected', fakeAsync(() => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -113,6 +114,7 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(spyClear).toHaveBeenCalled();
     });
 
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds */
     it('should draw on canvas', fakeAsync(() => {
         // NEED HELP : j'arrive pas a call fillRect
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);

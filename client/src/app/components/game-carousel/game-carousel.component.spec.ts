@@ -56,20 +56,41 @@ describe('GameCarouselComponent', () => {
         expect(spyFetch).toHaveBeenCalled();
     });
 
-    //     it('onClickPrevious should call method showPreviousFour from gameCarouselService', () => {
-    //         // component.onClickPrevious();
-    //         // expect(spyGameCarouselService.showPreviousFour).toHaveBeenCalled();
-    //     });
+    it('should return if the carousel has cards', () => {
+        component.hasCards();
+        expect(spyGameCarouselService.hasCards).toHaveBeenCalled();
+    });
 
-    //     it('onClickNext should call method showNextFour from gameCarouselService', () => {
-    //         // component.onClickNext();
-    //         // expect(spyGameCarouselService.showNextFour).toHaveBeenCalled();
-    //     });
+    it('fetchGameInformation should fetch the games properly', () => {
+        spyCommunicationService.getAllGameInfos.and.callFake(() => {
+            return of({ body: { games: [{}] } } as HttpResponse<{ games: GameInfo[] }>);
+        });
+        component.fetchGameInformation();
+        expect(spyCommunicationService.getAllGameInfos).toHaveBeenCalled();
 
-    //     it('hasCardsBefore should call method hasPreviousCards from gameCarouselService', () => {
-    //         // expect(component.hasCardsBefore()).toBeFalsy();
-    //         // expect(spyGameCarouselService.hasPreviousCards).toHaveBeenCalled();
-    //     });
+        spyCommunicationService.getAllGameInfos.and.rejectWith(undefined);
+        expect(spyCommunicationService.getAllGameInfos).toHaveBeenCalled();
+    });
+
+    it('resetStartingRange should call resetRange from the gameCarouselService', () => {
+        component.resetStartingRange();
+        expect(spyGameCarouselService.resetRange).toHaveBeenCalled();
+    });
+
+    it('onClickPrevious should call method showPreviousFour from gameCarouselService', () => {
+        component.onClickPrevious();
+        expect(spyGameCarouselService.showPreviousFour).toHaveBeenCalled();
+    });
+
+    it('onClickNext should call method showNextFour from gameCarouselService', () => {
+        component.onClickNext();
+        expect(spyGameCarouselService.showNextFour).toHaveBeenCalled();
+    });
+
+    it('hasCardsBefore should call method hasPreviousCards from gameCarouselService', () => {
+        expect(component.hasCardsBefore()).toBeFalsy();
+        expect(spyGameCarouselService.hasPreviousCards).toHaveBeenCalled();
+    });
 
     //     it('hasCardsAfter should call method hasNextCards from gameCarouselService', () => {
     //         // expect(component.hasCardsAfter()).toBeFalsy();

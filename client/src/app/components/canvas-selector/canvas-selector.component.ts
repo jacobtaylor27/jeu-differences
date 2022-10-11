@@ -22,11 +22,15 @@ export class CanvasSelectorComponent {
     }
 
     canvasManager(ctx: CanvasRenderingContext2D, typeCanvas: string) {
-        if ((!this.isCanvasSelect.compare && typeCanvas === 'compare') || (!this.isCanvasSelect.draw && typeCanvas === 'draw')) {
+        if (this.isOneCanvasSelect(typeCanvas)) {
             this.draw(ctx);
         } else {
             this.erase(ctx);
         }
+        return this.isOneCanvasSelect(typeCanvas);
+    }
+
+    isOneCanvasSelect(typeCanvas: string) {
         return (!this.isCanvasSelect.compare && typeCanvas === 'compare') || (!this.isCanvasSelect.draw && typeCanvas === 'draw');
     }
 

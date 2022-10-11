@@ -19,6 +19,15 @@ export class CanvasSelectorComponent {
         this.isCanvasSelect.draw = typeCanvas === 'draw' ? canvasState : this.isCanvasSelect.draw;
     }
 
+    canvasManager(ctx: CanvasRenderingContext2D, typeCanvas: string) {
+        if ((!this.isCanvasSelect.compare && typeCanvas === 'compare') || (!this.isCanvasSelect.draw && typeCanvas === 'draw')) {
+            this.draw(ctx);
+        } else {
+            this.erase(ctx);
+        }
+        return (!this.isCanvasSelect.compare && typeCanvas === 'compare') || (!this.isCanvasSelect.draw && typeCanvas === 'draw');
+    }
+
     erase(ctx: CanvasRenderingContext2D) {
         ctx.clearRect(0, 0, this.size.x, this.size.y);
     }

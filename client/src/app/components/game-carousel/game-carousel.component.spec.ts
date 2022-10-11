@@ -92,8 +92,8 @@ describe('GameCarouselComponent', () => {
         expect(spyGameCarouselService.hasPreviousCards).toHaveBeenCalled();
     });
 
-    //     it('hasCardsAfter should call method hasNextCards from gameCarouselService', () => {
-    //         // expect(component.hasCardsAfter()).toBeFalsy();
-    //         // expect(spyGameCarouselService.hasNextCards).toHaveBeenCalled();
-    //     });
+    it('hasCardsAfter should call method hasNextCards from gameCarouselService', () => {
+        expect(component.hasCardsAfter()).toBeFalsy();
+        expect(spyGameCarouselService.hasNextCards).toHaveBeenCalled();
+    });
 });

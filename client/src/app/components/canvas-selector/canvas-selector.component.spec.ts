@@ -56,3 +56,22 @@ describe('CanvasSelectorComponent', () => {
         component.canvasManager({} as CanvasRenderingContext2D, 'compare');
         expect(spyErase).toHaveBeenCalledTimes(2);
     });
+
+    it('should select the canvas selected by the user', () => {
+        component.isCanvasSelect = { draw: false, compare: false };
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyCanvasManager = spyOn(component, 'canvasManager').and.callFake(() => true);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyCanvasSelector = spyOn(component.canvasSelector, 'emit').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        component.select('draw', { target: { getContext: () => {} } } as unknown as Event);
+        expect(spyCanvasManager).toHaveBeenCalled();
+        expect(spyCanvasSelector).toHaveBeenCalled();
+        expect(component.isCanvasSelect.draw).toBeTrue();
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        component.select('compare', { target: { getContext: () => {} } } as unknown as Event);
+        expect(spyCanvasManager).toHaveBeenCalledTimes(2);
+        expect(spyCanvasSelector).toHaveBeenCalledTimes(2);
+        expect(component.isCanvasSelect.compare).toBeTrue();
+    });
+});

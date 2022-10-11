@@ -2,7 +2,7 @@
 <form (ngSubmit)="onSubmit()">
     <mat-dialog-content>
         <mat-list role="list">
-            <h2>Selection le canvas ou vous voulez televerser l'image</h2>
+            <h2>Sélectioner le canvas où vous voulez téléverser l'image</h2>
             <app-canvas-selector (canvasSelector)="this.isCanvasUpload = $event"></app-canvas-selector>
             <input mat-fab type="file" color="primary" accept=".bmp" (change)="this.uploadImage($event)" />
             <mat-error *ngIf="!this.isPropertiesImageCorrect.type">Le type d'image doit etre un bitmap</mat-error>

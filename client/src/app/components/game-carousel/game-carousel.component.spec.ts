@@ -23,20 +23,21 @@ describe('GameCarouselComponent', () => {
             'hasPreviousCards',
             'hasNextCards',
             'hasCards',
+            'setCards',
         ]);
-        // spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos']);
         await TestBed.configureTestingModule({
-            imports: [AppMaterialModule],
+            imports: [AppMaterialModule, HttpClientModule],
             declarations: [GameCarouselComponent, GameCardComponent],
             providers: [
                 {
                     provide: GameCarouselService,
                     useValue: spyGameCarouselService,
                 },
-                // {
-                //     provide: CommunicationService,
-                //     useValue: spyCommunicationService,
-                // },
+                {
+                    provide: CommunicationService,
+                    useValue: spyCommunicationService,
+                },
             ],
         }).compileComponents();
 

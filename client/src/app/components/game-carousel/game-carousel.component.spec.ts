@@ -49,10 +49,12 @@ describe('GameCarouselComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    //     it('resetStartingRange should call resetRange from the gameCarouselService', () => {
-    //         // component.resetStartingRange();
-    //         // expect(spyGameCarouselService.resetRange).toHaveBeenCalled();
-    //     });
+    it('should fetch game information on init', () => {
+        const spyFetch = spyOn(component, 'fetchGameInformation');
+        spyFetch.and.callFake(() => {});
+        component.ngOnInit();
+        expect(spyFetch).toHaveBeenCalled();
+    });
 
     //     it('onClickPrevious should call method showPreviousFour from gameCarouselService', () => {
     //         // component.onClickPrevious();

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BMP_HEADER_OFFSET, FORMAT_IMAGE, IMAGE_TYPE, SIZE } from '@app/constants/canvas';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { ImageCorrect } from '@app/interfaces/image-correct';
@@ -11,18 +10,13 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./dialog-upload-form.component.scss'],
 })
 export class DialogUploadFormComponent {
-    form: FormGroup;
+    isCanvasUpload = { draw: false, compare: false };
     isPropertiesImageCorrect: ImageCorrect = { size: true, type: true, format: true };
     img: ImageBitmap;
     isFormSubmitted: boolean = false;
     typePropagateCanvasEvent: typeof PropagateCanvasEvent = PropagateCanvasEvent;
 
-    constructor(private toolService: ToolBoxService) {
-        this.form = new FormGroup({
-            type: new FormControl('', Validators.required),
-            uploadImage: new FormControl(null, Validators.required),
-        });
-    }
+    constructor(private toolService: ToolBoxService) {}
 
     async uploadImage(event: Event) {
         const files: FileList = (event.target as HTMLInputElement).files as FileList;
@@ -61,23 +55,14 @@ export class DialogUploadFormComponent {
     }
 
     onSubmit(): void {
-        switch ((this.form.get('type') as FormControl).value) {
-            case this.typePropagateCanvasEvent.Both: {
-                this.toolService.$uploadImageInDiff.next(this.img);
-                this.toolService.$uploadImageInSource.next(this.img);
-                break;
-            }
-            case this.typePropagateCanvasEvent.Difference: {
-                this.toolService.$uploadImageInDiff.next(this.img);
-                break;
-            }
-            case this.typePropagateCanvasEvent.Source: {
-                this.toolService.$uploadImageInSource.next(this.img);
-                break;
-            }
-            default: {
-                return;
-            }
+        if (!this.isCanvasUpload.draw && !this.isCanvasUpload.compare) {
+            return;
+        }
+        if (this.isCanvasUpload.draw) {
+            this.toolService.$uploadImageInDiff.next(this.img);
+        }
+        if (this.isCanvasUpload.compare) {
+            this.toolService.$uploadImageInSource.next(this.img);
         }
     }
 }

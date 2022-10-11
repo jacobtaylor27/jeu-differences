@@ -1,21 +1,17 @@
 <h1 mat-dialog-title>Televerser une image BMP 24-bit de taille 640x480</h1>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-        <mat-label>Quelles type d'image</mat-label>
-        <mat-select formControlName="type">
-            <mat-option [value]="this.typePropagateCanvasEvent.Difference">Fond d'écran tableau à dessin</mat-option>
-            <mat-option [value]="this.typePropagateCanvasEvent.Source">Fond d'écran tableau comparatif</mat-option>
-            <mat-option [value]="this.typePropagateCanvasEvent.Both">Fond d'écran tableau à dessin et tableau comparatif</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <input mat-fab formControlName="uploadImage" type="file" color="primary" accept=".bmp" (change)="this.uploadImage($event)" />
-    <mat-error *ngIf="!this.isPropertiesImageCorrect.type">Le type d'image doit etre un bitmap</mat-error>
-    <mat-error *ngIf="!this.isPropertiesImageCorrect.size">La taille d'image doit etre 640*480</mat-error>
-    <mat-error *ngIf="!this.isPropertiesImageCorrect.format">La format d'image doit etre 24-bits</mat-error>
+<form (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+        <mat-list role="list">
+            <h2>Selection le canvas ou vous voulez televerser l'image</h2>
+            <app-canvas-selector (canvasSelector)="this.isCanvasUpload = $event"></app-canvas-selector>
+            <input mat-fab type="file" color="primary" accept=".bmp" (change)="this.uploadImage($event)" />
+            <mat-error *ngIf="!this.isPropertiesImageCorrect.type">Le type d'image doit etre un bitmap</mat-error>
+            <mat-error *ngIf="!this.isPropertiesImageCorrect.size">La taille d'image doit etre 640*480</mat-error>
+            <mat-error *ngIf="!this.isPropertiesImageCorrect.format">La format d'image doit etre 24-bits</mat-error>
+        </mat-list>
+    </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button type="button" mat-button mat-dialog-close>Cancel</button>
-        <button mat-button [mat-dialog-close]="true" [disabled]="this.isFormSubmitted && this.form.valid ? null : 'disabled'" type="submit">
-            Upload
-        </button>
+        <button mat-button [mat-dialog-close]="true" [disabled]="this.isFormSubmitted ? null : 'disabled'" type="submit">Upload</button>
     </mat-dialog-actions>
 </form>

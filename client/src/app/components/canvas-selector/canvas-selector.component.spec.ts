@@ -19,4 +19,12 @@ describe('CanvasSelectorComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-});
+    it('should draw an rectangle', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const expectedCtx = { rect: () => {}, fill: () => {}, fillStyle: '' } as unknown as CanvasRenderingContext2D;
+        const spyRect = spyOn(expectedCtx, 'rect');
+        const spyFill = spyOn(expectedCtx, 'fill');
+        component.draw(expectedCtx);
+        expect(spyFill).toHaveBeenCalled();
+        expect(spyRect).toHaveBeenCalled();
+    });

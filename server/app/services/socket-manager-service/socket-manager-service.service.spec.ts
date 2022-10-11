@@ -14,6 +14,13 @@ describe('SocketManager', () => {
         service = server['socketManager'];
     });
 
+    it('should throw an error if the server is not set', () => {
+        try {
+            service.handleSockets();
+        } catch (err) {
+            expect(err.message).to.equal('Server instance not set');
+        }
+    });
 
     it('set the server', () => {
         service.server = server['server'];

@@ -9,3 +9,10 @@ export class SocketManagerService {
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
     }
+
+    handleSockets(): void {
+        if (!this.sio) {
+            throw new Error('Server instance not set');
+        }
+    }
+}

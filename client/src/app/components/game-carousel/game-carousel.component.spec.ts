@@ -43,7 +43,6 @@ describe('GameCarouselComponent', () => {
 
         fixture = TestBed.createComponent(GameCarouselComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it('should create', () => {

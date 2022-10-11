@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
+import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
+import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
+import { DEFAULT_PENCIL } from '@app/constants/canvas';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
-import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
-import { DEFAULT_PENCIL } from '@app/constants/canvas';
 
 @Component({
     selector: 'app-tool-box',
@@ -46,6 +46,6 @@ export class ToolBoxComponent {
     }
 
     openResetDialog(): void {
-        this.dialog.open(DialogResetComponent);
+        this.dialog.open(DialogResetComponent, { width: '750px' });
     }
 }

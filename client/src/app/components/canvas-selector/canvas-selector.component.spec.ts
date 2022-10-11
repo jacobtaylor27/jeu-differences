@@ -36,3 +36,13 @@ describe('CanvasSelectorComponent', () => {
         component.erase(expectedCtx);
         expect(spyClearRect).toHaveBeenCalled();
     });
+
+    it('should draw if the state of the canvas is false', () => {
+        component.isCanvasSelect = { draw: false, compare: false };
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDraw = spyOn(component, 'draw').and.callFake(() => {});
+        component.canvasManager({} as CanvasRenderingContext2D, 'draw');
+        expect(spyDraw).toHaveBeenCalled();
+        component.canvasManager({} as CanvasRenderingContext2D, 'compare');
+        expect(spyDraw).toHaveBeenCalledTimes(2);
+    });

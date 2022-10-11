@@ -1,14 +1,18 @@
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameCardComponent } from '@app/components/game-card/game-card.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
+import { GameInfo } from '@common/game-info';
+import { of } from 'rxjs';
 import { GameCarouselComponent } from './game-carousel.component';
 
 describe('GameCarouselComponent', () => {
     let component: GameCarouselComponent;
     let fixture: ComponentFixture<GameCarouselComponent>;
     let spyGameCarouselService: GameCarouselService;
-    // let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
     beforeEach(async () => {
         spyGameCarouselService = jasmine.createSpyObj('GameCarouselService', [

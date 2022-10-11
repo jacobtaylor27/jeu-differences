@@ -3,7 +3,7 @@ import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SIZE } from '@app/constants/canvas';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
-fdescribe('DifferencesDetectionHandlerService', () => {
+describe('DifferencesDetectionHandlerService', () => {
     let service: DifferencesDetectionHandlerService;
 
     beforeEach(() => {

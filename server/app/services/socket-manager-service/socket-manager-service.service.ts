@@ -14,5 +14,9 @@ export class SocketManagerService {
         if (!this.sio) {
             throw new Error('Server instance not set');
         }
+        this.sio.on(SocketEvent.Connection, (socket) => {
+            // eslint-disable-next-line no-console
+            console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
+        });
     }
 }

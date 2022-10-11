@@ -27,6 +27,32 @@ describe('SocketManager', () => {
         expect(service['sio']).to.not.equal(undefined);
     });
 
+    it('should connect to socket', () => {
+        let isConnect = false;
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                callback();
+            },
+        };
+        const fakeSockets = {
+            // eslint-disable-next-line no-unused-vars
+            emit: (_eventName: string, _message: string) => {
+                return;
+            },
+        };
+        service['sio'] = {
+            sockets: fakeSockets,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    isConnect = true;
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        service.handleSockets();
+        expect(isConnect).to.equal(true);
     });
     afterEach(() => {
         restore();

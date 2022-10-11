@@ -116,7 +116,6 @@ describe('DifferencesDetectionHandlerService', () => {
 
     /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds */
     it('should draw on canvas', fakeAsync(() => {
-        // NEED HELP : j'arrive pas a call fillRect
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 

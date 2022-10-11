@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogResetComponent } from '@app/components/dialog-reset/dialog-reset.component';
 import { AppMaterialModule } from '@app/modules/material.module';
@@ -31,40 +31,36 @@ describe('DialogResetComponent', () => {
     });
 
     it('should submit a form and propagate event to reset both image', () => {
-        const expectedType = 'both';
+        component.isCanvasReset = { draw: true, compare: true };
         const resetDiffSpy = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
         const resetSourceSpy = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        spyOn(component.form, 'get').and.returnValue({ value: expectedType } as FormControl);
         component.onSubmit();
         expect(resetDiffSpy).toHaveBeenCalled();
         expect(resetSourceSpy).toHaveBeenCalled();
     });
 
     it('should submit a form and propagate event to reset difference image', () => {
-        const expectedType = 'difference';
+        component.isCanvasReset = { draw: true, compare: false };
         const resetDiffSpy = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
         const resetSourceSpy = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        spyOn(component.form, 'get').and.returnValue({ value: expectedType } as FormControl);
         component.onSubmit();
         expect(resetDiffSpy).toHaveBeenCalled();
         expect(resetSourceSpy).not.toHaveBeenCalled();
     });
 
     it('should submit a form and propagate event to reset source image', () => {
-        const expectedType = 'source';
+        component.isCanvasReset = { draw: false, compare: true };
         const resetDiffSpy = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
         const resetSourceSpy = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        spyOn(component.form, 'get').and.returnValue({ value: expectedType } as FormControl);
         component.onSubmit();
         expect(resetDiffSpy).not.toHaveBeenCalled();
         expect(resetSourceSpy).toHaveBeenCalled();
     });
 
     it('should not submit a form and propagate event to reset image if the value is not valid', () => {
-        const expectedType = '';
+        component.isCanvasReset = { draw: false, compare: false };
         const resetDiffSpy = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
         const resetSourceSpy = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        spyOn(component.form, 'get').and.returnValue({ value: expectedType } as FormControl);
         component.onSubmit();
         expect(resetDiffSpy).not.toHaveBeenCalled();
         expect(resetSourceSpy).not.toHaveBeenCalled();

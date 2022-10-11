@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
@@ -9,32 +8,19 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./dialog-reset.component.scss'],
 })
 export class DialogResetComponent {
-    form: FormGroup;
     typePropagateCanvasEvent: typeof PropagateCanvasEvent = PropagateCanvasEvent;
+    isCanvasReset = { draw: false, compare: false };
+    constructor(private toolService: ToolBoxService) {}
 
-    constructor(private toolService: ToolBoxService) {
-        this.form = new FormGroup({
-            reset: new FormControl('', Validators.required),
-        });
-    }
     onSubmit() {
-        switch ((this.form.get('reset') as FormControl).value) {
-            case this.typePropagateCanvasEvent.Both: {
-                this.toolService.$resetDiff.next();
-                this.toolService.$resetSource.next();
-                break;
-            }
-            case this.typePropagateCanvasEvent.Difference: {
-                this.toolService.$resetDiff.next();
-                break;
-            }
-            case this.typePropagateCanvasEvent.Source: {
-                this.toolService.$resetSource.next();
-                break;
-            }
-            default: {
-                return;
-            }
+        if (!this.isCanvasReset.draw && !this.isCanvasReset.compare) {
+            return;
+        }
+        if (this.isCanvasReset.draw) {
+            this.toolService.$resetDiff.next();
+        }
+        if (this.isCanvasReset.compare) {
+            this.toolService.$resetSource.next();
         }
     }
 }

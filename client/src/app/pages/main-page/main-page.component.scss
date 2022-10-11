@@ -28,7 +28,7 @@ span {
 p {
     text-align: right;
 }
-button {
+.optionsButton {
     margin-top: 2vh;
     border: none;
     color: white;
@@ -49,4 +49,10 @@ button {
 }
 li {
     text-align: right;
+}
+.home-button {
+    margin-right: 0.5vw;
+}
+.header-toolbar {
+    height: 10vh;
 }

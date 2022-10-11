@@ -1,9 +1,8 @@
 <div class="main" [ngClass]="theme.ClassName">
-    <mat-toolbar color="primary">
-        <button mat-button routerLink="/admin">
+    <mat-toolbar class="header-toolbar" color="primary">
+        <button mat-fab  color="primary" routerLink="/admin">
             <mat-icon>home</mat-icon>
-        </button>
-        <span>CRÉATION DE PARTIE</span>
+        </button>Création de partie
     </mat-toolbar>
     <div class="space-under-title-bar"></div>
     <form [formGroup]="this.form" (ngSubmit)="isGameValid()">

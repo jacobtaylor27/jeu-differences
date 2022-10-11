@@ -7,7 +7,9 @@ label {
     width: 100vw;
     height: 100vh;
 }
-
+.header-toolbar {
+    height: 10vh;
+}
 .drawImg {
     display: flex;
     flex-direction: column;

@@ -54,7 +54,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     resetImage(ctxImage: CanvasRenderingContext2D) {
-        ctxImage.rect(0, 0, SIZE.y, SIZE.x);
+        ctxImage.rect(0, 0, SIZE.x, SIZE.y);
         ctxImage.fillStyle = 'white';
         ctxImage.fill();
     }

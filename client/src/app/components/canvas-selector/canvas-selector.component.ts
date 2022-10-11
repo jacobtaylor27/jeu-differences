@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/interfaces/vec2';
 
 @Component({
@@ -7,6 +7,7 @@ import { Vec2 } from '@app/interfaces/vec2';
     styleUrls: ['./canvas-selector.component.scss'],
 })
 export class CanvasSelectorComponent {
+    @Output() canvasSelector = new EventEmitter<{ draw: boolean; compare: boolean }>();
     @ViewChild('drawCanvas', { static: false }) drawCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('compareCanvas', { static: false }) compareCanvas!: ElementRef<HTMLCanvasElement>;
     size: Vec2 = { x: 300, y: 300 };
@@ -17,6 +18,7 @@ export class CanvasSelectorComponent {
         const canvasState = this.canvasManager(ctx, typeCanvas);
         this.isCanvasSelect.compare = typeCanvas === 'compare' ? canvasState : this.isCanvasSelect.compare;
         this.isCanvasSelect.draw = typeCanvas === 'draw' ? canvasState : this.isCanvasSelect.draw;
+        this.canvasSelector.emit(this.isCanvasSelect);
     }
 
     canvasManager(ctx: CanvasRenderingContext2D, typeCanvas: string) {

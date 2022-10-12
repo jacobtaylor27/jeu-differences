@@ -1,10 +1,5 @@
 <main [ngClass]="favoriteTheme">
-    <mat-toolbar class="header-toolbar" color="primary" >
-        <span>MODE CLASSIQUE SOLO</span>
-        <span class="filler"></span>
-        <app-exit-game-button></app-exit-game-button>
-    </mat-toolbar>
-
+    <app-page-header [headerMessage]="'Mode classique Solo'" [isButtonEnabled]="false"></app-page-header>
     <div class="game-section">
         <app-sidebar></app-sidebar>
 

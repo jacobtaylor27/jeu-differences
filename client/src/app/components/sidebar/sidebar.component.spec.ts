@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
-import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -15,7 +14,7 @@ describe('SidebarComponent', () => {
         spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['getGameName', 'setPlayerName', 'getGameMode', 'getPlayerName']);
 
         await TestBed.configureTestingModule({
-            declarations: [SidebarComponent, CluesAreaComponent, TimerStopwatchComponent, TimerCountdownComponent],
+            declarations: [SidebarComponent, CluesAreaComponent, TimerStopwatchComponent],
             imports: [AppMaterialModule],
             providers: [
                 {

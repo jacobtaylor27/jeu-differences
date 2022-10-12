@@ -1,4 +1,4 @@
-import { SocketEvent } from '@app/constants/socket-event';
+import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';

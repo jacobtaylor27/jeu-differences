@@ -52,7 +52,7 @@ export class DifferencesDetectionHandlerService {
     }
 
     getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
-        return this.communicationService
+        this.communicationService
             .validateCoordinates(id, mousePosition)
             .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
                 if (!response || !response.body) {

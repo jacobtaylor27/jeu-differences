@@ -45,7 +45,7 @@ export class ToolBoxComponent {
     }
 
     openUploadDialog(): void {
-        this.dialog.open(DialogUploadFormComponent);
+        this.dialog.open(DialogUploadFormComponent, { data: { canvas: this.canvas } });
     }
 
     openResetDialog(): void {

@@ -1,12 +1,23 @@
+import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { SIZE } from '@app/constants/canvas';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { DifferencesDetectionHandlerService } from '../differences-detection-handler/differences-detection-handler.service';
 
 import { MouseHandlerService } from './mouse-handler.service';
 
 describe('MouseHandlerService', () => {
     let service: MouseHandlerService;
+    let spyDifferenceDetectedHandler: jasmine.SpyObj<DifferencesDetectionHandlerService>;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        spyDifferenceDetectedHandler = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['getDifferenceValidation']);
+        TestBed.configureTestingModule({
+            imports: [AppMaterialModule, HttpClientModule, RouterTestingModule],
+            providers: [{ provide: DifferencesDetectionHandlerService, useValue: spyDifferenceDetectedHandler }],
+        });
         service = TestBed.inject(MouseHandlerService);
     });
 
@@ -14,13 +25,15 @@ describe('MouseHandlerService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return MousePosition', () => {
+    it('should call getDifferenceValidation', () => {
         const mouseEvent = {
             clientX: 10,
             clientY: 10,
         } as MouseEvent;
-        /* eslint-disable @typescript-eslint/no-magic-numbers */
-        expect(service.mouseHitDetect(mouseEvent).x).toEqual(10);
-        expect(service.mouseHitDetect(mouseEvent).y).toEqual(10);
+
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        service.mouseHitDetect(mouseEvent, ctx, '');
+        expect(spyDifferenceDetectedHandler.getDifferenceValidation).toHaveBeenCalled();
     });
 });

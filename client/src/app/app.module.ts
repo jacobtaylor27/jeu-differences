@@ -17,7 +17,6 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
-import { CanvasSelectorComponent } from './components/canvas-selector/canvas-selector.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
@@ -69,7 +68,6 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
         GameConstantFieldComponent,
         GameCardButtonsComponent,
         GameScoreComponent,
-        CanvasSelectorComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

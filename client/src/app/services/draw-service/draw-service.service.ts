@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { Vec2 } from '@app/interfaces/vec2';
+import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -7,10 +9,19 @@ import { Subject } from 'rxjs';
 })
 export class DrawService {
     $differenceImage: Subject<ImageData>;
-    constructor() {
+    constructor(private toolService: ToolBoxService) {
         this.$differenceImage = new Subject();
     }
     reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {
         return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
+    }
+
+    reset(canvas: PropagateCanvasEvent) {
+        if (canvas === PropagateCanvasEvent.Both || canvas === PropagateCanvasEvent.Difference) {
+            this.toolService.$resetDiff.next();
+        }
+        if (canvas === PropagateCanvasEvent.Both || canvas === PropagateCanvasEvent.Source) {
+            this.toolService.$resetSource.next();
+        }
     }
 }

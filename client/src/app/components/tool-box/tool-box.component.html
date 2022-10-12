@@ -22,7 +22,7 @@
         <button mat-mini-fab color="primary" type="button" (click)="openUploadDialog()">
             <mat-icon>cloud_upload</mat-icon>
         </button>
-        <button mat-mini-fab color="primary" type="button" (click)="openResetDialog()">
+        <button mat-mini-fab color="primary" type="button" (click)="this.drawService.reset(this.canvas)">
             <mat-icon>rotate_left</mat-icon>
         </button>
     </div>

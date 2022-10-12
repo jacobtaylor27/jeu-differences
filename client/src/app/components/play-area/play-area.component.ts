@@ -23,7 +23,6 @@ export class PlayAreaComponent implements AfterViewInit {
     @ViewChild('gameOverDialog')
     private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
 
-    mousePosition: Vec2 = { x: 0, y: 0 };
     buttonPressed = '';
     gameId: string;
 

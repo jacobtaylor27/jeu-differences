@@ -32,7 +32,7 @@ export class PlayAreaComponent implements AfterViewInit {
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
-        private readonly timerService: TimerService,
+        private readonly mouseHandlerService: MouseHandlerService,
         private readonly matDialog: MatDialog,
     ) {
         this.createGameRoom();
@@ -60,14 +60,9 @@ export class PlayAreaComponent implements AfterViewInit {
     // eslint-disable-next-line no-unused-vars
     onClick($event: MouseEvent, canvas: string) {
         if (!this.isMouseDisabled()) {
-            this.mouseHitDetect($event, canvas);
+            const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
+            this.mouseHandlerService.mouseHitDetect($event, ctx, this.gameId);
         }
-    }
-
-    mouseHitDetect($event: MouseEvent, canvas: string) {
-        this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
-        const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
-        this.getDifferenceValidation(this.gameId, this.mousePosition, ctx);
     }
 
     getContextImgOriginal() {

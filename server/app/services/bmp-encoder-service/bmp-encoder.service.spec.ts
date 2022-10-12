@@ -64,4 +64,11 @@ describe('Bmp encoder service', async () => {
             .and.have.property('code', 'ENOENT');
         expect(fs.existsSync(incorrectFile)).to.equals(false);
     });
+
+    it.only('should convert a file into a base64 string', async () => {
+        const originalBmpFilePath = './assets/test-bmp/test_bmp_original.bmp';
+        const base64String = await bmpEncoderService.base64Encode(originalBmpFilePath);
+        const base64StringExpected = fs.readFileSync(originalBmpFilePath).toString('base64');
+        expect(base64String).to.equal(base64StringExpected);
+    });
 });

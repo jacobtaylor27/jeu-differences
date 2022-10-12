@@ -55,7 +55,7 @@ export class DialogUploadFormComponent {
     }
 
     onSubmit(): void {
-        if (!this.isFormSubmitted) {
+        if (!this.isFormSubmitted || !this.data.canvas) {
             return;
         }
         if (this.data.canvas === PropagateCanvasEvent.Both || this.data.canvas === PropagateCanvasEvent.Difference) {

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
@@ -11,12 +13,16 @@ describe('DialogUploadFormComponent', () => {
     let component: DialogUploadFormComponent;
     let fixture: ComponentFixture<DialogUploadFormComponent>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
+    const model = { canvas: PropagateCanvasEvent.Both };
     beforeEach(async () => {
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInDiff: new Subject(), $uploadImageInSource: new Subject() });
         await TestBed.configureTestingModule({
             declarations: [DialogUploadFormComponent],
-            providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],
-            imports: [AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
+            providers: [
+                { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
+                { provide: MAT_DIALOG_DATA, useValue: model },
+            ],
+            imports: [MatDialogModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DialogUploadFormComponent);
@@ -142,7 +148,6 @@ describe('DialogUploadFormComponent', () => {
     });
 
     it('should not submit a form because the type is not good', async () => {
-        component.isCanvasUpload = { draw: false, compare: false };
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         component.onSubmit();
@@ -151,7 +156,8 @@ describe('DialogUploadFormComponent', () => {
     });
 
     it('should submit a form because the type is both', async () => {
-        component.isCanvasUpload = { draw: true, compare: true };
+        component.data.canvas = PropagateCanvasEvent.Both;
+        component.isFormSubmitted = true;
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
@@ -166,7 +172,8 @@ describe('DialogUploadFormComponent', () => {
     });
 
     it('should submit a form because the type is difference', async () => {
-        component.isCanvasUpload = { draw: true, compare: false };
+        component.data.canvas = PropagateCanvasEvent.Difference;
+        component.isFormSubmitted = true;
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
@@ -181,7 +188,8 @@ describe('DialogUploadFormComponent', () => {
     });
 
     it('should submit a form because the type is source', async () => {
-        component.isCanvasUpload = { draw: false, compare: true };
+        component.data.canvas = PropagateCanvasEvent.Source;
+        component.isFormSubmitted = true;
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {

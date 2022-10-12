@@ -1,25 +1,32 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
-import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { DifferencesAreaComponent } from '../differences-area/differences-area.component';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
     let spyGameInfosService: jasmine.SpyObj<GameInformationHandlerService>;
+    let spyDifferencesDetection: jasmine.SpyObj<DifferencesDetectionHandlerService>;
 
     beforeEach(async () => {
         spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['getGameName', 'setPlayerName', 'getGameMode', 'getPlayerName']);
-
+        spyDifferencesDetection = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['nbDifferencesFound', 'resetNumberDifferencesFound']);
         await TestBed.configureTestingModule({
-            declarations: [SidebarComponent, CluesAreaComponent, TimerStopwatchComponent],
-            imports: [AppMaterialModule],
+            declarations: [SidebarComponent, CluesAreaComponent, DifferencesAreaComponent],
+            imports: [AppMaterialModule, HttpClientTestingModule],
             providers: [
                 {
                     provide: GameInformationHandlerService,
                     useValue: spyGameInfosService,
+                },
+                {
+                    provide: DifferencesDetectionHandlerService,
+                    useValue: spyDifferencesDetection,
                 },
             ],
         }).compileComponents();

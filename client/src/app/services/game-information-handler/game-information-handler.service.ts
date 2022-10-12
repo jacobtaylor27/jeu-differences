@@ -55,7 +55,7 @@ export class GameInformationHandlerService {
 
     getId(): string {
         this.handleNotDefined();
-        return this.gameInformation.id;
+        return this.gameInformation.id as string;
     }
 
     getGameName(): string {

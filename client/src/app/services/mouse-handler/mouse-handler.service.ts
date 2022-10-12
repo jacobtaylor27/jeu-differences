@@ -8,7 +8,6 @@ export class MouseHandlerService {
     constructor(private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService) {}
 
     mouseHitDetect($event: MouseEvent, ctx: CanvasRenderingContext2D, gameId: string) {
-        const mousePosition = { x: $event.offsetX, y: $event.offsetY };
-        this.differencesDetectionHandlerService.getDifferenceValidation(gameId, mousePosition, ctx);
+        this.differencesDetectionHandlerService.getDifferenceValidation(gameId, { x: $event.offsetX, y: $event.offsetY }, ctx);
     }
 }

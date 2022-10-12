@@ -3,4 +3,6 @@
         <mat-icon>home</mat-icon>
     </button>
     {{ headerMessage }}
+    <span class="filler"></span>
+    <app-exit-game-button *ngIf="isExitButtonEnabled" ></app-exit-game-button>
 </mat-toolbar>

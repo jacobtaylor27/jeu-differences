@@ -16,24 +16,24 @@ import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
-import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
+import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
+import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
+import { DialogGameOverComponent } from './components/dialog-gameover/dialog-gameover.component';
+import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
+import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
+import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
+import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
+import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
+import { GameCardComponent } from './components/game-card/game-card.component';
+import { GameCarouselComponent } from './components/game-carousel/game-carousel.component';
+import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
+import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
+import { GameScoreComponent } from './components/game-score/game-score.component';
 import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
-import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
-import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
-import { GameCardComponent } from './components/game-card/game-card.component';
-import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
-import { GameCarouselComponent } from './components/game-carousel/game-carousel.component';
-import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
-import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
-import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
-import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
-import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
-import { GameScoreComponent } from './components/game-score/game-score.component';
-import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
-import { DialogGameoverComponent } from './components/dialog-gameover/dialog-gameover/dialog-gameover.component';
+import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -71,7 +71,7 @@ import { DialogGameoverComponent } from './components/dialog-gameover/dialog-gam
         GameConstantFieldComponent,
         GameCardButtonsComponent,
         GameScoreComponent,
-        DialogGameoverComponent,
+        DialogGameOverComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
@@ -27,9 +27,7 @@ export class PlayAreaComponent implements AfterViewInit {
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
         private readonly mouseHandlerService: MouseHandlerService,
-    ) {
-        this.createGameRoom();
-    }
+    ) {}
 
     get width(): number {
         return SIZE.x;
@@ -98,21 +96,6 @@ export class PlayAreaComponent implements AfterViewInit {
 
             ctx.putImageData(image, 0, 0);
         });
-    }
-
-    createGameRoom() {
-        this.communicationService
-            .createGameRoom(
-                this.gameInfoHandlerService.getPlayerName(),
-                this.gameInfoHandlerService.getGameMode(),
-                this.gameInfoHandlerService.getGameInformation().id as string,
-            )
-            .subscribe((response: HttpResponse<{ id: string }> | null) => {
-                if (!response || !response.body) {
-                    return;
-                }
-                this.gameId = response.body.id;
-            });
     }
 
     private isMouseDisabled() {

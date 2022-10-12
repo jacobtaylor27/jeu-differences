@@ -1,13 +1,36 @@
+import { HttpClientModule } from '@angular/common/http';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SIZE } from '@app/constants/canvas';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { Subject } from 'rxjs';
+import { CommunicationService } from '../communication/communication.service';
+import { TimerService } from '../timer.service';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
-describe('DifferencesDetectionHandlerService', () => {
+fdescribe('DifferencesDetectionHandlerService', () => {
     let service: DifferencesDetectionHandlerService;
+    let spyMatDialog: jasmine.SpyObj<MatDialog>;
+    let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyTimer: jasmine.SpyObj<TimerService>;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['validateCoordinates']);
+        spyTimer = jasmine.createSpyObj('TimerService', ['setNbOfDifferencesFound'], {
+            differenceFind: new Subject(),
+            gameOver: new Subject(),
+        });
+        TestBed.configureTestingModule({
+            imports: [AppMaterialModule, HttpClientModule, RouterTestingModule],
+            providers: [
+                { provide: MatDialog, useValue: spyMatDialog },
+                { provide: TimerService, useValue: spyTimer },
+                { provide: CommunicationService, useValue: spyCommunicationService },
+            ],
+        });
         service = TestBed.inject(DifferencesDetectionHandlerService);
     });
 
@@ -109,6 +132,7 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(spyClear).toHaveBeenCalled();
 
         service.isGameOver = true;
+
         service.differenceDetected(ctx, ctx, []);
         expect(spyDisplay).toHaveBeenCalled();
         expect(spyClear).toHaveBeenCalled();

@@ -28,9 +28,20 @@ export class DifferencesDetectionHandlerService {
         this.nbDifferencesFound = 0;
     }
 
+    playWrongSound() {
+        this.playSound(new Audio('../assets/sounds/wronganswer.wav'));
+    }
+
+    playCorrectSound() {
+        this.playSound(new Audio('../assets/sounds/correctanswer.wav'));
+    }
+
+    playSound(sound: HTMLAudioElement) {
+        sound.play();
+    }
+
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
-        const wrongSound = new Audio('../assets/sounds/wronganswer.wav');
-        wrongSound.play();
+        this.playWrongSound();
         ctx.fillStyle = 'red';
         ctx.fillText('Erreur', mousePosition.x, mousePosition.y, 30);
         this.mouseIsDisabled = true;
@@ -43,8 +54,7 @@ export class DifferencesDetectionHandlerService {
     }
 
     differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
-        const correctSound = new Audio('../assets/sounds/correctanswer.wav');
-        correctSound.play();
+        this.playCorrectSound();
         this.timer.differenceFind.next();
         if (this.isGameOver) {
             this.timer.gameOver.next();
@@ -56,12 +66,12 @@ export class DifferencesDetectionHandlerService {
 
     private displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
         let counter = 0;
-        const a = setInterval(() => {
+        const interval = setInterval(() => {
             for (const coordinate of coords) {
                 ctx.clearRect(coordinate.x, coordinate.y, 1, 1);
             }
             if (counter === 5) {
-                clearInterval(a);
+                clearInterval(interval);
             }
             if (counter % 2 === 0) {
                 ctx.fillStyle = 'yellow';

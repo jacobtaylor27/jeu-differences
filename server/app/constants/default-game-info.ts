@@ -7,6 +7,7 @@ const score: Score = {
 };
 const game1: GameInfo = {
     id: '0',
+    thumbnail: 'image',
     idOriginalBmp: '0',
     idEditedBmp: '0',
     idDifferenceBmp: '0',

@@ -74,12 +74,16 @@ describe('GamePageComponent', () => {
 
     it('should createGameRoom properly', () => {
         communicationServiceSpy.createGameRoom.and.callFake(() => {
+            return of({} as HttpResponse<{ id: string }>);
+        });
+        component.createGameRoom();
+        expect(component.gameId).toBeUndefined();
+        expect(communicationServiceSpy.createGameRoom).toHaveBeenCalled();
+
+        communicationServiceSpy.createGameRoom.and.callFake(() => {
             return of({ body: { id: '1' } } as HttpResponse<{ id: string }>);
         });
         component.createGameRoom();
-        expect(communicationServiceSpy.createGameRoom).toHaveBeenCalled();
-
-        communicationServiceSpy.createGameRoom.and.rejectWith(undefined);
         expect(communicationServiceSpy.createGameRoom).toHaveBeenCalled();
     });
 });

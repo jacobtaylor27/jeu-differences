@@ -10,7 +10,7 @@ import { CommunicationService } from '../communication/communication.service';
 import { TimerService } from '../timer.service';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
-fdescribe('DifferencesDetectionHandlerService', () => {
+describe('DifferencesDetectionHandlerService', () => {
     let service: DifferencesDetectionHandlerService;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;

@@ -33,6 +33,7 @@ import { DialogCreateGameComponent } from './components/dialog-create-game/dialo
 import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
 import { GameScoreComponent } from './components/game-score/game-score.component';
 import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -70,6 +71,7 @@ import { GameCardButtonsComponent } from './components/game-card-buttons/game-ca
         GameConstantFieldComponent,
         GameCardButtonsComponent,
         GameScoreComponent,
+        PageHeaderComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

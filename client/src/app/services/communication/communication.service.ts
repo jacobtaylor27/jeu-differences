@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CREATE_GAME, VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
@@ -20,10 +20,6 @@ export class CommunicationService {
 
     basicGet(): Observable<Message> {
         return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
-    }
-
-    getTimeValue(): Observable<Message> {
-        return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
     }
 
     basicPost(message: Message): Observable<void> {
@@ -48,21 +44,27 @@ export class CommunicationService {
             );
     }
     createGame(image: { original: ImageData; modify: ImageData }, radius: number, name: string) {
-        return this.http.post<Record<string, never>>(
-            CREATE_GAME,
-            {
-                original: { width: image.original.width, height: image.original.height, data: Array.from(image.original.data) },
-                modify: { width: image.modify.width, height: image.modify.height, data: Array.from(image.modify.data) },
-                differenceRadius: radius,
-                name,
-            },
-            { observe: 'response' },
-        );
+        return this.http
+            .post<Record<string, never>>(
+                CREATE_GAME,
+                {
+                    original: { width: image.original.width, height: image.original.height, data: Array.from(image.original.data) },
+                    modify: { width: image.modify.width, height: image.modify.height, data: Array.from(image.modify.data) },
+                    differenceRadius: radius,
+                    name,
+                },
+                { observe: 'response' },
+            )
+            .pipe(
+                catchError(() => {
+                    return of(null);
+                }),
+            );
     }
 
     createGameRoom(playerName: string, gameMode: GameMode, gameId: string) {
         return this.http
-            .post<{ id: string }>(`${this.baseUrl}/game/create/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
+            .post<{ id: string }>(`${CREATE_GAME_ROOM}/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
             .pipe(
                 catchError(() => {
                     return of(null);
@@ -73,7 +75,7 @@ export class CommunicationService {
     validateCoordinates(id: string, coordinate: Vec2) {
         return this.http
             .post<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>(
-                `${this.baseUrl}/game/difference`,
+                VALIDATE_COORD,
                 {
                     x: coordinate.x,
                     y: coordinate.y,
@@ -99,4 +101,8 @@ export class CommunicationService {
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }
+
+    // getTimeValue(): Observable<Message> {
+    //     return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
+    // }
 }

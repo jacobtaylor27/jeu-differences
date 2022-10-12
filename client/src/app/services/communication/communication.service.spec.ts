@@ -1,9 +1,10 @@
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInfo } from '@common/game-info';
+import { GameMode } from '@common/game-mode';
 import { Message } from '@common/message';
 
 describe('CommunicationService', () => {
@@ -44,21 +45,6 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(`${baseUrl}/example`);
         expect(req.request.method).toBe('GET');
         // actually send the request
-        req.flush(expectedMessage);
-    });
-
-    it('should return expected message (timer) when game page is loaded', () => {
-        const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
-        service.getTimeValue().subscribe({
-            next: (response: Message) => {
-                expect(response.title).toEqual(expectedMessage.title);
-                expect(response.body).toEqual(expectedMessage.body);
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game`);
-        expect(req.request.method).toBe('GET');
         req.flush(expectedMessage);
     });
 
@@ -151,19 +137,108 @@ describe('CommunicationService', () => {
         req.error(new ProgressEvent('Random error occurred'));
     });
 
-    // it('should return expected imgData (HttpClient called once)', () => {
-    //     const expectedImgData: ImgData = EXPECTED_IMG_DATA;
+    it('should send a request to create a game', () => {
+        service
+            .createGame(
+                {
+                    original: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                    modify: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                },
+                3,
+                '',
+            )
+            .subscribe({
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                next: () => {},
+                error: fail,
+            });
+        const req = httpMock.expectOne(CREATE_GAME);
+        expect(req.request.method).toBe('POST');
+        req.flush({
+            original: { width: 0, height: 0, data: Array.from([]) },
+            modify: { width: 0, height: 0, data: Array.from([]) },
+            differenceRadius: 0,
+            name: '',
+        });
+    });
 
-    //     // TODO: make a better test with something else than 'hello'
-    //     service.getImgData('hello').subscribe({
-    //         next: (response: ImgData) => {
-    //             expect(response.imgData).toEqual(expectedImgData.imgData);
+    it('should handle http error when create a game', () => {
+        service
+            .createGame(
+                {
+                    original: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                    modify: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                },
+                3,
+                '',
+            )
+            .subscribe({
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                next: (response) => {
+                    expect(response).toBeNull();
+                },
+            });
+        const req = httpMock.expectOne(CREATE_GAME);
+        expect(req.request.method).toBe('POST');
+        req.error(new ProgressEvent('Random error occurred'));
+    });
+
+    it('should send a request to create a game room', () => {
+        service.createGameRoom('playername', GameMode.Classic, 'gameid').subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(CREATE_GAME_ROOM + '/gameid');
+        expect(req.request.method).toBe('POST');
+    });
+
+    it('should handle http error when create a game room', () => {
+        service.createGameRoom('playername', GameMode.Classic, 'gameid').subscribe({
+            next: (response) => {
+                expect(response).toBeNull();
+            },
+        });
+        const req = httpMock.expectOne(CREATE_GAME_ROOM + '/gameid');
+        expect(req.request.method).toBe('POST');
+        req.error(new ProgressEvent('Random error occurred'));
+    });
+
+    it('should send a request to validate coordinates', () => {
+        service.validateCoordinates('gameid', { x: 0, y: 0 }).subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(VALIDATE_COORD);
+        expect(req.request.method).toBe('POST');
+        req.flush({ x: 0, y: 0, id: '' });
+    });
+
+    it('should handle http error when validate coord', () => {
+        service.validateCoordinates('gameid', { x: 0, y: 0 }).subscribe({
+            next: (response) => {
+                expect(response).toBeNull();
+            },
+            error: fail,
+        });
+        const req = httpMock.expectOne(VALIDATE_COORD);
+        expect(req.request.method).toBe('POST');
+        req.error(new ProgressEvent('Random error occurred'));
+    });
+
+    // it('should return expected message (timer) when game page is loaded', () => {
+    //     const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
+    //     service.getTimeValue().subscribe({
+    //         next: (response: Message) => {
+    //             expect(response.title).toEqual(expectedMessage.title);
+    //             expect(response.body).toEqual(expectedMessage.body);
     //         },
     //         error: fail,
     //     });
 
-    //     const req = httpMock.expectOne(`${baseUrl}/bmp/hello`);
+    //     const req = httpMock.expectOne(`${baseUrl}/game`);
     //     expect(req.request.method).toBe('GET');
-    //     req.flush(expectedImgData);
+    //     req.flush(expectedMessage);
     // });
 });

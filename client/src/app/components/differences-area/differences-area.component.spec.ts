@@ -14,7 +14,10 @@ describe('DifferencesAreaComponent', () => {
 
     beforeEach(async () => {
         spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameInformation', 'getPlayerName']);
-        differenceDetectionHandlerSpy = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['resetNumberDifferencesFound']);
+        differenceDetectionHandlerSpy = jasmine.createSpyObj('DifferencesDetectionHandlerService', [
+            'resetNumberDifferencesFound',
+            'setNumberDifferencesFound',
+        ]);
         await TestBed.configureTestingModule({
             declarations: [DifferencesAreaComponent, TimerStopwatchComponent],
             imports: [AppMaterialModule],
@@ -25,7 +28,7 @@ describe('DifferencesAreaComponent', () => {
                 },
                 {
                     provide: DifferencesDetectionHandlerService,
-                    differenceDetectionHandlerSpy,
+                    useValue: differenceDetectionHandlerSpy,
                 },
             ],
         }).compileComponents();
@@ -66,5 +69,25 @@ describe('DifferencesAreaComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should set the nb of differences found at the beginning of the game', () => {
+        spyGameInfosService.gameInformation.differences.length = 4;
+        expect(component.setNbDifferencesFound()).toEqual('0 / 4');
+    });
+
+    it('should set the nb of differences found during the game', () => {
+        differenceDetectionHandlerSpy.nbTotalDifferences = 5;
+        differenceDetectionHandlerSpy.nbDifferencesFound = 1;
+
+        expect(component.setNbDifferencesFound()).toEqual('1 / 5');
+    });
+
+    it('should set the nb of differences when game is over', () => {
+        differenceDetectionHandlerSpy.isGameOver = true;
+        differenceDetectionHandlerSpy.nbTotalDifferences = 5;
+        differenceDetectionHandlerSpy.nbDifferencesFound = 5;
+
+        expect(component.setNbDifferencesFound()).toEqual('5 / 5');
     });
 });

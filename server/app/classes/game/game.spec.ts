@@ -12,7 +12,9 @@ import { spy, stub } from 'sinon';
 describe('Game', () => {
     let game: Game;
     const expectedGameInfo: GameInfo = {
+        id: '1',
         idOriginalBmp: '0',
+        thumbnail: 'thumbnail',
         idEditedBmp: '1',
         idDifferenceBmp: '2',
         soloScore: [{} as Score],

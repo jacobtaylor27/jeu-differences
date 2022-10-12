@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
-import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { TimerService } from '@app/services/timer.service';
-import { Coordinate } from '@common/coordinate';
+import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -21,8 +18,7 @@ export class PlayAreaComponent implements AfterViewInit {
     @ViewChild('imgModified') canvasImgModified!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModifiedWODifference') canvasImgDifference!: ElementRef<HTMLCanvasElement>;
     @ViewChild('gameOverDialog')
-    private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
-
+    // private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
     buttonPressed = '';
     gameId: string;
 
@@ -32,7 +28,6 @@ export class PlayAreaComponent implements AfterViewInit {
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
         private readonly mouseHandlerService: MouseHandlerService,
-        private readonly matDialog: MatDialog,
     ) {
         this.createGameRoom();
     }

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DialogGameOverComponent } from '@app/components/dialog-gameover/dialog-gameover.component';
 import { Vec2 } from '@app/interfaces/vec2';
 import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
@@ -18,7 +20,7 @@ export class DifferencesDetectionHandlerService {
 
     constructor(
         private timer: TimerService,
-        // private readonly matDialog: MatDialog,
+        public matDialog: MatDialog,
         private readonly communicationService: CommunicationService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
@@ -63,10 +65,10 @@ export class DifferencesDetectionHandlerService {
                 this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
                 if (response.body.isGameOver) {
                     this.setGameOver();
-                    // const dialogConfig = new MatDialogConfig();
-                    // dialogConfig.disableClose = true;
-                    // dialogConfig.minWidth = '50%';
-                    // this.matDialog.open(this.gameOverDialogRef, dialogConfig);
+                    const dialogConfig = new MatDialogConfig();
+                    dialogConfig.disableClose = true;
+                    dialogConfig.minWidth = '50%';
+                    this.matDialog.open(DialogGameOverComponent, dialogConfig);
                 }
             });
     }

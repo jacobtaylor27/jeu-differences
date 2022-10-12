@@ -14,6 +14,10 @@ export class GameCardComponent implements OnInit {
     imageSrc: string;
 
     ngOnInit() {
+        this.setImagesSrc();
+    }
+
+    setImagesSrc(): void {
         this.imageSrc = this.gameCard.gameInformation.thumbnail;
     }
 

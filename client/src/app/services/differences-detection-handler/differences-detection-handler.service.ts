@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/interfaces/vec2';
 import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
+import { CommunicationService } from '../communication/communication.service';
+import { GameInformationHandlerService } from '../game-information-handler/game-information-handler.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -11,8 +14,14 @@ export class DifferencesDetectionHandlerService {
     nbDifferencesFound: number;
     nbTotalDifferences: number;
     isGameOver: boolean = false;
+    contextImgModified: CanvasRenderingContext2D;
 
-    constructor(private timer: TimerService) {}
+    constructor(
+        private timer: TimerService,
+        // private readonly matDialog: MatDialog,
+        private readonly communicationService: CommunicationService,
+        private readonly gameInfoHandlerService: GameInformationHandlerService,
+    ) {}
 
     setGameOver() {
         this.isGameOver = true;
@@ -60,6 +69,9 @@ export class DifferencesDetectionHandlerService {
                     // this.matDialog.open(this.gameOverDialogRef, dialogConfig);
                 }
             });
+    }
+    setContextImgModified(ctx: CanvasRenderingContext2D) {
+        this.contextImgModified = ctx;
     }
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {

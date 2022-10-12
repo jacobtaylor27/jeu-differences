@@ -54,6 +54,7 @@ export class PlayAreaComponent implements AfterViewInit {
         this.displayImage(true, this.getContextImgOriginal());
         this.displayImage(false, this.getContextImgModified());
         this.displayImage(true, this.getContextDifferences());
+        this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
     }
 
     // eslint-disable-next-line no-unused-vars

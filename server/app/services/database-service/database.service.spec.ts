@@ -8,7 +8,7 @@ import * as sinon from 'sinon';
 import { DatabaseServiceMock } from './database.service.mock';
 chai.use(chaiAsPromised);
 
-describe.only('Database service', () => {
+describe('Database service', () => {
     let mongoServer: MongoMemoryServer;
     let databaseService: DatabaseServiceMock;
     let uri = '';

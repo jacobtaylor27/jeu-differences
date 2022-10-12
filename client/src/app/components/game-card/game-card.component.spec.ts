@@ -18,6 +18,7 @@ const GAME_CARD: GameCard = {
         idOriginalBmp: 'imageName',
         idEditedBmp: '1',
         idDifferenceBmp: '1',
+        thumbnail: 'image',
         soloScore: [
             {
                 playerName: 'test2',

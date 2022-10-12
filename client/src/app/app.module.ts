@@ -20,7 +20,6 @@ import { AdminCommandsComponent } from './components/admin-commands/admin-comman
 import { CanvasSelectorComponent } from './components/canvas-selector/canvas-selector.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
-import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
 import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
@@ -55,7 +54,6 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
         GameSelectionPageComponent,
         AdminPageComponent,
         DialogUploadFormComponent,
-        DialogResetComponent,
         GameCardComponent,
         GameConstantsSettingsComponent,
         UserNameInputComponent,

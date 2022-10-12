@@ -26,7 +26,7 @@ export class GamePageComponent implements OnInit {
             .createGameRoom(
                 this.gameInfoHandlerService.getPlayerName(),
                 this.gameInfoHandlerService.getGameMode(),
-                this.gameInfoHandlerService.getGameInformation().id as string,
+                this.gameInfoHandlerService.getId(),
             )
             .subscribe((response: HttpResponse<{ id: string }> | null) => {
                 if (!response || !response.body) {

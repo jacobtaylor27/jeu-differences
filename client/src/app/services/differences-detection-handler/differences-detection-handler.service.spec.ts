@@ -161,4 +161,23 @@ fdescribe('DifferencesDetectionHandlerService', () => {
         service['clearDifference'](ctx, [{ x: 1, y: 3 }]);
         expect(clearRectSpy).toHaveBeenCalled();
     });
+
+    // INTERFACE NEEDS TO CHANGE FIRST
+    // it('should verify with server if coord is not valid', () => {
+    //     const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+    //     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    //     spyCommunicationService.validateCoordinates.and.callFake(() => {
+    //         return of({ body: { differencesLeft: [], difference: [], isGameOver: false } } as HttpResponse<any>);
+    //     });
+    //     spyTimer.setNbOfDifferencesFound.and.callFake(() => {});
+
+    //     // const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected');
+    //     service.getDifferenceValidation('1', { x: 0, y: 1 }, ctx);
+
+    //     spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
+    //     // spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
+
+    //     expect(spyCommunicationService.validateCoordinates).toHaveBeenCalled();
+    //     // expect(spyDifferenceNotDetected).toHaveBeenCalled();
+    // });
 });

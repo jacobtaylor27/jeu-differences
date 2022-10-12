@@ -120,31 +120,6 @@ export class PlayAreaComponent implements AfterViewInit {
             });
     }
 
-    getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
-        return this.communicationService
-            .validateCoordinates(id, mousePosition)
-            .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
-                if (!response || !response.body) {
-                    this.differencesDetectionHandlerService.differenceNotDetected(mousePosition, ctx);
-                    return;
-                }
-
-                this.differencesDetectionHandlerService.setNumberDifferencesFound(
-                    response.body.differencesLeft,
-                    this.gameInfoHandlerService.gameInformation.differences.length,
-                );
-                this.timerService.setNbOfDifferencesFound();
-                if (response.body.isGameOver) {
-                    this.differencesDetectionHandlerService.setGameOver();
-                    const dialogConfig = new MatDialogConfig();
-                    dialogConfig.disableClose = true;
-                    dialogConfig.minWidth = '50%';
-                    this.matDialog.open(this.gameOverDialogRef, dialogConfig);
-                }
-                this.differencesDetectionHandlerService.differenceDetected(ctx, this.getContextImgModified(), response.body.difference);
-            });
-    }
-
     private isMouseDisabled() {
         return this.differencesDetectionHandlerService.mouseIsDisabled;
     }

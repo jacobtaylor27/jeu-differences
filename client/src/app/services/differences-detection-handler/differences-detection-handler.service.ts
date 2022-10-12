@@ -40,6 +40,28 @@ export class DifferencesDetectionHandlerService {
         sound.play();
     }
 
+    getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
+        return this.communicationService
+            .validateCoordinates(id, mousePosition)
+            .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
+                if (!response || !response.body) {
+                    this.differenceNotDetected(mousePosition, ctx);
+                    return;
+                }
+
+                this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.gameInformation.differences.length);
+                this.timer.setNbOfDifferencesFound();
+                this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
+                if (response.body.isGameOver) {
+                    this.setGameOver();
+                    // const dialogConfig = new MatDialogConfig();
+                    // dialogConfig.disableClose = true;
+                    // dialogConfig.minWidth = '50%';
+                    // this.matDialog.open(this.gameOverDialogRef, dialogConfig);
+                }
+            });
+    }
+
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         this.playWrongSound();
         ctx.fillStyle = 'red';

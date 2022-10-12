@@ -17,10 +17,9 @@ export class PlayAreaComponent implements AfterViewInit {
     @ViewChild('imgOriginal') canvasImgOriginal!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModified') canvasImgModified!: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModifiedWODifference') canvasImgDifference!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('gameOverDialog')
+    @Input() gameId: string;
     // private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
     buttonPressed = '';
-    gameId: string;
 
     // eslint-disable-next-line max-params
     constructor(

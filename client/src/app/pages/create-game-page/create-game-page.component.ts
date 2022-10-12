@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { Canvas } from '@app/enums/canvas';
+import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { Theme } from '@app/enums/theme';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -21,7 +22,7 @@ export class CreateGamePageComponent implements AfterViewInit {
     form: FormGroup;
     theme: typeof Theme = Theme;
     imageDifference: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
-
+    canvasPosition: typeof PropagateCanvasEvent = PropagateCanvasEvent;
     // eslint-disable-next-line max-params
     constructor(
         private toolBoxService: ToolBoxService,

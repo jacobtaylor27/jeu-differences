@@ -19,6 +19,7 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 
 describe('GameInfo service', async () => {
     let gameService: GameService;
@@ -28,6 +29,7 @@ describe('GameInfo service', async () => {
     let databaseService: DatabaseServiceMock;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
     let bmpDecoderService: BmpDecoderService;
+    let bmpEncoderService: BmpEncoderService;
 
     beforeEach(async () => {
         databaseService = new DatabaseServiceMock();
@@ -39,8 +41,16 @@ describe('GameInfo service', async () => {
         });
         bmpService = Container.get(BmpService);
         bmpDecoderService = Container.get(BmpDecoderService);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        gameService = new GameService(databaseService as any, bmpService, bmpSubtractorService, bmpDifferenceService, idGeneratorService);
+        bmpEncoderService = Container.get(BmpEncoderService);
+        gameService = new GameService(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            databaseService as any,
+            bmpService,
+            bmpSubtractorService,
+            bmpDifferenceService,
+            idGeneratorService,
+            bmpEncoderService,
+        );
         gameService['srcPath'] = tmpdir();
         await databaseService.start(DB_URL);
         await databaseService.populateDatabase();
@@ -78,9 +88,11 @@ describe('GameInfo service', async () => {
 
     it('addGame(game) should add a game to the game collection, getAllGames() should return them', async () => {
         const game: GameInfo = {
+            id: '5',
             idOriginalBmp: '2',
             idEditedBmp: '3',
             idDifferenceBmp: '4',
+            thumbnail: 'thumbnail',
             name: 'Mark',
             differenceRadius: 1,
             differences: [],
@@ -94,8 +106,10 @@ describe('GameInfo service', async () => {
 
     it("addGame(game) shouldn't add a game twice", async () => {
         const game: GameInfo = {
+            id: '5',
             idOriginalBmp: '2',
             idEditedBmp: '3',
+            thumbnail: 'thumbnail',
             idDifferenceBmp: '4',
             name: 'Laurie',
             differenceRadius: 3,
@@ -136,8 +150,10 @@ describe('GameInfo service', async () => {
             },
         } as unknown as Bmp);
         const addGameSpy = stub(gameService, 'addGame').resolves();
+        const bmpEncoderSpy = stub(bmpEncoderService, 'base64Encode').resolves();
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         await gameService.addGameWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0).then(() => {
+            expect(bmpEncoderSpy.called).to.equal(true);
             expect(addGameSpy.called).to.equal(true);
         });
     });

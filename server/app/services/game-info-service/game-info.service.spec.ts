@@ -79,7 +79,7 @@ describe.only('GameInfo Service', async () => {
         }
     });
 
-    it('getAllGameInfos() should return all of the games after deleting one', async () => {
+    it('deleteGameInfoById(id) should delete a gameInfo', async () => {
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
@@ -88,6 +88,17 @@ describe.only('GameInfo Service', async () => {
         expect(expectedGames.length).to.equal(DEFAULT_GAMES.length - 1);
         expect(expectedGames[0]).to.deep.equal(DEFAULT_GAMES[1]);
         expect(expectedGames[1]).to.deep.equal(DEFAULT_GAMES[2]);
+    });
+
+    it('deleteGameinfoBy(id) should return true when deleting a game', async () => {
+        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        await expect(gameInfoService.deleteGameInfoById('0')).to.eventually.equal(true);
+    });
+
+    it('deleteGameinfoBy(id) should return false when deleting a game twice', async () => {
+        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        await gameInfoService.deleteGameInfoById('0');
+        await expect(gameInfoService.deleteGameInfoById('0')).to.eventually.equal(false);
     });
 
     it('addGameInfo(gameInfo) should add a game to the game collection, getAllGames() should return them', async () => {
@@ -104,10 +115,6 @@ describe.only('GameInfo Service', async () => {
         expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
         expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
     });
-
-    it('deleteGameInfoBy(id) should delete a game according to a specific id', async () => {});
-
-    it('deleteGameinfoBy(id) should return false when trying to delete the same game twice', async () => {});
 
     it('resetAllGameInfo() should reset all of the games', async () => {
         await gameInfoService.resetAllGameInfos();

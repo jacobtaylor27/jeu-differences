@@ -26,11 +26,11 @@ export class GameInfoService {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
 
-    async getAllGames(): Promise<PrivateGameInformation[]> {
+    async getAllGameInfos(): Promise<PrivateGameInformation[]> {
         return await this.collection.find({}).toArray();
     }
 
-    async getGameById(gameId: string): Promise<PrivateGameInformation> {
+    async getGameInfoById(gameId: string): Promise<PrivateGameInformation> {
         const filter = { id: gameId };
         return (await this.collection.find(filter).toArray())[0];
     }
@@ -57,7 +57,6 @@ export class GameInfoService {
             idDifferenceBmp,
             soloScore: [],
             multiplayerScore: [],
-            nbDifferences: differences.length,
         });
     }
 

@@ -137,7 +137,7 @@ export class GameController {
 
         this.router.get('/cards', (req: Request, res: Response) => {
             this.gameInfo
-                .getAllGames()
+                .getAllGameInfos()
                 .then((games: PrivateGameInformation[]) => {
                     res.status(StatusCodes.OK).send({
                         games: games.map((game: PrivateGameInformation) => {
@@ -145,7 +145,7 @@ export class GameController {
                                 id: game.id,
                                 name: game.name,
                                 thumbnail: game.thumbnail,
-                                nbDifferences: game.nbDifferences,
+                                nbDifferences: game.differences.length,
                                 idEditedBmp: game.idEditedBmp,
                                 idOriginalBmp: game.idOriginalBmp,
                                 multiplayerScore: game.multiplayerScore,
@@ -161,14 +161,14 @@ export class GameController {
 
         this.router.get('/cards/:id', (req: Request, res: Response) => {
             this.gameInfo
-                .getGameById(req.params.id)
+                .getGameInfoById(req.params.id)
                 .then((game: PrivateGameInformation) => {
                     res.status(StatusCodes.OK).send({
                         game: {
                             id: game.id,
                             name: game.name,
                             thumbnail: game.thumbnail,
-                            nbDifferences: game.nbDifferences,
+                            nbDifferences: game.differences.length,
                             idOriginalBmp: game.idOriginalBmp,
                             idEditedBmp: game.idEditedBmp,
                             multiplayerScore: game.multiplayerScore,

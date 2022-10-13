@@ -87,19 +87,30 @@ describe.only('GameInfo Service', async () => {
         const expectedGames = await gameInfoService.getAllGameInfos();
         expect(expectedGames.length).to.equal(DEFAULT_GAMES.length - 1);
         expect(expectedGames[0]).to.deep.equal(DEFAULT_GAMES[1]);
-        expect(expectedGames[0]).to.deep.equal(DEFAULT_GAMES[2]);
+        expect(expectedGames[1]).to.deep.equal(DEFAULT_GAMES[2]);
     });
 
-    it('addGame(game) should add a game to the game collection, getAllGames() should return them', async () => {});
+    it('addGameInfo(gameInfo) should add a game to the game collection, getAllGames() should return them', async () => {
+        expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
+        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
+        expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
+    });
 
-    it("addGame(game) shouldn't add a game twice", async () => {});
+    it("addGameInfo(gameInfo) shouldn't add a game twice", async () => {
+        expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
+        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
+        expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
+    });
 
-    it('deleteGameBy(id) should delete a game according to a specific id', async () => {});
+    it('deleteGameInfoBy(id) should delete a game according to a specific id', async () => {});
 
-    it('deleteGameBy(id) should return false when trying to delete the same game twice', async () => {});
+    it('deleteGameinfoBy(id) should return false when trying to delete the same game twice', async () => {});
 
-    it('resetAllGame() should reset all of the games', async () => {
-        await gameInfoService.resetAllGameInfo();
+    it('resetAllGameInfo() should reset all of the games', async () => {
+        await gameInfoService.resetAllGameInfos();
         expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
     });
 

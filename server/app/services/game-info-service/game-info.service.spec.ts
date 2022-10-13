@@ -1,47 +1,37 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { BMP_EXTENSION, DB_URL, DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/constants/database';
-import { DEFAULT_GAME } from '@app/constants/default-game-info';
-import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
+import { DB_URL } from '@app/constants/database';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
+import { DEFAULT_GAMES } from '@app/services/game-info-service/game-info.service.contants.spec';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
-import * as bmp from 'bmp-js';
 import { expect } from 'chai';
-import { promises as fs } from 'fs';
 import { describe } from 'mocha';
 import { tmpdir } from 'os';
-import * as path from 'path';
 import * as sinon from 'sinon';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
 
-describe('GameInfo service', async () => {
+describe.only('GameInfo Service', async () => {
     let gameInfoService: GameInfoService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
     let bmpDifferenceService: BmpDifferenceInterpreter;
     let databaseService: DatabaseServiceMock;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
-    let bmpDecoderService: BmpDecoderService;
     let bmpEncoderService: BmpEncoderService;
 
     beforeEach(async () => {
         bmpService = Container.get(BmpService);
         databaseService = new DatabaseServiceMock();
-        bmpDecoderService = Container.get(BmpDecoderService);
         bmpEncoderService = Container.get(BmpEncoderService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
-        idGeneratorService = sinon.createStubInstance(IdGeneratorService);
-        idGeneratorService['generateNewId'].callsFake(() => {
-            return '5';
-        });
         gameInfoService = new GameInfoService(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             databaseService as any,
@@ -55,36 +45,52 @@ describe('GameInfo service', async () => {
         gameInfoService['srcPath'] = tmpdir();
         await databaseService.start(DB_URL);
         await databaseService.initializeCollection();
-
-        const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
-        const buffer = bmp.encode(await bmpObj.toBmpImageData());
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '3' + BMP_EXTENSION), buffer.data);
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '4' + BMP_EXTENSION), buffer.data);
     });
 
     afterEach(async () => {
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '3' + BMP_EXTENSION));
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '4' + BMP_EXTENSION));
         await databaseService.close();
     });
 
-    it('getGameById(id) should return a game according to a specific id', async () => {
-        expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAME[0]);
+    it('getGameInfoById(id) should return a game according to a specific id', async () => {
+        gameInfoService.getGameInfoById('0');
+        gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
+        expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
     });
 
-    it('getGameById(id) should return undefined if the specific id is out of range', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    it('getGameInfoById(id) should return a game according to a specific id', async () => {
+        gameInfoService.getGameInfoById('0');
+        gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
+        expect(await gameInfoService.getGameInfoById('2')).to.deep.equal(DEFAULT_GAMES[2]);
+    });
+
+    it('getGameInfoById(id) should return undefined if the specific id is out of range', async () => {
         expect(await gameInfoService.getGameInfoById('5')).to.equal(undefined);
     });
 
-    it('getAllGame() should return all of the games', async () => {
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length);
-        expect(await gameInfoService.deleteGameInfoById('0')).to.equal(true);
-        expect(await gameInfoService.getAllGameInfos()).to.deep.equal([]);
+    it('getAllGameInfos() should return all of the games', async () => {
+        gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
+        const expectedGames = await gameInfoService.getAllGameInfos();
+        expect(expectedGames.length).to.equal(DEFAULT_GAMES.length);
+        for (let i = 0; i < DEFAULT_GAMES.length; i++) {
+            expect(expectedGames[i]).to.deep.equal(DEFAULT_GAMES[i]);
+        }
+    });
+
+    it('getAllGameInfos() should return all of the games after deleting one', async () => {
+        gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
+        gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
+        gameInfoService.deleteGameInfoById('0');
+        const expectedGames = await gameInfoService.getAllGameInfos();
+        expect(expectedGames.length).to.equal(DEFAULT_GAMES.length - 1);
+        expect(expectedGames[0]).to.deep.equal(DEFAULT_GAMES[1]);
+        expect(expectedGames[0]).to.deep.equal(DEFAULT_GAMES[2]);
     });
 
     it('addGame(game) should add a game to the game collection, getAllGames() should return them', async () => {
@@ -100,9 +106,9 @@ describe('GameInfo service', async () => {
             soloScore: [],
             multiplayerScore: [],
         };
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length);
+        expect((await gameInfoService.getAllGameInfos()).length).to.equal(DEFAULT_GAMES.length);
         expect(await gameInfoService.addGameInfo(game));
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length + 1);
+        expect((await gameInfoService.getAllGameInfos()).length).to.equal(DEFAULT_GAMES.length + 1);
     });
 
     it("addGame(game) shouldn't add a game twice", async () => {
@@ -118,7 +124,7 @@ describe('GameInfo service', async () => {
             soloScore: [],
             multiplayerScore: [],
         };
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length);
+        expect((await gameInfoService.getAllGameInfos()).length).to.equal(DEFAULT_GAMES.length);
         expect(await gameInfoService.addGameInfo(game));
         await expect(gameInfoService.addGameInfo(game)).to.eventually.be.rejectedWith(Error);
     });

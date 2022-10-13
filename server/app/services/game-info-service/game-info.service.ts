@@ -29,6 +29,7 @@ export class GameInfoService {
     async getAllGames(): Promise<PrivateGameInformation[]> {
         return await this.collection.find({}).toArray();
     }
+
     async getGameById(gameId: string): Promise<PrivateGameInformation> {
         const filter = { id: gameId };
         return (await this.collection.find(filter).toArray())[0];
@@ -60,7 +61,7 @@ export class GameInfoService {
         });
     }
 
-    async addGame(game: PrivateGameInformation): Promise<void> {
+    async addGameInfo(game: PrivateGameInformation): Promise<void> {
         await this.collection.insertOne(game);
     }
 

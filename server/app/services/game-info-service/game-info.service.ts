@@ -1,6 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BMP_EXTENSION, DB_GAME_COLLECTION, DEFAULT_BMP_ASSET_PATH, ID_PREFIX } from '@app/constants/database';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
@@ -8,7 +9,6 @@ import { IdGeneratorService } from '@app/services/id-generator-service/id-genera
 import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
-import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 @Service()
 export class GameService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;

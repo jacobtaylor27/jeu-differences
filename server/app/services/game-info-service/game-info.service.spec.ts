@@ -3,6 +3,7 @@ import { BMP_EXTENSION, DB_URL, DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/co
 import { DEFAULT_GAME } from '@app/constants/default-game-info';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
@@ -19,7 +20,6 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
-import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 
 describe('GameInfo service', async () => {
     let gameService: GameService;

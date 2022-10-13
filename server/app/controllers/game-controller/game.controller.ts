@@ -1,9 +1,9 @@
 import { Bmp } from '@app/classes/bmp/bmp';
+import { GameInfo } from '@app/interface/game-info';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
-import { GameInfo } from '@common/game-info';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
@@ -139,7 +139,20 @@ export class GameController {
             this.gameInfo
                 .getAllGames()
                 .then((games: GameInfo[]) => {
-                    res.status(StatusCodes.OK).send({ games });
+                    res.status(StatusCodes.OK).send({
+                        games: games.map((game: GameInfo) => {
+                            return {
+                                id: game.id,
+                                name: game.name,
+                                thumbnail: game.thumbnail,
+                                nbDifferences: game.nbDifferences,
+                                idEditedBmp: game.idEditedBmp,
+                                idOriginalBmp: game.idOriginalBmp,
+                                multiplayerScore: game.multiplayerScore,
+                                soloScore: game.soloScore,
+                            };
+                        }),
+                    });
                 })
                 .catch(() => {
                     res.status(StatusCodes.NOT_FOUND).send();
@@ -149,8 +162,19 @@ export class GameController {
         this.router.get('/cards/:id', (req: Request, res: Response) => {
             this.gameInfo
                 .getGameById(req.params.id)
-                .then((games: GameInfo) => {
-                    res.status(StatusCodes.OK).send({ games });
+                .then((game: GameInfo) => {
+                    res.status(StatusCodes.OK).send({
+                        game: {
+                            id: game.id,
+                            name: game.name,
+                            thumbnail: game.thumbnail,
+                            nbDifferences: game.nbDifferences,
+                            idOriginalBmp: game.idOriginalBmp,
+                            idEditedBmp: game.idEditedBmp,
+                            multiplayerScore: game.multiplayerScore,
+                            soloScore: game.soloScore,
+                        },
+                    });
                 })
                 .catch(() => {
                     res.status(StatusCodes.NOT_FOUND).send();

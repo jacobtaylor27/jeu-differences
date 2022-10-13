@@ -8,6 +8,7 @@ import { DatabaseService } from '@app/services/database-service/database.service
 import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
+import { v4 } from 'uuid';
 @Service()
 export class GameInfoService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;
@@ -35,19 +36,24 @@ export class GameInfoService {
 
     async addGameInfoWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void> {
         const idOriginalBmp = await this.bmpService.addBmp(await images.original.toImageData(), DEFAULT_BMP_ASSET_PATH);
+        const idEditedBmp = await this.bmpService.addBmp(await images.modify.toImageData(), DEFAULT_BMP_ASSET_PATH);
+        const differences = await this.bmpDifferenceInterpreter.getCoordinates(
+            await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius),
+        );
         const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
+        const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
 
         await this.addGameInfo({
-            id: '0',
+            id: v4(),
             name,
             idOriginalBmp,
-            idEditedBmp: await this.bmpService.addBmp(await images.modify.toImageData(), DEFAULT_BMP_ASSET_PATH),
+            idEditedBmp,
             thumbnail:
                 'data:image/png;base64,' +
                 (await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION)),
             differenceRadius: radius,
-            differences: await this.bmpDifferenceInterpreter.getCoordinates(difference), // WHAT IS THAT????
-            idDifferenceBmp: await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH),
+            differences,
+            idDifferenceBmp,
             soloScore: [],
             multiplayerScore: [],
         });

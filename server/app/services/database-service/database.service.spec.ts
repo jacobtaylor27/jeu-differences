@@ -41,4 +41,11 @@ describe('Database service', () => {
         expect(databaseService['client']).to.not.equal(undefined);
         expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
+
+    it('start() should not do anything different if start() was already called', async () => {
+        await databaseService.start();
+        await databaseService.start();
+        expect(databaseService['client']).to.not.equal(undefined);
+        expect(databaseService.database.databaseName).to.equal(DB_NAME);
+    });
 });

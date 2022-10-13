@@ -6,8 +6,7 @@ export interface GameInformation {
     thumbnail: string;
     idOriginalBmp: string;
     idEditedBmp: string;
-    idDifferenceBmp: string;
     soloScore: Score[];
     multiplayerScore: Score[];
-    differenceRadius: number;
+    // nbDifferences: number;
 }

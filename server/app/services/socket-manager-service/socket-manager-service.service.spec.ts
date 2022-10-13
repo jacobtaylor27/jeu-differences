@@ -1,4 +1,4 @@
-import { SocketEvent } from '@app/constants/socket-event';
+import { SocketEvent } from '@common/socket-event';
 import { Server } from '@app/server';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
 import { expect } from 'chai';

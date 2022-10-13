@@ -5,6 +5,4 @@ import { Component } from '@angular/core';
     templateUrl: './dialog-gameover.component.html',
     styleUrls: ['./dialog-gameover.component.scss'],
 })
-export class DialogGameOverComponent {
-    constructor() {}
-}
+export class DialogGameOverComponent {}

@@ -1,7 +1,7 @@
-import { GameInfo } from '@common/game-info';
+import { GameInformation } from '@app/interfaces/game-information';
 
 export interface GameCard {
-    gameInformation: GameInfo;
+    gameInformation: GameInformation;
     isShown: boolean;
     isAdminCard: boolean;
 }

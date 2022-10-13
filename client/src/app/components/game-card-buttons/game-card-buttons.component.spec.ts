@@ -13,7 +13,6 @@ const GAME_CARD: GameCard = {
         thumbnail: 'image',
         idOriginalBmp: '1',
         idEditedBmp: '1',
-        idDifferenceBmp: '1',
         soloScore: [
             {
                 playerName: 'test2',
@@ -34,8 +33,6 @@ const GAME_CARD: GameCard = {
                 time: 10,
             },
         ],
-        differenceRadius: 3,
-        differences: [],
     },
     isShown: true,
     isAdminCard: true,

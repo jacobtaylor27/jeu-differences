@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { Tool } from '@app/enums/tool';
 import { Vec2 } from '@app/interfaces/vec2';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
@@ -27,5 +28,9 @@ export class DrawService {
 
     isCanvasSelected(canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) {
         return canvas === PropagateCanvasEvent.Both || canvas === specificCanvas;
+    }
+
+    isEraser(pencilState: Tool) {
+        return pencilState === Tool.Eraser;
     }
 }

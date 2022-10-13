@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { Tool } from '@app/enums/tool';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
@@ -52,17 +53,22 @@ describe('DrawServiceService', () => {
     });
 
     it('should verify if a both canvas is selected', () => {
-        expect(service['isCanvasSelected'](PropagateCanvasEvent.Both, PropagateCanvasEvent.Source)).toBeTrue();
-        expect(service['isCanvasSelected'](PropagateCanvasEvent.Both, PropagateCanvasEvent.Difference)).toBeTrue();
+        expect(service.isCanvasSelected(PropagateCanvasEvent.Both, PropagateCanvasEvent.Source)).toBeTrue();
+        expect(service.isCanvasSelected(PropagateCanvasEvent.Both, PropagateCanvasEvent.Difference)).toBeTrue();
     });
 
     it('should verify if a draw canvas is selected', () => {
-        expect(service['isCanvasSelected'](PropagateCanvasEvent.Difference, PropagateCanvasEvent.Difference)).toBeTrue();
-        expect(service['isCanvasSelected'](PropagateCanvasEvent.Difference, PropagateCanvasEvent.Source)).toBeFalse();
+        expect(service.isCanvasSelected(PropagateCanvasEvent.Difference, PropagateCanvasEvent.Difference)).toBeTrue();
+        expect(service.isCanvasSelected(PropagateCanvasEvent.Difference, PropagateCanvasEvent.Source)).toBeFalse();
     });
 
     it('should verify if a draw canvas is selected', () => {
-        expect(service['isCanvasSelected'](PropagateCanvasEvent.Source, PropagateCanvasEvent.Source)).toBeTrue();
-        expect(service['isCanvasSelected'](PropagateCanvasEvent.Source, PropagateCanvasEvent.Difference)).toBeFalse();
+        expect(service.isCanvasSelected(PropagateCanvasEvent.Source, PropagateCanvasEvent.Source)).toBeTrue();
+        expect(service.isCanvasSelected(PropagateCanvasEvent.Source, PropagateCanvasEvent.Difference)).toBeFalse();
+    });
+
+    it('should check if the pencil is in mode eraser', () => {
+        expect(service.isEraser(Tool.Eraser)).toBeTrue();
+        expect(service.isEraser(Tool.Pencil)).toBeFalse();
     });
 });

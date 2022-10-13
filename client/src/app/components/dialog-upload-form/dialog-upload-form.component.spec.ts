@@ -18,7 +18,7 @@ describe('DialogUploadFormComponent', () => {
     const model = { canvas: PropagateCanvasEvent.Both };
     beforeEach(async () => {
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInDiff: new Subject(), $uploadImageInSource: new Subject() });
-        drawServiceSpyObj = jasmine.createSpyObj('DrawService', [], ['isCanvasSelected']);
+        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['isCanvasSelected']);
         await TestBed.configureTestingModule({
             declarations: [DialogUploadFormComponent],
             providers: [
@@ -162,6 +162,7 @@ describe('DialogUploadFormComponent', () => {
     it('should submit a form because the type is both', async () => {
         component.data.canvas = PropagateCanvasEvent.Both;
         component.isFormSubmitted = true;
+        drawServiceSpyObj.isCanvasSelected.and.callFake(() => true);
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
@@ -178,6 +179,9 @@ describe('DialogUploadFormComponent', () => {
     it('should submit a form because the type is difference', async () => {
         component.data.canvas = PropagateCanvasEvent.Difference;
         component.isFormSubmitted = true;
+        drawServiceSpyObj.isCanvasSelected.and.callFake(
+            (canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) => specificCanvas === PropagateCanvasEvent.Difference,
+        );
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
@@ -196,6 +200,9 @@ describe('DialogUploadFormComponent', () => {
         component.isFormSubmitted = true;
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
+        drawServiceSpyObj.isCanvasSelected.and.callFake(
+            (canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) => specificCanvas === PropagateCanvasEvent.Source,
+        );
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
             expect(newImage).toEqual(component.img);
         });

@@ -57,6 +57,7 @@ export class GameService {
             idDifferenceBmp,
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: differences.length,
         });
     }
 

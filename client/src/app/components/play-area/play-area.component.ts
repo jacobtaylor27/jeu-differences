@@ -12,13 +12,13 @@ import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.s
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent implements AfterViewInit {
-    @ViewChild('actionsGameOriginal') canvasOriginal!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('actionsGameModified') canvasModified!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgOriginal') canvasImgOriginal!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModified') canvasImgModified!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModifiedWODifference') canvasImgDifference!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('actionsGameOriginal') canvasOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('actionsGameModified') canvasModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgOriginal') canvasImgOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModified') canvasImgModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModifiedWODifference') canvasImgDifference: ElementRef<HTMLCanvasElement>;
     @Input() gameId: string;
-    // private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
+
     buttonPressed = '';
 
     // eslint-disable-next-line max-params

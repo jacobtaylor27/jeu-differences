@@ -1,6 +1,6 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
-import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { GameInfo } from '@common/game-info';
@@ -15,7 +15,7 @@ export class GameController {
     // eslint-disable-next-line max-params
     constructor(
         private gameManager: GameManagerService,
-        private gameInfo: GameService,
+        private gameInfo: GameInfoService,
         private gameValidation: GameValidation,
         private bmpSubtractor: BmpSubtractorService,
     ) {
@@ -137,7 +137,7 @@ export class GameController {
 
         this.router.get('/cards', (req: Request, res: Response) => {
             this.gameInfo
-                .getAllGames()
+                .getAllGameInfos()
                 .then((games: GameInfo[]) => {
                     res.status(StatusCodes.OK).send({ games });
                 })
@@ -148,7 +148,7 @@ export class GameController {
 
         this.router.get('/cards/:id', (req: Request, res: Response) => {
             this.gameInfo
-                .getGameById(req.params.id)
+                .getGameInfoById(req.params.id)
                 .then((games: GameInfo) => {
                     res.status(StatusCodes.OK).send({ games });
                 })
@@ -190,7 +190,7 @@ export class GameController {
             const original = new Bmp(req.body.original.width, req.body.original.height, await Bmp.convertRGBAToARGB(req.body.original.data));
             const modify = new Bmp(req.body.modify.width, req.body.modify.height, await Bmp.convertRGBAToARGB(req.body.modify.data));
             this.gameInfo
-                .addGameWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
+                .addGameInfoWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
                 .then(() => {
                     res.status(StatusCodes.CREATED).send();
                 })

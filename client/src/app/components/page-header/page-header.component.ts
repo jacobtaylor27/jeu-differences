@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class PageHeaderComponent {
     @Input() headerMessage: string;
     @Input() isButtonEnabled: boolean = true;
+    @Input() isExitButtonEnabled: boolean = false;
 }

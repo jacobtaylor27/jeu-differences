@@ -24,11 +24,11 @@ export class DifferencesAreaComponent implements OnInit {
     }
 
     setNbDifferencesFound() {
-        if (!this.differenceDetectionHandler.nbDifferencesFound) {
-            this.nbDifferences = '0 / ' + this.gameInformationHandlerService.gameInformation.differences.length;
-        } else {
-            this.nbDifferences = this.differenceDetectionHandler.nbDifferencesFound + ' / ' + this.differenceDetectionHandler.nbTotalDifferences;
-        }
-        return this.nbDifferences;
+        // if (!this.differenceDetectionHandler.nbDifferencesFound) {
+        //     this.nbDifferences = '0 / ' + this.gameInformationHandlerService.gameInformation.differences.length;
+        // } else {
+        //     this.nbDifferences = this.differenceDetectionHandler.nbDifferencesFound + ' / ' + this.differenceDetectionHandler.nbTotalDifferences;
+        // }
+        // return this.nbDifferences;
     }
 }

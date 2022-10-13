@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DialogGameOverComponent } from '@app/components/dialog-gameover/dialog-gameover.component';
 import { Vec2 } from '@app/interfaces/vec2';
+import { CommunicationService } from '@app/services/communication/communication.service';
+// import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
 @Injectable({
@@ -11,8 +16,14 @@ export class DifferencesDetectionHandlerService {
     nbDifferencesFound: number;
     nbTotalDifferences: number;
     isGameOver: boolean = false;
+    contextImgModified: CanvasRenderingContext2D;
 
-    constructor(private timer: TimerService) {}
+    // eslint-disable-next-line max-params
+    constructor(
+        private timer: TimerService,
+        public matDialog: MatDialog,
+        private readonly communicationService: CommunicationService, // private readonly gameInfoHandlerService: GameInformationHandlerService,
+    ) {}
 
     setGameOver() {
         this.isGameOver = true;
@@ -38,6 +49,36 @@ export class DifferencesDetectionHandlerService {
 
     playSound(sound: HTMLAudioElement) {
         sound.play();
+    }
+
+    getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
+        this.communicationService
+            .validateCoordinates(id, mousePosition)
+            .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
+                if (!response || !response.body) {
+                    this.differenceNotDetected(mousePosition, ctx);
+                    return;
+                }
+
+                // this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.gameInformation.differences.length);
+                this.timer.setNbOfDifferencesFound();
+                this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
+                if (response.body.isGameOver) {
+                    this.setGameOver();
+                    this.openGameOverDialog();
+                }
+            });
+    }
+
+    openGameOverDialog() {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.minWidth = '50%';
+        this.matDialog.open(DialogGameOverComponent, dialogConfig);
+    }
+
+    setContextImgModified(ctx: CanvasRenderingContext2D) {
+        this.contextImgModified = ctx;
     }
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {

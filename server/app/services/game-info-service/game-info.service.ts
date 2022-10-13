@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { DB_GAME_COLLECTION, DEFAULT_BMP_ASSET_PATH } from '@app/constants/database';
+import { BMP_EXTENSION, DB_GAME_COLLECTION, DEFAULT_BMP_ASSET_PATH, ID_PREFIX } from '@app/constants/database';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
@@ -8,6 +8,7 @@ import { IdGeneratorService } from '@app/services/id-generator-service/id-genera
 import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 @Service()
 export class GameService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;
@@ -19,6 +20,7 @@ export class GameService {
         private readonly bmpSubtractorService: BmpSubtractorService,
         private readonly bmpDifferenceInterpreter: BmpDifferenceInterpreter,
         private readonly idGeneratorService: IdGeneratorService,
+        private readonly bmpEncoderService: BmpEncoderService,
     ) {}
 
     get collection(): Collection<GameInfo> {
@@ -41,10 +43,15 @@ export class GameService {
         );
         const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
         const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
+
         await this.addGame({
+            id: this.idGeneratorService.generateNewId(),
             name,
             idOriginalBmp,
             idEditedBmp,
+            thumbnail:
+                'data:image/png;base64,' +
+                (await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION)),
             differenceRadius: radius,
             differences,
             idDifferenceBmp,
@@ -54,13 +61,6 @@ export class GameService {
     }
 
     async addGame(game: GameInfo): Promise<void> {
-        if (game.id === undefined) game.id = this.idGeneratorService.generateNewId();
-        // if (game.soloScore === undefined) game.soloScore = [];
-        // if (game.multiplayerScore === undefined) game.multiplayerScore = [];
-        const originalBmp: Bmp = await this.bmpService.getBmpById(game.idOriginalBmp, this.srcPath);
-        const modifiedBmp: Bmp = await this.bmpService.getBmpById(game.idEditedBmp, this.srcPath);
-        const differenceBmp: Bmp = await this.bmpSubtractorService.getDifferenceBMP(originalBmp, modifiedBmp, game.differenceRadius);
-        game.differences = await this.bmpDifferenceInterpreter.getCoordinates(differenceBmp);
         await this.collection.insertOne(game);
     }
 

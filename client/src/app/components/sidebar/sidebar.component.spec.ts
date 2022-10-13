@@ -31,6 +31,7 @@ describe('SidebarComponent', () => {
         spyGameInfosService.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'imageName',
             idEditedBmp: '1',
             idDifferenceBmp: '1',

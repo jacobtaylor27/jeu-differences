@@ -187,25 +187,8 @@ export class GameController {
                 res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
-            let isErrorOnGameValidation = false;
             const original = new Bmp(req.body.original.width, req.body.original.height, await Bmp.convertRGBAToARGB(req.body.original.data));
             const modify = new Bmp(req.body.modify.width, req.body.modify.height, await Bmp.convertRGBAToARGB(req.body.modify.data));
-            await this.gameValidation
-                .isNbDifferenceValid(original, modify, req.body.differenceRadius)
-                .then((isValid: boolean) => {
-                    if (!isValid) {
-                        isErrorOnGameValidation = true;
-                        res.status(StatusCodes.NOT_ACCEPTABLE).send();
-                    }
-                })
-                .catch(() => {
-                    isErrorOnGameValidation = true;
-                    res.status(StatusCodes.NOT_FOUND).send();
-                });
-            if (isErrorOnGameValidation) {
-                return;
-            }
-
             this.gameInfo
                 .addGameWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
                 .then(() => {

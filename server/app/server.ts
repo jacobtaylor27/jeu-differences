@@ -30,7 +30,6 @@ export class Server {
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
         await this.databaseService.start();
-        await this.databaseService.populateDatabase();
     }
 
     private onError(error: NodeJS.ErrnoException): void {

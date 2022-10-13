@@ -25,12 +25,12 @@ export class DatabaseService {
     }
 
     private async initializeCollection(collectionName: string = DB_GAME_COLLECTION): Promise<void> {
-        if (!(await this.doesCollectionExists(collectionName))) {
+        if (!(await this.doesCollectionExist(collectionName))) {
             await this.db.createCollection(collectionName);
         }
     }
 
-    private async doesCollectionExists(collectionName: string): Promise<boolean> {
+    private async doesCollectionExist(collectionName: string): Promise<boolean> {
         return !((await this.db.listCollections({ name: collectionName }).toArray()).length === 0);
     }
 }

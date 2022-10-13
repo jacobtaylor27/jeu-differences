@@ -1,6 +1,6 @@
-import { GameInfo } from '@common/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 
-const game1: GameInfo = {
+const game1: PrivateGameInformation = {
     id: '0',
     thumbnail: 'image',
     idOriginalBmp: '0',
@@ -13,7 +13,7 @@ const game1: GameInfo = {
     differences: [],
 };
 
-const game2: GameInfo = {
+const game2: PrivateGameInformation = {
     id: '1',
     thumbnail: 'image',
     idOriginalBmp: '1',
@@ -26,7 +26,7 @@ const game2: GameInfo = {
     differences: [],
 };
 
-const game3: GameInfo = {
+const game3: PrivateGameInformation = {
     id: '2',
     thumbnail: 'image',
     idOriginalBmp: '2',
@@ -39,4 +39,4 @@ const game3: GameInfo = {
     differences: [],
 };
 
-export const DEFAULT_GAMES: GameInfo[] = [game1, game2, game3];
+export const DEFAULT_GAMES: PrivateGameInformation[] = [game1, game2, game3];

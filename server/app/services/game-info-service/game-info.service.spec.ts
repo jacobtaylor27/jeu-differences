@@ -9,7 +9,6 @@ import { GameInfoService } from '@app/services/game-info-service/game-info.servi
 import { DEFAULT_GAMES } from '@app/services/game-info-service/game-info.service.contants.spec';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
-import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 import { tmpdir } from 'os';

@@ -29,11 +29,8 @@ describe('GameInformationHandlerService', () => {
             thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
         };
         service.gameMode = GameMode.Classic;
 
@@ -63,11 +60,8 @@ describe('GameInformationHandlerService', () => {
             thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
         };
         expect(service.getOriginalBmpId()).toEqual('original');
     });
@@ -79,11 +73,8 @@ describe('GameInformationHandlerService', () => {
             thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
         };
         expect(service.getModifiedBmpId()).toEqual('edited');
     });
@@ -122,11 +113,8 @@ describe('GameInformationHandlerService', () => {
             thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
         };
         expect(service.getGameName()).toEqual('test');
     });

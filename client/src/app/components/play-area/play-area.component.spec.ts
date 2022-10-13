@@ -69,11 +69,8 @@ describe('PlayAreaComponent', () => {
             idOriginalBmp: 'original',
             thumbnail: 'string',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
         };
         gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
         gameInformationHandlerServiceSpy.playerName = 'test';

@@ -1,4 +1,4 @@
-import { GameInfo } from '@common/game-info';
+import { GameInfo } from '@app/interface/game-info';
 import { Score } from '@common/score';
 
 const score: Score = {
@@ -16,6 +16,7 @@ const game1: GameInfo = {
     name: 'Mark',
     differenceRadius: 1,
     differences: [],
+    nbDifferences: 1,
 };
 
 export const DEFAULT_GAME: GameInfo[] = [game1];

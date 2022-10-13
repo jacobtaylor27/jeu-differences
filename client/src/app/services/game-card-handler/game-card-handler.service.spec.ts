@@ -37,6 +37,7 @@ describe('GameCardHandlerService', () => {
                             time: 10,
                         },
                     ],
+                    nbDifferences: 1,
                 },
                 isShown: true,
                 isAdminCard: true,

@@ -71,6 +71,7 @@ describe('PlayAreaComponent', () => {
             idEditedBmp: 'edited',
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: 1,
         };
         gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
         gameInformationHandlerServiceSpy.playerName = 'test';

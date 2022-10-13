@@ -9,7 +9,7 @@ import { DatabaseServiceMock } from '@app/services/database-service/database.ser
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
+import { GameInfo } from '@app/interface/game-info';
 import * as bmp from 'bmp-js';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
@@ -98,6 +98,7 @@ describe('GameInfo service', async () => {
             differences: [],
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: 0,
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
         expect(await gameService.addGame(game));
@@ -116,6 +117,7 @@ describe('GameInfo service', async () => {
             differences: [],
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: 0,
         };
         expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
         expect(await gameService.addGame(game));

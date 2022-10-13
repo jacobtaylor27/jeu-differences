@@ -4,7 +4,7 @@ import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
+import { GameInfo } from '@app/interface/game-info';
 import { Score } from '@common/score';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -22,6 +22,7 @@ describe('Game', () => {
         name: 'test game',
         differenceRadius: 0,
         differences: [[{} as Coordinate]],
+        nbDifferences: 1,
     };
     const expectedPlayers = ['test player'];
     const expectedMode = 'classic';

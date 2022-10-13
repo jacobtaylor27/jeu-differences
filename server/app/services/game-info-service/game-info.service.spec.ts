@@ -7,7 +7,7 @@ import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
-import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
 import { GameInfo } from '@common/game-info';
@@ -22,7 +22,7 @@ import { stub } from 'sinon';
 import { Container } from 'typedi';
 
 describe('GameInfo service', async () => {
-    let gameService: GameService;
+    let gameService: GameInfoService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
     let bmpDifferenceService: BmpDifferenceInterpreter;
@@ -42,7 +42,7 @@ describe('GameInfo service', async () => {
         bmpService = Container.get(BmpService);
         bmpDecoderService = Container.get(BmpDecoderService);
         bmpEncoderService = Container.get(BmpEncoderService);
-        gameService = new GameService(
+        gameService = new GameInfoService(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             databaseService as any,
             bmpService,

@@ -1,9 +1,10 @@
 import { Game } from '@app/classes/game/game';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
-import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
@@ -12,14 +13,13 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub } from 'sinon';
 import { Container } from 'typedi';
-import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 
 describe('GameManagerService', () => {
     let bmpService: BmpService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpDifferenceService: BmpDifferenceInterpreter;
     let gameManager: GameManagerService;
-    let gameInfoSpyObj: SinonSpiedInstance<GameService>;
+    let gameInfoSpyObj: SinonSpiedInstance<GameInfoService>;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
     let bmpEncoderService: BmpEncoderService;
     // let differenceSpyObj: SinonSpiedInstance<BmpDifferenceInterpreter>;
@@ -33,7 +33,7 @@ describe('GameManagerService', () => {
             return '5';
         });
         bmpEncoderService = Container.get(BmpEncoderService);
-        const gameInfo = new GameService(
+        const gameInfo = new GameInfoService(
             {} as DatabaseService,
             bmpService,
             bmpSubtractorService,
@@ -49,7 +49,7 @@ describe('GameManagerService', () => {
 
     it('should create a game', async () => {
         expect(await gameManager.createGame(['test'], 'classic', '')).to.equal(gameManager['games'][0].identifier);
-        expect(gameInfoSpyObj.getGameById.called).to.equal(true);
+        expect(gameInfoSpyObj.getGameInfoById.called).to.equal(true);
         expect(gameManager['games'].length).not.to.equal(0);
     });
 

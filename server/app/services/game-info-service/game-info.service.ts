@@ -10,7 +10,7 @@ import { GameInfo } from '@common/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 @Service()
-export class GameService {
+export class GameInfoService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;
 
     // eslint-disable-next-line max-params

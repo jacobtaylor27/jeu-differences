@@ -34,6 +34,8 @@ import { TimerCountdownComponent } from './components/timer-countdown/timer-coun
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
+import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -72,6 +74,7 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
         GameCardButtonsComponent,
         GameScoreComponent,
         DialogGameOverComponent,
+        PageHeaderComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

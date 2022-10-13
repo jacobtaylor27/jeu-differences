@@ -66,13 +66,18 @@ export class DifferencesDetectionHandlerService {
                 this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
                 if (response.body.isGameOver) {
                     this.setGameOver();
-                    const dialogConfig = new MatDialogConfig();
-                    dialogConfig.disableClose = true;
-                    dialogConfig.minWidth = '50%';
-                    this.matDialog.open(DialogGameOverComponent, dialogConfig);
+                    this.openGameOverDialog();
                 }
             });
     }
+
+    openGameOverDialog() {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.minWidth = '50%';
+        this.matDialog.open(DialogGameOverComponent, dialogConfig);
+    }
+
     setContextImgModified(ctx: CanvasRenderingContext2D) {
         this.contextImgModified = ctx;
     }

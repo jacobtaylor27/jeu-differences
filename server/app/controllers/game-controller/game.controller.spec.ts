@@ -3,7 +3,7 @@ import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInformation } from '@common/game-information';
+import { PublicGameInformation } from '@common/game-information';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
@@ -88,7 +88,7 @@ describe('GameController', () => {
             .get('/api/game/cards')
             .expect(StatusCodes.OK)
             .then((response) => {
-                expect(response.body).to.deep.equal({ games: [{} as GameInformation, {} as GameInformation] });
+                expect(response.body).to.deep.equal({ games: [{} as PublicGameInformation, {} as PublicGameInformation] });
             });
     });
 

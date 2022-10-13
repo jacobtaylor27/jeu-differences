@@ -26,6 +26,7 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
@@ -59,6 +60,7 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
@@ -74,6 +76,7 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
@@ -89,6 +92,7 @@ describe('GameInformationHandlerService', () => {
         const gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
@@ -115,6 +119,7 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
@@ -130,6 +135,7 @@ describe('GameInformationHandlerService', () => {
         const gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',

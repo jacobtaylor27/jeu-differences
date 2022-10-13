@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { DifferencesDetectionHandlerService } from '../differences-detection-handler/differences-detection-handler.service';
+import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 
 import { MouseHandlerService } from './mouse-handler.service';
 

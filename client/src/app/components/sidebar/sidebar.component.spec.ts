@@ -1,11 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
+import { DifferencesAreaComponent } from '@app/components/differences-area/differences-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { DifferencesAreaComponent } from '../differences-area/differences-area.component';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;

@@ -4,10 +4,10 @@ import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogGameOverComponent } from '@app/components/dialog-gameover/dialog-gameover.component';
 import { Vec2 } from '@app/interfaces/vec2';
+import { CommunicationService } from '@app/services/communication/communication.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
-import { CommunicationService } from '../communication/communication.service';
-import { GameInformationHandlerService } from '../game-information-handler/game-information-handler.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -18,6 +18,7 @@ export class DifferencesDetectionHandlerService {
     isGameOver: boolean = false;
     contextImgModified: CanvasRenderingContext2D;
 
+    // eslint-disable-next-line max-params
     constructor(
         private timer: TimerService,
         public matDialog: MatDialog,

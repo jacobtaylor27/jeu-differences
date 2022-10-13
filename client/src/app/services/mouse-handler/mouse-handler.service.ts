@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DifferencesDetectionHandlerService } from '../differences-detection-handler/differences-detection-handler.service';
+import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 
 @Injectable({
     providedIn: 'root',

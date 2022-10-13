@@ -5,9 +5,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationService } from '@app/services/communication/communication.service';
+import { TimerService } from '@app/services/timer.service';
 import { Subject } from 'rxjs';
-import { CommunicationService } from '../communication/communication.service';
-import { TimerService } from '../timer.service';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 describe('DifferencesDetectionHandlerService', () => {

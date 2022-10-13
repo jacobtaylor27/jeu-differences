@@ -67,6 +67,7 @@ describe('GamePageComponent', () => {
 
     it('should create game room on init', () => {
         const spyCreateGame = spyOn(component, 'createGameRoom');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         spyCreateGame.and.callFake(() => {});
         component.ngOnInit();
         expect(spyCreateGame).toHaveBeenCalled();

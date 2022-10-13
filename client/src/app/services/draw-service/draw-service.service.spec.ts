@@ -50,4 +50,19 @@ describe('DrawServiceService', () => {
         expect(spyDiff).not.toHaveBeenCalled();
         expect(spySource).toHaveBeenCalled();
     });
+
+    it('should verify if a both canvas is selected', () => {
+        expect(service['isCanvasSelected'](PropagateCanvasEvent.Both, PropagateCanvasEvent.Source)).toBeTrue();
+        expect(service['isCanvasSelected'](PropagateCanvasEvent.Both, PropagateCanvasEvent.Difference)).toBeTrue();
+    });
+
+    it('should verify if a draw canvas is selected', () => {
+        expect(service['isCanvasSelected'](PropagateCanvasEvent.Difference, PropagateCanvasEvent.Difference)).toBeTrue();
+        expect(service['isCanvasSelected'](PropagateCanvasEvent.Difference, PropagateCanvasEvent.Source)).toBeFalse();
+    });
+
+    it('should verify if a draw canvas is selected', () => {
+        expect(service['isCanvasSelected'](PropagateCanvasEvent.Source, PropagateCanvasEvent.Source)).toBeTrue();
+        expect(service['isCanvasSelected'](PropagateCanvasEvent.Source, PropagateCanvasEvent.Difference)).toBeFalse();
+    });
 });

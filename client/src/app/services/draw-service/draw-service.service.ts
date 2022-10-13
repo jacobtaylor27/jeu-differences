@@ -17,11 +17,15 @@ export class DrawService {
     }
 
     reset(canvas: PropagateCanvasEvent) {
-        if (canvas === PropagateCanvasEvent.Both || canvas === PropagateCanvasEvent.Difference) {
+        if (this.isCanvasSelected(canvas, PropagateCanvasEvent.Difference)) {
             this.toolService.$resetDiff.next();
         }
-        if (canvas === PropagateCanvasEvent.Both || canvas === PropagateCanvasEvent.Source) {
+        if (this.isCanvasSelected(canvas, PropagateCanvasEvent.Source)) {
             this.toolService.$resetSource.next();
         }
+    }
+
+    private isCanvasSelected(canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) {
+        return canvas === PropagateCanvasEvent.Both || canvas === specificCanvas;
     }
 }

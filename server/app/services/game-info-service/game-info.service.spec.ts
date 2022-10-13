@@ -72,18 +72,18 @@ describe('GameInfo service', async () => {
     });
 
     it('getGameById(id) should return a game according to a specific id', async () => {
-        expect(await gameService.getGameById('0')).to.deep.equal(DEFAULT_GAME[0]);
+        expect(await gameService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAME[0]);
     });
 
     it('getGameById(id) should return undefined if the specific id is out of range', async () => {
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        expect(await gameService.getGameById('5')).to.equal(undefined);
+        expect(await gameService.getGameInfoById('5')).to.equal(undefined);
     });
 
     it('getAllGame() should return all of the games', async () => {
-        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
-        expect(await gameService.deleteGameById('0')).to.equal(true);
-        expect(await gameService.getAllGames()).to.deep.equal([]);
+        expect((await gameService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length);
+        expect(await gameService.deleteGameInfoById('0')).to.equal(true);
+        expect(await gameService.getAllGameInfos()).to.deep.equal([]);
     });
 
     it('addGame(game) should add a game to the game collection, getAllGames() should return them', async () => {
@@ -99,9 +99,9 @@ describe('GameInfo service', async () => {
             soloScore: [],
             multiplayerScore: [],
         };
-        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
-        expect(await gameService.addGame(game));
-        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length + 1);
+        expect((await gameService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length);
+        expect(await gameService.addGameInfo(game));
+        expect((await gameService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length + 1);
     });
 
     it("addGame(game) shouldn't add a game twice", async () => {
@@ -117,26 +117,26 @@ describe('GameInfo service', async () => {
             soloScore: [],
             multiplayerScore: [],
         };
-        expect((await gameService.getAllGames()).length).to.equal(DEFAULT_GAME.length);
-        expect(await gameService.addGame(game));
-        await expect(gameService.addGame(game)).to.eventually.be.rejectedWith(Error);
+        expect((await gameService.getAllGameInfos()).length).to.equal(DEFAULT_GAME.length);
+        expect(await gameService.addGameInfo(game));
+        await expect(gameService.addGameInfo(game)).to.eventually.be.rejectedWith(Error);
     });
 
     it('deleteGameBy(id) should delete a game according to a specific id', async () => {
-        expect(await gameService.deleteGameById('0')).to.equal(true);
-        expect((await gameService.getAllGames()).length).to.equal(0);
+        expect(await gameService.deleteGameInfoById('0')).to.equal(true);
+        expect((await gameService.getAllGameInfos()).length).to.equal(0);
     });
 
     it('deleteGameBy(id) should return false when trying to delete the same game twice', async () => {
-        expect(await gameService.deleteGameById('0')).to.equal(true);
-        expect((await gameService.getAllGames()).length).to.equal(0);
-        expect(await gameService.deleteGameById('0')).to.equal(false);
-        expect(await gameService.deleteGameById('0')).to.equal(false);
+        expect(await gameService.deleteGameInfoById('0')).to.equal(true);
+        expect((await gameService.getAllGameInfos()).length).to.equal(0);
+        expect(await gameService.deleteGameInfoById('0')).to.equal(false);
+        expect(await gameService.deleteGameInfoById('0')).to.equal(false);
     });
 
     it('resetAllGame() should reset all of the games', async () => {
-        await gameService.resetAllGame();
-        expect((await gameService.getAllGames()).length).to.equal(0);
+        await gameService.resetAllGameInfo();
+        expect((await gameService.getAllGameInfos()).length).to.equal(0);
     });
 
     it('should create a game from Bmp', async () => {
@@ -149,12 +149,14 @@ describe('GameInfo service', async () => {
                 return { width: 0, height: 0, data: new Uint8ClampedArray(), colorSpace: 'srgb' };
             },
         } as unknown as Bmp);
-        const addGameSpy = stub(gameService, 'addGame').resolves();
+        const addGameSpy = stub(gameService, 'addGameInfo').resolves();
         const bmpEncoderSpy = stub(bmpEncoderService, 'base64Encode').resolves();
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        await gameService.addGameWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0).then(() => {
-            expect(bmpEncoderSpy.called).to.equal(true);
-            expect(addGameSpy.called).to.equal(true);
-        });
+        await gameService
+            .addGameInfoWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0)
+            .then(() => {
+                expect(bmpEncoderSpy.called).to.equal(true);
+                expect(addGameSpy.called).to.equal(true);
+            });
     });
 });

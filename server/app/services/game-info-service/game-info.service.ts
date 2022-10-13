@@ -27,15 +27,15 @@ export class GameService {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
 
-    async getAllGames(): Promise<GameInfo[]> {
+    async getAllGameInfos(): Promise<GameInfo[]> {
         return await this.collection.find({}).toArray();
     }
-    async getGameById(gameId: string): Promise<GameInfo> {
+    async getGameInfoById(gameId: string): Promise<GameInfo> {
         const filter = { id: gameId };
         return (await this.collection.find(filter).toArray())[0];
     }
 
-    async addGameWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void> {
+    async addGameInfoWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void> {
         const idOriginalBmp = await this.bmpService.addBmp(await images.original.toImageData(), DEFAULT_BMP_ASSET_PATH);
         const idEditedBmp = await this.bmpService.addBmp(await images.modify.toImageData(), DEFAULT_BMP_ASSET_PATH);
         const differences = await this.bmpDifferenceInterpreter.getCoordinates(
@@ -44,7 +44,7 @@ export class GameService {
         const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
         const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
 
-        await this.addGame({
+        await this.addGameInfo({
             id: this.idGeneratorService.generateNewId(),
             name,
             idOriginalBmp,
@@ -60,16 +60,16 @@ export class GameService {
         });
     }
 
-    async addGame(game: GameInfo): Promise<void> {
+    async addGameInfo(game: GameInfo): Promise<void> {
         await this.collection.insertOne(game);
     }
 
-    async deleteGameById(gameId: string): Promise<boolean> {
+    async deleteGameInfoById(gameId: string): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
         return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;
     }
 
-    async resetAllGame(): Promise<void> {
+    async resetAllGameInfo(): Promise<void> {
         await this.collection.deleteMany({});
     }
 }

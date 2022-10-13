@@ -11,7 +11,7 @@ export class GameManagerService {
     constructor(private gameInfo: GameService, public differenceService: BmpDifferenceInterpreter) {}
 
     async createGame(players: string[], mode: string, gameCardId: string) {
-        const gameCard: GameInfo = await this.gameInfo.getGameById(gameCardId);
+        const gameCard: GameInfo = await this.gameInfo.getGameInfoById(gameCardId);
         const game = new Game(mode, players, gameCard);
         this.games.push(game);
         return game.identifier;

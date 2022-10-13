@@ -31,6 +31,10 @@ describe.only('GameInfo Service', async () => {
         bmpEncoderService = Container.get(BmpEncoderService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
+        idGeneratorService = sinon.createStubInstance(IdGeneratorService);
+        idGeneratorService['generateNewId'].callsFake(() => {
+            return '5';
+        });
         gameInfoService = new GameInfoService(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             databaseService as any,
@@ -40,7 +44,6 @@ describe.only('GameInfo Service', async () => {
             idGeneratorService,
             bmpEncoderService,
         );
-
         gameInfoService['srcPath'] = tmpdir();
         await databaseService.start(DB_URL);
         await databaseService.initializeCollection();
@@ -48,6 +51,7 @@ describe.only('GameInfo Service', async () => {
 
     afterEach(async () => {
         await databaseService.close();
+        sinon.restore();
     });
 
     it('getGameInfoById(id) should return a game according to a specific id', async () => {

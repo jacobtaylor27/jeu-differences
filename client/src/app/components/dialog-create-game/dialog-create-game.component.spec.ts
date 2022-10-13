@@ -45,5 +45,12 @@ describe('DialogCreateGameComponent', () => {
         });
         component.createGame();
         expect(spyCommunicationService.createGame).toHaveBeenCalled();
+
+        spyCommunicationService.createGame.and.callFake(() => {
+            return of(null)
+        });
+        component.createGame();
+        expect(spyCommunicationService.createGame).toHaveBeenCalled();
+
     });
 });

@@ -67,6 +67,7 @@ describe('PlayAreaComponent', () => {
             id: '1',
             name: 'test',
             idOriginalBmp: 'original',
+            thumbnail: 'string',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
             soloScore: [],

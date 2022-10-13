@@ -30,12 +30,11 @@ import { GameCarouselComponent } from './components/game-carousel/game-carousel.
 import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
 import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
 import { GameScoreComponent } from './components/game-score/game-score.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
-import { GameCardButtonsComponent } from './components/game-card-buttons/game-card-buttons.component';
-import { PageHeaderComponent } from './components/page-header/page-header.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.

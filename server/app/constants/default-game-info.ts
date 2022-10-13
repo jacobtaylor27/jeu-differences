@@ -1,11 +1,11 @@
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { Score } from '@common/score';
 
 const score: Score = {
     playerName: 'Mark',
     time: 23,
 };
-const game1: GameInfo = {
+const game1: PrivateGameInformation = {
     id: '0',
     thumbnail: 'image',
     idOriginalBmp: '0',
@@ -19,4 +19,4 @@ const game1: GameInfo = {
     nbDifferences: 1,
 };
 
-export const DEFAULT_GAME: GameInfo[] = [game1];
+export const DEFAULT_GAME: PrivateGameInformation[] = [game1];

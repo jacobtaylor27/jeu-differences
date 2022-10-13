@@ -9,7 +9,7 @@ import { DatabaseServiceMock } from '@app/services/database-service/database.ser
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import * as bmp from 'bmp-js';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
@@ -87,7 +87,7 @@ describe('GameInfo service', async () => {
     });
 
     it('addGame(game) should add a game to the game collection, getAllGames() should return them', async () => {
-        const game: GameInfo = {
+        const game: PrivateGameInformation = {
             id: '5',
             idOriginalBmp: '2',
             idEditedBmp: '3',
@@ -106,7 +106,7 @@ describe('GameInfo service', async () => {
     });
 
     it("addGame(game) shouldn't add a game twice", async () => {
-        const game: GameInfo = {
+        const game: PrivateGameInformation = {
             id: '5',
             idOriginalBmp: '2',
             idEditedBmp: '3',

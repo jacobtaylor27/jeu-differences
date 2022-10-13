@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { GameInformation } from '@common/game-information';
+import { PublicGameInformation } from '@common/game-information';
 
 @Component({
     selector: 'app-game-carousel',
@@ -22,7 +22,7 @@ export class GameCarouselComponent implements OnInit {
     }
 
     fetchGameInformation(): void {
-        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: GameInformation[] }>) => {
+        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: PublicGameInformation[] }>) => {
             if (response && response.body) {
                 for (const gameInfo of response.body.games) {
                     const newCard: GameCard = {

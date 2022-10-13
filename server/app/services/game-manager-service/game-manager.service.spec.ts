@@ -7,7 +7,7 @@ import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub } from 'sinon';
@@ -68,7 +68,7 @@ describe('GameManagerService', () => {
 
     it('should check if the game is over', () => {
         const gameFoundSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
-        const expectedGame = stub(new Game('', ['test'], {} as GameInfo));
+        const expectedGame = stub(new Game('', ['test'], {} as PrivateGameInformation));
         expectedGame.isGameOver.callsFake(() => false);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         expect(gameManager.isGameOver('')).to.equal(null);

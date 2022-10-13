@@ -1,5 +1,5 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
@@ -138,9 +138,9 @@ export class GameController {
         this.router.get('/cards', (req: Request, res: Response) => {
             this.gameInfo
                 .getAllGames()
-                .then((games: GameInfo[]) => {
+                .then((games: PrivateGameInformation[]) => {
                     res.status(StatusCodes.OK).send({
-                        games: games.map((game: GameInfo) => {
+                        games: games.map((game: PrivateGameInformation) => {
                             return {
                                 id: game.id,
                                 name: game.name,
@@ -162,7 +162,7 @@ export class GameController {
         this.router.get('/cards/:id', (req: Request, res: Response) => {
             this.gameInfo
                 .getGameById(req.params.id)
-                .then((game: GameInfo) => {
+                .then((game: PrivateGameInformation) => {
                     res.status(StatusCodes.OK).send({
                         game: {
                             id: game.id,

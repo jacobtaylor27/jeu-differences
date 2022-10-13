@@ -5,7 +5,7 @@ import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
@@ -23,14 +23,14 @@ export class GameService {
         private readonly bmpEncoderService: BmpEncoderService,
     ) {}
 
-    get collection(): Collection<GameInfo> {
+    get collection(): Collection<PrivateGameInformation> {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
 
-    async getAllGames(): Promise<GameInfo[]> {
+    async getAllGames(): Promise<PrivateGameInformation[]> {
         return await this.collection.find({}).toArray();
     }
-    async getGameById(gameId: string): Promise<GameInfo> {
+    async getGameById(gameId: string): Promise<PrivateGameInformation> {
         const filter = { id: gameId };
         return (await this.collection.find(filter).toArray())[0];
     }
@@ -61,7 +61,7 @@ export class GameService {
         });
     }
 
-    async addGame(game: GameInfo): Promise<void> {
+    async addGame(game: PrivateGameInformation): Promise<void> {
         await this.collection.insertOne(game);
     }
 

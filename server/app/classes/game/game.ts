@@ -3,17 +3,17 @@ import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { v4 } from 'uuid';
 
 export class Game {
     players: string[];
     private id: string;
-    private info: GameInfo;
+    private info: PrivateGameInformation;
     private differenceFound: Set<Coordinate[]>;
     private context: GameContext;
 
-    constructor(mode: string, players: string[], info: GameInfo) {
+    constructor(mode: string, players: string[], info: PrivateGameInformation) {
         this.info = info;
         this.players = players;
         this.differenceFound = new Set();

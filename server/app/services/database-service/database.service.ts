@@ -1,6 +1,6 @@
 import { DB_GAME_COLLECTION, DB_NAME, DB_URL } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game-info';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { Db, MongoClient, MongoParseError } from 'mongodb';
 import { Service } from 'typedi';
 
@@ -38,7 +38,7 @@ export class DatabaseService {
         }
     }
 
-    private async initializeGameCollection(collectionName: string, game: GameInfo[]): Promise<void> {
+    private async initializeGameCollection(collectionName: string, game: PrivateGameInformation[]): Promise<void> {
         await this.client.db(DB_NAME).collection(collectionName).insertMany(game);
     }
 }

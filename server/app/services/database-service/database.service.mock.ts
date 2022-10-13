@@ -1,6 +1,6 @@
 import { DB_GAME_COLLECTION, DB_NAME } from '@app/constants/database';
 import { DEFAULT_GAME } from '@app/constants/default-game-info';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { Db, MongoClient } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 export class DatabaseServiceMock {
@@ -41,7 +41,7 @@ export class DatabaseServiceMock {
         }
     }
 
-    private async initializeGameCollection(collectionName: string, game: GameInfo[]): Promise<void> {
+    private async initializeGameCollection(collectionName: string, game: PrivateGameInformation[]): Promise<void> {
         await this.client.db(DB_NAME).collection(collectionName).insertMany(game);
     }
 }

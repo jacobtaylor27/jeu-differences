@@ -2,13 +2,13 @@
 import { Injectable } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { CardRange } from '@app/interfaces/range';
-import { GameInformation } from '@common/game-information';
+import { PublicGameInformation } from '@common/game-information';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameCardHandlerService {
-    gamesInfo: GameInformation[];
+    gamesInfo: PublicGameInformation[];
     private activeCardsRange: CardRange = { start: 0, end: 3 };
     private gameCards: GameCard[] = [];
 

@@ -4,7 +4,7 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Coordinate } from '@common/coordinate';
 import { GameInformation } from '@common/game-information';
-import { GameInfo } from '@app/interface/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
@@ -82,7 +82,7 @@ describe('GameController', () => {
     });
 
     it('should fetch all games cards of the database', async () => {
-        const expectedGameCards = [{} as GameInfo, {} as GameInfo];
+        const expectedGameCards = [{} as PrivateGameInformation, {} as PrivateGameInformation];
         gameInfo.getAllGames.resolves(expectedGameCards);
         return supertest(expressApp)
             .get('/api/game/cards')
@@ -98,7 +98,7 @@ describe('GameController', () => {
     });
 
     it('should fetch a games card of the database', async () => {
-        const expectedGameCard = {} as GameInfo;
+        const expectedGameCard = {} as PrivateGameInformation;
         gameInfo.getGameById.resolves(expectedGameCard);
         return supertest(expressApp)
             .get('/api/game/cards/0')

@@ -8,6 +8,9 @@ import { environment } from 'src/environments/environment';
 export class CommunicationSocketService {
     private socket: Socket;
     constructor() {
+        if (!this.socket) {
+            this.socket = io(environment.socketUrl, { transports: ['websocket'], upgrade: false });
+        }
         this.connect();
     }
     private get isSocketAlive() {
@@ -25,7 +28,6 @@ export class CommunicationSocketService {
         if (this.isSocketAlive) {
             return;
         }
-        this.socket = io(environment.socketUrl, { transports: ['websocket'], upgrade: false });
         this.socket.connect();
     }
 }

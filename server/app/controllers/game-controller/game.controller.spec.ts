@@ -88,7 +88,7 @@ describe('GameController', () => {
             .get('/api/game/cards')
             .expect(StatusCodes.OK)
             .then((response) => {
-                expect(response.body).to.deep.equal({ games: expectedGameCards });
+                expect(response.body).to.deep.equal({ games: [{} as GameInformation, {} as GameInformation] });
             });
     });
 
@@ -104,7 +104,7 @@ describe('GameController', () => {
             .get('/api/game/cards/0')
             .expect(StatusCodes.OK)
             .then((response) => {
-                expect(response.body).to.deep.equal({ games: expectedGameCard });
+                expect(response.body).to.deep.equal({ game: expectedGameCard });
             });
     });
 

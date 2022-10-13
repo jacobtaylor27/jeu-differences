@@ -33,14 +33,7 @@ describe('GameManagerService', () => {
             return '5';
         });
         bmpEncoderService = Container.get(BmpEncoderService);
-        const gameInfo = new GameInfoService(
-            {} as DatabaseService,
-            bmpService,
-            bmpSubtractorService,
-            bmpDifferenceService,
-            idGeneratorService,
-            bmpEncoderService,
-        );
+        const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
         gameInfoSpyObj = stub(gameInfo);
         // differenceSpyObj = spy(differenceService);

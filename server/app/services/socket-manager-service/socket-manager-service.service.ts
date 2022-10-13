@@ -1,10 +1,13 @@
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
 @Service()
 export class SocketManagerService {
     private sio: Server;
+
+    constructor(private gameManager: GameManagerService) {}
 
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
@@ -17,6 +20,28 @@ export class SocketManagerService {
         this.sio.on(SocketEvent.Connection, (socket) => {
             // eslint-disable-next-line no-console
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
+
+            // socket.on(SocketEvent.JoinRoom, (playerName: string, gameId: string) => {
+            //     /* need more time to create multi  */
+            // });
+            socket.on(SocketEvent.CreateGame, (playerName: string, mode: string, cardId: string) => {
+                this.createGame({ playerName, mode, cardId }, socket);
+            });
+            socket.on(SocketEvent.Disconnect, () => {
+                // eslint-disable-next-line no-console
+                console.log(`Deconnexion de l'utilisateur avec id : ${socket.id}`);
+            });
         });
+    }
+
+    createGame(gameSettings: { playerName: string; mode: string; cardId: string }, socket: Socket) {
+        this.gameManager
+            .createGame([gameSettings.playerName], gameSettings.mode, gameSettings.cardId)
+            .then((gameId: string) => {
+                socket.emit(SocketEvent.GameCreated, gameId);
+            })
+            .catch(() => {
+                socket.emit(SocketEvent.Error, 'Cant create a game');
+            });
     }
 }

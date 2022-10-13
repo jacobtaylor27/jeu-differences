@@ -4,6 +4,7 @@ import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
@@ -13,14 +14,17 @@ describe('DialogUploadFormComponent', () => {
     let component: DialogUploadFormComponent;
     let fixture: ComponentFixture<DialogUploadFormComponent>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
+    let drawServiceSpyObj: jasmine.SpyObj<DrawService>;
     const model = { canvas: PropagateCanvasEvent.Both };
     beforeEach(async () => {
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInDiff: new Subject(), $uploadImageInSource: new Subject() });
+        drawServiceSpyObj = jasmine.createSpyObj('DrawService', [], ['isCanvasSelected']);
         await TestBed.configureTestingModule({
             declarations: [DialogUploadFormComponent],
             providers: [
                 { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
                 { provide: MAT_DIALOG_DATA, useValue: model },
+                { provide: DrawService, useValue: drawServiceSpyObj },
             ],
             imports: [MatDialogModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
         }).compileComponents();

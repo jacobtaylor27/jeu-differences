@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BMP_HEADER_OFFSET, FORMAT_IMAGE, IMAGE_TYPE, SIZE } from '@app/constants/canvas';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { ImageCorrect } from '@app/interfaces/image-correct';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 @Component({
@@ -16,7 +17,11 @@ export class DialogUploadFormComponent {
     isFormSubmitted: boolean = false;
     typePropagateCanvasEvent: typeof PropagateCanvasEvent = PropagateCanvasEvent;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { canvas: PropagateCanvasEvent }, private toolService: ToolBoxService) {}
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: { canvas: PropagateCanvasEvent },
+        private toolService: ToolBoxService,
+        private drawService: DrawService,
+    ) {}
 
     async uploadImage(event: Event) {
         const files: FileList = (event.target as HTMLInputElement).files as FileList;
@@ -58,10 +63,10 @@ export class DialogUploadFormComponent {
         if (!this.isFormSubmitted || !this.data.canvas) {
             return;
         }
-        if (this.data.canvas === PropagateCanvasEvent.Both || this.data.canvas === PropagateCanvasEvent.Difference) {
+        if (this.drawService.isCanvasSelected(this.data.canvas, PropagateCanvasEvent.Difference)) {
             this.toolService.$uploadImageInDiff.next(this.img);
         }
-        if (this.data.canvas === PropagateCanvasEvent.Both || this.data.canvas === PropagateCanvasEvent.Source) {
+        if (this.drawService.isCanvasSelected(this.data.canvas, PropagateCanvasEvent.Source)) {
             this.toolService.$uploadImageInSource.next(this.img);
         }
     }

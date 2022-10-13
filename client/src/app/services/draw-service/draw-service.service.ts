@@ -25,7 +25,7 @@ export class DrawService {
         }
     }
 
-    private isCanvasSelected(canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) {
+    isCanvasSelected(canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) {
         return canvas === PropagateCanvasEvent.Both || canvas === specificCanvas;
     }
 }

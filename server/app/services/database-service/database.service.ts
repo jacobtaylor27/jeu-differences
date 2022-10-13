@@ -16,6 +16,7 @@ export class DatabaseService {
             this.client = new MongoClient(url);
             await this.client.connect();
             this.db = this.client.db(DB_NAME);
+            await this.initializeCollection();
         }
     }
 
@@ -23,7 +24,7 @@ export class DatabaseService {
         this.client.close();
     }
 
-    async initializeCollection(collectionName: string = DB_GAME_COLLECTION): Promise<void> {
+    private async initializeCollection(collectionName: string = DB_GAME_COLLECTION): Promise<void> {
         if (!(await this.doesCollectionExists(collectionName))) {
             await this.db.createCollection(collectionName);
         }

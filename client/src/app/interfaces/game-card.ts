@@ -1,4 +1,4 @@
-import { GameInformation } from '@app/interfaces/game-information';
+import { GameInformation } from '@common/game-information';
 
 export interface GameCard {
     gameInformation: GameInformation;

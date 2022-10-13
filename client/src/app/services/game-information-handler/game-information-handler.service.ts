@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameMode } from '@common/game-mode';
-import { GameInformation } from '@app/interfaces/game-information';
+import { GameInformation } from '@common/game-information';
 
 @Injectable({
     providedIn: 'root',

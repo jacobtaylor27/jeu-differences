@@ -2,7 +2,7 @@ import { Game } from '@app/classes/game/game';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { GameService } from '@app/services/game-info-service/game-info.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
+import { GameInfo } from '@app/interface/game-info';
 import { Service } from 'typedi';
 
 @Service()

@@ -8,5 +8,5 @@ export interface GameInformation {
     idEditedBmp: string;
     soloScore: Score[];
     multiplayerScore: Score[];
-    // nbDifferences: number;
+    nbDifferences: number;
 }

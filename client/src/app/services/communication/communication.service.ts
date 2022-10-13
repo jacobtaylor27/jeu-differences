@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
+import { GameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
@@ -94,8 +94,8 @@ export class CommunicationService {
         return this.http.get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' }).pipe();
     }
 
-    getAllGameInfos(): Observable<HttpResponse<{ games: GameInfo[] }>> {
-        return this.http.get<{ games: GameInfo[] }>(`${this.baseUrl}/game/cards`, { observe: 'response' }).pipe();
+    getAllGameInfos(): Observable<HttpResponse<{ games: GameInformation[] }>> {
+        return this.http.get<{ games: GameInformation[] }>(`${this.baseUrl}/game/cards`, { observe: 'response' }).pipe();
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

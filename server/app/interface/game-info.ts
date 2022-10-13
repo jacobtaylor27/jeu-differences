@@ -1,5 +1,6 @@
-import { Coordinate } from './coordinate';
-import { Score } from './score';
+import { Coordinate } from '@common/coordinate';
+import { Score } from '@common/score';
+
 export interface GameInfo {
     id: string;
     name: string;
@@ -11,4 +12,5 @@ export interface GameInfo {
     multiplayerScore: Score[];
     differenceRadius: number;
     differences: Coordinate[][];
+    nbDifferences: number;
 }

@@ -5,7 +5,7 @@ import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
-import { GameInfo } from '@common/game-info';
+import { GameInfo } from '@app/interface/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';

@@ -7,7 +7,7 @@ import { GameService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
+import { GameInfo } from '@app/interface/game-info';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub } from 'sinon';

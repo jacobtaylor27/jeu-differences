@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { GameMode } from '@common/game-mode';
 import { Router } from '@angular/router';
+import { GameInfo } from '@common/game-info';
+import { GameMode } from '@common/game-mode';
 import { GameInformation } from '@app/interfaces/game-information';
 
 @Injectable({
@@ -51,6 +52,11 @@ export class GameInformationHandlerService {
     getGameInformation(): GameInformation {
         this.handleNotDefined();
         return this.gameInformation;
+    }
+
+    getId(): string {
+        this.handleNotDefined();
+        return this.gameInformation.id as string;
     }
 
     getGameName(): string {

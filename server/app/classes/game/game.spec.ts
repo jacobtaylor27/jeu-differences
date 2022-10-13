@@ -22,7 +22,6 @@ describe('Game', () => {
         name: 'test game',
         differenceRadius: 0,
         differences: [[{} as Coordinate]],
-        nbDifferences: 1,
     };
     const expectedPlayers = ['test player'];
     const expectedMode = 'classic';

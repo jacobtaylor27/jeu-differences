@@ -12,5 +12,4 @@ export interface PrivateGameInformation {
     multiplayerScore: Score[];
     differenceRadius: number;
     differences: Coordinate[][];
-    nbDifferences: number;
 }

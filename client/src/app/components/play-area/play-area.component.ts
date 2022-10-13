@@ -29,13 +29,6 @@ export class PlayAreaComponent implements AfterViewInit {
         private readonly mouseHandlerService: MouseHandlerService,
     ) {}
 
-    ngAfterViewInit(): void {
-        this.displayImage(false, this.getContextImgModified());
-        this.displayImage(true, this.getContextDifferences());
-        this.displayImage(true, this.getContextImgOriginal());
-        this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
-    }
-
     get width(): number {
         return SIZE.x;
     }
@@ -48,8 +41,13 @@ export class PlayAreaComponent implements AfterViewInit {
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
     }
+    ngAfterViewInit(): void {
+        this.displayImage(false, this.getContextImgModified());
+        this.displayImage(true, this.getContextDifferences());
+        this.displayImage(true, this.getContextImgOriginal());
+        this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
+    }
 
-    // eslint-disable-next-line no-unused-vars
     onClick($event: MouseEvent, canvas: string) {
         if (!this.isMouseDisabled()) {
             const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();

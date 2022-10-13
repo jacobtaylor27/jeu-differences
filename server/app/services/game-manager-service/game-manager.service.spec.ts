@@ -12,6 +12,7 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub } from 'sinon';
 import { Container } from 'typedi';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 
 describe('GameManagerService', () => {
     let bmpService: BmpService;
@@ -20,6 +21,7 @@ describe('GameManagerService', () => {
     let gameManager: GameManagerService;
     let gameInfoSpyObj: SinonSpiedInstance<GameService>;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
+    let bmpEncoderService: BmpEncoderService;
     // let differenceSpyObj: SinonSpiedInstance<BmpDifferenceInterpreter>;
 
     beforeEach(() => {
@@ -30,7 +32,15 @@ describe('GameManagerService', () => {
         idGeneratorService['generateNewId'].callsFake(() => {
             return '5';
         });
-        const gameInfo = new GameService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, idGeneratorService);
+        bmpEncoderService = Container.get(BmpEncoderService);
+        const gameInfo = new GameService(
+            {} as DatabaseService,
+            bmpService,
+            bmpSubtractorService,
+            bmpDifferenceService,
+            idGeneratorService,
+            bmpEncoderService,
+        );
         const differenceService = new BmpDifferenceInterpreter();
         gameInfoSpyObj = stub(gameInfo);
         // differenceSpyObj = spy(differenceService);

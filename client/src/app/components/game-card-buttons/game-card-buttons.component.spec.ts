@@ -10,6 +10,7 @@ const GAME_CARD: GameCard = {
     gameInformation: {
         id: '1',
         name: 'test',
+        thumbnail: 'image',
         idOriginalBmp: '1',
         idEditedBmp: '1',
         idDifferenceBmp: '1',

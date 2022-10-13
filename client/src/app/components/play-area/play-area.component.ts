@@ -81,7 +81,7 @@ export class PlayAreaComponent implements AfterViewInit {
         return this.communicationService.getImgData(source);
     }
 
-    displayImage(isOriginalImage: boolean = true, ctx: CanvasRenderingContext2D): void {
+    displayImage(isOriginalImage: boolean, ctx: CanvasRenderingContext2D): void {
         const originalImageData = isOriginalImage
             ? this.getImageData(this.gameInfoHandlerService.getOriginalBmpId())
             : this.getImageData(this.gameInfoHandlerService.getModifiedBmpId());

@@ -1,5 +1,5 @@
 import { Application } from '@app/app';
-import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Coordinate } from '@common/coordinate';
@@ -14,13 +14,13 @@ import { Container } from 'typedi';
 describe('GameController', () => {
     const expectedGameId = 'test';
     let gameManager: SinonStubbedInstance<GameManagerService>;
-    let gameInfo: SinonStubbedInstance<GameService>;
+    let gameInfo: SinonStubbedInstance<GameInfoService>;
     let gameValidation: SinonStubbedInstance<GameValidation>;
     let expressApp: Express.Application;
 
     beforeEach(async () => {
         gameManager = createStubInstance(GameManagerService);
-        gameInfo = createStubInstance(GameService);
+        gameInfo = createStubInstance(GameInfoService);
         gameValidation = createStubInstance(GameValidation);
         const app = Container.get(Application);
         // eslint-disable-next-line dot-notation
@@ -93,7 +93,7 @@ describe('GameController', () => {
     });
 
     it('should return nothing if the games cards is empty', async () => {
-        gameInfo.getAllGames.rejects();
+        gameInfo.getAllGameInfos.rejects();
         return supertest(expressApp).get('/api/game/cards').expect(StatusCodes.NOT_FOUND);
     });
 
@@ -109,7 +109,7 @@ describe('GameController', () => {
     });
 
     it('should return Not Found if the game does not exist', async () => {
-        gameInfo.getGameById.rejects();
+        gameInfo.getGameInfoById.rejects();
         return supertest(expressApp).get('/api/game/cards/0').expect(StatusCodes.NOT_FOUND);
     });
 
@@ -180,7 +180,7 @@ describe('GameController', () => {
     it('should return Accepted if the game is valid', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
-        gameInfo.addGameWrapper.resolves();
+        gameInfo.addGameInfoWrapper.resolves();
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
@@ -193,7 +193,7 @@ describe('GameController', () => {
     it('should return Not Acceptable if the game creation has a problem', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
-        gameInfo.addGameWrapper.rejects();
+        gameInfo.addGameInfoWrapper.rejects();
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },

@@ -8,7 +8,7 @@ import * as sinon from 'sinon';
 import { DatabaseServiceMock } from './database.service.mock';
 chai.use(chaiAsPromised);
 
-describe('Database service', () => {
+describe.only('Database service', () => {
     let mongoServer: MongoMemoryServer;
     let databaseService: DatabaseServiceMock;
     let uri = '';
@@ -49,22 +49,39 @@ describe('Database service', () => {
 
     it('doesCollectionExists(collectionName) should return true if a collection does exist', async () => {
         await databaseService.start();
-        await databaseService.populateDatabase();
+        await databaseService.initializeCollection();
         await expect(databaseService['doesCollectionExists'](DB_GAME_COLLECTION)).to.eventually.equal(true);
     });
 
     it('createCollection() should be called when there is no collection in the db', async () => {
         await databaseService.start();
         const spy = sinon.spy(databaseService['db'], 'createCollection');
-        await databaseService.populateDatabase();
+        await databaseService.initializeCollection();
         expect(spy.calledOnce).to.equal(true);
     });
 
     it('createCollection() should not be called when a collection already exists', async () => {
         await databaseService.start();
-        await databaseService.populateDatabase();
+        await databaseService.initializeCollection();
         const spy = sinon.spy(databaseService['db'], 'createCollection');
-        await databaseService.populateDatabase();
+        await databaseService.initializeCollection();
+        expect(spy.calledOnce).to.equal(false);
+    });
+
+    it('initializeCollection(collectionName) should let the user choose the collectionName', async () => {
+        const collectionName = 'test-to-delete-collection';
+        await databaseService.start();
+        const spy = sinon.spy(databaseService['db'], 'createCollection');
+        await databaseService.initializeCollection(collectionName);
+        expect(spy.calledOnce).to.equal(true);
+    });
+
+    it('initializeCollection(collectionName) should not call createCollection twice when a collection is created', async () => {
+        const collectionName = 'test-to-delete-collection';
+        await databaseService.start();
+        await databaseService.initializeCollection(collectionName);
+        const spy = sinon.spy(databaseService['db'], 'createCollection');
+        await databaseService.initializeCollection(collectionName);
         expect(spy.calledOnce).to.equal(false);
     });
 });

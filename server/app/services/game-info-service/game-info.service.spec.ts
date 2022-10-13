@@ -21,7 +21,7 @@ import * as sinon from 'sinon';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
 
-describe.only('GameInfo service', async () => {
+describe('GameInfo service', async () => {
     let gameInfoService: GameInfoService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
@@ -54,7 +54,7 @@ describe.only('GameInfo service', async () => {
 
         gameInfoService['srcPath'] = tmpdir();
         await databaseService.start(DB_URL);
-        await databaseService.populateDatabase();
+        await databaseService.initializeCollection();
 
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toBmpImageData());

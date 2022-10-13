@@ -29,9 +29,9 @@ export class DatabaseServiceMock {
         }
     }
 
-    async populateDatabase(): Promise<void> {
-        if (!(await this.doesCollectionExists(DB_GAME_COLLECTION))) {
-            await this.db.createCollection(DB_GAME_COLLECTION);
+    async initializeCollection(collectionName: string = DB_GAME_COLLECTION): Promise<void> {
+        if (!(await this.doesCollectionExists(collectionName))) {
+            await this.db.createCollection(collectionName);
         }
     }
 

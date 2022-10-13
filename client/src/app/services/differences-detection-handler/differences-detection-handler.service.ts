@@ -5,7 +5,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogGameOverComponent } from '@app/components/dialog-gameover/dialog-gameover.component';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+// import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
 @Injectable({
@@ -22,8 +22,7 @@ export class DifferencesDetectionHandlerService {
     constructor(
         private timer: TimerService,
         public matDialog: MatDialog,
-        private readonly communicationService: CommunicationService,
-        private readonly gameInfoHandlerService: GameInformationHandlerService,
+        private readonly communicationService: CommunicationService, // private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
 
     setGameOver() {
@@ -61,7 +60,7 @@ export class DifferencesDetectionHandlerService {
                     return;
                 }
 
-                this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.gameInformation.differences.length);
+                // this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.gameInformation.differences.length);
                 this.timer.setNbOfDifferencesFound();
                 this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
                 if (response.body.isGameOver) {

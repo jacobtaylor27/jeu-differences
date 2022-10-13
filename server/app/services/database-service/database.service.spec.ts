@@ -1,20 +1,20 @@
 import { DB_GAME_COLLECTION, DB_NAME } from '@app/constants/database';
+import { DatabaseService } from '@app/services/database-service/database.service';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
-import { DatabaseServiceMock } from './database.service.mock';
 chai.use(chaiAsPromised);
 
 describe('Database service', () => {
     let mongoServer: MongoMemoryServer;
-    let databaseService: DatabaseServiceMock;
+    let databaseService: DatabaseService;
     let uri = '';
 
     beforeEach(async () => {
-        databaseService = new DatabaseServiceMock();
+        databaseService = new DatabaseService();
         mongoServer = await MongoMemoryServer.create();
         uri = mongoServer.getUri();
     });

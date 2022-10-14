@@ -14,9 +14,9 @@ describe('GameCardHandlerService', () => {
                 gameInformation: {
                     id: '1',
                     name: 'test',
+                    thumbnail: 'image',
                     idOriginalBmp: 'imageName',
                     idEditedBmp: '1',
-                    idDifferenceBmp: '1',
                     soloScore: [
                         {
                             playerName: 'test2',
@@ -37,8 +37,7 @@ describe('GameCardHandlerService', () => {
                             time: 10,
                         },
                     ],
-                    differenceRadius: 3,
-                    differences: [],
+                    nbDifferences: 1,
                 },
                 isShown: true,
                 isAdminCard: true,

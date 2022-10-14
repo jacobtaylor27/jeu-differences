@@ -4,15 +4,17 @@ import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { Score } from '@common/score';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 
 describe('Game', () => {
     let game: Game;
-    const expectedGameInfo: GameInfo = {
+    const expectedGameInfo: PrivateGameInformation = {
+        id: '1',
         idOriginalBmp: '0',
+        thumbnail: 'thumbnail',
         idEditedBmp: '1',
         idDifferenceBmp: '2',
         soloScore: [{} as Score],
@@ -157,7 +159,7 @@ describe('Game', () => {
 
     it('should return undefined if differences is not found with coordinate', () => {
         const expectedDifferences = [[{} as Coordinate]];
-        game['info'] = { differences: expectedDifferences } as GameInfo;
+        game['info'] = { differences: expectedDifferences } as PrivateGameInformation;
         expect(game.findDifference({ x: 0, y: 0 })).to.equal(undefined);
     });
 
@@ -167,7 +169,7 @@ describe('Game', () => {
             { x: 1, y: -1 },
         ];
         const expectedDifferences = [expectedDifferencesFound];
-        game['info'] = { differences: expectedDifferences } as GameInfo;
+        game['info'] = { differences: expectedDifferences } as PrivateGameInformation;
         expect(game.findDifference({ x: 0, y: 0 })).to.deep.equal(expectedDifferencesFound);
     });
 

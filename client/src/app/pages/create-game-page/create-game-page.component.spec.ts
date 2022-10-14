@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
 import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
@@ -32,7 +33,7 @@ describe('CreateGamePageComponent', () => {
             $resetDiff: new Subject(),
         });
         await TestBed.configureTestingModule({
-            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent],
+            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent, DialogCreateGameComponent],
             imports: [HttpClientTestingModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
@@ -62,28 +63,6 @@ describe('CreateGamePageComponent', () => {
         });
     });
 
-    it('should differenceValidator return null if the number of difference is not < 10 and > 2 ', () => {
-        const calcDiffSpy = spyOn(component, 'calculateDifference').and.callFake(() => 0);
-        const mockControl = { value: 'test' } as FormControl;
-        const nbDifference = component.differenceValidator()(mockControl);
-        expect(calcDiffSpy).toHaveBeenCalled();
-        expect(nbDifference).toEqual(null);
-    });
-
-    it('should differenceValidator return the value control of if the number of difference is < 10 and > 2', () => {
-        const mockDiff = 5;
-        const calcDiffSpy = spyOn(component, 'calculateDifference').and.callFake(() => mockDiff);
-        const mockControl = { value: 'test' } as FormControl;
-        const nbDifference = component.differenceValidator()(mockControl);
-        expect(calcDiffSpy).toHaveBeenCalled();
-        expect(nbDifference).not.toEqual(null);
-        expect(nbDifference?.difference.value).toEqual(mockControl.value);
-    });
-
-    it('should calculateDifference return the number of difference between two images', () => {
-        const expectedDifference = 5;
-        expect(component.calculateDifference()).toEqual(expectedDifference);
-    });
     it('should subscribe to get the new image and draw it', async () => {
         const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const spyDrawImage = spyOn(ctx, 'drawImage');
@@ -110,7 +89,7 @@ describe('CreateGamePageComponent', () => {
     it('should open the validate dialog if the form is valid', async () => {
         spyOnProperty(component.form, 'valid').and.returnValue(true);
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        spyOn(component, 'validateForm').and.callFake(() => {});
+        const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => {
             return of({ body: { numberDifference: 0, data: [0], height: 1, width: 1 } } as HttpResponse<{
                 numberDifference: number;
@@ -120,7 +99,36 @@ describe('CreateGamePageComponent', () => {
             }>);
         });
         component.isGameValid();
-        // expect(spyValidateFormDialog).toHaveBeenCalled();
+        expect(validateFormSpy).toHaveBeenCalled();
+    });
+
+    it('should not open the validate dialog if the form is not valid and body is null', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
+        communicationSpyObject.validateGame.and.callFake(() => {
+            return of({ body: null } as HttpResponse<{
+                numberDifference: number;
+                width: number;
+                height: number;
+                data: number[];
+            }>);
+        });
+        component.isGameValid();
+        expect(validateFormSpy).not.toHaveBeenCalled();
+        expect(manageErrorFormFormSpy).toHaveBeenCalled();
+    });
+
+    it('should not open the validate dialog if the form is not valid and response is null', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
+        communicationSpyObject.validateGame.and.callFake(() => of(null));
+        component.isGameValid();
+        expect(validateFormSpy).not.toHaveBeenCalled();
+        expect(manageErrorFormFormSpy).toHaveBeenCalled();
     });
 
     it('should subscribe to get the new image and draw it', async () => {

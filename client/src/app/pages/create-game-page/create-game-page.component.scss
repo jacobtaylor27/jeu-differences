@@ -7,7 +7,6 @@ label {
     width: 100vw;
     height: 100vh;
 }
-
 .drawImg {
     display: flex;
     flex-direction: column;
@@ -26,6 +25,7 @@ label {
 .toolbox-container {
     display: flex;
     justify-content: center;
+    align-self: end;
     margin-top: 4vh;
 }
 
@@ -45,4 +45,10 @@ label {
 
 .space-under-title-bar {
     height: 2vh;
+}
+
+.toolbox-specific {
+    margin-top: 0.5em;
+    justify-self: center;
+    align-self: center;
 }

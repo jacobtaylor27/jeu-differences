@@ -17,7 +17,7 @@ const GAME_CARD: GameCard = {
         name: 'test',
         idOriginalBmp: 'imageName',
         idEditedBmp: '1',
-        idDifferenceBmp: '1',
+        thumbnail: 'image',
         soloScore: [
             {
                 playerName: 'test2',
@@ -38,8 +38,7 @@ const GAME_CARD: GameCard = {
                 time: 10,
             },
         ],
-        differenceRadius: 3,
-        differences: [],
+        nbDifferences: 1,
     },
     isShown: true,
     isAdminCard: true,
@@ -80,7 +79,7 @@ describe('GameCardComponent', () => {
     });
 
     it('should get the base64 image name', () => {
-        expect(spyCommunicationService.getImgData).toHaveBeenCalled();
+        expect(component.imageSrc).toEqual(GAME_CARD.gameInformation.thumbnail);
     });
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {

@@ -10,11 +10,3 @@
         <canvas #actionsGameOriginal class="canvas" (click)="onClick($event, 'original')" click [width]="width" [height]="height"></canvas>
     </div>
 </div>
-
-<ng-template #gameOverDialog>
-    <h1 mat-dialog-title>Partie terminée !</h1>
-    <div mat-dialog-content>Félicitations</div>
-    <div mat-dialog-actions align="end">
-        <button mat-raised-button routerLink="/home" mat-dialog-close color="primary" mat-primary>Quitter</button>
-    </div>
-</ng-template>

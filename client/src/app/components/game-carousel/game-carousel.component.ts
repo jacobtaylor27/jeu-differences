@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { GameInfo } from '@common/game-info';
+import { PublicGameInformation } from '@common/game-information';
 
 @Component({
     selector: 'app-game-carousel',
@@ -13,7 +13,6 @@ import { GameInfo } from '@common/game-info';
 export class GameCarouselComponent implements OnInit {
     @Input() isAdmin: boolean = false;
     gameCards: GameCard[] = [];
-    gamesInfo: GameInfo[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
@@ -23,21 +22,19 @@ export class GameCarouselComponent implements OnInit {
     }
 
     fetchGameInformation(): void {
-        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: GameInfo[] }>) => {
-            if (!response || !response.body) {
-                return;
+        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: PublicGameInformation[] }>) => {
+            if (response && response.body) {
+                for (const gameInfo of response.body.games) {
+                    const newCard: GameCard = {
+                        gameInformation: gameInfo,
+                        isAdminCard: this.isAdmin,
+                        isShown: false,
+                    };
+                    this.gameCards.push(newCard);
+                }
+                this.gameCarouselService.setCards(this.gameCards);
+                this.resetStartingRange();
             }
-            this.gamesInfo = response.body.games;
-            for (const gameInfo of this.gamesInfo) {
-                const newCard: GameCard = {
-                    gameInformation: gameInfo,
-                    isAdminCard: this.isAdmin,
-                    isShown: false,
-                };
-                this.gameCards.push(newCard);
-            }
-            this.gameCarouselService.setCards(this.gameCards);
-            this.resetStartingRange();
         });
     }
 

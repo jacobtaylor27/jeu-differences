@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { GameInfo } from '@common/game-info';
-import { GameMode } from '@common/game-mode';
 import { Router } from '@angular/router';
+import { GameMode } from '@common/game-mode';
+import { PublicGameInformation } from '@common/game-information';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameInformationHandlerService {
     playerName: string;
-    gameInformation: GameInfo;
+    gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
 
     constructor(private readonly router: Router) {}
@@ -35,7 +35,7 @@ export class GameInformationHandlerService {
         return this.gameInformation.idEditedBmp;
     }
 
-    setGameInformation(gameInformation: GameInfo): void {
+    setGameInformation(gameInformation: PublicGameInformation): void {
         this.gameInformation = gameInformation;
     }
 
@@ -48,9 +48,14 @@ export class GameInformationHandlerService {
         return this.gameMode;
     }
 
-    getGameInformation(): GameInfo {
+    getGameInformation(): PublicGameInformation {
         this.handleNotDefined();
         return this.gameInformation;
+    }
+
+    getId(): string {
+        this.handleNotDefined();
+        return this.gameInformation.id;
     }
 
     getGameName(): string {

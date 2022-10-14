@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { DEFAULT_DRAW_CLIENT, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
+import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
+import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -17,13 +18,20 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
-    pencil: Pencil;
-    // pencil: Pencil = DEFAULT_PENCIL;
+    pencil: Pencil = DEFAULT_PENCIL;
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
         });
+    }
+
+    get width() {
+        return SIZE.x;
+    }
+
+    get height() {
+        return SIZE.y;
     }
 
     ngAfterViewInit() {
@@ -32,24 +40,32 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.updateImage();
         });
         this.toolBoxService.$resetDiff.subscribe(() =>
-            this.resetCanvas(
+            this.reset(
                 this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
                 this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             ),
         );
-        this.resetCanvas(
+        this.reset(
             this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
         );
     }
+    reset(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
+        this.resetCanvas(ctxCanvas);
+        this.resetImage(ctxImage);
+    }
 
-    resetCanvas(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
+    resetCanvas(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        ctxImage.rect(0, 0, SIZE.y, SIZE.x);
-        ctxImage.fillStyle = 'white';
-        ctxImage.fill();
         this.updateImage();
     }
+
+    resetImage(ctxImage: CanvasRenderingContext2D) {
+        ctxImage.rect(0, 0, SIZE.x, SIZE.y);
+        ctxImage.fillStyle = 'white';
+        ctxImage.fill();
+    }
+
     updateImage() {
         const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.drawImage(this.img.nativeElement, 0, 0);
@@ -68,30 +84,18 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.isClick = false;
     }
 
-    // eslint-disable-next-line no-unused-vars
-    async draw(event: MouseEvent) {
-        return;
-    }
-
-    // eslint-disable-next-line no-unused-vars
-    async erase(event: MouseEvent) {
-        return;
-    }
-
-    /*
-    // Deactivated for sprint 1, but already works
-    async draw(event: MouseEvent) {
+    draw(event: MouseEvent) {
         if (!this.isClick || !this.pencil) {
             return;
         }
         if (this.pencil.state !== Tool.Pencil) {
-            await this.erase(event);
+            this.erase(event);
             return;
         }
-        await this.drawPoint(event);
+        this.drawPoint(event);
     }
 
-    async erase(event: MouseEvent) {
+    erase(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         ctx.rect(this.coordDraw.x, this.coordDraw.y, this.pencil.width, this.pencil.width);
@@ -100,7 +104,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.updateImage();
     }
 
-    async drawPoint(event: MouseEvent) {
+    drawPoint(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
         ctx.lineWidth = this.pencil.width;
@@ -110,7 +114,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
         ctx.stroke();
-        await this.updateImage();
+        this.updateImage();
     }
-    */
 }

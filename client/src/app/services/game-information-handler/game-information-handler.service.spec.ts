@@ -26,13 +26,12 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
+            nbDifferences: 0,
         };
         service.gameMode = GameMode.Classic;
 
@@ -59,13 +58,12 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
+            nbDifferences: 0,
         };
         expect(service.getOriginalBmpId()).toEqual('original');
     });
@@ -74,13 +72,12 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
+            nbDifferences: 0,
         };
         expect(service.getModifiedBmpId()).toEqual('edited');
     });
@@ -89,6 +86,7 @@ describe('GameInformationHandlerService', () => {
         const gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
@@ -96,6 +94,7 @@ describe('GameInformationHandlerService', () => {
             multiplayerScore: [],
             differenceRadius: 2,
             differences: [],
+            nbDifferences: 0,
         };
         service.setGameInformation(gameInformation);
         expect(service.gameInformation).toEqual(gameInformation);
@@ -115,13 +114,12 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
-            idDifferenceBmp: 'difference',
             soloScore: [],
             multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
+            nbDifferences: 0,
         };
         expect(service.getGameName()).toEqual('test');
     });
@@ -130,6 +128,7 @@ describe('GameInformationHandlerService', () => {
         const gameInformation = {
             id: '1',
             name: 'test',
+            thumbnail: 'image',
             idOriginalBmp: 'original',
             idEditedBmp: 'edited',
             idDifferenceBmp: 'difference',
@@ -137,6 +136,7 @@ describe('GameInformationHandlerService', () => {
             multiplayerScore: [],
             differenceRadius: 2,
             differences: [],
+            nbDifferences: 0,
         };
         service.gameInformation = gameInformation;
         expect(service.getGameInformation()).toEqual(gameInformation);

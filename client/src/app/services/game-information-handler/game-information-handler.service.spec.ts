@@ -54,6 +54,20 @@ describe('GameInformationHandlerService', () => {
         expect(service.playerName).toEqual(expectedName);
     });
 
+    it('should return nb of differences', () =>{
+        service.gameInformation = {
+            id: '1',
+            name: 'test',
+            thumbnail: 'image',
+            idOriginalBmp: 'original',
+            idEditedBmp: 'edited',
+            soloScore: [],
+            multiplayerScore: [],
+            nbDifferences: 10,
+        };
+        expect(service.getNbDifferences()).toEqual(service.gameInformation.nbDifferences);
+    })
+
     it('should return original bmp id', () => {
         service.gameInformation = {
             id: '1',

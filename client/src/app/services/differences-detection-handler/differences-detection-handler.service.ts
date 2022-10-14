@@ -7,7 +7,7 @@ import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInformationHandlerService } from '../game-information-handler/game-information-handler.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -18,11 +18,12 @@ export class DifferencesDetectionHandlerService {
     isGameOver: boolean = false;
     contextImgModified: CanvasRenderingContext2D;
 
-    
+    // eslint-disable-next-line max-params
     constructor(
         private timer: TimerService,
         public matDialog: MatDialog,
-        private readonly communicationService: CommunicationService, private readonly gameInfoHandlerService: GameInformationHandlerService,
+        private readonly communicationService: CommunicationService,
+        private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
 
     setGameOver() {

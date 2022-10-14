@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
@@ -43,20 +44,20 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should set the nb of differences found at the beginning of the game', () => {
-        spyGameInfosService.getNbDifferences.and.returnValue(10)
+        spyGameInfosService.getNbDifferences.and.returnValue(10);
         expect(component.setNbDifferencesFound()).toEqual('0 / 10');
     });
 
     it('should set the nb of differences found during the game', () => {
         differenceDetectionHandlerSpy.nbDifferencesFound = 1;
-        spyGameInfosService.getNbDifferences.and.returnValue(10)
+        spyGameInfosService.getNbDifferences.and.returnValue(10);
         expect(component.setNbDifferencesFound()).toEqual('1 / 10');
     });
 
     it('should set the nb of differences when game is over', () => {
         differenceDetectionHandlerSpy.isGameOver = true;
         differenceDetectionHandlerSpy.nbDifferencesFound = 5;
-        spyGameInfosService.getNbDifferences.and.returnValue(10)
+        spyGameInfosService.getNbDifferences.and.returnValue(10);
 
         expect(component.setNbDifferencesFound()).toEqual('5 / 10');
     });

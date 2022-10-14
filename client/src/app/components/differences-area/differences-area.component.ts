@@ -27,7 +27,7 @@ export class DifferencesAreaComponent implements OnInit {
         if (!this.differenceDetectionHandler.nbDifferencesFound) {
             this.nbDifferences = '0 / ' + this.gameInformationHandlerService.getNbDifferences();
         } else {
-            this.nbDifferences = this.differenceDetectionHandler.nbDifferencesFound + ' / ' + this.gameInformationHandlerService.getNbDifferences();;
+            this.nbDifferences = this.differenceDetectionHandler.nbDifferencesFound + ' / ' + this.gameInformationHandlerService.getNbDifferences();
         }
         return this.nbDifferences;
     }

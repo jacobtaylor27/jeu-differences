@@ -54,7 +54,7 @@ describe('GameInformationHandlerService', () => {
         expect(service.playerName).toEqual(expectedName);
     });
 
-    it('should return nb of differences', () =>{
+    it('should return nb of differences', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
@@ -66,9 +66,9 @@ describe('GameInformationHandlerService', () => {
             nbDifferences: 10,
         };
         expect(service.getNbDifferences()).toEqual(service.gameInformation.nbDifferences);
-    })
+    });
 
-    it('should return id', () =>{
+    it('should return id', () => {
         service.gameInformation = {
             id: '1',
             name: 'test',
@@ -80,7 +80,7 @@ describe('GameInformationHandlerService', () => {
             nbDifferences: 0,
         };
         expect(service.getId()).toEqual(service.gameInformation.id);
-    })
+    });
 
     it('should return original bmp id', () => {
         service.gameInformation = {

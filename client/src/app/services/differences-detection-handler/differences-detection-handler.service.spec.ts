@@ -7,8 +7,9 @@ import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { TimerService } from '@app/services/timer.service';
-import {  of, Subject } from 'rxjs';
-import { GameInformationHandlerService } from '../game-information-handler/game-information-handler.service';
+import { Coordinate } from '@common/coordinate';
+import { of, Subject } from 'rxjs';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 describe('DifferencesDetectionHandlerService', () => {
@@ -20,7 +21,7 @@ describe('DifferencesDetectionHandlerService', () => {
 
     beforeEach(() => {
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
-        spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences'])
+        spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['validateCoordinates']);
         spyTimer = jasmine.createSpyObj('TimerService', ['setNbOfDifferencesFound'], {
             differenceFind: new Subject(),
@@ -48,12 +49,12 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(service.isGameOver).toBeTruthy();
     });
 
-    it('should set ctx', () =>{
+    it('should set ctx', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         service.setContextImgModified(ctx);
         expect(service.contextImgModified).toEqual(ctx);
-    })
+    });
 
     it('should set number of differences found', () => {
         service.setNumberDifferencesFound(1, 3);
@@ -182,41 +183,55 @@ describe('DifferencesDetectionHandlerService', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-       spyCommunicationService.validateCoordinates.and.callFake(() => {
-            return of({ body: undefined } as HttpResponse<any>);
+        spyCommunicationService.validateCoordinates.and.callFake(() => {
+            return of({} as HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>);
         });
-       
-        const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected').and.callFake(() =>{});
-        service.getDifferenceValidation('1', {x:0, y:0}, ctx)
-        expect(spyDifferenceNotDetected).toHaveBeenCalled()
-     
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected').and.callFake(() => {});
+        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        expect(spyDifferenceNotDetected).toHaveBeenCalled();
     });
 
-    it('should verify with server if coord is valid', () =>{
+    it('should verify with server if coord is valid', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         spyCommunicationService.validateCoordinates.and.callFake(() => {
-            return of({ body:  {differencesLeft: [], difference: [], isGameOver: false } } as HttpResponse<any>);
+            return of({ body: { difference: [{ x: 0, y: 0 }], isGameOver: false, differencesLeft: 1 } } as HttpResponse<{
+                difference: Coordinate[];
+                isGameOver: boolean;
+                differencesLeft: number;
+            }>);
         });
-        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() =>{});
-        const spySetNbDifferences = spyOn(service, 'setNumberDifferencesFound').and.callFake(()=>{})
-        service.getDifferenceValidation('1', {x:0, y:0}, ctx)
-        expect(spyDifferenceDetected).toHaveBeenCalled()
-        expect(spySetNbDifferences).toHaveBeenCalled()
-    })
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spySetNbDifferences = spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
+        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        expect(spyDifferenceDetected).toHaveBeenCalled();
+        expect(spySetNbDifferences).toHaveBeenCalled();
+    });
 
-    it('should verify with server if coord is valid and game over', () =>{
+    it('should verify with server if coord is valid and game over', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         spyCommunicationService.validateCoordinates.and.callFake(() => {
-            return of({ body:  {differencesLeft: [], difference: [], isGameOver: true } } as HttpResponse<any>);
+            return of({ body: { difference: [{ x: 0, y: 0 }], isGameOver: true, differencesLeft: 1 } } as HttpResponse<{
+                difference: Coordinate[];
+                isGameOver: boolean;
+                differencesLeft: number;
+            }>);
         });
-        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() =>{});
-        const spySetGameOver = spyOn(service, 'setGameOver').and.callFake(() =>{});
-        const spyOpenDialog = spyOn(service, 'openGameOverDialog').and.callFake(() =>{});
-        service.getDifferenceValidation('1', {x:0, y:0}, ctx)
-        expect(spyDifferenceDetected).toHaveBeenCalled()
-        expect(spySetGameOver).toHaveBeenCalled()
-        expect(spyOpenDialog).toHaveBeenCalled()
-    })
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spySetGameOver = spyOn(service, 'setGameOver').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyOpenDialog = spyOn(service, 'openGameOverDialog').and.callFake(() => {});
+        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        expect(spyDifferenceDetected).toHaveBeenCalled();
+        expect(spySetGameOver).toHaveBeenCalled();
+        expect(spyOpenDialog).toHaveBeenCalled();
+    });
 });

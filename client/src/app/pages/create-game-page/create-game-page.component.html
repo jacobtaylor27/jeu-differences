@@ -6,25 +6,28 @@
             <div class="drawImg">
                 <label for="imgDiff">Tableau à dessin </label>
                 <app-draw-canvas id="imgDiff"></app-draw-canvas>
+                <app-tool-box [canvas]="canvasPosition.Difference" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
+            </div>
+
+            <div class="toolbox-container">
+                <app-tool-box [canvas]="canvasPosition.Both"></app-tool-box>
             </div>
 
             <div class="drawImg">
                 <label for="sourceImg">Tableau comparatif</label>
                 <canvas id="sourceImg" class="img" width="640px" height="480px" alt="Image Source" #sourceImg></canvas>
+                <app-tool-box [canvas]="canvasPosition.Source" class="toolbox-specific" [ngStyle]="{ 'width.vw': 10 }"></app-tool-box>
             </div>
-        </div>
-        <div class="toolbox-container">
-            <app-tool-box></app-tool-box>
         </div>
         <div class="submission-container">
             <div class="submission-box">
                 <mat-form-field>
-                    <mat-label>Quelles est le rayon d'elargissement</mat-label>
+                    <mat-label>Choisir le rayon d'élargissement</mat-label>
                     <select matNativeControl id="expansionRadius" formControlName="expansionRadius">
-                        <option value="0">0px rayon d'elargissement</option>
-                        <option value="3" selected>3px rayon d'elargissement</option>
-                        <option value="9">9px rayon d'elargissement</option>
-                        <option value="15">15px rayon d'elargissement</option>
+                        <option value="0">0px rayon d'élargissement</option>
+                        <option value="3" selected>3px rayon d'élargissement</option>
+                        <option value="9">9px rayon d'élargissement</option>
+                        <option value="15">15px rayon d'élargissement</option>
                     </select>
                 </mat-form-field>
                 <button mat-flat-button color="primary" (click)="this.isGameValid()" #onSubmit type="button">Valider</button>

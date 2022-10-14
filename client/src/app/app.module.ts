@@ -19,8 +19,6 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
-import { DialogGameOverComponent } from './components/dialog-gameover/dialog-gameover.component';
-import { DialogResetComponent } from './components/dialog-reset/dialog-reset.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
 import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
@@ -56,7 +54,6 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
         GameSelectionPageComponent,
         AdminPageComponent,
         DialogUploadFormComponent,
-        DialogResetComponent,
         GameCardComponent,
         GameConstantsSettingsComponent,
         UserNameInputComponent,
@@ -72,7 +69,6 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
         GameConstantFieldComponent,
         GameCardButtonsComponent,
         GameScoreComponent,
-        DialogGameOverComponent,
         PageHeaderComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],

@@ -1,8 +1,6 @@
 .tool-container {
     display: flex;
-    width: 30vw;
     justify-content: space-around;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px, rgba(0, 0, 0, 0.45) 0px 1px 3px;
     align-items: center;
 }
 
@@ -27,4 +25,17 @@ input[type='color'] {
 
 input[type='color']:hover {
     transform: scale(1.1);
+}
+
+.drawTool {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 15vw;
+}
+
+.commonTool {
+    width: 5vw;
+    display: flex;
+    justify-content: space-between;
 }

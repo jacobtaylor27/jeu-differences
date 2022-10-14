@@ -2,3 +2,6 @@ form {
     display: flex;
     flex-direction: column;
 }
+input[type='file'] {
+    margin: 1em;
+}

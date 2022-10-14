@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
@@ -11,12 +14,19 @@ describe('DialogUploadFormComponent', () => {
     let component: DialogUploadFormComponent;
     let fixture: ComponentFixture<DialogUploadFormComponent>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
+    let drawServiceSpyObj: jasmine.SpyObj<DrawService>;
+    const model = { canvas: PropagateCanvasEvent.Both };
     beforeEach(async () => {
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $uploadImageInDiff: new Subject(), $uploadImageInSource: new Subject() });
+        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['isCanvasSelected']);
         await TestBed.configureTestingModule({
             declarations: [DialogUploadFormComponent],
-            providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],
-            imports: [AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
+            providers: [
+                { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
+                { provide: MAT_DIALOG_DATA, useValue: model },
+                { provide: DrawService, useValue: drawServiceSpyObj },
+            ],
+            imports: [MatDialogModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DialogUploadFormComponent);
@@ -142,24 +152,17 @@ describe('DialogUploadFormComponent', () => {
     });
 
     it('should not submit a form because the type is not good', async () => {
-        const expectedType = '';
-        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
-        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
-            expect(newImage).toEqual(component.img);
-        });
-        toolBoxServiceSpyObj.$uploadImageInSource.subscribe((newImage: ImageBitmap) => {
-            expect(newImage).toEqual(component.img);
-        });
         component.onSubmit();
         expect(spyDiff).not.toHaveBeenCalled();
         expect(spySource).not.toHaveBeenCalled();
     });
 
     it('should submit a form because the type is both', async () => {
-        const expectedType = 'both';
-        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
+        component.data.canvas = PropagateCanvasEvent.Both;
+        component.isFormSubmitted = true;
+        drawServiceSpyObj.isCanvasSelected.and.callFake(() => true);
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
@@ -174,8 +177,11 @@ describe('DialogUploadFormComponent', () => {
     });
 
     it('should submit a form because the type is difference', async () => {
-        const expectedType = 'difference';
-        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
+        component.data.canvas = PropagateCanvasEvent.Difference;
+        component.isFormSubmitted = true;
+        drawServiceSpyObj.isCanvasSelected.and.callFake(
+            (canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) => specificCanvas === PropagateCanvasEvent.Difference,
+        );
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
@@ -190,10 +196,13 @@ describe('DialogUploadFormComponent', () => {
     });
 
     it('should submit a form because the type is source', async () => {
-        const expectedType = 'source';
-        spyOn(component.form, 'get').and.returnValue(new FormControl(expectedType));
+        component.data.canvas = PropagateCanvasEvent.Source;
+        component.isFormSubmitted = true;
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImageInDiff, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImageInSource, 'next');
+        drawServiceSpyObj.isCanvasSelected.and.callFake(
+            (canvas: PropagateCanvasEvent, specificCanvas: PropagateCanvasEvent) => specificCanvas === PropagateCanvasEvent.Source,
+        );
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe((newImage: ImageBitmap) => {
             expect(newImage).toEqual(component.img);
         });

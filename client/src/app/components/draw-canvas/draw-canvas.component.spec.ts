@@ -1,4 +1,6 @@
+import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -36,6 +38,14 @@ describe('DrawCanvasComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('should get the width of the canvas', () => {
+        expect(component.width).toEqual(SIZE.x);
+    });
+
+    it('should get the height of the canvas', () => {
+        expect(component.height).toEqual(SIZE.y);
+    });
+
     it('start should change the click state and call to reposition the pointer', () => {
         drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
         component.isClick = false;
@@ -55,13 +65,6 @@ describe('DrawCanvasComponent', () => {
         expect(component.isClick).toBeFalse();
     });
 
-    it('draw and erase should exist', () => {
-        component.draw({} as MouseEvent);
-        component.erase({} as MouseEvent);
-    });
-
-    /*
-    // Commented for sprint 1, but works. Kept for sprint 2.
     it('should draw when the client is clicking on the canvas', () => {
         component.isClick = false;
         component.pencil = DEFAULT_PENCIL;
@@ -119,8 +122,6 @@ describe('DrawCanvasComponent', () => {
         expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
     });
 
-*/
-
     it('should receive a new pencil', () => {
         const expectedPencil = { cap: 'round', width: 3, state: Tool.Eraser, color: '#000100' } as Pencil;
         toolBoxServiceSpyObj.$pencil.next(expectedPencil);
@@ -128,19 +129,19 @@ describe('DrawCanvasComponent', () => {
     });
 
     it('should subscribe to get the new image and draw it', async () => {
-        // const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        // // eslint-disable-next-line @typescript-eslint/no-empty-function
-        // const resetCanvasSpy = spyOn(component, 'resetCanvas').and.callFake(() => {});
-        // const drawImageSpy = spyOn(ctx, 'drawImage');
-        // toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
-        //     expect(drawImageSpy).toHaveBeenCalled();
-        // });
-        // toolBoxServiceSpyObj.$resetDiff.subscribe(() => {
-        //     expect(resetCanvasSpy).toHaveBeenCalled();
-        // });
-        // // component.ngAfterViewInit();
-        // toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
-        // toolBoxServiceSpyObj.$resetDiff.next();
+        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const resetCanvasSpy = spyOn(component, 'resetCanvas').and.callFake(() => {});
+        const drawImageSpy = spyOn(ctx, 'drawImage');
+        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
+            expect(drawImageSpy).toHaveBeenCalled();
+        });
+        toolBoxServiceSpyObj.$resetDiff.subscribe(() => {
+            expect(resetCanvasSpy).toHaveBeenCalled();
+        });
+        // component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
+        toolBoxServiceSpyObj.$resetDiff.next();
     });
 
     it('should subscribe to get the new image and draw it', async () => {

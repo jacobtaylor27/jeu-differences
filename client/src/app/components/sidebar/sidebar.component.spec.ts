@@ -14,7 +14,7 @@ describe('SidebarComponent', () => {
     let spyDifferencesDetection: jasmine.SpyObj<DifferencesDetectionHandlerService>;
 
     beforeEach(async () => {
-        spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['getGameName', 'setPlayerName', 'getGameMode', 'getPlayerName']);
+        spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['getGameName', 'setPlayerName', 'getGameMode', 'getPlayerName', 'getNbDifferences']);
         spyDifferencesDetection = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['nbDifferencesFound', 'resetNumberDifferencesFound']);
         await TestBed.configureTestingModule({
             declarations: [SidebarComponent, CluesAreaComponent, DifferencesAreaComponent],

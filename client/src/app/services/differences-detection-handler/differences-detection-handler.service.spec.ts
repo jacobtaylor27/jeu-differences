@@ -44,6 +44,13 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(service.isGameOver).toBeTruthy();
     });
 
+    it('should set ctx', () =>{
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        service.setContextImgModified(ctx);
+        expect(service.contextImgModified).toEqual(ctx);
+    })
+
     it('should set number of differences found', () => {
         service.setNumberDifferencesFound(1, 3);
         expect(service.nbDifferencesFound).toEqual(2);

@@ -8,16 +8,19 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { TimerService } from '@app/services/timer.service';
 import {  of, Subject } from 'rxjs';
+import { GameInformationHandlerService } from '../game-information-handler/game-information-handler.service';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 describe('DifferencesDetectionHandlerService', () => {
     let service: DifferencesDetectionHandlerService;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyGameInfoHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
     let spyTimer: jasmine.SpyObj<TimerService>;
 
     beforeEach(() => {
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
+        spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences'])
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['validateCoordinates']);
         spyTimer = jasmine.createSpyObj('TimerService', ['setNbOfDifferencesFound'], {
             differenceFind: new Subject(),
@@ -28,6 +31,7 @@ describe('DifferencesDetectionHandlerService', () => {
             providers: [
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: TimerService, useValue: spyTimer },
+                { provide: GameInformationHandlerService, useValue: spyGameInfoHandlerService },
                 { provide: CommunicationService, useValue: spyCommunicationService },
             ],
         });
@@ -195,8 +199,10 @@ describe('DifferencesDetectionHandlerService', () => {
             return of({ body:  {differencesLeft: [], difference: [], isGameOver: false } } as HttpResponse<any>);
         });
         const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() =>{});
+        const spySetNbDifferences = spyOn(service, 'setNumberDifferencesFound').and.callFake(()=>{})
         service.getDifferenceValidation('1', {x:0, y:0}, ctx)
         expect(spyDifferenceDetected).toHaveBeenCalled()
+        expect(spySetNbDifferences).toHaveBeenCalled()
     })
 
     it('should verify with server if coord is valid and game over', () =>{

@@ -32,13 +32,11 @@ export class SocketManagerService {
             .then((socketsClient) => {
                 socketsClient.forEach((socketClient) => {
                     const socket = this.sio.sockets.sockets.get(socketClient.id) as Socket<DefaultEventsMap, DefaultEventsMap>;
-                    if (socket) {
-                        if (!event.data) {
-                            socket.emit(event.name);
-                            return;
-                        }
-                        socket.emit(event.name, event.data);
+                    if (!event.data) {
+                        socket.emit(event.name);
+                        return;
                     }
+                    socket.emit(event.name, event.data);
                 });
             });
     }

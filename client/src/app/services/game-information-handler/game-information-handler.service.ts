@@ -35,6 +35,10 @@ export class GameInformationHandlerService {
         return this.gameInformation.idEditedBmp;
     }
 
+    getNbDifferences(): number {
+        return this.gameInformation.nbDifferences;
+    }
+
     setGameInformation(gameInformation: PublicGameInformation): void {
         this.gameInformation = gameInformation;
     }

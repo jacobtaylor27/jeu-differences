@@ -1,4 +1,4 @@
-import { Score } from '@common/score';
+import { Score } from './score';
 
 export interface PublicGameInformation {
     id: string;

@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -7,17 +7,21 @@ import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { TimerService } from '@app/services/timer.service';
-import { Subject } from 'rxjs';
+import { Coordinate } from '@common/coordinate';
+import { of, Subject } from 'rxjs';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 describe('DifferencesDetectionHandlerService', () => {
     let service: DifferencesDetectionHandlerService;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyGameInfoHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
     let spyTimer: jasmine.SpyObj<TimerService>;
 
     beforeEach(() => {
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
+        spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['validateCoordinates']);
         spyTimer = jasmine.createSpyObj('TimerService', ['setNbOfDifferencesFound'], {
             differenceFind: new Subject(),
@@ -28,6 +32,7 @@ describe('DifferencesDetectionHandlerService', () => {
             providers: [
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: TimerService, useValue: spyTimer },
+                { provide: GameInformationHandlerService, useValue: spyGameInfoHandlerService },
                 { provide: CommunicationService, useValue: spyCommunicationService },
             ],
         });
@@ -42,6 +47,13 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(service.isGameOver).toBeFalsy();
         service.setGameOver();
         expect(service.isGameOver).toBeTruthy();
+    });
+
+    it('should set ctx', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        service.setContextImgModified(ctx);
+        expect(service.contextImgModified).toEqual(ctx);
     });
 
     it('should set number of differences found', () => {
@@ -167,22 +179,59 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(spyMatDialog.open).toHaveBeenCalled();
     });
 
-    // INTERFACE NEEDS TO CHANGE FIRST
-    // it('should verify with server if coord is not valid', () => {
-    //     const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-    //     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    //     spyCommunicationService.validateCoordinates.and.callFake(() => {
-    //         return of({ body: { differencesLeft: [], difference: [], isGameOver: false } } as HttpResponse<any>);
-    //     });
-    //     spyTimer.setNbOfDifferencesFound.and.callFake(() => {});
+    it('should verify with server if coord is not valid', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    //     // const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected');
-    //     service.getDifferenceValidation('1', { x: 0, y: 1 }, ctx);
+        spyCommunicationService.validateCoordinates.and.callFake(() => {
+            return of({} as HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>);
+        });
 
-    //     spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
-    //     // spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected').and.callFake(() => {});
+        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        expect(spyDifferenceNotDetected).toHaveBeenCalled();
+    });
 
-    //     expect(spyCommunicationService.validateCoordinates).toHaveBeenCalled();
-    //     // expect(spyDifferenceNotDetected).toHaveBeenCalled();
-    // });
+    it('should verify with server if coord is valid', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyCommunicationService.validateCoordinates.and.callFake(() => {
+            return of({ body: { difference: [{ x: 0, y: 0 }], isGameOver: false, differencesLeft: 1 } } as HttpResponse<{
+                difference: Coordinate[];
+                isGameOver: boolean;
+                differencesLeft: number;
+            }>);
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spySetNbDifferences = spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
+        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        expect(spyDifferenceDetected).toHaveBeenCalled();
+        expect(spySetNbDifferences).toHaveBeenCalled();
+    });
+
+    it('should verify with server if coord is valid and game over', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyCommunicationService.validateCoordinates.and.callFake(() => {
+            return of({ body: { difference: [{ x: 0, y: 0 }], isGameOver: true, differencesLeft: 1 } } as HttpResponse<{
+                difference: Coordinate[];
+                isGameOver: boolean;
+                differencesLeft: number;
+            }>);
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spySetGameOver = spyOn(service, 'setGameOver').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyOpenDialog = spyOn(service, 'openGameOverDialog').and.callFake(() => {});
+        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        expect(spyDifferenceDetected).toHaveBeenCalled();
+        expect(spySetGameOver).toHaveBeenCalled();
+        expect(spyOpenDialog).toHaveBeenCalled();
+    });
 });

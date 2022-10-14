@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { SocketEvent } from '@common/socket-event';
 import * as io from 'socket.io-client';
 import { CommunicationSocketService } from './communication-socket.service';
 
@@ -50,4 +51,15 @@ describe('CommunicationSocketService', () => {
         expect(spyDisconnect).toHaveBeenCalled();
         expect(spySocketAlive).toHaveBeenCalled();
     });
+
+    it('should handle an event', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyHandleEvent = spyOn(service['socket'], 'on').and.callFake(() => {
+            return {} as io.Socket<never, never>;
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        service.on('' as SocketEvent, () => {});
+        expect(spyHandleEvent).toHaveBeenCalled();
+    });
+
 });

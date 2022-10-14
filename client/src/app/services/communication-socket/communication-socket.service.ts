@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { SocketEvent } from '@common/socket-event';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -22,6 +22,10 @@ export class CommunicationSocketService {
             return;
         }
         this.socket.disconnect();
+    }
+
+    on<T>(event: SocketEvent, action: (data: T) => void): void {
+        this.socket.on(event, action);
     }
 
     private connect() {

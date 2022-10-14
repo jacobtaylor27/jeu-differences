@@ -13,7 +13,7 @@ describe('DifferencesAreaComponent', () => {
     let differenceDetectionHandlerSpy: jasmine.SpyObj<DifferencesDetectionHandlerService>;
 
     beforeEach(async () => {
-        spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameInformation', 'getPlayerName']);
+        spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameInformation', 'getPlayerName', 'getNbDifferences']);
         differenceDetectionHandlerSpy = jasmine.createSpyObj('DifferencesDetectionHandlerService', [
             'resetNumberDifferencesFound',
             'setNumberDifferencesFound',
@@ -35,34 +35,6 @@ describe('DifferencesAreaComponent', () => {
 
         fixture = TestBed.createComponent(DifferencesAreaComponent);
         component = fixture.componentInstance;
-        spyGameInfosService.gameInformation = {
-            id: '1',
-            name: 'test',
-            thumbnail: 'image',
-            idOriginalBmp: 'imageName',
-            idEditedBmp: '1',
-            soloScore: [
-                {
-                    playerName: 'test2',
-                    time: 10,
-                },
-                {
-                    playerName: 'test',
-                    time: 10,
-                },
-            ],
-            multiplayerScore: [
-                {
-                    playerName: 'test2',
-                    time: 10,
-                },
-                {
-                    playerName: 'test',
-                    time: 10,
-                },
-            ],
-            nbDifferences: 10,
-        };
         fixture.detectChanges();
     });
 
@@ -70,23 +42,22 @@ describe('DifferencesAreaComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    // it('should set the nb of differences found at the beginning of the game', () => {
-    //     spyGameInfosService.gameInformation.differences.length = 4;
-    //     expect(component.setNbDifferencesFound()).toEqual('0 / 4');
-    // });
+    it('should set the nb of differences found at the beginning of the game', () => {
+        spyGameInfosService.getNbDifferences.and.returnValue(10)
+        expect(component.setNbDifferencesFound()).toEqual('0 / 10');
+    });
 
-    // it('should set the nb of differences found during the game', () => {
-    //     differenceDetectionHandlerSpy.nbTotalDifferences = 5;
-    //     differenceDetectionHandlerSpy.nbDifferencesFound = 1;
+    it('should set the nb of differences found during the game', () => {
+        differenceDetectionHandlerSpy.nbDifferencesFound = 1;
+        spyGameInfosService.getNbDifferences.and.returnValue(10)
+        expect(component.setNbDifferencesFound()).toEqual('1 / 10');
+    });
 
-    //     expect(component.setNbDifferencesFound()).toEqual('1 / 5');
-    // });
+    it('should set the nb of differences when game is over', () => {
+        differenceDetectionHandlerSpy.isGameOver = true;
+        differenceDetectionHandlerSpy.nbDifferencesFound = 5;
+        spyGameInfosService.getNbDifferences.and.returnValue(10)
 
-    // it('should set the nb of differences when game is over', () => {
-    //     differenceDetectionHandlerSpy.isGameOver = true;
-    //     differenceDetectionHandlerSpy.nbTotalDifferences = 5;
-    //     differenceDetectionHandlerSpy.nbDifferencesFound = 5;
-
-    //     expect(component.setNbDifferencesFound()).toEqual('5 / 5');
-    // });
+        expect(component.setNbDifferencesFound()).toEqual('5 / 10');
+    });
 });

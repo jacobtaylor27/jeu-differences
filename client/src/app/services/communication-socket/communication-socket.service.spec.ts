@@ -62,4 +62,26 @@ describe('CommunicationSocketService', () => {
         expect(spyHandleEvent).toHaveBeenCalled();
     });
 
+    it('should emit an event to send to server without data', () => {
+        const expectedEvent = '' as SocketEvent;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyHandleEvent = spyOn(service['socket'], 'emit').and.callFake(() => {
+            return {} as io.Socket<never, never>;
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        service.send(expectedEvent);
+        expect(spyHandleEvent).toHaveBeenCalledWith(expectedEvent);
+    });
+
+    it('should emit an event to send to server with data', () => {
+        const expectedData = 'test';
+        const expectedEvent = '' as SocketEvent;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyHandleEvent = spyOn(service['socket'], 'emit').and.callFake(() => {
+            return {} as io.Socket<never, never>;
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        service.send<string>(expectedEvent, expectedData);
+        expect(spyHandleEvent).toHaveBeenCalledWith(expectedEvent, expectedData);
+    });
 });

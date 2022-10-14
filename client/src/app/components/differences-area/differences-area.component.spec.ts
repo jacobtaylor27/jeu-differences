@@ -61,6 +61,7 @@ describe('DifferencesAreaComponent', () => {
                     time: 10,
                 },
             ],
+            nbDifferences: 10,
         };
         fixture.detectChanges();
     });

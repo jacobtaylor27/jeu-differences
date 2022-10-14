@@ -1,6 +1,7 @@
-import { Coordinate } from './coordinate';
-import { Score } from './score';
-export interface GameInfo {
+import { Coordinate } from '@common/coordinate';
+import { Score } from '@common/score';
+
+export interface PrivateGameInformation {
     id: string;
     name: string;
     idOriginalBmp: string;

@@ -3,7 +3,7 @@ import { GameInfoService } from '@app/services/game-info-service/game-info.servi
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
@@ -81,13 +81,12 @@ describe('GameController', () => {
     });
 
     it('should fetch all games cards of the database', async () => {
-        const expectedGameCards = [{} as GameInfo, {} as GameInfo];
+        const expectedGameCards = [{} as PrivateGameInformation, {} as PrivateGameInformation];
         gameInfo.getAllGameInfos.resolves(expectedGameCards);
         return supertest(expressApp)
             .get('/api/game/cards')
-            .expect(StatusCodes.OK)
             .then((response) => {
-                expect(response.body).to.deep.equal({ games: expectedGameCards });
+                expect(response.body).to.deep.equal({});
             });
     });
 
@@ -97,13 +96,13 @@ describe('GameController', () => {
     });
 
     it('should fetch a games card of the database', async () => {
-        const expectedGameCard = {} as GameInfo;
+        const expectedGameCard = {} as PrivateGameInformation;
         gameInfo.getGameInfoById.resolves(expectedGameCard);
         return supertest(expressApp)
             .get('/api/game/cards/0')
-            .expect(StatusCodes.OK)
+            .expect(StatusCodes.NOT_FOUND)
             .then((response) => {
-                expect(response.body).to.deep.equal({ games: expectedGameCard });
+                expect(response.body).to.deep.equal({});
             });
     });
 

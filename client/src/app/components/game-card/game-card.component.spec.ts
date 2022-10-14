@@ -38,6 +38,7 @@ const GAME_CARD: GameCard = {
                 time: 10,
             },
         ],
+        nbDifferences: 1,
     },
     isShown: true,
     isAdminCard: true,

@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { GameInfo } from '@common/game-info';
+import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { Message } from '@common/message';
 
@@ -62,7 +62,7 @@ describe('CommunicationService', () => {
 
     it('should get games info when select or admin page is loaded', () => {
         service.getAllGameInfos().subscribe({
-            next: (response: HttpResponse<{ games: GameInfo[] }>) => {
+            next: (response: HttpResponse<{ games: PublicGameInformation[] }>) => {
                 expect(response.body).toEqual({ games: [] });
             },
             error: fail,

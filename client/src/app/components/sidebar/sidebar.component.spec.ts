@@ -60,6 +60,7 @@ describe('SidebarComponent', () => {
                     time: 10,
                 },
             ],
+            nbDifferences: 10,
         };
     });
 

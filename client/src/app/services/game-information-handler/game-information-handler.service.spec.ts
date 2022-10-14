@@ -31,6 +31,7 @@ describe('GameInformationHandlerService', () => {
             idEditedBmp: 'edited',
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: 0,
         };
         service.gameMode = GameMode.Classic;
 
@@ -62,6 +63,7 @@ describe('GameInformationHandlerService', () => {
             idEditedBmp: 'edited',
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: 0,
         };
         expect(service.getOriginalBmpId()).toEqual('original');
     });
@@ -75,6 +77,7 @@ describe('GameInformationHandlerService', () => {
             idEditedBmp: 'edited',
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: 0,
         };
         expect(service.getModifiedBmpId()).toEqual('edited');
     });
@@ -91,6 +94,7 @@ describe('GameInformationHandlerService', () => {
             multiplayerScore: [],
             differenceRadius: 2,
             differences: [],
+            nbDifferences: 0,
         };
         service.setGameInformation(gameInformation);
         expect(service.gameInformation).toEqual(gameInformation);
@@ -115,6 +119,7 @@ describe('GameInformationHandlerService', () => {
             idEditedBmp: 'edited',
             soloScore: [],
             multiplayerScore: [],
+            nbDifferences: 0,
         };
         expect(service.getGameName()).toEqual('test');
     });
@@ -131,6 +136,7 @@ describe('GameInformationHandlerService', () => {
             multiplayerScore: [],
             differenceRadius: 2,
             differences: [],
+            nbDifferences: 0,
         };
         service.gameInformation = gameInformation;
         expect(service.getGameInformation()).toEqual(gameInformation);

@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -7,7 +7,7 @@ import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { TimerService } from '@app/services/timer.service';
-import { Subject } from 'rxjs';
+import {  of, Subject } from 'rxjs';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 describe('DifferencesDetectionHandlerService', () => {
@@ -174,22 +174,43 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(spyMatDialog.open).toHaveBeenCalled();
     });
 
-    // INTERFACE NEEDS TO CHANGE FIRST
-    // it('should verify with server if coord is not valid', () => {
-    //     const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-    //     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    //     spyCommunicationService.validateCoordinates.and.callFake(() => {
-    //         return of({ body: { differencesLeft: [], difference: [], isGameOver: false } } as HttpResponse<any>);
-    //     });
-    //     spyTimer.setNbOfDifferencesFound.and.callFake(() => {});
+    it('should verify with server if coord is not valid', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    //     // const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected');
-    //     service.getDifferenceValidation('1', { x: 0, y: 1 }, ctx);
+       spyCommunicationService.validateCoordinates.and.callFake(() => {
+            return of({ body: undefined } as HttpResponse<any>);
+        });
+       
+        const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected').and.callFake(() =>{});
+        service.getDifferenceValidation('1', {x:0, y:0}, ctx)
+        expect(spyDifferenceNotDetected).toHaveBeenCalled()
+     
+    });
 
-    //     spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
-    //     // spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
+    it('should verify with server if coord is valid', () =>{
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyCommunicationService.validateCoordinates.and.callFake(() => {
+            return of({ body:  {differencesLeft: [], difference: [], isGameOver: false } } as HttpResponse<any>);
+        });
+        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() =>{});
+        service.getDifferenceValidation('1', {x:0, y:0}, ctx)
+        expect(spyDifferenceDetected).toHaveBeenCalled()
+    })
 
-    //     expect(spyCommunicationService.validateCoordinates).toHaveBeenCalled();
-    //     // expect(spyDifferenceNotDetected).toHaveBeenCalled();
-    // });
+    it('should verify with server if coord is valid and game over', () =>{
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyCommunicationService.validateCoordinates.and.callFake(() => {
+            return of({ body:  {differencesLeft: [], difference: [], isGameOver: true } } as HttpResponse<any>);
+        });
+        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() =>{});
+        const spySetGameOver = spyOn(service, 'setGameOver').and.callFake(() =>{});
+        const spyOpenDialog = spyOn(service, 'openGameOverDialog').and.callFake(() =>{});
+        service.getDifferenceValidation('1', {x:0, y:0}, ctx)
+        expect(spyDifferenceDetected).toHaveBeenCalled()
+        expect(spySetGameOver).toHaveBeenCalled()
+        expect(spyOpenDialog).toHaveBeenCalled()
+    })
 });

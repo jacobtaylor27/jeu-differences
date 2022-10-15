@@ -6,7 +6,6 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Canvas } from '@app/enums/canvas';
 import { Theme } from '@app/enums/theme';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { catchError, of } from 'rxjs';
 
 @Component({
     selector: 'app-dialog-create-game',
@@ -40,11 +39,6 @@ export class DialogCreateGameComponent implements AfterViewInit {
                 { original: this.data.src, modify: this.data.difference },
                 this.data.expansionRadius,
                 (this.form.get('name') as FormControl).value,
-            )
-            .pipe(
-                catchError(() => {
-                    return of(null);
-                }),
             )
             .subscribe((response: HttpResponse<Record<string, never>> | null) => {
                 if (!response) {

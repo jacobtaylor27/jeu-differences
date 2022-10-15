@@ -1,7 +1,9 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
+import { MAX_VALUE_PIXEL, MIN_VALUE_PIXEL } from '@app/constants/encoding';
 import { MidpointAlgorithm } from '@app/services/mid-point-algorithm/mid-point-algorithm';
+// import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 
 @Service()
@@ -12,31 +14,34 @@ export class BmpSubtractorService {
         if (!this.areBmpCompatible(originalImage, modifiedImage)) {
             throw new Error('Both images do not have the same height or width');
         }
+        const differenceImage0px: Bmp = await this.getDifference(originalImage, modifiedImage);
+        return this.applyEnlargment(differenceImage0px, radius);
+    }
 
-        const resultImage: Bmp = new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), Pixel.convertPixelsToARGB(modifiedImage.getPixels()));
+    private async getDifference(originalImage: Bmp, modifiedImage: Bmp): Promise<Bmp> {
+        const buffer: number[] = [];
 
-        for (let i = 0; i < originalImage.getPixels().length; i++) {
-            for (let j = 0; j < originalImage.getPixels()[i].length; j++) {
-                if (this.arePixelsEqual(originalImage.getPixels()[i][j], modifiedImage.getPixels()[i][j])) {
-                    resultImage.getPixels()[i][j].setWhite();
+        for (let i = 0; i < originalImage.getHeight(); i++) {
+            for (let j = 0; j < originalImage.getWidth(); j++) {
+                if (originalImage.getPixels()[i][j].isEqual(modifiedImage.getPixels()[i][j])) {
+                    buffer.push(MAX_VALUE_PIXEL, MAX_VALUE_PIXEL, MAX_VALUE_PIXEL, MAX_VALUE_PIXEL);
                 } else {
-                    resultImage.getPixels()[i][j].setBlack();
+                    buffer.push(MAX_VALUE_PIXEL, MIN_VALUE_PIXEL, MIN_VALUE_PIXEL, MIN_VALUE_PIXEL);
                 }
             }
         }
-
-        return this.createDifferencesBMP(resultImage, radius);
+        return new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), buffer);
     }
 
-    private createDifferencesBMP(originalImage: Bmp, radius: number): Bmp {
+    private applyEnlargment(originalImage: Bmp, radius: number): Bmp {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
-
         if (radius === 0) return originalImage;
 
         const resultCoordinates: BmpCoordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
-        resultCoordinates.forEach((coordinate) => {
-            pixelResult[coordinate.getX()][coordinate.getY()].setBlack();
+        resultCoordinates.forEach((coord) => {
+            if (coord.getX() < originalImage.getHeight() && coord.getY() < originalImage.getWidth())
+                pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToARGB(pixelResult));
     }
@@ -63,15 +68,6 @@ export class BmpSubtractorService {
             }
         }
         return coordinatesOfBlackPixels;
-    }
-
-    private arePixelsEqual(pixelOriginalImg: Pixel, pixelModifiedImg: Pixel): boolean {
-        return (
-            pixelOriginalImg.a === pixelModifiedImg.a &&
-            pixelOriginalImg.b === pixelModifiedImg.b &&
-            pixelOriginalImg.g === pixelModifiedImg.g &&
-            pixelOriginalImg.r === pixelModifiedImg.r
-        );
     }
 
     private areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {

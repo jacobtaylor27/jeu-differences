@@ -5,7 +5,7 @@ import * as bmp from 'bmp-js';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe.only('Bmp', () => {
+describe('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
         const bmpProduced = new Bmp(TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height, TEST_BMP_DATA[0].data);
         expect(bmpProduced.getWidth()).to.equals(TEST_BMP_DATA[0].width);

@@ -5,11 +5,11 @@ import * as bmp from 'bmp-js';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-describe('Bmp', () => {
+describe.only('Bmp', () => {
     it('The constructor should construct an image based on the its parameters', () => {
-        const bmpProduced = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
-        expect(bmpProduced.getWidth()).to.equals(TEST_BMP_DATA.width);
-        expect(bmpProduced.getHeight()).to.equals(TEST_BMP_DATA.height);
+        const bmpProduced = new Bmp(TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height, TEST_BMP_DATA[0].data);
+        expect(bmpProduced.getWidth()).to.equals(TEST_BMP_DATA[0].width);
+        expect(bmpProduced.getHeight()).to.equals(TEST_BMP_DATA[0].height);
         expect(bmpProduced.getPixels()).to.eql(EQUIVALENT_DATA);
     });
 
@@ -34,7 +34,7 @@ describe('Bmp', () => {
     });
 
     it('toBuffer() should convert a bmp file into a buffer', async () => {
-        const bmpProduced = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
+        const bmpProduced = new Bmp(TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height, TEST_BMP_DATA[0].data);
         expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(Buffer.from(PIXEL_BUFFER_ARGB));
     });
 
@@ -44,28 +44,39 @@ describe('Bmp', () => {
             [pixel, pixel],
             [pixel, pixel],
         ];
-        const bmpObj = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
-        expect(bmpObj['convertRawToPixels'](TEST_BMP_DATA.data, TEST_BMP_DATA.width, TEST_BMP_DATA.height)).to.deep.equal(pixels);
+        const bmpObj = new Bmp(TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height, TEST_BMP_DATA[0].data);
+        expect(bmpObj['convertRawToPixels'](TEST_BMP_DATA[0].data, TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height)).to.deep.equal(pixels);
+    });
+
+    it('convertRawToPixels() should work with different pixels', async () => {
+        const pixels: Pixel[][] = [
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            [new Pixel(1, 2, 3), new Pixel(2, 3, 4)],
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            [new Pixel(3, 4, 5), new Pixel(4, 5, 6)],
+        ];
+        const bmpObj = new Bmp(TEST_BMP_DATA[1].width, TEST_BMP_DATA[1].height, TEST_BMP_DATA[1].data);
+        expect(bmpObj['convertRawToPixels'](TEST_BMP_DATA[1].data, TEST_BMP_DATA[1].width, TEST_BMP_DATA[1].height)).to.deep.equal(pixels);
     });
 
     it('toImageData() should convert the data from the bmp object into an ImageData format', async () => {
-        const bmpObj = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
+        const bmpObj = new Bmp(TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height, TEST_BMP_DATA[0].data);
 
         const colorSpace = 'srgb';
         const imageDataExpected: ImageData = {
             colorSpace,
-            width: TEST_BMP_DATA.width,
-            height: TEST_BMP_DATA.height,
+            width: TEST_BMP_DATA[0].width,
+            height: TEST_BMP_DATA[0].height,
             data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToBGRA(bmpObj.getPixels()))),
         };
         expect(await bmpObj.toImageData()).to.deep.equal(imageDataExpected);
     });
 
     it('toBmpImageData() should convert the data from the bmp object into an bmp.ImageData format', async () => {
-        const bmpObj = new Bmp(TEST_BMP_DATA.width, TEST_BMP_DATA.height, TEST_BMP_DATA.data);
+        const bmpObj = new Bmp(TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height, TEST_BMP_DATA[0].data);
         const imgData: bmp.ImageData = {
-            width: TEST_BMP_DATA.width,
-            height: TEST_BMP_DATA.height,
+            width: TEST_BMP_DATA[0].width,
+            height: TEST_BMP_DATA[0].height,
             data: await bmpObj['getPixelBuffer'](),
         };
         const encodedBmp = bmp.encode(imgData);

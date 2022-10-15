@@ -42,7 +42,7 @@ export class Pixel {
     }
 
     isEqual(pixel: Pixel) {
-        return pixel.a === this.a && pixel.b === this.b && pixel.g === this.g && pixel.g === this.g;
+        return pixel.a === this.a && pixel.b === this.b && pixel.g === this.g && pixel.r === this.r;
     }
 
     isWhite() {

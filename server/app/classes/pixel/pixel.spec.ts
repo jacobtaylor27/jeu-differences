@@ -56,4 +56,15 @@ describe('Pixel', () => {
         // eslint-disable-next-line
         expect(whitePixel['arePixelsValid'](0, -1, 0)).to.equal(false);
     });
+
+    it('isEqual(...) should return false when the pixels are not deeply the same', () => {
+        const testPixel: Pixel = new Pixel(PIXEL_COLOR.black, PIXEL_COLOR.white, PIXEL_COLOR.black);
+        const differentPixel: Pixel = new Pixel(PIXEL_COLOR.white, PIXEL_COLOR.white, PIXEL_COLOR.black);
+        expect(testPixel.isEqual(differentPixel)).to.equal(false);
+    });
+
+    it('isEqual(...) should return true when the pixels deeply the same', () => {
+        const testPixel: Pixel = new Pixel(PIXEL_COLOR.black, PIXEL_COLOR.white, PIXEL_COLOR.black);
+        expect(testPixel.isEqual(testPixel)).to.equal(true);
+    });
 });

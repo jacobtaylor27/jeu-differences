@@ -33,11 +33,14 @@ export class BmpSubtractorService {
         return new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), buffer);
     }
 
-    private applyEnlargment(originalImage: Bmp, radius: number): Bmp {
+    private async applyEnlargment(originalImage: Bmp, radius: number): Promise<Bmp> {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
         if (radius === 0) return originalImage;
 
-        const resultCoordinates: BmpCoordinate[] = this.getCoordinatesAfterEnlargement(this.getBlackPixelsFromOriginalImage(originalImage), radius);
+        const resultCoordinates: BmpCoordinate[] = await this.getCoordinatesAfterEnlargement(
+            await this.getBlackPixelsFromOriginalImage(originalImage),
+            radius,
+        );
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coord) => {
             if (coord.getX() < originalImage.getHeight() && coord.getY() < originalImage.getWidth())
@@ -46,7 +49,7 @@ export class BmpSubtractorService {
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToARGB(pixelResult));
     }
 
-    private getCoordinatesAfterEnlargement(originalCoordinates: BmpCoordinate[], radius: number): BmpCoordinate[] {
+    private async getCoordinatesAfterEnlargement(originalCoordinates: BmpCoordinate[], radius: number): Promise<BmpCoordinate[]> {
         const resultCoordinates: BmpCoordinate[] = [];
         originalCoordinates.forEach((coordinate) => {
             const result = this.midpointAlgorithm.findEnlargementArea(coordinate, radius);
@@ -57,7 +60,7 @@ export class BmpSubtractorService {
         return resultCoordinates;
     }
 
-    private getBlackPixelsFromOriginalImage(differenceBmp: Bmp): BmpCoordinate[] {
+    private async getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Promise<BmpCoordinate[]> {
         const coordinatesOfBlackPixels: BmpCoordinate[] = [];
         const pixels: Pixel[][] = differenceBmp.getPixels();
         for (let i = 0; i < pixels.length; i++) {

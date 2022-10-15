@@ -59,6 +59,19 @@ describe.only('Bmp', () => {
         expect(bmpObj['convertRawToPixels'](TEST_BMP_DATA[1].data, TEST_BMP_DATA[1].width, TEST_BMP_DATA[1].height)).to.deep.equal(pixels);
     });
 
+    it('convertRawToPixels() should work with different size of arrays', async () => {
+        const pixels: Pixel[][] = [
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            [new Pixel(1, 2, 3), new Pixel(2, 3, 4)],
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            [new Pixel(3, 4, 5), new Pixel(4, 5, 6)],
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            [new Pixel(5, 6, 7), new Pixel(6, 7, 8)],
+        ];
+        const bmpObj = new Bmp(TEST_BMP_DATA[2].width, TEST_BMP_DATA[2].height, TEST_BMP_DATA[2].data);
+        expect(bmpObj['convertRawToPixels'](TEST_BMP_DATA[2].data, TEST_BMP_DATA[2].width, TEST_BMP_DATA[2].height)).to.deep.equal(pixels);
+    });
+
     it('toImageData() should convert the data from the bmp object into an ImageData format', async () => {
         const bmpObj = new Bmp(TEST_BMP_DATA[0].width, TEST_BMP_DATA[0].height, TEST_BMP_DATA[0].data);
 

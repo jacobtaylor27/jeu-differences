@@ -43,8 +43,7 @@ export class BmpSubtractorService {
         );
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coord) => {
-            if (coord.getX() < originalImage.getHeight() && coord.getY() < originalImage.getWidth())
-                pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
+            pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToARGB(pixelResult));
     }

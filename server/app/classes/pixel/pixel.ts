@@ -41,6 +41,10 @@ export class Pixel {
         return raw;
     }
 
+    isEqual(pixel: Pixel) {
+        return pixel.a === this.a && pixel.b === this.b && pixel.g === this.g && pixel.r === this.r;
+    }
+
     isWhite() {
         return this.isColor(PIXEL_COLOR.white);
     }

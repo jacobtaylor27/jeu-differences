@@ -1,10 +1,23 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
-export const TEST_BMP_DATA = {
-    width: 2,
-    height: 2,
-    data: [255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3],
-};
+export const TEST_BMP_DATA = [
+    {
+        width: 2,
+        height: 2,
+        data: [255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3, 255, 1, 2, 3],
+    },
+    {
+        width: 2,
+        height: 2,
+        data: [255, 1, 2, 3, 255, 2, 3, 4, 255, 3, 4, 5, 255, 4, 5, 6],
+    },
+
+    {
+        width: 2,
+        height: 3,
+        data: [255, 1, 2, 3, 255, 2, 3, 4, 255, 3, 4, 5, 255, 4, 5, 6, 255, 5, 6, 7, 255, 6, 7, 8],
+    },
+];
 
 export const EQUIVALENT_DATA = [
     [

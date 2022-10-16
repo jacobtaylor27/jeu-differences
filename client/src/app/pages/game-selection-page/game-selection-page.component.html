@@ -1,7 +1,4 @@
 <main [ngClass]="favoriteTheme">
     <app-page-header [headerMessage]="'Sélectionnez votre jeu'"></app-page-header>
-    <div class="game-number-container">
-        <span class="game-number">{{ getNumberOfGames() }} jeu<span *ngIf="hasGames()">x</span></span>
-    </div>
     <app-game-carousel></app-game-carousel>
 </main>

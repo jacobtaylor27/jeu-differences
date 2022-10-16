@@ -181,4 +181,10 @@ describe('GameCardHandlerService', () => {
         service['activeCardsRange'] = { start: 14, end: 17 };
         expect(service.hasPreviousCards()).toBeTruthy();
     });
+
+    it('should return true if there are more than one game cards', () => {
+        expect(service.hasMoreThanOneCard()).toBeFalsy();
+        service['gameCards'].push({} as GameCard);
+        expect(service.hasMoreThanOneCard()).toBeTruthy();
+    });
 });

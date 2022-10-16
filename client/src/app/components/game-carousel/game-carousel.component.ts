@@ -49,7 +49,7 @@ export class GameCarouselComponent implements OnInit {
     }
 
     hasMoreThanOneCard(): boolean {
-        return this.gameCarouselService.getNumberOfCards() > 1;
+        return this.gameCarouselService.hasMoreThanOneCard();
     }
 
     hasCards(): boolean {

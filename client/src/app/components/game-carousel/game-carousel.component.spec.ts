@@ -24,6 +24,8 @@ describe('GameCarouselComponent', () => {
             'hasNextCards',
             'hasCards',
             'setCards',
+            'hasMoreThanOneCard',
+            'getNumberOfCards',
         ]);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos']);
         await TestBed.configureTestingModule({
@@ -96,5 +98,15 @@ describe('GameCarouselComponent', () => {
     it('hasCardsAfter should call method hasNextCards from gameCarouselService', () => {
         expect(component.hasCardsAfter()).toBeFalsy();
         expect(spyGameCarouselService.hasNextCards).toHaveBeenCalled();
+    });
+
+    it('should get the number of game cards', () => {
+        component.getCardsCount();
+        expect(spyGameCarouselService.getNumberOfCards).toHaveBeenCalled();
+    });
+
+    it('should return true if there are more than one card', () => {
+        component.hasMoreThanOneCard();
+        expect(spyGameCarouselService.hasMoreThanOneCard).toHaveBeenCalled();
     });
 });

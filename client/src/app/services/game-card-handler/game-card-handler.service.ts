@@ -36,6 +36,10 @@ export class GameCardHandlerService {
         return this.gameCards.length;
     }
 
+    hasMoreThanOneCard(): boolean {
+        return this.gameCards.length > 1;
+    }
+
     hasCards(): boolean {
         return this.gameCards.length > 0;
     }

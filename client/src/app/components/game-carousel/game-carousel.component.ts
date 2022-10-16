@@ -12,10 +12,15 @@ import { PublicGameInformation } from '@common/game-information';
 })
 export class GameCarouselComponent implements OnInit {
     @Input() isAdmin: boolean = false;
+    isLoaded: boolean;
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
+
+    get isInformationLoaded(): boolean {
+        return this.isLoaded;
+    }
 
     ngOnInit(): void {
         this.fetchGameInformation();

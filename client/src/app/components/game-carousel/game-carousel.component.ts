@@ -38,9 +38,18 @@ export class GameCarouselComponent implements OnInit {
                     this.gameCards.push(newCard);
                 }
                 this.gameCarouselService.setCards(this.gameCards);
+                this.isLoaded = true;
                 this.resetStartingRange();
             }
         });
+    }
+
+    getCardsCount(): number {
+        return this.gameCarouselService.getNumberOfCards();
+    }
+
+    hasMoreThanOneCard(): boolean {
+        return this.gameCarouselService.getNumberOfCards() > 1;
     }
 
     hasCards(): boolean {

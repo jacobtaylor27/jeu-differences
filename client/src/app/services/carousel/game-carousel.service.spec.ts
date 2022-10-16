@@ -20,6 +20,7 @@ describe('GameCarouselService', () => {
             'hasNextCards',
             'setCardMode',
             'setCards',
+            'hasMoreThanOneCard',
         ]);
         TestBed.configureTestingModule({
             providers: [{ provide: GameCardHandlerService, useValue: spyGameCardHandlerService }],
@@ -87,5 +88,10 @@ describe('GameCarouselService', () => {
         service.showNextFour();
         expect(spyGameCardHandlerService.increaseActiveRange).toHaveBeenCalled();
         expect(spyGameCardHandlerService.setActiveCards).toHaveBeenCalled();
+    });
+
+    it('should return if there are more than 1 game card', () => {
+        service.hasMoreThanOneCard();
+        expect(spyGameCardHandlerService.hasMoreThanOneCard).toHaveBeenCalled();
     });
 });

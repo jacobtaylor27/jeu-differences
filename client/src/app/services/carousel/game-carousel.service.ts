@@ -16,6 +16,10 @@ export class GameCarouselService {
         return this.gameCardHandlerService.getNumberOfCards();
     }
 
+    hasMoreThanOneCard(): boolean {
+        return this.gameCardHandlerService.getNumberOfCards() > 1;
+    }
+
     setCards(cards: GameCard[]) {
         this.gameCardHandlerService.setCards(cards);
     }

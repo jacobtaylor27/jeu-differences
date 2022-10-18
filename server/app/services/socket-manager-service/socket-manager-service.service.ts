@@ -23,7 +23,12 @@ export class SocketManagerService {
                 // eslint-disable-next-line no-console
                 console.log(`Deconnexion de l'utilisateur avec id : ${socket.id}`);
             });
-        });
+
+            socket.on(SocketEvent.CreateGame, async (playerInfo: { player: User; isMulti: boolean }, mode: string, gameCardId: string) => {
+                const id = await this.gameManager.createGame(playerInfo, mode, gameCardId);
+                socket.join(id);
+                await this.send<string>(id, { name: playerInfo.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, data: id });
+            });
     }
     async send<T>(socketId: string, gameId: string, event: { name: SocketEvent; data?: T }) {
         this.sio

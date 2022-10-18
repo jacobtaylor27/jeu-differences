@@ -35,6 +35,19 @@ export class GameManagerService {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).differenceLeft() : null;
     }
 
+    isGameAlreadyFull(gameId: string) {
+        const game = this.findGame(gameId);
+        return !game || game.isGameFull();
+    }
+
+    addPlayer(player: User, gameId: string) {
+        const game = this.findGame(gameId);
+        if (!game) {
+            return;
+        }
+        game.addJoinPlayer(player);
+    }
+
     private findGame(gameId: string): Game | undefined {
         return this.games.find((game: Game) => game.identifier === gameId);
     }

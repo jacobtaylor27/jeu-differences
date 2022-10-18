@@ -3,8 +3,8 @@ import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-on
 import { GameStatus } from '@app/enum/game-status';
 
 export class PlayerTwoTourState extends GameState {
-    next(): void {
-        // check if the game is not finish
+    // eslint-disable-next-line no-unused-vars
+    next(isMulti: boolean): void {
         this.context.transitionTo(new PlayerOneTourState());
     }
 

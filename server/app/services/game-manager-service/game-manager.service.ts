@@ -1,8 +1,9 @@
 import { Game } from '@app/classes/game/game';
+import { PrivateGameInformation } from '@app/interface/game-info';
+import { User } from '@app/interface/user';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { Coordinate } from '@common/coordinate';
-import { PrivateGameInformation } from '@app/interface/game-info';
 import { Service } from 'typedi';
 
 @Service()
@@ -10,9 +11,9 @@ export class GameManagerService {
     games: Game[] = [];
     constructor(private gameInfo: GameInfoService, public differenceService: BmpDifferenceInterpreter) {}
 
-    async createGame(players: string[], mode: string, gameCardId: string) {
+    async createGame(playerInfo: { player: User; isMulti: boolean }, mode: string, gameCardId: string) {
         const gameCard: PrivateGameInformation = await this.gameInfo.getGameInfoById(gameCardId);
-        const game = new Game(mode, players, gameCard);
+        const game = new Game(mode, playerInfo, gameCard);
         this.games.push(game);
         return game.identifier;
     }

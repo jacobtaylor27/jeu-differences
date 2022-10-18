@@ -2,22 +2,25 @@ import { GameContext } from '@app/classes/game-context/game-context';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
-import { Coordinate } from '@common/coordinate';
 import { PrivateGameInformation } from '@app/interface/game-info';
+import { User } from '@app/interface/user';
+import { Coordinate } from '@common/coordinate';
 import { v4 } from 'uuid';
 
 export class Game {
-    players: string[];
+    players: User[];
     private id: string;
+    private isMulti: boolean;
     private info: PrivateGameInformation;
     private differenceFound: Set<Coordinate[]>;
     private context: GameContext;
 
-    constructor(mode: string, players: string[], info: PrivateGameInformation) {
+    constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
-        this.players = players;
+        this.players = [playerInfo.player];
+        this.isMulti = playerInfo.isMulti;
         this.differenceFound = new Set();
-        this.context = new GameContext(mode as GameMode, new InitGameState());
+        this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
         this.id = v4();
         this.context.next();
         this.context.next(); // go directly to the Found Difference State because timer is not initialize in the server for now

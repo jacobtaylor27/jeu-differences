@@ -1,3 +1,5 @@
+import { User } from '@app/interface/user';
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
@@ -6,6 +8,8 @@ import { Service } from 'typedi';
 @Service()
 export class SocketManagerService {
     private sio: Server;
+
+    constructor(private gameManager: GameManagerService) {}
 
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
@@ -29,8 +33,19 @@ export class SocketManagerService {
                 socket.join(id);
                 await this.send<string>(id, { name: playerInfo.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, data: id });
             });
+
+            socket.on(SocketEvent.JoinGame, (player: User, gameId: string) => {
+                if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
+                    return socket.emit(SocketEvent.Error);
+                }
+                this.gameManager.addPlayer(player, gameId);
+                socket.join(gameId);
+                socket.emit(SocketEvent.JoinGame, gameId);
+                this.send(gameId, { name: SocketEvent.Play });
+            });
+        });
     }
-    async send<T>(socketId: string, gameId: string, event: { name: SocketEvent; data?: T }) {
+    async send<T>(gameId: string, event: { name: SocketEvent; data?: T }) {
         this.sio
             .in(gameId)
             .fetchSockets()

@@ -30,6 +30,10 @@ export class Game {
         return this.id;
     }
 
+    get multi() {
+        return this.isMulti;
+    }
+
     get information() {
         return this.info;
     }
@@ -88,5 +92,16 @@ export class Game {
 
     differenceLeft(): number {
         return this.info.differences.length - this.differenceFound.size;
+    }
+
+    isGameFull() {
+        return (!this.isMulti && this.players.length === 1) || (this.isMulti && this.players.length === 2);
+    }
+
+    addJoinPlayer(player: User) {
+        if ((this.isMulti && this.isGameFull()) || !this.isMulti) {
+            return;
+        }
+        this.players.push(player);
     }
 }

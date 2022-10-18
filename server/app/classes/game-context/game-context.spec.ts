@@ -1,10 +1,10 @@
-import { SinonSpiedInstance, spy } from 'sinon';
-import { GameContext } from '@app/classes/game-context/game-context';
-import { expect } from 'chai';
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { FindDifferenceState } from '@app/classes/find-difference-state/find-difference-state';
+import { GameContext } from '@app/classes/game-context/game-context';
 import { PlayerOneTourState } from '@app/classes/player-one-tour-state/player-one-tour-state';
 import { GameMode } from '@app/enum/game-mode';
+import { expect } from 'chai';
+import { SinonSpiedInstance, spy } from 'sinon';
 
 describe('GameContext', () => {
     let state: FindDifferenceState;
@@ -13,7 +13,7 @@ describe('GameContext', () => {
 
     beforeEach(() => {
         state = new FindDifferenceState();
-        gameContext = new GameContext(GameMode.Classic, state);
+        gameContext = new GameContext(GameMode.Classic, state, true);
         stateSpyObj = spy(state);
         state.setContext(gameContext);
     });

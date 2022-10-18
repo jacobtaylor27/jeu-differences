@@ -1,9 +1,9 @@
-import { GameState } from './game-state';
-import { expect } from 'chai';
-import { describe } from 'mocha';
 import { GameContext } from '@app/classes/game-context/game-context';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
+import { expect } from 'chai';
+import { describe } from 'mocha';
+import { GameState } from './game-state';
 
 class MockGameState extends GameState {
     next(): void {
@@ -22,7 +22,7 @@ describe('GameState', () => {
     });
 
     it('should set the context', () => {
-        const expectedGameContext = new GameContext(GameMode.Classic, state);
+        const expectedGameContext = new GameContext(GameMode.Classic, state, true);
         state.setContext(expectedGameContext);
         expect(state.context).to.equal(expectedGameContext);
     });

@@ -34,6 +34,14 @@ describe('SocketManager', () => {
             on: (_eventName: string, callback: () => void) => {
                 callback();
             },
+            // eslint-disable-next-line no-unused-vars
+            emit: (_eventName: string, _message: string) => {
+                return;
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
         };
         const fakeSockets = {
             // eslint-disable-next-line no-unused-vars
@@ -75,7 +83,7 @@ describe('SocketManager', () => {
             },
         } as unknown as io.Server;
         const spyEmit = spy(fakeSocket, 'emit');
-        await service.send('', '', { name: expectedEvent.name as SocketEvent });
+        await service.send('', { name: expectedEvent.name as SocketEvent });
         expect(spyEmit.calledWith(expectedEvent.name)).to.equal(true);
     });
 
@@ -99,7 +107,7 @@ describe('SocketManager', () => {
             },
         } as unknown as io.Server;
         const spyEmit = spy(fakeSocket, 'emit');
-        await service.send('', '', { name: expectedEvent.name as SocketEvent, data: expectedEvent.data });
+        await service.send('', { name: expectedEvent.name as SocketEvent, data: expectedEvent.data });
         expect(spyEmit.calledWith(expectedEvent.name, expectedEvent.data)).to.equal(true);
     });
 

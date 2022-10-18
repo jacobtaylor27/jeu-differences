@@ -1,4 +1,5 @@
 import { Game } from '@app/classes/game/game';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
@@ -8,7 +9,6 @@ import { GameInfoService } from '@app/services/game-info-service/game-info.servi
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
-import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub } from 'sinon';
@@ -41,7 +41,9 @@ describe('GameManagerService', () => {
     });
 
     it('should create a game', async () => {
-        expect(await gameManager.createGame(['test'], 'classic', '')).to.equal(gameManager['games'][0].identifier);
+        expect(await gameManager.createGame({ player: { name: 'test', id: '' }, isMulti: false }, 'classic', '')).to.equal(
+            gameManager['games'][0].identifier,
+        );
         expect(gameInfoSpyObj.getGameInfoById.called).to.equal(true);
         expect(gameManager['games'].length).not.to.equal(0);
     });
@@ -61,7 +63,7 @@ describe('GameManagerService', () => {
 
     it('should check if the game is over', () => {
         const gameFoundSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
-        const expectedGame = stub(new Game('', ['test'], {} as PrivateGameInformation));
+        const expectedGame = stub(new Game('', { player: { name: 'test', id: '' }, isMulti: false }, {} as PrivateGameInformation));
         expectedGame.isGameOver.callsFake(() => false);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         expect(gameManager.isGameOver('')).to.equal(null);

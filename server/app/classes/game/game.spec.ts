@@ -3,8 +3,8 @@ import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
-import { Coordinate } from '@common/coordinate';
 import { PrivateGameInformation } from '@app/interface/game-info';
+import { Coordinate } from '@common/coordinate';
 import { Score } from '@common/score';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -23,17 +23,18 @@ describe('Game', () => {
         differenceRadius: 0,
         differences: [[{} as Coordinate]],
     };
-    const expectedPlayers = ['test player'];
+    const expectedPlayer = { player: { name: 'test player', id: '' }, isMulti: false };
     const expectedMode = 'classic';
     beforeEach(() => {
-        game = new Game(expectedMode, expectedPlayers, expectedGameInfo);
+        game = new Game(expectedMode, expectedPlayer, expectedGameInfo);
     });
 
     it('should create a game with specific mode, players and game information', () => {
         const expectedGameState = new FindDifferenceState();
-        const newGame = new Game(expectedMode, expectedPlayers, expectedGameInfo);
+        const newGame = new Game(expectedMode, expectedPlayer, expectedGameInfo);
         expect(newGame.information).to.deep.equal(expectedGameInfo);
-        expect(newGame['players']).to.deep.equal(expectedPlayers);
+        expect(newGame['players']).to.deep.equal([expectedPlayer.player]);
+        expect(newGame['isMulti']).to.deep.equal(expectedPlayer.isMulti);
         expect(newGame['differenceFound']).to.deep.equal(new Set<Coordinate[]>());
         expect(newGame['context'].gameMode).to.equal(expectedMode as GameMode);
         expect(newGame['context'].gameState()).to.equal(expectedGameState.status());

@@ -12,10 +12,15 @@ import { PublicGameInformation } from '@common/game-information';
 })
 export class GameCarouselComponent implements OnInit {
     @Input() isAdmin: boolean = false;
+    isLoaded: boolean;
     gameCards: GameCard[] = [];
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
+
+    get isInformationLoaded(): boolean {
+        return this.isLoaded;
+    }
 
     ngOnInit(): void {
         this.fetchGameInformation();
@@ -33,9 +38,18 @@ export class GameCarouselComponent implements OnInit {
                     this.gameCards.push(newCard);
                 }
                 this.gameCarouselService.setCards(this.gameCards);
+                this.isLoaded = true;
                 this.resetStartingRange();
             }
         });
+    }
+
+    getCardsCount(): number {
+        return this.gameCarouselService.getNumberOfCards();
+    }
+
+    hasMoreThanOneCard(): boolean {
+        return this.gameCarouselService.hasMoreThanOneCard();
     }
 
     hasCards(): boolean {

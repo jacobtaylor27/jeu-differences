@@ -56,6 +56,17 @@ export class GameManagerService {
         return game.multi;
     }
 
+    leaveGame(playerId: string, gameId: string) {
+        const game = this.findGame(gameId);
+        if (!game) {
+            return;
+        }
+        game.leaveGame(playerId);
+        if (game.isAllPlayerLeave()) {
+            this.games.delete(game);
+        }
+    }
+
     private findGame(gameId: string): Game | undefined {
         return Array.from(this.games.values()).find((game: Game) => game.identifier === gameId);
     }

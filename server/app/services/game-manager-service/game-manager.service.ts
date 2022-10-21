@@ -8,13 +8,13 @@ import { Service } from 'typedi';
 
 @Service()
 export class GameManagerService {
-    games: Game[] = [];
+    games: Set<Game> = new Set();
     constructor(private gameInfo: GameInfoService, public differenceService: BmpDifferenceInterpreter) {}
 
     async createGame(playerInfo: { player: User; isMulti: boolean }, mode: string, gameCardId: string) {
         const gameCard: PrivateGameInformation = await this.gameInfo.getGameInfoById(gameCardId);
         const game = new Game(mode, playerInfo, gameCard);
-        this.games.push(game);
+        this.games.add(game);
         return game.identifier;
     }
 
@@ -49,6 +49,6 @@ export class GameManagerService {
     }
 
     private findGame(gameId: string): Game | undefined {
-        return this.games.find((game: Game) => game.identifier === gameId);
+        return Array.from(this.games.values()).find((game: Game) => game.identifier === gameId);
     }
 }

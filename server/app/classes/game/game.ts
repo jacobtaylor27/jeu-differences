@@ -118,3 +118,8 @@ export class Game {
         this.players.delete(player);
         this.context.transitionTo(new EndGameState());
     }
+
+    isAllPlayerLeave() {
+        return this.players.size === 0;
+    }
+}

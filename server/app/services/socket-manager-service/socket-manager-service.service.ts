@@ -44,6 +44,15 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {
+                if (!this.gameManager.isGameFound(gameId)) {
+                    return socket.emit(SocketEvent.Error);
+                }
+                this.gameManager.leaveGame(socket.id, gameId);
+                if (this.gameManager.isGameMultiPlayer(gameId)) {
+                    socket.to(gameId).emit(SocketEvent.Win);
+                }
+                socket.emit(SocketEvent.LeaveGame);
+                socket.leave(gameId);
             });
         });
     }

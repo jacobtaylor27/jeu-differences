@@ -48,6 +48,14 @@ export class GameManagerService {
         game.addJoinPlayer(player);
     }
 
+    isGameMultiPlayer(gameId: string) {
+        const game = this.findGame(gameId);
+        if (!game) {
+            return;
+        }
+        return game.multi;
+    }
+
     private findGame(gameId: string): Game | undefined {
         return Array.from(this.games.values()).find((game: Game) => game.identifier === gameId);
     }

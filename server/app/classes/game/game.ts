@@ -105,4 +105,7 @@ export class Game {
         }
         this.players.add(player);
     }
-}
+
+    findPlayer(playerId: string) {
+        return Array.from(this.players.values()).find((player: User) => player.id === playerId);
+    }

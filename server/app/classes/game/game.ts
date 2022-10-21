@@ -109,3 +109,12 @@ export class Game {
     findPlayer(playerId: string) {
         return Array.from(this.players.values()).find((player: User) => player.id === playerId);
     }
+
+    leaveGame(playerId: string) {
+        const player = this.findPlayer(playerId);
+        if (!player) {
+            return;
+        }
+        this.players.delete(player);
+        this.context.transitionTo(new EndGameState());
+    }

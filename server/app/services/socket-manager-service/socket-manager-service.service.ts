@@ -37,10 +37,12 @@ export class SocketManagerService {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
                     return socket.emit(SocketEvent.Error);
                 }
-                this.gameManager.addPlayer(player, gameId);
+                this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
                 socket.emit(SocketEvent.JoinGame, gameId);
-                this.send(gameId, { name: SocketEvent.Play });
+                socket.in(gameId).emit(SocketEvent.Play);
+            });
+
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {
             });
         });

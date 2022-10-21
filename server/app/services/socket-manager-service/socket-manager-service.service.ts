@@ -1,4 +1,3 @@
-import { User } from '@app/interface/user';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
@@ -28,13 +27,13 @@ export class SocketManagerService {
                 console.log(`Deconnexion de l'utilisateur avec id : ${socket.id}`);
             });
 
-            socket.on(SocketEvent.CreateGame, async (playerInfo: { player: User; isMulti: boolean }, mode: string, gameCardId: string) => {
+            socket.on(SocketEvent.CreateGame, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
                 const id = await this.gameManager.createGame(playerInfo, mode, gameCardId);
                 socket.join(id);
                 await this.send<string>(id, { name: playerInfo.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, data: id });
             });
 
-            socket.on(SocketEvent.JoinGame, (player: User, gameId: string) => {
+            socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
                     return socket.emit(SocketEvent.Error);
                 }
@@ -42,9 +41,11 @@ export class SocketManagerService {
                 socket.join(gameId);
                 socket.emit(SocketEvent.JoinGame, gameId);
                 this.send(gameId, { name: SocketEvent.Play });
+            socket.on(SocketEvent.LeaveGame, (gameId: string) => {
             });
         });
     }
+
     async send<T>(gameId: string, event: { name: SocketEvent; data?: T }) {
         this.sio
             .in(gameId)

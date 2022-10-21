@@ -7,4 +7,6 @@ export enum SocketEvent {
     WaitPlayer = 'WaitPlayer',
     Error = 'Error',
     Play = 'Play',
+    LeaveGame = 'LeaveGame',
+    Win = 'Win',
 }

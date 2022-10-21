@@ -1,3 +1,4 @@
+import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { GameContext } from '@app/classes/game-context/game-context';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
@@ -8,7 +9,7 @@ import { Coordinate } from '@common/coordinate';
 import { v4 } from 'uuid';
 
 export class Game {
-    players: User[];
+    players: Set<User>;
     private id: string;
     private isMulti: boolean;
     private info: PrivateGameInformation;
@@ -17,7 +18,7 @@ export class Game {
 
     constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
-        this.players = [playerInfo.player];
+        this.players = new Set([playerInfo.player]);
         this.isMulti = playerInfo.isMulti;
         this.differenceFound = new Set();
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
@@ -95,13 +96,13 @@ export class Game {
     }
 
     isGameFull() {
-        return (!this.isMulti && this.players.length === 1) || (this.isMulti && this.players.length === 2);
+        return (!this.isMulti && this.players.size === 1) || (this.isMulti && this.players.size === 2);
     }
 
     addJoinPlayer(player: User) {
         if ((this.isMulti && this.isGameFull()) || !this.isMulti) {
             return;
         }
-        this.players.push(player);
+        this.players.add(player);
     }
 }

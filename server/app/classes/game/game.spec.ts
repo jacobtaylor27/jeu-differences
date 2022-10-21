@@ -33,7 +33,7 @@ describe('Game', () => {
         const expectedGameState = new FindDifferenceState();
         const newGame = new Game(expectedMode, expectedPlayer, expectedGameInfo);
         expect(newGame.information).to.deep.equal(expectedGameInfo);
-        expect(newGame['players']).to.deep.equal([expectedPlayer.player]);
+        expect(newGame['players'].has(expectedPlayer.player)).to.equal(true);
         expect(newGame['isMulti']).to.deep.equal(expectedPlayer.isMulti);
         expect(newGame['differenceFound']).to.deep.equal(new Set<Coordinate[]>());
         expect(newGame['context'].gameMode).to.equal(expectedMode as GameMode);

@@ -42,10 +42,10 @@ describe('GameManagerService', () => {
 
     it('should create a game', async () => {
         expect(await gameManager.createGame({ player: { name: 'test', id: '' }, isMulti: false }, 'classic', '')).to.equal(
-            gameManager['games'][0].identifier,
+            Array.from(gameManager['games'].values())[0].identifier,
         );
         expect(gameInfoSpyObj.getGameInfoById.called).to.equal(true);
-        expect(gameManager['games'].length).not.to.equal(0);
+        expect(gameManager['games'].size).not.to.equal(0);
     });
 
     it('should check if the game is found', () => {
@@ -95,7 +95,7 @@ describe('GameManagerService', () => {
         expect(gameManager['findGame']('')).to.equal(undefined);
         const expectedIdGame = '';
         const expectedGame = { identifier: expectedIdGame } as Game;
-        gameManager['games'].push(expectedGame);
+        gameManager['games'].add(expectedGame);
         expect(gameManager['findGame'](expectedIdGame)).to.deep.equal(expectedGame);
     });
 

@@ -25,12 +25,12 @@ describe('BmpCoordinate', () => {
     });
 
     it('BmpCoordinate constructor should not allow outside bounds coordinates', () => {
-        const coordinate = new BmpCoordinate(641, 1);
+        const coordinate = new BmpCoordinate(1, 641);
         expect(coordinate.getX()).to.equal(undefined);
     });
 
     it('BmpCoordinate constructor should not allow outside bounds coordinates', () => {
-        const coordinate = new BmpCoordinate(1, 481);
+        const coordinate = new BmpCoordinate(481, 1);
         expect(coordinate.getX()).to.equal(undefined);
     });
 

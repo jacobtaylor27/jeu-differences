@@ -104,7 +104,7 @@ describe('Midpoint Algorithn', async () => {
     });
 
     it('addInitial4Coords(...) should not add coord if coord is outside bound', () => {
-        const center: BmpCoordinate = new BmpCoordinate(640, 480);
+        const center: BmpCoordinate = new BmpCoordinate(480, 640);
         const distance: Coordinate = { x: 1, y: 3 };
         const coordinates: BmpCoordinate[] = [];
         midpointAlgorithm['addInitial4Coords'](center, distance, coordinates);

@@ -18,7 +18,7 @@ export class SocketManagerService {
         if (!this.sio) {
             throw new Error('Server instance not set');
         }
-        this.sio.on(SocketEvent.Connection, (socket) => {
+        this.sio.on(SocketEvent.Connection, (socket: Socket) => {
             // eslint-disable-next-line no-console
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
 
@@ -35,7 +35,8 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
-                    return socket.emit(SocketEvent.Error);
+                    socket.emit(SocketEvent.Error);
+                    return;
                 }
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
@@ -45,7 +46,8 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId)) {
-                    return socket.emit(SocketEvent.Error);
+                    socket.emit(SocketEvent.Error);
+                    return;
                 }
                 this.gameManager.leaveGame(socket.id, gameId);
                 if (this.gameManager.isGameMultiPlayer(gameId)) {

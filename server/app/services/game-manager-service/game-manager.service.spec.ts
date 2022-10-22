@@ -126,6 +126,17 @@ describe('GameManagerService', () => {
         expect(gameManager.isGameAlreadyFull('')).to.equal(true);
     });
 
+    it('should add player', () => {
+        const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const spyAddPlayer = stub(game, 'addJoinPlayer');
+        const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
+        gameManager.addPlayer({ name: '', id: '' }, '');
+        expect(spyAddPlayer.called).to.equal(false);
+        spyFindGame.callsFake(() => game);
+        gameManager.addPlayer({ name: '', id: '' }, '');
+        expect(spyAddPlayer.called).to.equal(true);
+    });
+
     afterEach(() => {
         restore();
     });

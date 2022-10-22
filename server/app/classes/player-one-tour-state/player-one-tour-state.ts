@@ -1,4 +1,3 @@
-import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { GameState } from '@app/classes/game-state/game-state';
 import { PlayerTwoTourState } from '@app/classes/player-two-tour-state/player-two-tour-state';
 import { GameStatus } from '@app/enum/game-status';
@@ -11,9 +10,5 @@ export class PlayerOneTourState extends GameState {
 
     status(): GameStatus {
         return GameStatus.PlayerOneTour;
-    }
-
-    end(): void {
-        this.context.transitionTo(new EndGameState());
     }
 }

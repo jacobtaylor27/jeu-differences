@@ -1,9 +1,11 @@
+import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { FindDifferenceState } from '@app/classes/find-difference-state/find-difference-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
+import { User } from '@app/interface/user';
 import { Coordinate } from '@common/coordinate';
 import { Score } from '@common/score';
 import { expect } from 'chai';
@@ -23,7 +25,7 @@ describe('Game', () => {
         differenceRadius: 0,
         differences: [[{} as Coordinate]],
     };
-    const expectedPlayer = { player: { name: 'test player', id: '' }, isMulti: false };
+    const expectedPlayer = { player: { name: 'test player', id: 'test' }, isMulti: false };
     const expectedMode = 'classic';
     beforeEach(() => {
         game = new Game(expectedMode, expectedPlayer, expectedGameInfo);
@@ -33,7 +35,7 @@ describe('Game', () => {
         const expectedGameState = new FindDifferenceState();
         const newGame = new Game(expectedMode, expectedPlayer, expectedGameInfo);
         expect(newGame.information).to.deep.equal(expectedGameInfo);
-        expect(newGame['players'].has(expectedPlayer.player)).to.equal(true);
+        expect(newGame['players'].has(expectedPlayer.player.id)).to.equal(true);
         expect(newGame['isMulti']).to.deep.equal(expectedPlayer.isMulti);
         expect(newGame['differenceFound']).to.deep.equal(new Set<Coordinate[]>());
         expect(newGame['context'].gameMode).to.equal(expectedMode as GameMode);
@@ -189,4 +191,9 @@ describe('Game', () => {
         expect(game.isDifferenceFound({} as Coordinate)).to.equal(expectedDifferences);
         expect(addCoordinatesOnDifferenceFoundSpy.called).to.equal(true);
     });
-});
+
+    it('should get if the game is in multi or not', () => {
+        expect(game.multi).to.equal(false);
+        game['isMulti'] = true;
+        expect(game.multi).to.equal(true);
+    });

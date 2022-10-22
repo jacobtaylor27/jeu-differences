@@ -1,7 +1,5 @@
 import { Coordinate } from '@common/coordinate';
-
-const HEIGHT = 480;
-const WIDTH = 640;
+import { DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@common/image-size';
 
 export class BmpCoordinate {
     private x: number;
@@ -35,10 +33,10 @@ export class BmpCoordinate {
     }
 
     private isXCoordinateValid(x: number) {
-        return x >= 0 && x <= HEIGHT;
+        return x >= 0 && x <= DEFAULT_IMAGE_HEIGHT;
     }
 
     private isYCoordinateValid(y: number) {
-        return y >= 0 && y <= WIDTH;
+        return y >= 0 && y <= DEFAULT_IMAGE_WIDTH;
     }
 }

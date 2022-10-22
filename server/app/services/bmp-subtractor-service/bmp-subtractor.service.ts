@@ -4,7 +4,7 @@ import { Pixel } from '@app/classes/pixel/pixel';
 import { MAX_VALUE_PIXEL, MIN_VALUE_PIXEL } from '@app/constants/encoding';
 import { MidpointAlgorithm } from '@app/services/mid-point-algorithm/mid-point-algorithm';
 import { Coordinate } from '@common/coordinate';
-// import { Coordinate } from '@common/coordinate';
+import { DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@common/image-size';
 import { Service } from 'typedi';
 
 @Service()
@@ -37,13 +37,8 @@ export class BmpSubtractorService {
     private async applyEnlargment(originalImage: Bmp, radius: number): Promise<Bmp> {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
         if (radius === 0) return originalImage;
-        // const pixelsToEnlarge: BmpCoordinate[] = [];
-        const blackPixels: BmpCoordinate[] = await this.getBlackPixelsFromOriginalImage(originalImage);
-        // blackPixels.forEach((pixel) => {
-        //     if (this.isEdgePoint(pixel, blackPixels)) {
-        //         pixelsToEnlarge.push(pixel);
-        //     }
-        // });
+
+        const blackPixels: BmpCoordinate[] = await this.getContour(originalImage);
         const resultCoordinates: BmpCoordinate[] = await this.getCoordinatesAfterEnlargement(blackPixels, radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coord) => {
@@ -53,35 +48,14 @@ export class BmpSubtractorService {
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToARGB(pixelResult));
     }
 
-    // private isEdgePoint(pixel: BmpCoordinate, blackPixelArray: BmpCoordinate[]): boolean {
-    //     const neighborsArray: Coordinate[] = this.findNeighbors(pixel);
-    //     let result = false;
-    //     neighborsArray.forEach((neighbor) => {
-    //         if (
-    //             !blackPixelArray.some(
-    //                 (coord) => coord.toCoordinate().x === neighbor.toCoordinate().x && coord.toCoordinate().y === neighbor.toCoordinate().y,
-    //             )
-    //         )
-    //             result = true;
-    //     });
-    //     return result;
-    // }
-
-    private findNeighbors(pixel: Coordinate, coordinatesOfBlackPixels: BmpCoordinate[], differenceBmp: Bmp) {
+    private findPixelContour(pixel: Coordinate, contour: BmpCoordinate[], differenceBmp: Bmp) {
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
                 const offsetX = pixel.x + i;
                 const offsetY = pixel.y + j;
-                if (
-                    offsetX >= 0 &&
-                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-                    offsetX < 480 &&
-                    offsetY >= 0 &&
-                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-                    offsetY < 640
-                ) {
+                if (offsetX >= 0 && offsetX < DEFAULT_IMAGE_HEIGHT && offsetY >= 0 && offsetY < DEFAULT_IMAGE_WIDTH) {
                     if (differenceBmp.getPixels()[offsetX][offsetY].isWhite()) {
-                        coordinatesOfBlackPixels.push(new BmpCoordinate(pixel.x, pixel.y));
+                        contour.push(new BmpCoordinate(pixel.x, pixel.y));
                         return;
                     }
                 }
@@ -100,17 +74,17 @@ export class BmpSubtractorService {
         return resultCoordinates;
     }
 
-    private async getBlackPixelsFromOriginalImage(differenceBmp: Bmp): Promise<BmpCoordinate[]> {
-        const coordinatesOfBlackPixels: BmpCoordinate[] = [];
+    private async getContour(differenceBmp: Bmp): Promise<BmpCoordinate[]> {
+        const contour: BmpCoordinate[] = [];
         const pixels: Pixel[][] = differenceBmp.getPixels();
         for (let i = 0; i < pixels.length; i++) {
             for (let j = 0; j < pixels[i].length; j++) {
                 if (pixels[i][j].isBlack()) {
-                    this.findNeighbors({ x: i, y: j }, coordinatesOfBlackPixels, differenceBmp);
+                    this.findPixelContour({ x: i, y: j }, contour, differenceBmp);
                 }
             }
         }
-        return coordinatesOfBlackPixels;
+        return contour;
     }
 
     private areBmpCompatible(originalImage: Bmp, modifiedImage: Bmp): boolean {

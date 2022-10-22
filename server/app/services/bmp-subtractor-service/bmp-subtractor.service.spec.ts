@@ -8,7 +8,7 @@ import { Container } from 'typedi';
 import { BmpSubtractorService } from './bmp-subtractor.service';
 chai.use(chaiAsPromised);
 
-describe.only('Bmp subractor service', async () => {
+describe('Bmp subractor service', async () => {
     let bmpDecoderService: BmpDecoderService;
     let bmpSubtractorService: BmpSubtractorService;
 

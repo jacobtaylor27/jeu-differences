@@ -9,7 +9,7 @@ import { Coordinate } from '@common/coordinate';
 import { v4 } from 'uuid';
 
 export class Game {
-    players: Set<User>;
+    players: Map<string, string>;
     private id: string;
     private isMulti: boolean;
     private info: PrivateGameInformation;
@@ -18,7 +18,8 @@ export class Game {
 
     constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
-        this.players = new Set([playerInfo.player]);
+        this.players = new Map();
+        this.players.set(playerInfo.player.id, playerInfo.player.name);
         this.isMulti = playerInfo.isMulti;
         this.differenceFound = new Set();
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
@@ -103,11 +104,11 @@ export class Game {
         if ((this.isMulti && this.isGameFull()) || !this.isMulti) {
             return;
         }
-        this.players.add(player);
+        this.players.set(player.id, player.name);
     }
 
     findPlayer(playerId: string) {
-        return Array.from(this.players.values()).find((player: User) => player.id === playerId);
+        return this.players.get(playerId);
     }
 
     leaveGame(playerId: string) {
@@ -115,7 +116,7 @@ export class Game {
         if (!player) {
             return;
         }
-        this.players.delete(player);
+        this.players.delete(playerId);
         this.context.transitionTo(new EndGameState());
     }
 

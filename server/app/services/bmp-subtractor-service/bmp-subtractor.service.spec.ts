@@ -8,7 +8,7 @@ import { Container } from 'typedi';
 import { BmpSubtractorService } from './bmp-subtractor.service';
 chai.use(chaiAsPromised);
 
-describe('Bmp subractor service', async () => {
+describe.only('Bmp subractor service', async () => {
     let bmpDecoderService: BmpDecoderService;
     let bmpSubtractorService: BmpSubtractorService;
 
@@ -51,23 +51,41 @@ describe('Bmp subractor service', async () => {
             .and.be.an.instanceOf(Error);
     });
 
-    it.only('Should apply 0 pixel enlargement radius for a given image ', async () => {
-        const radius = 3;
-        const bmpWithRadiusOf0px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/white.bmp');
-        const blackBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/image_7_diff.bmp');
-        await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius);
-    });
-
-    it('Should apply 3 pixel enlargement radius for a given image ', async () => {
-        const radius = 3;
+    it('getDifferenceBMP(...) Should apply 0 pixel enlargement radius for a given image', async () => {
+        const radius = 0;
         const bmpWithRadiusOf0px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
         const blackBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
-        const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-3px.bmp');
-        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius);
+        expect(bmpWithRadiusOf0px).to.deep.equal(await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius));
+    });
+
+    it('getDifferenceBMP(...) Should apply 0 pixel enlargement radius for a real image', async () => {
+        const radius = 0;
+        const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/white_bmp.bmp');
+        const bmpWithRadius = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/maxplus_diff.bmp');
+        const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/maxplus_diff.bmp');
+        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadius, whiteBmp, radius);
         expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
     });
 
-    it('Should apply 9 pixel enlargement radius for a given image ', async () => {
+    it('getDifferenceBMP(...) Should apply 3 pixel enlargement radius for a given image', async () => {
+        const radius = 3;
+        const bmpWithRadius = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
+        const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
+        const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-3px.bmp');
+        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadius, whiteBmp, radius);
+        expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
+    });
+
+    it('getDifferenceBMP(...) Should apply 3 pixel enlargement radius for a real image', async () => {
+        const radius = 3;
+        const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/white_bmp.bmp');
+        const bmpWithRadius = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/maxplus_diff.bmp');
+        const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/real_img_3px.bmp');
+        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadius, whiteBmp, radius);
+        expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
+    });
+
+    it('getDifferenceBMP(...) Should apply 9 pixel enlargement radius for a given image', async () => {
         const radius = 9;
         const bmpWithRadiusOf0px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
         const blackBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
@@ -76,12 +94,30 @@ describe('Bmp subractor service', async () => {
         expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
     });
 
-    it('Should apply 15 pixel enlargement radius for a given image ', async () => {
+    it('getDifferenceBMP(...) Should apply 9 pixel enlargement radius for a real image', async () => {
+        const radius = 9;
+        const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/white_bmp.bmp');
+        const bmpWithRadius = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/maxplus_diff.bmp');
+        const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/real_img_9px.bmp');
+        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadius, whiteBmp, radius);
+        expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
+    });
+
+    it('getDifferenceBMP(...) Should apply 15 pixel enlargement radius for a given image', async () => {
         const radius = 15;
         const bmpWithRadiusOf0px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
         const blackBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
         const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-15px.bmp');
         const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius);
+        expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
+    });
+
+    it('getDifferenceBMP(...) Should apply 15 pixel enlargement radius for a real image', async () => {
+        const radius = 15;
+        const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/white_bmp.bmp');
+        const bmpWithRadius = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/maxplus_diff.bmp');
+        const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/real_img_15px.bmp');
+        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadius, whiteBmp, radius);
         expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
     });
 });

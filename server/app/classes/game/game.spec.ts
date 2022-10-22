@@ -223,4 +223,11 @@ describe('Game', () => {
         expect(game.players.has(expectedPlayer1.id)).to.equal(false);
     });
 
+    it('should add a player in a game if the game is not full', () => {
+        stub(game, 'isGameFull').callsFake(() => false);
+        const expectedPlayer1 = { name: 'test', id: '' };
+        game['isMulti'] = true;
+        game.addJoinPlayer(expectedPlayer1);
+        expect(game.players.has(expectedPlayer1.id)).to.equal(true);
+    });
 

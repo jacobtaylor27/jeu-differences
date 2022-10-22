@@ -231,3 +231,20 @@ describe('Game', () => {
         expect(game.players.has(expectedPlayer1.id)).to.equal(true);
     });
 
+    it('should leave a game if the player is found', () => {
+        const spyDeletePlayer = stub(game.players, 'delete');
+        const expectedPlayer1 = { name: 'test', id: '1' };
+        game.leaveGame(expectedPlayer1.id);
+        expect(spyDeletePlayer.called).to.equal(false);
+        game.leaveGame(expectedPlayer.player.id);
+        // expect(game.players.has(expectedPlayer.player.id)).to.equal(false);
+        const endGameState = new EndGameState();
+        expect(game.status()).to.equal(endGameState.status());
+    });
+
+    it('should check if all player leave', () => {
+        expect(game.isAllPlayerLeave()).to.equal(false);
+        game.players = new Map();
+        expect(game.isAllPlayerLeave()).to.equal(true);
+    });
+});

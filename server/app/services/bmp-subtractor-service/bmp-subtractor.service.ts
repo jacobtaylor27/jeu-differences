@@ -3,6 +3,7 @@ import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
 import { MAX_VALUE_PIXEL, MIN_VALUE_PIXEL } from '@app/constants/encoding';
 import { MidpointAlgorithm } from '@app/services/mid-point-algorithm/mid-point-algorithm';
+import { Coordinate } from '@common/coordinate';
 // import { Coordinate } from '@common/coordinate';
 import { Service } from 'typedi';
 
@@ -36,16 +37,54 @@ export class BmpSubtractorService {
     private async applyEnlargment(originalImage: Bmp, radius: number): Promise<Bmp> {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
         if (radius === 0) return originalImage;
-
-        const resultCoordinates: BmpCoordinate[] = await this.getCoordinatesAfterEnlargement(
-            await this.getBlackPixelsFromOriginalImage(originalImage),
-            radius,
-        );
+        // const pixelsToEnlarge: BmpCoordinate[] = [];
+        const blackPixels: BmpCoordinate[] = await this.getBlackPixelsFromOriginalImage(originalImage);
+        // blackPixels.forEach((pixel) => {
+        //     if (this.isEdgePoint(pixel, blackPixels)) {
+        //         pixelsToEnlarge.push(pixel);
+        //     }
+        // });
+        const resultCoordinates: BmpCoordinate[] = await this.getCoordinatesAfterEnlargement(blackPixels, radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coord) => {
-            pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
+            if (coord.toCoordinate().x < originalImage.getHeight() && coord.toCoordinate().y < originalImage.getWidth())
+                pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
         });
         return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToARGB(pixelResult));
+    }
+
+    // private isEdgePoint(pixel: BmpCoordinate, blackPixelArray: BmpCoordinate[]): boolean {
+    //     const neighborsArray: Coordinate[] = this.findNeighbors(pixel);
+    //     let result = false;
+    //     neighborsArray.forEach((neighbor) => {
+    //         if (
+    //             !blackPixelArray.some(
+    //                 (coord) => coord.toCoordinate().x === neighbor.toCoordinate().x && coord.toCoordinate().y === neighbor.toCoordinate().y,
+    //             )
+    //         )
+    //             result = true;
+    //     });
+    //     return result;
+    // }
+
+    private findNeighbors(pixel: Coordinate) {
+        const neighborsArray: Coordinate[] = [];
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                const offsetX = pixel.x + i;
+                const offsetY = pixel.y + j;
+                if (
+                    offsetX >= 0 &&
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                    offsetX < 480 &&
+                    offsetY >= 0 &&
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                    offsetY < 640
+                )
+                    neighborsArray.push({ x: offsetX, y: offsetY });
+            }
+        }
+        return neighborsArray;
     }
 
     private async getCoordinatesAfterEnlargement(originalCoordinates: BmpCoordinate[], radius: number): Promise<BmpCoordinate[]> {
@@ -65,7 +104,13 @@ export class BmpSubtractorService {
         for (let i = 0; i < pixels.length; i++) {
             for (let j = 0; j < pixels[i].length; j++) {
                 if (pixels[i][j].isBlack()) {
-                    coordinatesOfBlackPixels.push(new BmpCoordinate(i, j));
+                    const neighborsArray: Coordinate[] = this.findNeighbors({ x: i, y: j });
+                    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+                    for (let k = 0; k < neighborsArray.length; k++) {
+                        if (differenceBmp.getPixels()[neighborsArray[k].x][neighborsArray[k].y].isWhite()) {
+                            coordinatesOfBlackPixels.push(new BmpCoordinate(i, j));
+                        }
+                    }
                 }
             }
         }

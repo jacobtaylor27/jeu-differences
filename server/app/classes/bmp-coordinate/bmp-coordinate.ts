@@ -35,10 +35,10 @@ export class BmpCoordinate {
     }
 
     private isXCoordinateValid(x: number) {
-        return x >= 0 && x <= WIDTH;
+        return x >= 0 && x <= HEIGHT;
     }
 
     private isYCoordinateValid(y: number) {
-        return y >= 0 && y <= HEIGHT;
+        return y >= 0 && y <= WIDTH;
     }
 }

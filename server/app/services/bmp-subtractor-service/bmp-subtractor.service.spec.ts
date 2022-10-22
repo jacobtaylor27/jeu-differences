@@ -51,11 +51,11 @@ describe('Bmp subractor service', async () => {
             .and.be.an.instanceOf(Error);
     });
 
-    it('Should apply 0 pixel enlargement radius for a given image ', async () => {
-        const radius = 0;
-        const bmpWithRadiusOf0px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/dot-with-radius-0px.bmp');
-        const blackBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-radius/no-dot-with-no-radius.bmp');
-        expect(bmpWithRadiusOf0px).to.deep.equal(await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius));
+    it.only('Should apply 0 pixel enlargement radius for a given image ', async () => {
+        const radius = 3;
+        const bmpWithRadiusOf0px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/white.bmp');
+        const blackBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/image_7_diff.bmp');
+        await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius);
     });
 
     it('Should apply 3 pixel enlargement radius for a given image ', async () => {

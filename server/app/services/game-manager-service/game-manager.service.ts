@@ -4,6 +4,7 @@ import { User } from '@app/interface/user';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { Coordinate } from '@common/coordinate';
+import { DifferenceFound } from '@common/difference';
 import { Service } from 'typedi';
 
 @Service()
@@ -67,11 +68,11 @@ export class GameManagerService {
         }
     }
 
-    differenceFound(coord: Coordinate, isPlayerFoundDifference: boolean, gameId: string) {
+    differenceFound(coord: Coordinate, isPlayerFoundDifference: boolean, gameId: string): DifferenceFound {
         return {
-            difference: { coords: this.isDifference(gameId, coord), isPlayerFoundDifference },
-            isGameOver: this.isGameOver(gameId),
-            differenceLeft: this.differenceLeft(gameId),
+            difference: { coords: this.isDifference(gameId, coord) as Coordinate[], isPlayerFoundDifference },
+            isGameOver: this.isGameOver(gameId) as boolean,
+            differenceLeft: this.differenceLeft(gameId) as number,
         };
     }
 

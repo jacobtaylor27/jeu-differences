@@ -147,6 +147,18 @@ describe('GameManagerService', () => {
         expect(gameManager.isGameMultiPlayer('')).to.equal(true);
     });
 
+    it('should leave game', () => {
+        const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyLeaveGame = stub(game, 'leaveGame').callsFake(() => {});
+        gameManager.leaveGame('', '');
+        expect(spyLeaveGame.called).to.equal(false);
+        spyFindGame.callsFake(() => game);
+        gameManager.leaveGame('', '');
+        expect(spyLeaveGame.called).to.equal(true);
+    });
+
     afterEach(() => {
         restore();
     });

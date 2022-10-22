@@ -2,7 +2,7 @@ import { Server } from '@app/server';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
 import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
-import { restore, spy } from 'sinon';
+import { restore, spy, stub } from 'sinon';
 import * as io from 'socket.io';
 import { Container } from 'typedi';
 
@@ -63,6 +63,31 @@ describe('SocketManager', () => {
         expect(isConnect).to.equal(true);
     });
 
+    it('should create a game', async () => {
+        const fakeSockets = {
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, _message: string) => {
+                expect(eventName).to.equal(SocketEvent.CreateGame);
+            },
+        };
+
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: async (eventName: string, callback: () => Promise<void>) => {
+                if (eventName === SocketEvent.CreateGame) {
+                    await callback();
+                }
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {
+                return;
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            in: () => fakeSockets,
+        };
     it('should send an event without data', async () => {
         const expectedEvent = { name: 'test', data: undefined };
         const fakeSocket = {

@@ -1,3 +1,4 @@
+import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { GameContext } from '@app/classes/game-context/game-context';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
@@ -25,5 +26,13 @@ describe('GameState', () => {
         const expectedGameContext = new GameContext(GameMode.Classic, state, true);
         state.setContext(expectedGameContext);
         expect(state.context).to.equal(expectedGameContext);
+    });
+
+    it('should end the game', () => {
+        const expectedState = new EndGameState();
+        const expectedGameContext = new GameContext(GameMode.Classic, state, true);
+        state.setContext(expectedGameContext);
+        state.end();
+        expect(expectedGameContext.gameState()).to.equal(expectedState.status());
     });
 });

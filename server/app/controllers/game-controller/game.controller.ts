@@ -187,8 +187,8 @@ export class GameController {
                 return;
             }
             try {
-                const original = new Bmp(req.body.original.width, req.body.original.height, req.body.original.data as number[]);
-                const modify = new Bmp(req.body.modify.width, req.body.modify.height, req.body.modify.data as number[]);
+                const original = new Bmp({ width: req.body.original.width, height: req.body.original.height }, req.body.original.data as number[]);
+                const modify = new Bmp({ width: req.body.modify.width, height: req.body.modify.height }, req.body.modify.data as number[]);
                 const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius as number);
                 const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius as number);
                 res.status(
@@ -211,8 +211,14 @@ export class GameController {
                 res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
-            const original = new Bmp(req.body.original.width, req.body.original.height, await Bmp.convertRGBAToARGB(req.body.original.data));
-            const modify = new Bmp(req.body.modify.width, req.body.modify.height, await Bmp.convertRGBAToARGB(req.body.modify.data));
+            const original = new Bmp(
+                { width: req.body.original.width, height: req.body.original.height },
+                await Bmp.convertRGBAToARGB(req.body.original.data),
+            );
+            const modify = new Bmp(
+                { width: req.body.modify.width, height: req.body.modify.height },
+                await Bmp.convertRGBAToARGB(req.body.modify.data),
+            );
             this.gameInfo
                 .addGameInfoWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
                 .then(() => {

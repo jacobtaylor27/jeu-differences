@@ -24,7 +24,7 @@ describe('Bmp difference interpreter service', async () => {
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 254, 255, 255];
         const width = 2;
         const height = 2;
-        const bmpWithColors = new Bmp(width, height, rawData);
+        const bmpWithColors = new Bmp({ width, height }, rawData);
         await expect(bmpDifferenceInterpreter.getCoordinates(bmpWithColors))
             .to.eventually.be.rejectedWith('The pixels are not perfectly black or white')
             .and.be.an.instanceOf(Error);
@@ -34,7 +34,7 @@ describe('Bmp difference interpreter service', async () => {
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255];
         const width = 2;
         const height = 2;
-        const bmpWithColors = new Bmp(width, height, rawData);
+        const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 0;
 
         const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);
@@ -45,7 +45,7 @@ describe('Bmp difference interpreter service', async () => {
         const rawData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const width = 2;
         const height = 2;
-        const bmpWithColors = new Bmp(width, height, rawData);
+        const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 1;
 
         const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);
@@ -56,7 +56,7 @@ describe('Bmp difference interpreter service', async () => {
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0];
         const width = 2;
         const height = 2;
-        const bmpWithColors = new Bmp(width, height, rawData);
+        const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 1;
 
         const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);
@@ -67,7 +67,7 @@ describe('Bmp difference interpreter service', async () => {
         const rawData = [0, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0];
         const width = 2;
         const height = 2;
-        const bmpWithColors = new Bmp(width, height, rawData);
+        const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 1;
 
         const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);

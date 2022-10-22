@@ -15,7 +15,7 @@ export class BmpDecoderService {
             throw new Error('Le décodage du bmp a échoué');
         }
         const rawData: number[] = bmpData.data.toJSON().data;
-        return new Bmp(bmpData.width, bmpData.height, rawData);
+        return new Bmp({ width: bmpData.width, height: bmpData.height }, rawData);
     }
 
     async decodeArrayBufferToBmp(arrayBuffer: ArrayBuffer): Promise<Bmp> {
@@ -30,7 +30,7 @@ export class BmpDecoderService {
         } catch (e) {
             throw new Error('Le décodage du bmp a échoué');
         }
-        return new Bmp(bmpData.width, bmpData.height, bmpData.data.toJSON().data);
+        return new Bmp({ width: bmpData.width, height: bmpData.height }, bmpData.data.toJSON().data);
     }
 
     async convertBufferIntoArrayBuffer(buffer: Buffer): Promise<ArrayBuffer> {

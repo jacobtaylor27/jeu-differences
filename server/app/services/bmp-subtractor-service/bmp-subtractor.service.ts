@@ -20,18 +20,20 @@ export class BmpSubtractorService {
     }
 
     private async getDifference(originalImage: Bmp, modifiedImage: Bmp): Promise<Bmp> {
-        const buffer: number[] = [];
+        const pixels: Pixel[][] = [];
 
         for (let i = 0; i < originalImage.getHeight(); i++) {
+            const lineOfPixels: Pixel[] = [];
             for (let j = 0; j < originalImage.getWidth(); j++) {
                 if (originalImage.getPixels()[i][j].isEqual(modifiedImage.getPixels()[i][j])) {
-                    buffer.push(MAX_VALUE_PIXEL, MAX_VALUE_PIXEL, MAX_VALUE_PIXEL, MAX_VALUE_PIXEL);
+                    lineOfPixels.push(new Pixel(MAX_VALUE_PIXEL, MAX_VALUE_PIXEL, MAX_VALUE_PIXEL));
                 } else {
-                    buffer.push(MAX_VALUE_PIXEL, MIN_VALUE_PIXEL, MIN_VALUE_PIXEL, MIN_VALUE_PIXEL);
+                    lineOfPixels.push(new Pixel(MIN_VALUE_PIXEL, MIN_VALUE_PIXEL, MIN_VALUE_PIXEL));
                 }
             }
+            pixels.push(lineOfPixels);
         }
-        return new Bmp(modifiedImage.getWidth(), modifiedImage.getHeight(), buffer);
+        return new Bmp({ width: modifiedImage.getWidth(), height: modifiedImage.getHeight() }, [], pixels);
     }
 
     private async applyEnlargment(originalImage: Bmp, radius: number): Promise<Bmp> {
@@ -45,7 +47,7 @@ export class BmpSubtractorService {
             if (coord.toCoordinate().x < originalImage.getHeight() && coord.toCoordinate().y < originalImage.getWidth())
                 pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
         });
-        return new Bmp(originalImage.getWidth(), originalImage.getHeight(), Pixel.convertPixelsToARGB(pixelResult));
+        return new Bmp({ width: originalImage.getWidth(), height: originalImage.getHeight() }, Pixel.convertPixelsToARGB(pixelResult));
     }
 
     private findPixelContour(pixel: Coordinate, contour: BmpCoordinate[], differenceBmp: Bmp) {

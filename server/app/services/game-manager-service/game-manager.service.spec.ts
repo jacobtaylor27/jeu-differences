@@ -137,6 +137,16 @@ describe('GameManagerService', () => {
         expect(spyAddPlayer.called).to.equal(true);
     });
 
+    it('should check if the game is in multiplayer', () => {
+        const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
+        expect(gameManager.isGameMultiPlayer('')).to.equal(undefined);
+        spyFindGame.callsFake(() => game);
+        expect(gameManager.isGameMultiPlayer('')).to.equal(false);
+        game['isMulti'] = true;
+        expect(gameManager.isGameMultiPlayer('')).to.equal(true);
+    });
+
     afterEach(() => {
         restore();
     });

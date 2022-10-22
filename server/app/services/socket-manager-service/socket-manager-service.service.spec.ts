@@ -88,6 +88,104 @@ describe('SocketManager', () => {
             },
             in: () => fakeSockets,
         };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+        stub(service['gameManager'], 'createGame')
+            .callsFake(async () => new Promise(() => ''))
+            .resolves();
+        service.handleSockets();
+    });
+
+    it('should not leave a game if the game is not found', () => {
+        const fakeSockets = {
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, _message: string) => {
+                expect(eventName).to.equal(SocketEvent.Error);
+            },
+        };
+
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.LeaveGame) callback();
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {
+                return;
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            in: () => fakeSockets,
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isGameFound').callsFake(() => false);
+        service.handleSockets();
+    });
+
+                return;
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            in: () => fakeSockets,
+
+        };
+        };
+            },
+        } as io.Server;
+    it('should leave a game if the game is found for multiplayer', () => {
+        const fakeSockets = {
+            emit: (eventName: string) => {
+                expect(eventName).to.equal(SocketEvent.Win);
+            },
+        };
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.LeaveGame) callback();
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.LeaveGame);
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            to: () => fakeSockets,
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            leave: () => {},
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        const spyLeaveRoom = spy(fakeSocket, 'leave');
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['gameManager'], 'leaveGame').callsFake(() => {});
+        stub(service['gameManager'], 'isGameMultiPlayer').callsFake(() => true);
+        service.handleSockets();
+        expect(spyLeaveRoom.called).to.equal(true);
+    });
     it('should send an event without data', async () => {
         const expectedEvent = { name: 'test', data: undefined };
         const fakeSocket = {

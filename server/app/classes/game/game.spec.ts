@@ -231,6 +231,12 @@ describe('Game', () => {
         expect(game.players.has(expectedPlayer1.id)).to.equal(true);
     });
 
+    it('should find a player', () => {
+        const expectedPlayer1 = { name: 'test', id: '1' };
+        expect(game.findPlayer(expectedPlayer1.id)).to.equal(undefined);
+        expect(game.findPlayer(expectedPlayer.player.id)).to.equal(expectedPlayer.player.name);
+    });
+
     it('should leave a game if the player is found', () => {
         const spyDeletePlayer = stub(game.players, 'delete');
         const expectedPlayer1 = { name: 'test', id: '1' };

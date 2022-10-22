@@ -109,6 +109,7 @@ export class BmpSubtractorService {
                     for (let k = 0; k < neighborsArray.length; k++) {
                         if (differenceBmp.getPixels()[neighborsArray[k].x][neighborsArray[k].y].isWhite()) {
                             coordinatesOfBlackPixels.push(new BmpCoordinate(i, j));
+                            break;
                         }
                     }
                 }

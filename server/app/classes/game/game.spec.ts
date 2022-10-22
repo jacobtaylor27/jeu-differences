@@ -207,8 +207,20 @@ describe('Game', () => {
         expect(game.isGameFull()).to.equal(false);
         game.players.set(expectedPlayer.player.id, expectedPlayer.player.name);
         game.players.set(expectedFistPlayer.id, expectedFistPlayer.name);
+        expect(game.isGameFull()).to.equal(true);
     });
 
+    it('should not add a player if the game is full ou the game is not multiplayer', () => {
+        const expectedPlayer1 = {} as User;
+        const spyIsGameFull = stub(game, 'isGameFull').callsFake(() => true);
+        game.addJoinPlayer(expectedPlayer1);
+        expect(game.players.has(expectedPlayer1.id)).to.equal(false);
+        game['isMulti'] = true;
+        game.addJoinPlayer(expectedPlayer1);
+        expect(game.players.has(expectedPlayer1.id)).to.equal(false);
+        spyIsGameFull.callsFake(() => true);
+        game.addJoinPlayer(expectedPlayer1);
+        expect(game.players.has(expectedPlayer1.id)).to.equal(false);
     });
 
 

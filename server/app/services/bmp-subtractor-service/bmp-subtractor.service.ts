@@ -67,8 +67,7 @@ export class BmpSubtractorService {
     //     return result;
     // }
 
-    private findNeighbors(pixel: Coordinate) {
-        const neighborsArray: Coordinate[] = [];
+    private findNeighbors(pixel: Coordinate, coordinatesOfBlackPixels: BmpCoordinate[], differenceBmp: Bmp) {
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
                 const offsetX = pixel.x + i;
@@ -80,11 +79,14 @@ export class BmpSubtractorService {
                     offsetY >= 0 &&
                     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
                     offsetY < 640
-                )
-                    neighborsArray.push({ x: offsetX, y: offsetY });
+                ) {
+                    if (differenceBmp.getPixels()[offsetX][offsetY].isWhite()) {
+                        coordinatesOfBlackPixels.push(new BmpCoordinate(pixel.x, pixel.y));
+                        return;
+                    }
+                }
             }
         }
-        return neighborsArray;
     }
 
     private async getCoordinatesAfterEnlargement(originalCoordinates: BmpCoordinate[], radius: number): Promise<BmpCoordinate[]> {
@@ -104,14 +106,7 @@ export class BmpSubtractorService {
         for (let i = 0; i < pixels.length; i++) {
             for (let j = 0; j < pixels[i].length; j++) {
                 if (pixels[i][j].isBlack()) {
-                    const neighborsArray: Coordinate[] = this.findNeighbors({ x: i, y: j });
-                    // eslint-disable-next-line @typescript-eslint/prefer-for-of
-                    for (let k = 0; k < neighborsArray.length; k++) {
-                        if (differenceBmp.getPixels()[neighborsArray[k].x][neighborsArray[k].y].isWhite()) {
-                            coordinatesOfBlackPixels.push(new BmpCoordinate(i, j));
-                            break;
-                        }
-                    }
+                    this.findNeighbors({ x: i, y: j }, coordinatesOfBlackPixels, differenceBmp);
                 }
             }
         }

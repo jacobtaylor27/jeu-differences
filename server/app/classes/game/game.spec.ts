@@ -197,3 +197,18 @@ describe('Game', () => {
         game['isMulti'] = true;
         expect(game.multi).to.equal(true);
     });
+
+    it('should verify if the game is full', () => {
+        const expectedFistPlayer = { name: 'test1', id: '1' };
+        expect(game.isGameFull()).to.equal(true);
+        game.players.delete(expectedPlayer.player.id);
+        expect(game.isGameFull()).to.equal(false);
+        game['isMulti'] = true;
+        expect(game.isGameFull()).to.equal(false);
+        game.players.set(expectedPlayer.player.id, expectedPlayer.player.name);
+        game.players.set(expectedFistPlayer.id, expectedFistPlayer.name);
+    });
+
+    });
+
+

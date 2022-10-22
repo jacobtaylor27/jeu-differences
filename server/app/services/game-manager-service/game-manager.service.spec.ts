@@ -1,5 +1,6 @@
 import { Game } from '@app/classes/game/game';
 import { PrivateGameInformation } from '@app/interface/game-info';
+import { User } from '@app/interface/user';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
@@ -113,6 +114,16 @@ describe('GameManagerService', () => {
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
         expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(expectedDifferences);
         expect(findGameSpy.called).to.equal(true);
+    });
+
+    it('should check if the game is full', () => {
+        const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        expect(gameManager.isGameAlreadyFull('')).to.equal(true);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
+        const spyIsGameFull = stub(game, 'isGameFull').callsFake(() => false);
+        expect(gameManager.isGameAlreadyFull('')).to.equal(false);
+        spyIsGameFull.callsFake(() => true);
+        expect(gameManager.isGameAlreadyFull('')).to.equal(true);
     });
 
     afterEach(() => {

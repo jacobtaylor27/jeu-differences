@@ -171,6 +171,14 @@ describe('GameManagerService', () => {
         expect(spyDeleteGame.called).to.equal(true);
     });
 
+    it('should return a object that represent a difference found', () => {
+        const expectedDifference = { difference: { coords: [], isPlayerFoundDifference: false }, isGameOver: false, differenceLeft: 2 };
+        stub(gameManager, 'isGameOver').callsFake(() => false);
+        stub(gameManager, 'isDifference').callsFake(() => []);
+        stub(gameManager, 'differenceLeft').callsFake(() => 2);
+        expect(gameManager.differenceFound({ x: 0, y: 0 }, false, '')).to.deep.equal(expectedDifference);
+    });
+
     afterEach(() => {
         restore();
     });

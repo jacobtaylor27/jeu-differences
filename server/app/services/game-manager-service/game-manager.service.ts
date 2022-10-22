@@ -67,6 +67,14 @@ export class GameManagerService {
         }
     }
 
+    differenceFound(coord: Coordinate, isPlayerFoundDifference: boolean, gameId: string) {
+        return {
+            difference: { coords: this.isDifference(gameId, coord), isPlayerFoundDifference },
+            isGameOver: this.isGameOver(gameId),
+            differenceLeft: this.differenceLeft(gameId),
+        };
+    }
+
     private findGame(gameId: string): Game | undefined {
         return Array.from(this.games.values()).find((game: Game) => game.identifier === gameId);
     }

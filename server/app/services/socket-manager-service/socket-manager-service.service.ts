@@ -1,4 +1,5 @@
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
@@ -55,6 +56,20 @@ export class SocketManagerService {
                 }
                 socket.emit(SocketEvent.LeaveGame);
                 socket.leave(gameId);
+            });
+            socket.on(SocketEvent.Difference, (differenceCoord: Coordinate, gameId: string) => {
+                if (!this.gameManager.isGameFound(gameId)) {
+                    socket.emit(SocketEvent.Error);
+                    return;
+                }
+                if (!this.gameManager.isDifference(gameId, differenceCoord)) {
+                    socket.emit(SocketEvent.DifferenceNotFound);
+                    return;
+                }
+                socket.emit(SocketEvent.DifferenceFound, this.gameManager.differenceFound(differenceCoord, true, gameId));
+                if (this.gameManager.isGameMultiPlayer(gameId)) {
+                    socket.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.differenceFound(differenceCoord, false, gameId));
+                }
             });
         });
     }

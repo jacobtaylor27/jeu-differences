@@ -9,4 +9,7 @@ export enum SocketEvent {
     Play = 'Play',
     LeaveGame = 'LeaveGame',
     Win = 'Win',
+    DifferenceNotFound = 'DifferenceNotFound',
+    DifferenceFound = 'DifferenceFound',
+    Difference = 'Difference',
 }

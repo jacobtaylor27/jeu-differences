@@ -49,6 +49,9 @@ export class BmpSubtractorService {
         });
         return new Bmp({ width: originalImage.getWidth(), height: originalImage.getHeight() }, Pixel.convertPixelsToARGB(pixelResult));
     }
+    private isCoordinateValid(coordinate: BmpCoordinate, image: Bmp) {
+        return coordinate.toCoordinate().x < image.getHeight() && coordinate.toCoordinate().y < image.getWidth();
+    }
 
     private findPixelContour(pixel: Coordinate, contour: BmpCoordinate[], differenceBmp: Bmp) {
         for (let i = -1; i <= 1; i++) {

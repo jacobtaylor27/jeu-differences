@@ -30,12 +30,6 @@ export class Bmp {
         return rgba;
     }
 
-    static async getCopy(bmpToCopy: Bmp): Promise<Bmp> {
-        const stringified = JSON.stringify(bmpToCopy);
-        const parsed = JSON.parse(stringified);
-        return parsed;
-    }
-
     async toImageData(): Promise<ImageData> {
         const imageData: ImageData = {
             colorSpace: 'srgb',

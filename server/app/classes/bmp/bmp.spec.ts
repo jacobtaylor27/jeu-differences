@@ -150,16 +150,4 @@ describe('Bmp', () => {
         const encodedBmp = bmp.encode(imgData);
         expect(await bmpObj.toBmpImageData()).to.deep.equal(encodedBmp);
     });
-
-    it('Bmp.getCopy() should return an object with the same attributs as the object pass into parameters', async () => {
-        const bmpObj = new Bmp(TEST_BMP_DATA[0].dimensions, TEST_BMP_DATA[0].data);
-        const newObj = await Bmp.getCopy(bmpObj);
-        expect(newObj).to.deep.equal(bmpObj);
-    });
-
-    it('Bmp.getCopy() should return a copy of the object an not the shallow copy', async () => {
-        const bmpObj = new Bmp(TEST_BMP_DATA[0].dimensions, TEST_BMP_DATA[0].data);
-        const newObj = await Bmp.getCopy(bmpObj);
-        expect(newObj).to.not.equal(bmpObj);
-    });
 });

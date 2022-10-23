@@ -44,8 +44,7 @@ export class BmpSubtractorService {
         const resultCoordinates: BmpCoordinate[] = await this.getCoordinatesAfterEnlargement(blackPixels, radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coord) => {
-            if (coord.toCoordinate().x < originalImage.getHeight() && coord.toCoordinate().y < originalImage.getWidth())
-                pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
+            if (this.isCoordinateValid(coord, originalImage)) pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
         });
         return new Bmp({ width: originalImage.getWidth(), height: originalImage.getHeight() }, Pixel.convertPixelsToARGB(pixelResult));
     }

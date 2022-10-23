@@ -44,12 +44,15 @@ export class BmpSubtractorService {
         const resultCoordinates: BmpCoordinate[] = await this.getCoordinatesAfterEnlargement(blackPixels, radius);
         const pixelResult: Pixel[][] = originalImage.getPixels();
         resultCoordinates.forEach((coord) => {
-            if (this.isCoordinateValid(coord, originalImage)) pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
+            if (this.isBmpCoordinateValid(coord, originalImage)) pixelResult[coord.toCoordinate().x][coord.toCoordinate().y].setBlack();
         });
         return new Bmp({ width: originalImage.getWidth(), height: originalImage.getHeight() }, Pixel.convertPixelsToARGB(pixelResult));
     }
-    private isCoordinateValid(coordinate: BmpCoordinate, image: Bmp) {
+    private isBmpCoordinateValid(coordinate: BmpCoordinate, image: Bmp) {
         return coordinate.toCoordinate().x < image.getHeight() && coordinate.toCoordinate().y < image.getWidth();
+    }
+    private isCoordinateValid(coord: Coordinate) {
+        return coord.x >= 0 && coord.x < DEFAULT_IMAGE_HEIGHT && coord.y >= 0 && coord.y < DEFAULT_IMAGE_WIDTH;
     }
 
     private findPixelContour(pixel: Coordinate, contour: BmpCoordinate[], differenceBmp: Bmp) {
@@ -57,7 +60,7 @@ export class BmpSubtractorService {
             for (let j = -1; j <= 1; j++) {
                 const offsetX = pixel.x + i;
                 const offsetY = pixel.y + j;
-                if (offsetX >= 0 && offsetX < DEFAULT_IMAGE_HEIGHT && offsetY >= 0 && offsetY < DEFAULT_IMAGE_WIDTH) {
+                if (this.isCoordinateValid({ x: offsetX, y: offsetY })) {
                     if (differenceBmp.getPixels()[offsetX][offsetY].isWhite()) {
                         contour.push(new BmpCoordinate(pixel.x, pixel.y));
                         return;

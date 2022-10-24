@@ -13,7 +13,7 @@ export class Game {
     private id: string;
     private isMulti: boolean;
     private info: PrivateGameInformation;
-    private differenceFound: Set<Coordinate[]>;
+    private getNbDifferencesFound: Set<Coordinate[]>;
     private context: GameContext;
 
     constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
@@ -21,7 +21,7 @@ export class Game {
         this.players = new Map();
         this.players.set(playerInfo.player.id, playerInfo.player.name);
         this.isMulti = playerInfo.isMulti;
-        this.differenceFound = new Set();
+        this.getNbDifferencesFound = new Set();
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
         this.id = v4();
         this.context.next();
@@ -63,14 +63,14 @@ export class Game {
         if (this.isDifferenceAlreadyFound(differenceCoords)) {
             return;
         }
-        this.differenceFound.add(differenceCoords);
+        this.getNbDifferencesFound.add(differenceCoords);
         if (this.isAllDifferenceFound() && !this.isGameOver()) {
             this.context.next();
         }
     }
 
     isDifferenceAlreadyFound(differenceCoords: Coordinate[]) {
-        return this.differenceFound.has(differenceCoords);
+        return this.getNbDifferencesFound.has(differenceCoords);
     }
 
     next() {
@@ -85,22 +85,22 @@ export class Game {
         if (this.isGameInitialize() || this.isGameOver()) {
             return this.isGameOver(); // if the game is already over all the difference are found and if the game is not initialize 0 difference found
         }
-        return this.info.differences.length === this.differenceFound.size;
+        return this.info.differences.length === this.getNbDifferencesFound.size;
     }
 
     isGameOver() {
         return this.context.gameState() === GameStatus.EndGame;
     }
 
-    differenceLeft(): number {
-        return this.info.differences.length - this.differenceFound.size;
+    nbDifferencesLeft(): number {
+        return this.info.differences.length - this.getNbDifferencesFound.size;
     }
 
     isGameFull() {
         return (!this.isMulti && this.players.size === 1) || (this.isMulti && this.players.size === 2);
     }
 
-    addJoinPlayer(player: User) {
+    addPlayer(player: User) {
         if ((this.isMulti && this.isGameFull()) || !this.isMulti) {
             return;
         }

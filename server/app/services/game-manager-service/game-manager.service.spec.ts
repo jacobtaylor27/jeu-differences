@@ -78,18 +78,18 @@ describe('GameManagerService', () => {
 
     it('should check if the difference left', () => {
         const findGameSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
-        expect(gameManager.differenceLeft('')).to.equal(null);
+        expect(gameManager.nbDifferencesLeft('')).to.equal(null);
         expect(findGameSpy.called).to.equal(true);
 
         findGameSpy.callsFake(() => true);
         const findSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
-            return { differenceLeft: () => true };
+            return { nbDifferencesLeft: () => true };
         });
-        expect(gameManager.differenceLeft('')).equal(true);
+        expect(gameManager.nbDifferencesLeft('')).equal(true);
         findSpy.callsFake(() => {
-            return { differenceLeft: () => false };
+            return { nbDifferencesLeft: () => false };
         });
-        expect(gameManager.differenceLeft('')).equal(false);
+        expect(gameManager.nbDifferencesLeft('')).equal(false);
     });
 
     it('should find a game', () => {
@@ -128,7 +128,7 @@ describe('GameManagerService', () => {
 
     it('should add player', () => {
         const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
-        const spyAddPlayer = stub(game, 'addJoinPlayer');
+        const spyAddPlayer = stub(game, 'addPlayer');
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         gameManager.addPlayer({ name: '', id: '' }, '');
         expect(spyAddPlayer.called).to.equal(false);
@@ -140,11 +140,11 @@ describe('GameManagerService', () => {
     it('should check if the game is in multiplayer', () => {
         const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
-        expect(gameManager.isGameMultiPlayer('')).to.equal(undefined);
+        expect(gameManager.isGameMultiplayer('')).to.equal(undefined);
         spyFindGame.callsFake(() => game);
-        expect(gameManager.isGameMultiPlayer('')).to.equal(false);
+        expect(gameManager.isGameMultiplayer('')).to.equal(false);
         game['isMulti'] = true;
-        expect(gameManager.isGameMultiPlayer('')).to.equal(true);
+        expect(gameManager.isGameMultiplayer('')).to.equal(true);
     });
 
     it('should leave game', () => {
@@ -172,11 +172,11 @@ describe('GameManagerService', () => {
     });
 
     it('should return a object that represent a difference found', () => {
-        const expectedDifference = { difference: { coords: [], isPlayerFoundDifference: false }, isGameOver: false, differenceLeft: 2 };
+        const expectedDifference = { difference: { coords: [], isPlayerFoundDifference: false }, isGameOver: false, nbDifferencesLeft: 2 };
         stub(gameManager, 'isGameOver').callsFake(() => false);
         stub(gameManager, 'isDifference').callsFake(() => []);
-        stub(gameManager, 'differenceLeft').callsFake(() => 2);
-        expect(gameManager.differenceFound({ x: 0, y: 0 }, false, '')).to.deep.equal(expectedDifference);
+        stub(gameManager, 'nbDifferencesLeft').callsFake(() => 2);
+        expect(gameManager.getNbDifferencesFound({ x: 0, y: 0 }, false, '')).to.deep.equal(expectedDifference);
     });
 
     afterEach(() => {

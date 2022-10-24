@@ -201,7 +201,7 @@ describe('SocketManager', () => {
         const expectedDifferenceFound = {
             difference: { coords: [], isPlayerFoundDifference: true },
             isGameOver: false,
-            differenceLeft: 2,
+            nbDifferencesLeft: 2,
         };
         const fakeSocket = {
             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
@@ -228,7 +228,7 @@ describe('SocketManager', () => {
             },
         } as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.difference.coords);
-        stub(service['gameManager'], 'differenceFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         service.handleSockets();
     });
@@ -237,7 +237,7 @@ describe('SocketManager', () => {
         const expectedDifferenceFound = {
             difference: { coords: [], isPlayerFoundDifference: true },
             isGameOver: false,
-            differenceLeft: 2,
+            nbDifferencesLeft: 2,
         };
         const fakeSockets = {
             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
@@ -273,8 +273,8 @@ describe('SocketManager', () => {
             },
         } as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.difference.coords);
-        stub(service['gameManager'], 'isGameMultiPlayer').callsFake(() => true);
-        stub(service['gameManager'], 'differenceFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         service.handleSockets();
     });
@@ -387,7 +387,7 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         stub(service['gameManager'], 'leaveGame').callsFake(() => {});
-        stub(service['gameManager'], 'isGameMultiPlayer').callsFake(() => false);
+        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => false);
         service.handleSockets();
         expect(spyLeaveRoom.called).to.equal(true);
     });
@@ -428,7 +428,7 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         stub(service['gameManager'], 'leaveGame').callsFake(() => {});
-        stub(service['gameManager'], 'isGameMultiPlayer').callsFake(() => true);
+        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         service.handleSockets();
         expect(spyLeaveRoom.called).to.equal(true);
     });

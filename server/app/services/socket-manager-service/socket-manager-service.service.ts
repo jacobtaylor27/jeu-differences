@@ -51,7 +51,7 @@ export class SocketManagerService {
                     return;
                 }
                 this.gameManager.leaveGame(socket.id, gameId);
-                if (this.gameManager.isGameMultiPlayer(gameId)) {
+                if (this.gameManager.isGameMultiplayer(gameId)) {
                     socket.to(gameId).emit(SocketEvent.Win);
                 }
                 socket.emit(SocketEvent.LeaveGame);
@@ -66,9 +66,9 @@ export class SocketManagerService {
                     socket.emit(SocketEvent.DifferenceNotFound);
                     return;
                 }
-                socket.emit(SocketEvent.DifferenceFound, this.gameManager.differenceFound(differenceCoord, true, gameId));
-                if (this.gameManager.isGameMultiPlayer(gameId)) {
-                    socket.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.differenceFound(differenceCoord, false, gameId));
+                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, true, gameId));
+                if (this.gameManager.isGameMultiplayer(gameId)) {
+                    socket.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, false, gameId));
                 }
             });
         });

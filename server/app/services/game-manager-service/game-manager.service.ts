@@ -32,8 +32,8 @@ export class GameManagerService {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).isGameOver() : null;
     }
 
-    differenceLeft(gameId: string) {
-        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).differenceLeft() : null;
+    nbDifferencesLeft(gameId: string) {
+        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).nbDifferencesLeft() : null;
     }
 
     isGameAlreadyFull(gameId: string) {
@@ -46,10 +46,10 @@ export class GameManagerService {
         if (!game) {
             return;
         }
-        game.addJoinPlayer(player);
+        game.addPlayer(player);
     }
 
-    isGameMultiPlayer(gameId: string) {
+    isGameMultiplayer(gameId: string) {
         const game = this.findGame(gameId);
         if (!game) {
             return;
@@ -68,11 +68,11 @@ export class GameManagerService {
         }
     }
 
-    differenceFound(coord: Coordinate, isPlayerFoundDifference: boolean, gameId: string): DifferenceFound {
+    getNbDifferencesFound(coord: Coordinate, isPlayerFoundDifference: boolean, gameId: string): DifferenceFound {
         return {
             difference: { coords: this.isDifference(gameId, coord) as Coordinate[], isPlayerFoundDifference },
             isGameOver: this.isGameOver(gameId) as boolean,
-            differenceLeft: this.differenceLeft(gameId) as number,
+            nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
         };
     }
 

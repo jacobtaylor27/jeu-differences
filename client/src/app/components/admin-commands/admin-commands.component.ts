@@ -22,12 +22,16 @@ export class AdminCommandsComponent {
 
     onClickDeleteGames(): void {
         this.adminService.deleteAllGames();
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/admin']);
-        });
+        this.reloadComponent();
     }
 
     onClickResetHighScores(): void {
         this.adminService.resetAllHighScores();
+    }
+
+    reloadComponent(): void {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/admin']);
+        });
     }
 }

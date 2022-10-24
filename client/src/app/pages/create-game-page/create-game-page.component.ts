@@ -30,7 +30,7 @@ export class CreateGamePageComponent implements AfterViewInit {
         public dialog: MatDialog,
         private drawService: DrawService,
         private communication: CommunicationService,
-        exitButtonService : ExitButtonHandlerService
+        exitButtonService: ExitButtonHandlerService,
     ) {
         exitButtonService.setCreateGamePage();
         this.form = new FormGroup({

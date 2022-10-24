@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class ExitButtonHandlerService {
+    isOnGamePage: boolean;
 
-  isOnGamePage: boolean;
-  constructor() { }
+    setCreateGamePage(): void {
+        this.isOnGamePage = false;
+    }
 
-  public setCreateGamePage() : void{
-    this.isOnGamePage = false;
-  }
+    setGamePage(): void {
+        this.isOnGamePage = true;
+    }
 
-  public setGamePage() : void{
-    this.isOnGamePage = true;
-  }
-  
-  public getMessage(): string{
-    return this.isOnGamePage ? "Quitter la partie ?" : "Quitter la création ?"
-  }
+    getMessage(): string {
+        return this.isOnGamePage ? 'Quitter la partie ?' : 'Quitter la création ?';
+    }
 }

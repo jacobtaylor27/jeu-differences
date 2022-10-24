@@ -9,7 +9,7 @@ import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit
 export class ExitGameButtonComponent {
     @ViewChild('exitDialogContent')
     private readonly exitDialogContentRef: TemplateRef<HTMLElement>;
-    constructor(readonly matDialog: MatDialog,readonly exitButtonService : ExitButtonHandlerService ) {}
+    constructor(readonly matDialog: MatDialog, readonly exitButtonService: ExitButtonHandlerService) {}
 
     onExit(): void {
         this.matDialog.open(this.exitDialogContentRef);

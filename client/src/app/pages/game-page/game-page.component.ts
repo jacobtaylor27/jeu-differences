@@ -16,8 +16,10 @@ export class GamePageComponent implements OnInit {
     constructor(
         private readonly communicationService: CommunicationService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
-        exitButtonService : ExitButtonHandlerService
-    ) {exitButtonService.setGamePage()}
+        exitButtonService: ExitButtonHandlerService,
+    ) {
+        exitButtonService.setGamePage();
+    }
 
     ngOnInit() {
         this.createGameRoom();

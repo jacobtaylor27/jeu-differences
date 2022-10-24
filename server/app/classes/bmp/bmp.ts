@@ -10,7 +10,7 @@ export class Bmp {
 
     constructor(dimensions: Dimension, rawData: number[], pixels?: Pixel[][]) {
         if (!this.areParametersValid(dimensions, rawData, pixels)) throw new Error('The parameters given for creating a bmp are invalid');
-        if (pixels !== undefined) {
+        if (pixels) {
             this.pixels = pixels;
         } else {
             this.pixels = this.convertRawToPixels(rawData, dimensions);

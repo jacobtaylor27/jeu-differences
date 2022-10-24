@@ -125,12 +125,15 @@ export class GameController {
          *         description: The id of the game was not found
          */
         this.router.delete('/cards/:id', (req: Request, res: Response) => {
-            const deletedGame = this.gameInfo.deleteGameInfoById(req.params.id.toString());
-            if (deletedGame) {
-                res.status(StatusCodes.ACCEPTED).json(deletedGame);
-            } else {
-                res.sendStatus(StatusCodes.NOT_FOUND);
-            }
+            const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
+            isGameDeleted
+                .then((isDeleted) => {
+                    const status = isDeleted ? StatusCodes.ACCEPTED : StatusCodes.NOT_FOUND;
+                    res.status(status).send();
+                })
+                .catch(() => {
+                    res.status(StatusCodes.BAD_REQUEST).send();
+                });
         });
 
         this.router.delete('/cards', (req: Request, res: Response) => {
@@ -140,7 +143,7 @@ export class GameController {
                     res.status(StatusCodes.ACCEPTED).send();
                 })
                 .catch(() => {
-                    res.sendStatus(StatusCodes.BAD_REQUEST).send();
+                    res.status(StatusCodes.BAD_REQUEST).send();
                 });
         });
 

@@ -33,6 +33,13 @@ export class CommunicationService {
             .subscribe();
     }
 
+    deleteGame(id: string): void {
+        this.http
+            .delete(`${this.baseUrl}/game/cards/${id}`)
+            .pipe(catchError(this.handleError('deleteGame')))
+            .subscribe();
+    }
+
     validateGame(original: ImageData, modify: ImageData, radius: number) {
         return this.http
             .post<{ numberDifference: number; width: number; height: number; data: number[] }>(

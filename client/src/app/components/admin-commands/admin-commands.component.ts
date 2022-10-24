@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AdminService } from '@app/services/admin-service/admin.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { AdminService } from '@app/services/admin-service/admin.service';
 export class AdminCommandsComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(private readonly adminService: AdminService) {}
+    constructor(private readonly adminService: AdminService, private readonly router: Router) {}
 
     hasCards(): boolean {
         return this.adminService.hasGameCards();
@@ -21,6 +22,9 @@ export class AdminCommandsComponent {
 
     onClickDeleteGames(): void {
         this.adminService.deleteAllGames();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/admin']);
+        });
     }
 
     onClickResetHighScores(): void {

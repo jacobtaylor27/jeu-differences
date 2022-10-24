@@ -210,7 +210,7 @@ describe('Game', () => {
         expect(game.isGameFull()).to.equal(true);
     });
 
-    it('should not add a player if the game is full ou the game is not multiplayer', () => {
+    it('should not add a player if the game is full', () => {
         const expectedPlayer1 = {} as User;
         const spyIsGameFull = stub(game, 'isGameFull').callsFake(() => true);
         game.addJoinPlayer(expectedPlayer1);

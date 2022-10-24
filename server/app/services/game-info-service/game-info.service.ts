@@ -69,7 +69,7 @@ export class GameInfoService {
         return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;
     }
 
-    async resetAllGameInfos(): Promise<void> {
+    async deleteAllGamesInfo(): Promise<void> {
         await this.collection.deleteMany({});
     }
 }

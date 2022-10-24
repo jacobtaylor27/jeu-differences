@@ -2,7 +2,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogGameOverComponent } from '@app/components/dialog-gameover/dialog-gameover.component';
+import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { TimerService } from '@app/services/timer.service';

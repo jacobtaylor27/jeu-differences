@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCardService } from '@app/services/game-card/game-card.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -11,18 +12,30 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 export class GameCardButtonsComponent {
     @Input() gameCard: GameCard;
 
-    constructor(private readonly gameCardService: GameCardService, private readonly gameInfoHandlerService: GameInformationHandlerService) {}
+    constructor(
+        private readonly gameCardService: GameCardService,
+        private readonly gameInfoHandlerService: GameInformationHandlerService,
+        private readonly router: Router,
+    ) {}
 
     onClickDeleteGame(game: GameCard): void {
-        this.gameCardService.deleteGame(game);
+        this.gameCardService.deleteGame(game.gameInformation.id);
+        this.reloadComponent();
     }
 
+    // eslint-disable-next-line no-unused-vars
     onClickResetHighScores(game: GameCard): void {
-        this.gameCardService.resetHighScores(game);
+        // this.gameCardService.resetHighScores(game.gameInformation.id);
     }
 
     onClickPlayGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
         this.gameCardService.openNameDialog();
+    }
+
+    reloadComponent(): void {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/admin']);
+        });
     }
 }

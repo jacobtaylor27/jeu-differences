@@ -35,6 +35,9 @@ export class BmpService {
         const rawData = bmp.encode(bmpData);
         const bmpId: string = this.idGeneratorService.generateNewId();
         const fullpath = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
+        if (!fs.existsSync(filepath)) {
+            await fs.promises.mkdir(filepath);
+        }
         await fs.promises.writeFile(fullpath, rawData.data);
         return bmpId;
     }

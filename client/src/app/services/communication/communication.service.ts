@@ -26,6 +26,10 @@ export class CommunicationService {
         return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
     }
 
+    deleteAllGameCards(): void {
+        this.http.delete(`${this.baseUrl}/game/cards`).subscribe(() => 'Delete successful');
+    }
+
     validateGame(original: ImageData, modify: ImageData, radius: number) {
         return this.http
             .post<{ numberDifference: number; width: number; height: number; data: number[] }>(
@@ -43,6 +47,7 @@ export class CommunicationService {
                 }),
             );
     }
+
     createGame(image: { original: ImageData; modify: ImageData }, radius: number, name: string) {
         return this.http
             .post<Record<string, never>>(

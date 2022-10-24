@@ -135,7 +135,7 @@ export class GameController {
 
         this.router.delete('/cards', (req: Request, res: Response) => {
             this.gameInfo.deleteAllGamesInfo();
-            res.sendStatus(StatusCodes.ACCEPTED);
+            res.status(StatusCodes.ACCEPTED).send({ message: 'All games were deleted' });
         });
 
         this.router.get('/cards', (req: Request, res: Response) => {

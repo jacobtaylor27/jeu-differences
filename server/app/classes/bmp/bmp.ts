@@ -87,24 +87,29 @@ export class Bmp {
         return new Pixel(r, g, b);
     }
 
-    private areParametersValid(dimensions: Dimension, rawData: number[], pixels: Pixel[][] | undefined): boolean {
-        if (dimensions.width <= 0 || dimensions.height <= 0) {
-            return false;
-        }
-        if (pixels !== undefined) {
-            if (
-                pixels.length * pixels[0].length !== dimensions.height * dimensions.width ||
-                pixels.length !== dimensions.height ||
-                pixels[0].length !== dimensions.width
-            ) {
-                return false;
-            }
-        } else {
-            if (rawData.length !== PIXEL_DEPT * dimensions.height * dimensions.width) {
-                return false;
-            }
-        }
+    private arePixelDimensionsValid(expectedDimensions: Dimension, pixelDimension: Dimension) {
+        return (
+            expectedDimensions.height * expectedDimensions.width === pixelDimension.height * pixelDimension.width &&
+            expectedDimensions.height === pixelDimension.height &&
+            expectedDimensions.width === pixelDimension.width
+        );
+    }
 
-        return true;
+    private areBufferDimensionsValid(expectedDimensions: Dimension, rawData: number[]) {
+        return rawData.length === PIXEL_DEPT * expectedDimensions.height * expectedDimensions.width;
+    }
+
+    private areBmpDimensionsValid(dimensions: Dimension) {
+        return dimensions.width > 0 && dimensions.height > 0;
+    }
+
+    private areParametersValid(dimensions: Dimension, rawData: number[], pixels: Pixel[][] | undefined): boolean {
+        if (!this.areBmpDimensionsValid(dimensions)) return false;
+
+        if (pixels) {
+            return this.arePixelDimensionsValid(dimensions, { width: pixels[0].length, height: pixels.length });
+        } else {
+            return this.areBufferDimensionsValid(dimensions, rawData);
+        }
     }
 }

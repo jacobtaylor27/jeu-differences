@@ -16,7 +16,7 @@ export class ExitButtonHandlerService {
     this.isOnGamePage = true;
   }
   
-  public getMessages(): string{
+  public getMessage(): string{
     return this.isOnGamePage ? "Quitter la partie ? " : "Quitter la création ?"
   }
 }

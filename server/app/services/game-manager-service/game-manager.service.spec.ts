@@ -163,10 +163,10 @@ describe('GameManagerService', () => {
         const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
         const spyDeleteGame = stub(gameManager.games, 'delete');
-        const spyIsAllPlayerLeave = stub(game, 'isAllPlayerLeave').callsFake(() => false);
+        const spyhasNoPlayer = stub(game, 'hasNoPlayer').callsFake(() => false);
         gameManager.leaveGame('', '');
         expect(spyDeleteGame.called).to.equal(false);
-        spyIsAllPlayerLeave.callsFake(() => true);
+        spyhasNoPlayer.callsFake(() => true);
         gameManager.leaveGame('', '');
         expect(spyDeleteGame.called).to.equal(true);
     });

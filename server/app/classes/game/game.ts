@@ -120,7 +120,7 @@ export class Game {
         this.context.transitionTo(new EndGameState());
     }
 
-    isAllPlayerLeave() {
+    hasNoPlayer() {
         return this.players.size === 0;
     }
 }

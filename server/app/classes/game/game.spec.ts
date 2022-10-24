@@ -249,8 +249,8 @@ describe('Game', () => {
     });
 
     it('should check if all player leave', () => {
-        expect(game.isAllPlayerLeave()).to.equal(false);
+        expect(game.hasNoPlayer()).to.equal(false);
         game.players = new Map();
-        expect(game.isAllPlayerLeave()).to.equal(true);
+        expect(game.hasNoPlayer()).to.equal(true);
     });
 });

@@ -63,7 +63,7 @@ export class GameManagerService {
             return;
         }
         game.leaveGame(playerId);
-        if (game.isAllPlayerLeave()) {
+        if (game.hasNoPlayer()) {
             this.games.delete(game);
         }
     }

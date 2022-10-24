@@ -75,7 +75,7 @@ export class BmpSubtractorService {
         originalCoordinates.forEach((coordinate) => {
             const result = this.midpointAlgorithm.findEnlargementArea(coordinate, radius);
             result.forEach((coord) => {
-                resultCoordinates.push(new BmpCoordinate(coord.getX(), coord.getY()));
+                resultCoordinates.push(coord);
             });
         });
         return resultCoordinates;

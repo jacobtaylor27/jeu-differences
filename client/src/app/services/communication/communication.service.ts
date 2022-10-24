@@ -27,7 +27,10 @@ export class CommunicationService {
     }
 
     deleteAllGameCards(): void {
-        this.http.delete(`${this.baseUrl}/game/cards`).subscribe(() => 'Delete successful');
+        this.http
+            .delete(`${this.baseUrl}/game/cards`)
+            .pipe(catchError(this.handleError('deleteAllGameCards')))
+            .subscribe();
     }
 
     validateGame(original: ImageData, modify: ImageData, radius: number) {

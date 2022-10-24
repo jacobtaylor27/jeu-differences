@@ -134,8 +134,14 @@ export class GameController {
         });
 
         this.router.delete('/cards', (req: Request, res: Response) => {
-            this.gameInfo.deleteAllGamesInfo();
-            res.status(StatusCodes.ACCEPTED).send({ message: 'All games were deleted' });
+            this.gameInfo
+                .deleteAllGamesInfo()
+                .then(() => {
+                    res.status(StatusCodes.ACCEPTED).send();
+                })
+                .catch(() => {
+                    res.sendStatus(StatusCodes.BAD_REQUEST).send();
+                });
         });
 
         this.router.get('/cards', (req: Request, res: Response) => {

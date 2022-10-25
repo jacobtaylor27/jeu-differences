@@ -6,8 +6,6 @@ import { Service } from 'typedi';
 @Service()
 export class BmpDifferenceInterpreter {
     async getCoordinates(bmpDifferentiated: Bmp): Promise<Coordinate[][]> {
-        if (!(await this.isBmpDifferentiated(bmpDifferentiated))) throw new Error('The pixels are not perfectly black or white');
-
         const differences: Coordinate[][] = [];
         const pixels = bmpDifferentiated.getPixels();
 
@@ -40,17 +38,5 @@ export class BmpDifferenceInterpreter {
             }
         }
         return differences;
-    }
-
-    private async isBmpDifferentiated(bmp: Bmp): Promise<boolean> {
-        const pixels: Pixel[][] = bmp.getPixels();
-        for (const scanLine of pixels) {
-            for (const pixel of scanLine) {
-                if (!pixel.isBlack() && !pixel.isWhite()) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

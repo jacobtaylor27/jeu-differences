@@ -14,6 +14,7 @@ export class UserNameInputComponent {
     playerName: string;
     favoriteTheme: string = 'deeppurple-amber-theme';
 
+    // eslint-disable-next-line max-params
     constructor(
         private readonly router: Router,
         private readonly dialogRef: MatDialogRef<UserNameInputComponent>,

@@ -1,8 +1,15 @@
 export enum SocketEvent {
     Connection = 'Connection',
     Disconnect = 'Disconnect',
-    JoinRoom = 'JoinRoom',
+    JoinGame = 'JoinGame',
     CreateGame = 'CreateGame',
     GameCreated = 'GameCreated',
+    WaitPlayer = 'WaitPlayer',
     Error = 'Error',
+    Play = 'Play',
+    LeaveGame = 'LeaveGame',
+    Win = 'Win',
+    DifferenceNotFound = 'DifferenceNotFound',
+    DifferenceFound = 'DifferenceFound',
+    Difference = 'Difference',
 }

@@ -7,12 +7,14 @@ import { environment } from 'src/environments/environment';
 })
 export class CommunicationSocketService {
     private socket: Socket;
+
     constructor() {
         if (!this.socket) {
             this.socket = io(environment.socketUrl, { transports: ['websocket'], upgrade: false });
         }
         this.connect();
     }
+
     private get isSocketAlive() {
         return this.socket && this.socket.connected;
     }

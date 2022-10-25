@@ -29,7 +29,7 @@ export class BmpDifferenceInterpreter {
         if (pixels[row][column].isWhite()) {
             return [];
         }
-        let differences: Coordinate[] = [{ x: row, y: column }];
+        let differences: Coordinate[] = [{ x: column, y: row }];
         pixels[row][column].setWhite();
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = column - 1; c <= column + 1; c++) {

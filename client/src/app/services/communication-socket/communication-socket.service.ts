@@ -35,7 +35,7 @@ export class CommunicationSocketService {
             this.socket.emit(event);
             return;
         }
-        this.socket.emit(event, data);
+        this.socket.emit(event, ...Object.values(data));
     }
 
     private connect() {

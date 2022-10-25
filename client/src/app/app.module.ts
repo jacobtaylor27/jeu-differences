@@ -33,7 +33,7 @@ import { TimerCountdownComponent } from './components/timer-countdown/timer-coun
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
-import { WaitingRoomComponent } from './components/waiting-room/waiting-room.component';
+import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
 /**
  * Main module that is used in main.ts.

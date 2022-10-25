@@ -4,6 +4,8 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AdminService } from './admin.service';
 import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { HttpClientModule } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('AdminService', () => {
     let service: AdminService;
@@ -16,13 +18,15 @@ describe('AdminService', () => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         TestBed.configureTestingModule({
-            imports: [AppMaterialModule],
+            imports: [AppMaterialModule, HttpClientModule],
             providers: [
                 { provide: GameCardHandlerService, useValue: spyGameCardHandlerService },
                 { provide: MatDialog, useValue: spyMatDialog },
+                { provide: CommunicationService, useValue: spyCommunicationService },
             ],
         });
         service = TestBed.inject(AdminService);
+        spyCommunicationService.deleteAllGameCards.and.returnValue(of());
     });
 
     it('should be created', () => {

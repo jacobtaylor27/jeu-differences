@@ -43,27 +43,18 @@ export class GameManagerService {
 
     addPlayer(player: User, gameId: string) {
         const game = this.findGame(gameId);
-        if (!game) {
-            return;
-        }
-        game.addPlayer(player);
+        game?.addPlayer(player);
     }
 
     isGameMultiplayer(gameId: string) {
         const game = this.findGame(gameId);
-        if (!game) {
-            return;
-        }
-        return game.multi;
+        return game?.multi;
     }
 
     leaveGame(playerId: string, gameId: string) {
         const game = this.findGame(gameId);
-        if (!game) {
-            return;
-        }
-        game.leaveGame(playerId);
-        if (game.hasNoPlayer()) {
+        game?.leaveGame(playerId);
+        if (game?.hasNoPlayer()) {
             this.games.delete(game);
         }
     }

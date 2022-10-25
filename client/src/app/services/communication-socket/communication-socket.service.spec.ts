@@ -81,7 +81,7 @@ describe('CommunicationSocketService', () => {
             return {} as io.Socket<never, never>;
         });
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        service.send<string>(expectedEvent, expectedData);
+        service.send<{data: string }>(expectedEvent, {data: expectedData});
         expect(spyHandleEvent).toHaveBeenCalledWith(expectedEvent, expectedData);
     });
 });

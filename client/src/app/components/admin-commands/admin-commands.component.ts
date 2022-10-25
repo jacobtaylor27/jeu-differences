@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { AdminService } from '@app/services/admin-service/admin.service';
+import { RouterService } from '@app/services/router-service/router.service';
 
 @Component({
     selector: 'app-admin-commands',
@@ -10,7 +10,7 @@ import { AdminService } from '@app/services/admin-service/admin.service';
 export class AdminCommandsComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(private readonly adminService: AdminService, private readonly router: Router) {}
+    constructor(private readonly adminService: AdminService, private readonly router: RouterService) {}
 
     hasCards(): boolean {
         return this.adminService.hasGameCards();
@@ -30,8 +30,6 @@ export class AdminCommandsComponent {
     }
 
     reloadComponent(): void {
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/admin']);
-        });
+        this.router.reloadPage('admin');
     }
 }

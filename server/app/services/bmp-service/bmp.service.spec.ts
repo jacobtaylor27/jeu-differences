@@ -7,7 +7,8 @@ import * as bmp from 'bmp-js';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { promises as fs } from 'fs';
+import { promises as fsPromises } from 'fs';
+import * as fs from 'fs';
 import { describe } from 'mocha';
 import { tmpdir } from 'os';
 import * as path from 'path';
@@ -31,13 +32,13 @@ describe('Bmp service', async () => {
 
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toBmpImageData());
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
+        await fsPromises.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
+        await fsPromises.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
     });
 
     after(async () => {
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
-        await fs.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
+        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
+        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
     });
 
     it('getBmpById(id) should return a bmp according to a specific id', async () => {
@@ -62,7 +63,7 @@ describe('Bmp service', async () => {
         expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(1);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toBmpImageData());
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
+        await fsPromises.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
     });
 
     it('addBmp(bmp) should create a file and store it with a unique id', async () => {
@@ -75,12 +76,23 @@ describe('Bmp service', async () => {
         await bmpService.deleteBmpById('5', tmpdir());
     });
 
+    it('should create a dir if it does not already exist', async () => {
+        const width = 2;
+        const height = 2;
+        const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const bmpObj = new Bmp({ width, height }, defaultRawData);
+
+        await bmpService.addBmp(await bmpObj.toImageData(), 'test');
+        expect(fs.existsSync('test').valueOf()).to.equal(true);
+        await fsPromises.rm('test', { recursive: true });
+    });
+
     it('resetAllBmp(bmp) should delete all the bmp files in the directory', async () => {
         await bmpService.resetAllBmp(tmpdir());
         expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(0);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toBmpImageData());
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
-        await fs.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
+        await fsPromises.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
+        await fsPromises.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
     });
 });

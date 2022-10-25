@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
 @Component({
@@ -15,7 +16,10 @@ export class GamePageComponent implements OnInit {
     constructor(
         private readonly communicationService: CommunicationService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
-    ) {}
+        exitButtonService: ExitButtonHandlerService,
+    ) {
+        exitButtonService.setGamePage();
+    }
 
     ngOnInit() {
         this.createGameRoom();

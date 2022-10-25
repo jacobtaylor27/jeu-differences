@@ -1,5 +1,5 @@
 <div class="main" [ngClass]="theme.ClassName">
-    <app-page-header [headerMessage]="'Création de partie'"></app-page-header>
+    <app-page-header [isExitButtonEnabled]="true" [headerMessage]="'Création de partie'"></app-page-header>
     <div class="space-under-title-bar"></div>
     <form [formGroup]="this.form" (ngSubmit)="isGameValid()">
         <div class="img-container">

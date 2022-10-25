@@ -22,7 +22,7 @@ export class AdminService {
     }
 
     deleteAllGames(): void {
-        this.communicationService.deleteAllGameCards();
+        this.communicationService.deleteAllGameCards().subscribe();
     }
 
     openSettings(): void {

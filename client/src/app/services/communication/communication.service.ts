@@ -26,18 +26,12 @@ export class CommunicationService {
         return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
     }
 
-    deleteAllGameCards(): void {
-        this.http
-            .delete(`${this.baseUrl}/game/cards`)
-            .pipe(catchError(this.handleError('deleteAllGameCards')))
-            .subscribe();
+    deleteAllGameCards(): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/game/cards`).pipe(catchError(this.handleError<void>('deleteAllGameCards')));
     }
 
-    deleteGame(id: string): void {
-        this.http
-            .delete(`${this.baseUrl}/game/cards/${id}`)
-            .pipe(catchError(this.handleError('deleteGame')))
-            .subscribe();
+    deleteGame(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/game/cards/${id}`).pipe(catchError(this.handleError<void>('deleteGame')));
     }
 
     validateGame(original: ImageData, modify: ImageData, radius: number) {

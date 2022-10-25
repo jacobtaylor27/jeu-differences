@@ -188,6 +188,31 @@ describe('GameController', () => {
         return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.CREATED);
     });
 
+    it('should send not found if the game is not found', async () => {
+        gameInfo.deleteGameInfoById.resolves().returns(Promise.resolve(false));
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.NOT_FOUND);
+    });
+
+    it('should send not found if the game is not found', async () => {
+        gameInfo.deleteGameInfoById.resolves().returns(Promise.resolve(true));
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.ACCEPTED);
+    });
+
+    it('should send bad request if there is an error while deleting the game', async () => {
+        gameInfo.deleteGameInfoById.rejects();
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should send accepted if all the games are deleted', async () => {
+        gameInfo.deleteAllGamesInfo.resolves();
+        return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.ACCEPTED);
+    });
+
+    it('should send bad request if there is an error while deleting all the games', async () => {
+        gameInfo.deleteAllGamesInfo.rejects();
+        return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.BAD_REQUEST);
+    });
+
     it('should return Not Acceptable if the game creation has a problem', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);

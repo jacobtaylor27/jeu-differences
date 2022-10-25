@@ -4,7 +4,7 @@ export enum SocketEvent {
     CreateGame = 'createGame',
     GameCreated = 'gameCreated',
     Error = 'error',
-    JoinGame = 'JoinGame',
+    JoinGame = 'joinGame',
     WaitPlayer = 'waitPlayer',
     Play = 'play',
     LeaveGame = 'leaveGame',

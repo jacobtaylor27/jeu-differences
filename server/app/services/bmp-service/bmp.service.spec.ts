@@ -69,7 +69,7 @@ describe('Bmp service', async () => {
         const width = 2;
         const height = 2;
         const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
-        const bmpObj = new Bmp(width, height, defaultRawData);
+        const bmpObj = new Bmp({ width, height }, defaultRawData);
         await bmpService.addBmp(await bmpObj.toImageData(), tmpdir());
         await expect(bmpService.getBmpById('5', tmpdir())).to.eventually.deep.equal(bmpObj);
         await bmpService.deleteBmpById('5', tmpdir());

@@ -11,7 +11,7 @@ import { Theme } from '@app/enums/theme';
 export class ExitGameButtonComponent {
     @ViewChild('exitDialogContent')
     private readonly exitDialogContentRef: TemplateRef<HTMLElement>;
-    
+
     theme = Theme.ClassName;
     constructor(readonly matDialog: MatDialog, readonly exitButtonService: ExitButtonHandlerService) {}
 

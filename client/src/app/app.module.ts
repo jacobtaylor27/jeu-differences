@@ -28,6 +28,7 @@ import { GameCarouselComponent } from './components/game-carousel/game-carousel.
 import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
 import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
 import { GameScoreComponent } from './components/game-score/game-score.component';
+import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
@@ -70,6 +71,7 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
         GameCardButtonsComponent,
         GameScoreComponent,
         PageHeaderComponent,
+        LoadingScreenComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

@@ -81,10 +81,11 @@ describe('Bmp service', async () => {
         const height = 2;
         const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
         const bmpObj = new Bmp({ width, height }, defaultRawData);
+        const dir = 'test-dir';
 
-        await bmpService.addBmp(await bmpObj.toImageData(), 'test');
-        expect(fs.existsSync('test').valueOf()).to.equal(true);
-        await fsPromises.rm('test', { recursive: true });
+        await bmpService.addBmp(await bmpObj.toImageData(), dir);
+        expect(fs.existsSync(dir).valueOf()).to.equal(true);
+        await fsPromises.rm(dir, { recursive: true });
     });
 
     it('resetAllBmp(bmp) should delete all the bmp files in the directory', async () => {

@@ -1,9 +1,9 @@
 import { Application } from '@app/app';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Coordinate } from '@common/coordinate';
-import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
@@ -60,11 +60,11 @@ describe('GameController', () => {
 
     it('should return a array of coordinate if a difference is found ', async () => {
         const expectedDifference = [{} as Coordinate];
-        const expectedDifferenceLeft = 10;
+        const expectednbDifferencesLeft = 10;
         gameManager.isGameFound.callsFake(() => true);
         gameManager.isDifference.callsFake(() => expectedDifference);
         gameManager.isGameOver.callsFake(() => false);
-        gameManager.differenceLeft.callsFake(() => expectedDifferenceLeft);
+        gameManager.nbDifferencesLeft.callsFake(() => expectednbDifferencesLeft);
         return supertest(expressApp)
             .post('/api/game/difference')
             .send({ id: '', x: 0, y: 0 })
@@ -72,7 +72,7 @@ describe('GameController', () => {
             .then((response) => {
                 expect(response.body.difference).to.deep.equal(expectedDifference);
                 expect(response.body.isGameOver).to.deep.equal(false);
-                expect(response.body.differencesLeft).to.deep.equal(expectedDifferenceLeft);
+                expect(response.body.differencesLeft).to.deep.equal(expectednbDifferencesLeft);
             });
     });
 

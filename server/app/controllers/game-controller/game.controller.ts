@@ -272,7 +272,7 @@ export class GameController {
             res.status(StatusCodes.OK).send({
                 difference,
                 isGameOver: this.gameManager.isGameOver(req.body.id),
-                differencesLeft: this.gameManager.differenceLeft(req.body.id),
+                differencesLeft: this.gameManager.nbDifferencesLeft(req.body.id),
             });
         });
 

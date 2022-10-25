@@ -28,8 +28,12 @@ export class SocketManagerService {
                 console.log(`Deconnexion de l'utilisateur avec id : ${socket.id}`);
             });
 
-            socket.on(SocketEvent.CreateGame, async (data: {player: string, mode: string, game: { card: string; isMulti: boolean }}) => {
-                const id = await this.gameManager.createGame({ player: { name: data.player, id: socket.id }, isMulti: data.game.isMulti }, data.mode, data.game.card);
+            socket.on(SocketEvent.CreateGame, async (data: { player: string; mode: string; game: { card: string; isMulti: boolean } }) => {
+                const id = await this.gameManager.createGame(
+                    { player: { name: data.player, id: socket.id }, isMulti: data.game.isMulti },
+                    data.mode,
+                    data.game.card,
+                );
                 socket.join(id);
                 socket.in(id).emit(data.game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
             });

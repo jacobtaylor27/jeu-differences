@@ -18,7 +18,7 @@ export class UserNameInputComponent {
         private readonly router: Router,
         private readonly dialogRef: MatDialogRef<UserNameInputComponent>,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
-        private communicationSocketService : CommunicationSocketService
+        private communicationSocketService: CommunicationSocketService,
     ) {}
 
     @HostListener('window:keyup', ['$event'])
@@ -35,7 +35,9 @@ export class UserNameInputComponent {
             this.router.navigate(['/game']);
             this.communicationSocketService.send(SocketEvent.CreateGame, {
                 player: this.playerName,
-                mode: this.gameInformationHandlerService.gameMode, game: { card: this.gameInformationHandlerService.getId(), isMulti: false}})
+                mode: this.gameInformationHandlerService.gameMode,
+                game: { card: this.gameInformationHandlerService.getId(), isMulti: false },
+            });
         }
     }
 

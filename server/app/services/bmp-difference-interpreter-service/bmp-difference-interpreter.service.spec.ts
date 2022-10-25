@@ -37,7 +37,7 @@ describe('Bmp difference interpreter service', async () => {
         const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 0;
 
-        const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);
+        const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('A black image should have one difference', async () => {
@@ -48,7 +48,7 @@ describe('Bmp difference interpreter service', async () => {
         const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 1;
 
-        const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);
+        const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels side by side should be considered as one difference', async () => {
@@ -59,7 +59,7 @@ describe('Bmp difference interpreter service', async () => {
         const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 1;
 
-        const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);
+        const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels in diagonal should be considered as one difference', async () => {
@@ -70,7 +70,7 @@ describe('Bmp difference interpreter service', async () => {
         const bmpWithColors = new Bmp({ width, height }, rawData);
         const nbOfDifference = 1;
 
-        const coordinates: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpWithColors);
+        const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
 
@@ -98,7 +98,7 @@ describe('Bmp difference interpreter service', async () => {
         const filepath = './assets/test-bmp/ten_difference.bmp';
         const bmpDecoded = await bmpDecoderService.decodeBIntoBmp(filepath);
         const nbOfDifference = 10;
-        const differences: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpDecoded);
+        const differences: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
         expect(differences.length).to.equal(nbOfDifference);
     });
 
@@ -106,7 +106,7 @@ describe('Bmp difference interpreter service', async () => {
         const filepath = './assets/test-bmp/coordinates_verifier.bmp';
         const bmpDecoded = await bmpDecoderService.decodeBIntoBmp(filepath);
         const coordinatedExpedted: BmpCoordinate[][] = [[new BmpCoordinate(0, 0), new BmpCoordinate(1, 0)]];
-        const differences: BmpCoordinate[][] = await bmpDifferenceInterpreter.getBmpCoordinates(bmpDecoded);
+        const differences: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
         expect(differences).to.deep.equal(coordinatedExpedted);
     });
 });

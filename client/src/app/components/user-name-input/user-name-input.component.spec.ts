@@ -21,7 +21,6 @@ describe('UserNameInputComponent', () => {
     };
 
     beforeEach(async () => {
-        // spyGameInformationHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName']);
         await TestBed.configureTestingModule({
             declarations: [UserNameInputComponent, AdminCommandsComponent],
             imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
@@ -32,7 +31,7 @@ describe('UserNameInputComponent', () => {
                 },
                 {
                     provide: GameInformationHandlerService,
-                    useValue: jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName']),
+                    useValue: jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName', 'getId']),
                 },
             ],
         }).compileComponents();

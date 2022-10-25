@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCardService } from '@app/services/game-card/game-card.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
 
 @Component({
     selector: 'app-game-card-buttons',
@@ -15,7 +15,7 @@ export class GameCardButtonsComponent {
     constructor(
         private readonly gameCardService: GameCardService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
-        private readonly router: Router,
+        private readonly router: RouterService,
     ) {}
 
     onClickDeleteGame(game: GameCard): void {
@@ -23,10 +23,9 @@ export class GameCardButtonsComponent {
         this.reloadComponent();
     }
 
-    // eslint-disable-next-line no-unused-vars
-    onClickResetHighScores(game: GameCard): void {
-        // this.gameCardService.resetHighScores(game.gameInformation.id);
-    }
+    // onClickResetHighScores(game: GameCard): void {
+    //     // this.gameCardService.resetHighScores(game.gameInformation.id);
+    // }
 
     onClickPlayGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
@@ -34,8 +33,6 @@ export class GameCardButtonsComponent {
     }
 
     reloadComponent(): void {
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/admin']);
-        });
+        this.router.reloadPage('/admin');
     }
 }

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
     styleUrls: ['./waiting-room.component.scss'],
 })
 export class WaitingRoomComponent {
-    constructor() {}
+    favoriteTheme: string = 'deeppurple-amber-theme';
 }

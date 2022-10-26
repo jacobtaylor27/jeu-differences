@@ -5,16 +5,16 @@ import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
-import { TimerService } from '../timer-service/timer.service';
 @Service()
 export class SocketManagerService {
     private sio: Server;
 
-    constructor(private gameManager: GameManagerService, private timerService : TimerService) {}
+    constructor(private gameManager: GameManagerService) {}
 
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
     }
+
 
     handleSockets(): void {
         if (!this.sio) {
@@ -33,7 +33,14 @@ export class SocketManagerService {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                 socket.join(id);
                 socket.in(id).emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
+                this.gameManager.setTimer(id);
+               
+                setInterval(() => {
+                    console.log(this.gameManager.getStatus(id))
+                    this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                }, 1000)
             });
+
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
@@ -45,12 +52,6 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.JoinGame, gameId);
                 socket.in(gameId).emit(SocketEvent.Play);
             });
-
-
-            socket.on(SocketEvent.Play, () => {
-               this.timerService.setTimer();
-            });
-
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId)) {
@@ -79,7 +80,9 @@ export class SocketManagerService {
                 }
             });
         });
+
     }
+
 
     async send<T>(gameId: string, event: { name: SocketEvent; data?: T }) {
         this.sio
@@ -96,10 +99,7 @@ export class SocketManagerService {
                 });
             });
 
-            setInterval(() => {this.emitTime();}, 1000)
+           
     }
 
-    private emitTime(){
-        this.sio.sockets.emit(SocketEvent.Clock, this.timerService.seconds.toString())
-    }
 }

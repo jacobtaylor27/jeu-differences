@@ -19,6 +19,15 @@ export class GameManagerService {
         return game.identifier;
     }
 
+
+    setTimer(gameId : string){
+        this.findGame(gameId)?.setTimer()
+    }
+
+    getTime(gameId: string) {
+        return this.findGame(gameId) ? (this.findGame(gameId) as Game).seconds  : null;
+    }
+
     isDifference(gameId: string, coord: Coordinate) {
         const game = this.findGame(gameId);
         return !game ? null : game.isDifferenceFound(coord);

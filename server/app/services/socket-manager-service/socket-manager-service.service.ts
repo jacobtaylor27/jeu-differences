@@ -5,11 +5,12 @@ import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
+import { TimerService } from '../timer-service/timer.service';
 @Service()
 export class SocketManagerService {
     private sio: Server;
 
-    constructor(private gameManager: GameManagerService) {}
+    constructor(private gameManager: GameManagerService, private timerService : TimerService) {}
 
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
@@ -44,6 +45,12 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.JoinGame, gameId);
                 socket.in(gameId).emit(SocketEvent.Play);
             });
+
+
+            socket.on(SocketEvent.Play, () => {
+               this.timerService.setTimer();
+            });
+
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId)) {
@@ -88,5 +95,11 @@ export class SocketManagerService {
                     socket.emit(event.name, event.data);
                 });
             });
+
+            setInterval(() => {this.emitTime();}, 1000)
+    }
+
+    private emitTime(){
+        this.sio.sockets.emit(SocketEvent.Clock, this.timerService.seconds.toString())
     }
 }

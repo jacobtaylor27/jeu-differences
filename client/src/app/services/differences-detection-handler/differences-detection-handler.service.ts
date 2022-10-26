@@ -41,11 +41,11 @@ export class DifferencesDetectionHandlerService {
     }
 
     playWrongSound() {
-        this.playSound(new Audio('../assets/sounds/wronganswer.wav'));
+        this.playSound(new Audio('/assets/sounds/wronganswer.wav'));
     }
 
     playCorrectSound() {
-        this.playSound(new Audio('../assets/sounds/correctanswer.wav'));
+        this.playSound(new Audio('/assets/sounds/correctanswer.wav'));
     }
 
     playSound(sound: HTMLAudioElement) {

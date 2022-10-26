@@ -14,8 +14,10 @@ import { SocketEvent } from '@common/socket-event';
 export class GamePageComponent implements OnInit {
     favoriteTheme: string = 'deeppurple-amber-theme';
     gameId: string;
+    clock : string;
 
     constructor(
+        
         private readonly communicationService: CommunicationService,
         private communicationSocketService : CommunicationSocketService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
@@ -27,6 +29,7 @@ export class GamePageComponent implements OnInit {
     ngOnInit() {
         this.createGameRoom();
         this.communicationSocketService.on(SocketEvent.Clock, (time : string) =>{
+            this.clock = time;
             console.log(time)
         })
     }

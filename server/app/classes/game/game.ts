@@ -56,7 +56,7 @@ export class Game {
 
     private calculateTime() : number {
         const presentTime = new Date();
-        return Math.ceil((presentTime.getTime() - this.initialTime.getTime()) / 1000);
+        return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
     }
 
     findDifference(differenceCoords: Coordinate): Coordinate[] | undefined {

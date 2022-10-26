@@ -10,6 +10,7 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 })
 export class GameCardButtonsComponent {
     @Input() gameCard: GameCard;
+    isAlreadyCreated: boolean = false;
 
     constructor(private readonly gameCardService: GameCardService, private readonly gameInfoHandlerService: GameInformationHandlerService) {}
 
@@ -24,5 +25,10 @@ export class GameCardButtonsComponent {
     onClickPlayGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
         this.gameCardService.openNameDialog();
+    }
+
+    onClickCreateJoinGame(): void {
+        // eslint-disable-next-line no-console
+        console.log('Create/Join Game');
     }
 }

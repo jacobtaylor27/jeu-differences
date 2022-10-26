@@ -6,9 +6,8 @@ import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { TimerService } from '@app/services/timer.service';
 import { Coordinate } from '@common/coordinate';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
@@ -17,21 +16,16 @@ describe('DifferencesDetectionHandlerService', () => {
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
     let spyGameInfoHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
-    let spyTimer: jasmine.SpyObj<TimerService>;
 
     beforeEach(() => {
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['validateCoordinates']);
-        spyTimer = jasmine.createSpyObj('TimerService', ['setNbOfDifferencesFound'], {
-            differenceFind: new Subject(),
-            gameOver: new Subject(),
-        });
+            
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule, RouterTestingModule],
             providers: [
                 { provide: MatDialog, useValue: spyMatDialog },
-                { provide: TimerService, useValue: spyTimer },
                 { provide: GameInformationHandlerService, useValue: spyGameInfoHandlerService },
                 { provide: CommunicationService, useValue: spyCommunicationService },
             ],
@@ -41,12 +35,6 @@ describe('DifferencesDetectionHandlerService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
-    });
-
-    it('it should set the gameOver', () => {
-        expect(service.isGameOver).toBeFalsy();
-        service.setGameOver();
-        expect(service.isGameOver).toBeTruthy();
     });
 
     it('should set ctx', () => {
@@ -226,12 +214,10 @@ describe('DifferencesDetectionHandlerService', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() => {});
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const spySetGameOver = spyOn(service, 'setGameOver').and.callFake(() => {});
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyOpenDialog = spyOn(service, 'openGameOverDialog').and.callFake(() => {});
         service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
         expect(spyDifferenceDetected).toHaveBeenCalled();
-        expect(spySetGameOver).toHaveBeenCalled();
         expect(spyOpenDialog).toHaveBeenCalled();
     });
 });

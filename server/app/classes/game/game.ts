@@ -54,7 +54,7 @@ export class Game {
         this.context.next();
     }
 
-    private calculateTime() : number {
+    calculateTime() : number {
         const presentTime = new Date();
         return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
     }

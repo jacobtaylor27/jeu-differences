@@ -191,11 +191,10 @@ export class GameController {
                 const modify = new Bmp({ width: req.body.modify.width, height: req.body.modify.height }, req.body.modify.data as number[]);
                 const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius as number);
                 const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius as number);
-                res.status(
-                    (await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius as number))
-                        ? StatusCodes.ACCEPTED
-                        : StatusCodes.NOT_ACCEPTABLE,
-                ).send({
+                const nbDifference = await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius as number);
+                // eslint-disable-next-line no-console
+                console.log(nbDifference);
+                res.status(nbDifference ? StatusCodes.ACCEPTED : StatusCodes.NOT_ACCEPTABLE).send({
                     numberDifference,
                     width: differenceImage.getWidth(),
                     height: differenceImage.getHeight(),

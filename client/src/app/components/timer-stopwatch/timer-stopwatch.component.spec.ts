@@ -23,36 +23,4 @@ describe('TimerStopwatchComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    // it('should start at 00 : 00', fakeAsync(() => {
-    //     component.ngOnInit();
-    //     tick(1);
-    //     expect(component.timerDisplay).toEqual('00 : 00');
-    //     discardPeriodicTasks();
-    // }));
-
-    // it('should increment every second', fakeAsync(() => {
-    //     const componentInstance = fixture.componentInstance;
-    //     const calculateTimeSpy = spyOn(Object.getPrototypeOf(componentInstance), 'calculateTime');
-    //     componentInstance.ngOnInit();
-    //     tick(0);
-    //     expect(calculateTimeSpy).toHaveBeenCalledTimes(0);
-    //     /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
-    //     tick(1000);
-    //     expect(calculateTimeSpy).toHaveBeenCalledTimes(1);
-    //     /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
-    //     tick(1000);
-    //     expect(calculateTimeSpy).toHaveBeenCalledTimes(2);
-    //     discardPeriodicTasks();
-    // }));
-
-    // it('should increment every second', fakeAsync(() => {
-    //     const componentInstance = fixture.componentInstance;
-    //     const stopTimerSpy = spyOn(Object.getPrototypeOf(componentInstance), 'stopTimer');
-    //     componentInstance.ngOnInit();
-    //     /* eslint-disable @typescript-eslint/no-magic-numbers -- test for 1 second */
-    //     tick(1000);
-    //     component.ngOnInit();
-    //     expect(stopTimerSpy).toHaveBeenCalled();
-    //     discardPeriodicTasks();
-    // }));
 });

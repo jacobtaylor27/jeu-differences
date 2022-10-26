@@ -41,7 +41,7 @@ export class Game {
         return this.info;
     }
 
-    status(): GameStatus {
+    get status(): GameStatus {
         return this.context.gameState();
     }
 

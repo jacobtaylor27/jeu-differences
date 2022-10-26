@@ -28,9 +28,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/quote.png",
-              "src/assets",
-              "src/assets/quote.png"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"
@@ -98,9 +96,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/quote.png",
-              "src/assets",
-              "src/assets/quote.jpg"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"

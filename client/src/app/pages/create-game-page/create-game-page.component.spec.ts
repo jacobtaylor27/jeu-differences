@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
+import { ExitGameButtonComponent } from '@app/components/exit-game-button/exit-game-button.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
 import { AppMaterialModule } from '@app/modules/material.module';
@@ -33,7 +34,14 @@ describe('CreateGamePageComponent', () => {
             $resetDiff: new Subject(),
         });
         await TestBed.configureTestingModule({
-            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent, DialogCreateGameComponent, PageHeaderComponent],
+            declarations: [
+                CreateGamePageComponent,
+                DrawCanvasComponent,
+                ToolBoxComponent,
+                DialogCreateGameComponent,
+                PageHeaderComponent,
+                ExitGameButtonComponent,
+            ],
             imports: [HttpClientTestingModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },

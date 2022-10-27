@@ -13,8 +13,6 @@
     position: absolute;
     width: 640px;
     height: 480px;
-    margin-left: 2vw;
-    margin-right: 2vw;
 }
 
 .wrapper {
@@ -22,6 +20,6 @@
     position: relative;
 }
 
-#grid-container {
+.grid-container {
     display: flex;
 }

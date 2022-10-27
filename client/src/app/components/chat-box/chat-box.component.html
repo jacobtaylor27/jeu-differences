@@ -1,1 +1,33 @@
-<p>chat-box works!</p>
+<mat-card class="main-wrapper">
+    <mat-card-title> Messages </mat-card-title>
+    <div class="chat-area">
+        <div *ngFor="let message of messages">
+            <div class="message-wrapper">
+                <div
+                    [ngClass]="{
+                        'message-wrapper-adversary': message.type === 'adversary',
+                        'message-wrapper-gameMaster': message.type === 'gameMaster',
+                        'message-wrapper-personnal': message.type === 'personnal'
+                    }"
+                >
+                    <div
+                        class="message-content"
+                        [ngClass]="{
+                            adversary: message.type === 'adversary',
+                            personnal: message.type === 'personnal',
+                            gameMaster: message.type === 'gameMaster'
+                        }"
+                    >
+                        {{ message.content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <mat-form-field appearance="outline" class="input-area">
+        <input matInput placeholder="Entrez un message..." maxlength="200" disabled="{{ !isAdversaryConnected }}" />
+        <button mat-icon-button matSuffix>
+            <mat-icon>send</mat-icon>
+        </button>
+    </mat-form-field>
+</mat-card>

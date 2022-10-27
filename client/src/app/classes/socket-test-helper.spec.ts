@@ -13,7 +13,7 @@ describe('CanvasTestHelper', () => {
     });
 
     it('should return undefined on emit', () => {
-        expect(socketTestHelper.emit('')).toBeUndefined();
+        expect(socketTestHelper.emit()).toBeUndefined();
     });
 
     it('should return undefined on disconnect', () => {

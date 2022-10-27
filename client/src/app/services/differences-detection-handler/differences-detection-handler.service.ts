@@ -5,8 +5,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { Coordinate } from '@common/coordinate';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { Coordinate } from '@common/coordinate';
 @Injectable({
     providedIn: 'root',
 })
@@ -89,7 +89,6 @@ export class DifferencesDetectionHandlerService {
 
     differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
         this.playCorrectSound();
-       
         this.displayDifferenceTemp(ctx, coords);
         this.clearDifference(ctxModified, coords);
     }

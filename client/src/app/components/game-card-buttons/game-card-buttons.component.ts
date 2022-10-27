@@ -10,9 +10,12 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 })
 export class GameCardButtonsComponent {
     @Input() gameCard: GameCard;
-    isAlreadyCreated: boolean = false;
 
     constructor(private readonly gameCardService: GameCardService, private readonly gameInfoHandlerService: GameInformationHandlerService) {}
+
+    isMultiplayer(): boolean {
+        return this.gameCard.isMulti;
+    }
 
     onClickDeleteGame(game: GameCard): void {
         this.gameCardService.deleteGame(game);
@@ -28,7 +31,7 @@ export class GameCardButtonsComponent {
     }
 
     onClickCreateJoinGame(): void {
-        // eslint-disable-next-line no-console
-        console.log('Create/Join Game');
+        this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
+        this.gameCardService.openNameDialog();
     }
 }

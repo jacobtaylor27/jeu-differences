@@ -70,8 +70,7 @@ describe('Game', () => {
 
     it('should get the status of the game', () => {
         const expectGameState = new InitGameState();
-        const stateSpyObj = stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
-        expect(stateSpyObj.called).to.equal(true);
+        stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
         expect(game.status).to.equal(expectGameState.status());
     });
 

@@ -19,13 +19,12 @@ export class GameManagerService {
         return game.identifier;
     }
 
-
-    setTimer(gameId : string){
+    setTimer(gameId: string) {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).setTimer() : null;
     }
 
     getTime(gameId: string) {
-        return this.findGame(gameId) ? (this.findGame(gameId) as Game).seconds  : null;
+        return this.findGame(gameId) ? (this.findGame(gameId) as Game).seconds : null;
     }
 
     isDifference(gameId: string, coord: Coordinate) {

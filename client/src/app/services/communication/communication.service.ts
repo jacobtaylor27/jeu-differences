@@ -101,5 +101,4 @@ export class CommunicationService {
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }
-
 }

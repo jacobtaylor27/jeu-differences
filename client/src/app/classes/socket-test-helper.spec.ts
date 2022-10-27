@@ -13,14 +13,14 @@ describe('CanvasTestHelper', () => {
     });
 
     it('should return undefined on emit', () => {
-        expect(socketTestHelper.emit('')).toBeUndefined()
+        expect(socketTestHelper.emit('')).toBeUndefined();
     });
 
     it('should return undefined on disconnect', () => {
-        expect(socketTestHelper.disconnect()).toBeUndefined()
+        expect(socketTestHelper.disconnect()).toBeUndefined();
     });
 
     it('should return undefined on peerSideEmit if no event', () => {
-        expect(socketTestHelper.peerSideEmit('')).toBeUndefined()
+        expect(socketTestHelper.peerSideEmit('')).toBeUndefined();
     });
 });

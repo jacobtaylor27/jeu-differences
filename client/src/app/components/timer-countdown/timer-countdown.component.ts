@@ -11,38 +11,29 @@ import { Component } from '@angular/core';
 export class TimerCountdownComponent {
     // @Input() timerAdmin: string;
     // @Input() clueAskedCounter: number = 0;
-
     // @ViewChild('gameOverDialog')
     // private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
-
     // timerDisplay: string;
     // secondsLeft: number;
-
     // // TODO : link timePenalty with input form admin
     // // @Input() timerPenalty: number;
     // /* eslint-disable @typescript-eslint/no-magic-numbers -- fixed value for now, will be changed later */
     // private timePenalty: number = 5;
-
     // // TODO : link nbDifferencesFound && bonusTime
     // // @Input() bonusTime: number;
     // // @Input() nbDifferencesFound: number;
-
     // private timer: number;
     // private sub: Subscription;
-
     // constructor(private readonly matDialog: MatDialog, private readonly timerService: TimerService) {
     //     timerService.setCountdown();
     // }
-
     // ngOnInit(): void {
     //     this.setTimerService();
     //     this.countdownTimer();
     // }
-
     // ngOnDestroy(): void {
     //     this.stopTimer();
     // }
-
     // /* eslint-disable @typescript-eslint/no-magic-numbers -- justify with method's name */
     // moreThanFiveSeconds() {
     //     if (this.secondsLeft < 5) {
@@ -50,7 +41,6 @@ export class TimerCountdownComponent {
     //     }
     //     return true;
     // }
-
     // private countdownTimer() {
     //     /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 for 1second */
     //     const $time = timer(10, 1000);
@@ -65,22 +55,18 @@ export class TimerCountdownComponent {
     //         }
     //     });
     // }
-
     // private stopTimer() {
     //     this.sub.unsubscribe();
     // }
-
     // // TODO : add time when users finds a difference
     // private calculateTime() {
     //     this.timer = Number(this.timerAdmin) - this.clueAskedCounter * this.timePenalty;
     //     // this.timer = Number(this.timerAdmin) + this. * this.nbDifferencesFound * this.bonusTime;
     // }
-
     // private setTimerService() {
     //     this.calculateTime();
     //     this.timerService.setTimer(this.timer);
     // }
-
     // private gameOver() {
     //     const dialogConfig = new MatDialogConfig();
     //     dialogConfig.disableClose = true;

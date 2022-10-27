@@ -1,6 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-type CallbackSignature = (params: any) => {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CallbackSignature = (params: any) => {};
 
 @Injectable({
     providedIn: 'root',
@@ -14,12 +15,13 @@ export class SocketTestHelper {
         this.callbacks.get(event)!.push(callback);
     }
 
-    emit(event: string, ...params: any): void {
+    emit(): void {
         return;
     }
 
     disconnect(): void { return; }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any 
     peerSideEmit(event: string, params?: any) {
         if (!this.callbacks.has(event)) {
             return;

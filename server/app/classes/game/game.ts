@@ -15,7 +15,7 @@ export class Game {
     private info: PrivateGameInformation;
     private getNbDifferencesFound: Set<Coordinate[]>;
     private context: GameContext;
-    private initialTime : Date;
+    private initialTime: Date;
 
     constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
@@ -26,7 +26,7 @@ export class Game {
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
         this.id = v4();
         this.context.next();
-         // go directly to the Found Difference State because timer is not initialize in the server for now
+        // go directly to the Found Difference State because timer is not initialize in the server for now
     }
 
     get identifier() {
@@ -45,17 +45,18 @@ export class Game {
         return this.context.gameState();
     }
 
-    get seconds(){
-        return this.calculateTime()
+    get seconds() {
+        return this.calculateTime();
     }
 
-    setTimer(){
+    setTimer() {
         this.initialTime = new Date();
         this.context.next();
     }
 
-    calculateTime() : number {
+    calculateTime(): number {
         const presentTime = new Date();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
         return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
     }
 

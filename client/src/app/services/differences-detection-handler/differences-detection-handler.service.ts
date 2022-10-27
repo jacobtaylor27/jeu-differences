@@ -89,7 +89,7 @@ export class DifferencesDetectionHandlerService {
 
     differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
         this.playCorrectSound();
-       
+
         this.displayDifferenceTemp(ctx, coords);
         this.clearDifference(ctxModified, coords);
     }

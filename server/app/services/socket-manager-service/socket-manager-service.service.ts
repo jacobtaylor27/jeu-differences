@@ -15,7 +15,6 @@ export class SocketManagerService {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
     }
 
-
     handleSockets(): void {
         if (!this.sio) {
             throw new Error('Server instance not set');
@@ -33,17 +32,16 @@ export class SocketManagerService {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                 socket.join(id);
                 this.gameManager.setTimer(id);
-                
-                // socket.in(id).emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
-             
-               if(!game.isMulti){
-                   setInterval(() => {
-                       this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
-                   }, 1000)
-               }
-            });
 
-          
+                // socket.in(id).emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
+
+                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
+                if (!game.isMulti) {
+                    setInterval(() => {
+                        this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                    }, 1000);
+                }
+            });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
@@ -83,9 +81,7 @@ export class SocketManagerService {
                 }
             });
         });
-
     }
-
 
     async send<T>(gameId: string, event: { name: SocketEvent; data?: T }) {
         this.sio
@@ -101,8 +97,5 @@ export class SocketManagerService {
                     socket.emit(event.name, event.data);
                 });
             });
-
-           
     }
-
 }

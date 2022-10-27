@@ -11,6 +11,8 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { GamePageComponent } from './game-page.component';
+import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
+import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 
 describe('GamePageComponent', () => {
     let component: GamePageComponent;
@@ -42,7 +44,8 @@ describe('GamePageComponent', () => {
                 CluesAreaComponent,
                 DifferencesAreaComponent,
                 ExitGameButtonComponent,
-                // TimerStopwatchComponent,
+                PageHeaderComponent,
+                ChatBoxComponent,
             ],
             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
             providers: [

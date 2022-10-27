@@ -33,7 +33,9 @@ import { TimerCountdownComponent } from './components/timer-countdown/timer-coun
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
+import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
+import { ChatBoxComponent } from './components/chat-box/chat-box.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -72,6 +74,8 @@ import { DialogGameOverComponent } from './components/dialog-game-over/dialog-ga
         GameScoreComponent,
         PageHeaderComponent,
         DialogGameOverComponent,
+        WaitingRoomComponent,
+        ChatBoxComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

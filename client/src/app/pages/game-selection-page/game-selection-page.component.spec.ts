@@ -35,4 +35,14 @@ describe('GameSelectionPageComponent', () => {
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
         expect(component.formatScoreTime(1)).toEqual('00 : 01');
     });
+
+    it('getNumberOfGames should call getCarouselLength from gameCarouselService', () => {
+        component.getNumberOfGames();
+        expect(spyGameCarouselService.getCarouselLength).toHaveBeenCalled();
+    });
+
+    it('hasGames should call hasCards from gameCarouselService', () => {
+        component.hasGames();
+        expect(spyGameCarouselService.hasCards).toHaveBeenCalled();
+    });
 });

@@ -19,7 +19,6 @@ export class GameCardButtonsComponent {
     ) {}
 
     isMultiplayer(): boolean {
-        console.log('is multi : game-cardbuttons -> ' + this.gameCard.isMulti);
         return this.gameCard.isMulti;
     }
 

@@ -36,7 +36,10 @@ export class SocketManagerService {
                 /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
                 if (!game.isMulti) {
                     setInterval(() => {
-                        this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                        if(!this.gameManager.isGameOver(id)){
+
+                            this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                        }
                     }, 1000);
                 }
             });

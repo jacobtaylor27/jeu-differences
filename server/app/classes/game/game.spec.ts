@@ -9,7 +9,7 @@ import { Coordinate } from '@common/coordinate';
 import { Score } from '@common/score';
 import { expect } from 'chai';
 import { SinonFakeTimers, spy, stub, useFakeTimers } from 'sinon';
-import { InitTimerState } from '../init-timer-state/init-timer-state';
+import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
 
 describe('Game', () => {
     let game: Game;
@@ -56,31 +56,29 @@ describe('Game', () => {
         expect(game.information).to.equal(expectedGameInfo);
     });
 
-    it('should get the seconds of the timer of the game', () =>{
+    it('should get the seconds of the timer of the game', () => {
         stub(game, 'calculateTime').callsFake(() => 2);
-        expect(game.seconds).to.equal(2)
-    })
+        expect(game.seconds).to.equal(2);
+    });
 
-    it('should calculate time', () =>{
+    it('should calculate time', () => {
         game.setTimer();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);
-        expect(game.calculateTime()).to.equal(5)
-    })
-    
+        expect(game.calculateTime()).to.equal(5);
+    });
+
     it('should get the status of the game', () => {
         const expectGameState = new InitGameState();
-        const stateSpyObj = stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
-        game.status;
-        expect(stateSpyObj.called).to.equal(true);
+        stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
         expect(game.status).to.equal(expectGameState.status());
     });
-    
-    it('should set timer', () =>{
-        game.setTimer()
-        expect(game['initialTime'].getDate()).to.equal((new Date()).getDate());
-        expect(game.status).to.equal(GameStatus.FindDifference)
-    })
 
+    it('should set timer', () => {
+        game.setTimer();
+        expect(game['initialTime'].getDate()).to.equal(new Date().getDate());
+        expect(game.status).to.equal(GameStatus.FindDifference);
+    });
 
     it('should go to the next state of the game', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function

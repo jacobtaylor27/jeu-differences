@@ -33,10 +33,12 @@ export class SocketManagerService {
                 socket.join(id);
                 this.gameManager.setTimer(id);
                 socket.emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
-                setInterval(() => {
-                    console.log(this.gameManager.getStatus(id));
-                    this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
-                }, 1000);
+                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
+                if (!game.isMulti) {
+                    setInterval(() => {
+                        this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                    }, 1000);
+                }
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {

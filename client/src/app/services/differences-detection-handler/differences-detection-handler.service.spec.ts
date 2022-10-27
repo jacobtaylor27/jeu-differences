@@ -21,7 +21,7 @@ describe('DifferencesDetectionHandlerService', () => {
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['validateCoordinates']);
-            
+
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule, RouterTestingModule],
             providers: [

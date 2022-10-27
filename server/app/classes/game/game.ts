@@ -56,6 +56,7 @@ export class Game {
 
     calculateTime(): number {
         const presentTime = new Date();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
         return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
     }
 

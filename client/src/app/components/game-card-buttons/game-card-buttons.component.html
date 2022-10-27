@@ -10,6 +10,6 @@
 
     <ng-template #selectPage>
         <button mat-flat-button color="primary" aria-label="Boutton Jouer" (click)="onClickPlayGame()">Jouer</button>
-        <button mat-flat-button color="primary" aria-label="Boutton Créer" (click)="onClickCreateJoinGame()">{{ isAlreadyCreated ? 'Rejoindre' : 'Créer' }}</button>
+        <button mat-flat-button color="primary" aria-label="Boutton Créer" (click)="onClickCreateJoinGame()">{{ isMultiplayer() ? 'Joindre' : 'Créer' }}</button>
     </ng-template>
 </mat-card-actions>

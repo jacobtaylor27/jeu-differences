@@ -24,12 +24,8 @@ export class GameCardButtonsComponent {
 
     onClickDeleteGame(game: GameCard): void {
         this.gameCardService.deleteGame(game.gameInformation.id);
-        this.reloadComponent();
+        this.router.reloadPage('admin');
     }
-
-    // onClickResetHighScores(game: GameCard): void {
-    //     // this.gameCardService.resetHighScores(game.gameInformation.id);
-    // }
 
     onClickPlayGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);

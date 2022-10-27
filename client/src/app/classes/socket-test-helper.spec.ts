@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from './socket-test-helper';
 
-describe('CanvasTestHelper', () => {
+describe('SocketTestHelper', () => {
     let socketTestHelper: SocketTestHelper;
 
     beforeEach(() => {

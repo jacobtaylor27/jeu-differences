@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, CREATE_GAME_ROOM, DELETE_GAMES, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
@@ -225,6 +225,26 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(VALIDATE_COORD);
         expect(req.request.method).toBe('POST');
         req.error(new ProgressEvent('Random error occurred'));
+    });
+
+    it('should handle delete all game cards', () => {
+        service.deleteAllGameCards().subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(DELETE_GAMES);
+        expect(req.request.method).toBe('DELETE');
+    });
+
+    it('should delete a game by id', () => {
+        service.deleteGame('gameid').subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(DELETE_GAMES + '/gameid');
+        expect(req.request.method).toBe('DELETE');
     });
 
     // it('should return expected message (timer) when game page is loaded', () => {

@@ -8,7 +8,6 @@ import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { of } from 'rxjs';
-// import { CommunicationService } from '@app/services/communication.service';
 import { GameCardComponent } from './game-card.component';
 
 const GAME_CARD: GameCard = {
@@ -114,10 +113,5 @@ describe('GameCardComponent', () => {
 
     it('hasSinglePlayerScores should return true if the game has a single player score', () => {
         expect(component.hasSinglePlayerScores()).toEqual(true);
-    });
-
-    it('should get the image namecall getImageData from communication service', () => {
-        // spyOn(spyCommunicationService, 'getImgData').and.returnValue(of());
-        // component.getImageName();
     });
 });

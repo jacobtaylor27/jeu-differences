@@ -120,7 +120,7 @@ describe('GameInfo Service', async () => {
     });
 
     it('resetAllGameInfo() should reset all of the games', async () => {
-        await gameInfoService.resetAllGameInfos();
+        await gameInfoService.deleteAllGamesInfo();
         expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
     });
 

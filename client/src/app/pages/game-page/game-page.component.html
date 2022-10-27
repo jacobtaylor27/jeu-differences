@@ -1,12 +1,14 @@
 <main [ngClass]="favoriteTheme">
     <app-page-header [headerMessage]="'Mode classique Solo'" [isHomeButtonEnabled]="false" [isExitButtonEnabled]="true"> </app-page-header>
-    <div class="game-section">
-        <app-sidebar></app-sidebar>
-
-        <section class="container">
-            <section>
+    <div class="main-wrapper">
+        <div class="game-section">
+            <app-sidebar></app-sidebar>
+            <section class="container">
                 <app-play-area class="play-area" tabindex="0" [gameId]="gameId"></app-play-area>
             </section>
-        </section>
+        </div>
+        <div class="chat-section">
+            <app-chat-box></app-chat-box>
+        </div>
     </div>
 </main>

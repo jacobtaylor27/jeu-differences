@@ -32,21 +32,15 @@ export class SocketManagerService {
             socket.on(SocketEvent.CreateGame, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                 socket.join(id);
-                console.log(this.gameManager.getStatus(id))
                 this.gameManager.setTimer(id);
                 
                 // socket.in(id).emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
-                // if(!game.isMulti){
-                //    
-              
-                // }, 1000)
-                // }
-
-               
-                setInterval(() => {
-                    console.log(this.gameManager.getStatus(id))
-                    this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
-                }, 1000)
+             
+               if(!game.isMulti){
+                   setInterval(() => {
+                       this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                   }, 1000)
+               }
             });
 
           

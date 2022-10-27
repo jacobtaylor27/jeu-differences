@@ -12,7 +12,6 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 export class GamePageComponent implements OnInit {
     favoriteTheme: string = 'deeppurple-amber-theme';
     gameId: string;
-    clock: string;
 
     constructor(
         private readonly communicationService: CommunicationService,

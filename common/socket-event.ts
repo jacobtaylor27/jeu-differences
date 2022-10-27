@@ -12,4 +12,5 @@ export enum SocketEvent {
     DifferenceNotFound = 'differenceNotFound',
     DifferenceFound = 'differenceFound',
     Difference = 'difference',
+    GetGamesWaiting = 'getGamesWaiting',
 }

@@ -37,7 +37,7 @@ export class UserNameInputComponent {
             this.communicationSocketService.send(SocketEvent.CreateGame, {
                 player: this.playerName,
                 mode: this.gameInformationHandlerService.gameMode,
-                game: { card: this.gameInformationHandlerService.getId(), isMulti: false },
+                game: { card: this.gameInformationHandlerService.getId(), isMulti: true },
             });
         }
     }

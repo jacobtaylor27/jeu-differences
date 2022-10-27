@@ -19,9 +19,6 @@ export class GameManagerService {
         return game.identifier;
     }
 
-    getStatus(gameId: string) {
-        return this.findGame(gameId)?.status;
-    }
     setTimer(gameId: string) {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).setTimer() : null;
     }

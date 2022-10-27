@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AdminCommandsComponent } from '@app/components/admin-commands/admin-commands.component';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
 import { UserNameInputComponent } from './user-name-input.component';
@@ -13,14 +13,16 @@ import { UserNameInputComponent } from './user-name-input.component';
 describe('UserNameInputComponent', () => {
     let component: UserNameInputComponent;
     let fixture: ComponentFixture<UserNameInputComponent>;
-    let router: Router;
-    // let spyGameInformationHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
+    let spySocketCommunication: jasmine.SpyObj<CommunicationSocketService>;
+    let spyGameInformationService: jasmine.SpyObj<GameInformationHandlerService>;
     const dialogMock = {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         close: () => {},
     };
 
     beforeEach(async () => {
+        spySocketCommunication = jasmine.createSpyObj('CommunicationSocketService', ['send']);
+        spyGameInformationService = jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName', 'getId']);
         await TestBed.configureTestingModule({
             declarations: [UserNameInputComponent, AdminCommandsComponent],
             imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
@@ -31,13 +33,16 @@ describe('UserNameInputComponent', () => {
                 },
                 {
                     provide: GameInformationHandlerService,
-                    useValue: jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName', 'getId']),
+                    useValue: spyGameInformationService,
+                },
+                {
+                    provide: CommunicationSocketService,
+                    useValue: spySocketCommunication,
                 },
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(UserNameInputComponent);
-        router = TestBed.inject(Router);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -57,18 +62,18 @@ describe('UserNameInputComponent', () => {
         expect(component.isValidName()).toBeFalse();
     });
 
-    it('should redirect on game page on continue click', () => {
-        const spyRouter = spyOn(router, 'navigate');
-        component.playerName = 'test';
-        component.onClickContinue();
-        expect(spyRouter).toHaveBeenCalledWith(['/game']);
-    });
-
     it('should act like click when enter key is pressed', () => {
-        const spyRouter = spyOn(router, 'navigate');
+        const spyClick = spyOn(component, 'onClickContinue');
         component.playerName = 'test';
         const key = { key: 'Enter' } as KeyboardEvent;
         component.onDialogClick(key);
-        expect(spyRouter).toHaveBeenCalledWith(['/game']);
+        expect(spyClick).toHaveBeenCalled();
+    });
+
+    it('should use socket communication when click', () => {
+        component.playerName = 'test';
+        component.onClickContinue();
+        expect(spySocketCommunication.send).toHaveBeenCalled();
+        expect(spyGameInformationService.setPlayerName).toHaveBeenCalled();
     });
 });

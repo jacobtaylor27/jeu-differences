@@ -121,18 +121,6 @@ describe('GameCardHandlerService', () => {
         expect(service['activeCardsRange']).toEqual({ start: 0, end: 3 });
     });
 
-    it('deleteGames should delete all games from list', () => {
-        expect(service['gameCards'].length).toBeGreaterThan(0);
-        service.deleteGames();
-        expect(service['gameCards'].length).toEqual(0);
-    });
-
-    it('deleteGame should remove a specified game from the array', () => {
-        expect(service['gameCards'].length).toEqual(1);
-        service.deleteGame(service['gameCards'][0]);
-        expect(service['gameCards'].length).toEqual(0);
-    });
-
     it('resetHighScores should reset scores for a given game', () => {
         expect(service['gameCards'][0].gameInformation.soloScore.length).toEqual(2);
         expect(service['gameCards'][0].gameInformation.multiplayerScore.length).toEqual(2);

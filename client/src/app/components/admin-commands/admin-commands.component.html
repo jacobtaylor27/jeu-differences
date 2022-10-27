@@ -7,7 +7,7 @@
         </div>
 
         <div class="delete-games-button control-button">
-            <button mat-fab color="primary" [disabled]="true" matTooltip="Supprimer tous les jeux" aria-label="Boutton supprimer" (click)="onClickDeleteGames()">
+            <button mat-fab color="primary" matTooltip="Supprimer tous les jeux" [disabled]="!hasCards()" aria-label="Boutton supprimer" (click)="onClickDeleteGames()">
                 <mat-icon>delete</mat-icon> 
             </button>
         </div>

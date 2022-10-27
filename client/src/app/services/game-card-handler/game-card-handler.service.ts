@@ -90,18 +90,6 @@ export class GameCardHandlerService {
         this.setActiveCards(this.activeCardsRange);
     }
 
-    deleteGames(): void {
-        for (let i = this.gameCards.length - 1; i >= 0; i--) {
-            this.gameCards.splice(i, 1);
-        }
-    }
-
-    deleteGame(game: GameCard): void {
-        const index = this.gameCards.indexOf(game);
-        this.gameCards.splice(index, 1);
-        this.resetActiveRange();
-    }
-
     resetHighScores(game: GameCard) {
         const index = this.gameCards.indexOf(game);
         this.gameCards[index].gameInformation.multiplayerScore = [];

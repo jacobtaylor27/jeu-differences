@@ -94,4 +94,9 @@ describe('GameCarouselService', () => {
         service.hasMoreThanOneCard();
         expect(spyGameCardHandlerService.hasMoreThanOneCard).toHaveBeenCalled();
     });
+
+    it('should get the number of cards', () => {
+        service.getNumberOfCards();
+        expect(spyGameCardHandlerService.getNumberOfCards).toHaveBeenCalled();
+    });
 });

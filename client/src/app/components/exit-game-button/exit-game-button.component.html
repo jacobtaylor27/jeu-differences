@@ -15,6 +15,10 @@
                 <div *ngIf="exitButtonService.currentPage.CreateGame; ">
                     <button mat-button routerLink="/admin" mat-dialog-close color="primary">Quitter</button>
                </div>
+               <div *ngIf="exitButtonService.currentPage.WaitingRoom; ">
+                <button mat-button routerLink="/select" mat-dialog-close color="primary">Quitter</button>
+                
+            </div>
         </div>
     </div>
     </ng-template>

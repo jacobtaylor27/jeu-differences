@@ -3,7 +3,7 @@ import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
-// import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
+import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
@@ -16,7 +16,7 @@ export class GameController {
     constructor(
         private gameManager: GameManagerService,
         private gameInfo: GameInfoService,
-        // private gameValidation: GameValidation,
+        private gameValidation: GameValidation,
         private bmpSubtractor: BmpSubtractorService,
     ) {
         this.configureRouter();
@@ -201,12 +201,11 @@ export class GameController {
             try {
                 const original = new Bmp({ width: req.body.original.width, height: req.body.original.height }, req.body.original.data as number[]);
                 const modify = new Bmp({ width: req.body.modify.width, height: req.body.modify.height }, req.body.modify.data as number[]);
-                // const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius as number);
+                const numberDifference = await this.gameValidation.numberDifference(original, modify, req.body.differenceRadius as number);
                 const differenceImage = await this.bmpSubtractor.getDifferenceBMP(original, modify, req.body.differenceRadius as number);
-                // const nbDifference = await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius as number);
-                const nbDifference = true;
+                const nbDifference = await this.gameValidation.isNbDifferenceValid(original, modify, req.body.differenceRadius as number);
                 res.status(nbDifference ? StatusCodes.ACCEPTED : StatusCodes.NOT_ACCEPTABLE).send({
-                    numberDifference: 7,
+                    numberDifference: numberDifference as number,
                     width: differenceImage.getWidth(),
                     height: differenceImage.getHeight(),
                     data: Array.from((await differenceImage.toImageData()).data),

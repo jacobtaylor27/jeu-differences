@@ -38,6 +38,7 @@ const GAME_CARD: GameCard = {
     },
     isShown: true,
     isAdminCard: true,
+    isMulti: true,
 };
 
 describe('GameCardButtonsComponent', () => {
@@ -87,8 +88,17 @@ describe('GameCardButtonsComponent', () => {
     });
 
     it('should call the reload page method', () => {
-        component.reloadComponent();
-        expect(spyRouterService.reloadPage).toHaveBeenCalledWith('/admin');
+        component.onClickDeleteGame(GAME_CARD);
+        expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
+    });
+
+    it('should return is multi attribute', () => {
+        expect(component.isMultiplayer()).toBeTrue();
+    });
+
+    it('should call open name dialog when clicking create or join', () => {
+        component.onClickCreateJoinGame();
+        expect(spyGameCardService.openNameDialog).toHaveBeenCalled();
     });
 
     // it('onClickResetHighScores should call the resetHighScores method from gameCardService', () => {});

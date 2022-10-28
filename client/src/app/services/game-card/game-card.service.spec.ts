@@ -40,6 +40,7 @@ const GAME_CARD: GameCard = {
     },
     isShown: true,
     isAdminCard: true,
+    isMulti: true,
 };
 
 describe('GameCardService', () => {

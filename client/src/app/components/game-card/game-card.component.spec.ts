@@ -6,6 +6,7 @@ import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
+// import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { of } from 'rxjs';
 import { GameCardComponent } from './game-card.component';
@@ -41,6 +42,7 @@ const GAME_CARD: GameCard = {
     },
     isShown: true,
     isAdminCard: true,
+    isMulti: true,
 };
 
 describe('GameCardComponent', () => {
@@ -49,9 +51,14 @@ describe('GameCardComponent', () => {
     let spyTimeFormatter: jasmine.SpyObj<TimeFormatter>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
+    // let socketServiceMock: CommunicationSocketService;
+    // let socketHelper: SocketTestHelper;
+
     beforeEach(async () => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getImgData']);
         spyCommunicationService.getImgData.and.returnValue(of());
+        // socketHelper = new SocketTestHelper();
+
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule, RouterTestingModule, HttpClientModule],
             declarations: [GameCardComponent, GameScoreComponent, GameCardButtonsComponent],
@@ -114,4 +121,6 @@ describe('GameCardComponent', () => {
     it('hasSinglePlayerScores should return true if the game has a single player score', () => {
         expect(component.hasSinglePlayerScores()).toEqual(true);
     });
+
+    // it('should get all the games waiting for opponent', () => {});
 });

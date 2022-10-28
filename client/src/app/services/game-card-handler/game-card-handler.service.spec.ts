@@ -41,6 +41,7 @@ describe('GameCardHandlerService', () => {
                 },
                 isShown: true,
                 isAdminCard: true,
+                isMulti: true,
             },
         ];
     });

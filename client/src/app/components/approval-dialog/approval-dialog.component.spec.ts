@@ -3,21 +3,28 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApprovalDialogComponent } from './approval-dialog.component';
 
 describe('ApprovalDialogComponent', () => {
-  let component: ApprovalDialogComponent;
-  let fixture: ComponentFixture<ApprovalDialogComponent>;
+    let component: ApprovalDialogComponent;
+    let fixture: ComponentFixture<ApprovalDialogComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ApprovalDialogComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [ApprovalDialogComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(ApprovalDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(ApprovalDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should send no to the user', () => {
+        component.onClickReject();
+    });
+
+    it('should send yes to the user', () => {
+        component.onClickApprove();
+    });
 });

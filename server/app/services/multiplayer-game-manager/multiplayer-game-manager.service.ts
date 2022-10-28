@@ -25,18 +25,16 @@ export class MultiplayerGameManager {
         return game.multi;
     }
 
-
-    isGameWaiting(game : string): boolean {
+    isGameWaiting(game: string): boolean {
         for (const gameWaiting of this.gameManager.games) {
             if (game === gameWaiting.information.id) {
                 return true;
             }
+        }
+        return false;
     }
-    return false;
-}
 
     addGameWaiting(gameId: string): void {
         this.gamesWaiting.push(gameId);
     }
-
 }

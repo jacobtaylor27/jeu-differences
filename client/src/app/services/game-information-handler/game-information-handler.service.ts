@@ -30,8 +30,8 @@ export class GameInformationHandlerService {
 
         this.socket.on(SocketEvent.WaitPlayer, (gameId: string) => {
             this.gameId = gameId;
-            this.router.navigate(['/waiting'])
-        })
+            this.router.navigate(['/waiting']);
+        });
     }
     handleNotDefined(): void {
         if (this.propertiesAreUndefined()) {

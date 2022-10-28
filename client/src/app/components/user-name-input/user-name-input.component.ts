@@ -35,7 +35,7 @@ export class UserNameInputComponent {
         if (this.isValidName()) {
             this.gameInformationHandlerService.setPlayerName(this.playerName);
             this.dialogRef.close(true);
-            if(!this.isMulti){
+            if (!this.isMulti) {
                 this.communicationSocketService.send(SocketEvent.CreateGame, {
                     player: this.playerName,
                     mode: this.gameInformationHandlerService.gameMode,
@@ -43,11 +43,12 @@ export class UserNameInputComponent {
                 });
                 return;
             }
-            
+
             this.communicationSocketService.send(SocketEvent.CreateGameMulti, {
                 player: this.playerName,
                 mode: this.gameInformationHandlerService.gameMode,
-                game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti }})
+                game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
+            });
         }
     }
 

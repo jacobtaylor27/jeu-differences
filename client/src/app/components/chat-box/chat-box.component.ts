@@ -25,15 +25,21 @@ export class ChatBoxComponent implements OnInit {
 
     ngOnInit(): void {
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
-            console.log('message recieved');
-            this.messages.push({ content: message, type: 'adversary' });
+            this.addingAdversaryMessage(message);
         });
     }
 
     onClickSend(): void {
-        this.messages.push({ content: this.currentMessage, type: 'personnal' });
-        console.log(this.currentMessage);
+        this.addingPersonalMessage(this.currentMessage);
         this.communicationSocket.send(SocketEvent.Message, { message: this.currentMessage, gameId: this.gameInformation.gameId });
         this.currentMessage = '';
+    }
+
+    private addingAdversaryMessage(message: string) {
+        this.messages.push({ content: message, type: 'adversary' });
+    }
+
+    private addingPersonalMessage(message: string) {
+        this.messages.push({ content: message, type: 'personal' });
     }
 }

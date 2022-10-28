@@ -31,4 +31,9 @@ export class ChatBoxComponent implements OnInit {
             { content: 'Invite moi la prochaine fois', type: 'personnal' },
         ];
     }
+
+    onClickSend(): void {
+        this.messages.push({ content: this.message, type: 'personnal' });
+        this.message = '';
+    }
 }

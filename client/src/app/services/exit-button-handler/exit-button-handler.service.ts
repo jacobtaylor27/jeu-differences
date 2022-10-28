@@ -1,20 +1,38 @@
 import { Injectable } from '@angular/core';
+import { Pages } from '@app/interfaces/pages';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ExitButtonHandlerService {
-    isOnGamePage: boolean;
+    currentPage : Pages;
 
-    setCreateGamePage(): void {
-        this.isOnGamePage = false;
-    }
 
     setGamePage(): void {
-        this.isOnGamePage = true;
+        this.currentPage = {Game : true, CreateGame : false, WaitingRoom : false}
+    }
+    
+    setCreateGamePage(): void {
+        this.currentPage = {Game : false, CreateGame : true, WaitingRoom : false}
+    }
+
+    setWaitingRoom(): void {
+        this.currentPage = {Game : false, CreateGame : false, WaitingRoom : true}
     }
 
     getMessage(): string {
-        return this.isOnGamePage ? 'Quitter la partie ?' : 'Quitter la création ?';
+        if(this.currentPage.Game){
+            return 'Quitter la partie ?'
+        }
+
+        else if(this.currentPage.CreateGame){
+            return 'Quitter la création ?'
+        }
+
+        else if(this.currentPage.WaitingRoom){
+            return "Quitter la salle d'attente ? "
+        }
+
+        return ''; 
     }
 }

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AdminCommandsComponent } from '@app/components/admin-commands/admin-commands.component';
@@ -15,6 +15,7 @@ describe('UserNameInputComponent', () => {
     let fixture: ComponentFixture<UserNameInputComponent>;
     let spySocketCommunication: jasmine.SpyObj<CommunicationSocketService>;
     let spyGameInformationService: jasmine.SpyObj<GameInformationHandlerService>;
+    const model = { isMulti: false };
     const dialogMock = {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         close: () => {},
@@ -31,6 +32,7 @@ describe('UserNameInputComponent', () => {
                     provide: MatDialogRef,
                     useValue: dialogMock,
                 },
+                { provide: MAT_DIALOG_DATA, useValue: model },
                 {
                     provide: GameInformationHandlerService,
                     useValue: spyGameInformationService,

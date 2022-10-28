@@ -11,7 +11,6 @@ import { Service } from 'typedi';
 import { v4 } from 'uuid';
 @Service()
 export class GameInfoService {
-    private cardInformation: PrivateGameInformation[] = [];
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;
 
     // eslint-disable-next-line max-params
@@ -27,13 +26,8 @@ export class GameInfoService {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
 
-    get cardInfos(): PrivateGameInformation[] {
-        return this.cardInformation;
-    }
-
     async getAllGameInfos(): Promise<PrivateGameInformation[]> {
-        this.cardInformation = await this.collection.find({}).toArray();
-        return this.cardInformation;
+        return await this.collection.find({}).toArray();
     }
 
     async getGameInfoById(gameId: string): Promise<PrivateGameInformation> {

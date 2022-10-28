@@ -15,7 +15,7 @@ describe('UserNameInputComponent', () => {
     let fixture: ComponentFixture<UserNameInputComponent>;
     let spySocketCommunication: jasmine.SpyObj<CommunicationSocketService>;
     let spyGameInformationService: jasmine.SpyObj<GameInformationHandlerService>;
-    const model = {isMulti : false};
+    const model = { isMulti: false };
     const dialogMock = {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         close: () => {},

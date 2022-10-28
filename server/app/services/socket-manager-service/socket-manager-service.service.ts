@@ -47,7 +47,7 @@ export class SocketManagerService {
                 }
             });
 
-            socket.on(SocketEvent.Message, (message: string) => {
+            socket.on(SocketEvent.Message, (message: string, gameId: string) => {
                 // if (!this.gameManager.isGameFound(gameId)) {
                 //     socket.emit(SocketEvent.Error);
                 //     return;

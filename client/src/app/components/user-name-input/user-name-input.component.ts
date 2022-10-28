@@ -20,7 +20,7 @@ export class UserNameInputComponent {
         private readonly dialogRef: MatDialogRef<UserNameInputComponent>,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
         private communicationSocketService: CommunicationSocketService,
-        private readonly router : Router,
+        private readonly router: Router,
         @Inject(MAT_DIALOG_DATA) private data: { isMulti: boolean },
     ) {
         this.isMulti = this.data.isMulti;
@@ -37,15 +37,13 @@ export class UserNameInputComponent {
         if (this.isValidName()) {
             this.gameInformationHandlerService.setPlayerName(this.playerName);
             this.dialogRef.close(true);
-                this.communicationSocketService.send(SocketEvent.CreateGame, {
-                    player: this.playerName,
-                    mode: this.gameInformationHandlerService.gameMode,
-                    game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
-                });
-            
+            this.communicationSocketService.send(SocketEvent.CreateGame, {
+                player: this.playerName,
+                mode: this.gameInformationHandlerService.gameMode,
+                game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
+            });
 
             this.router.navigate(['/waiting']);
-           
         }
     }
 

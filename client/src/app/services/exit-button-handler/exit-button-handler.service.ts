@@ -11,7 +11,7 @@ export class ExitButtonHandlerService {
     setGamePage(): void {
         this.currentPage = {Game : true, CreateGame : false, WaitingRoom : false}
     }
-    
+
     setCreateGamePage(): void {
         this.currentPage = {Game : false, CreateGame : true, WaitingRoom : false}
     }
@@ -20,7 +20,7 @@ export class ExitButtonHandlerService {
         this.currentPage = {Game : false, CreateGame : false, WaitingRoom : true}
     }
 
-    getMessage(): string {
+    getTitle(): string {
         if(this.currentPage.Game){
             return 'Quitter la partie ?'
         }

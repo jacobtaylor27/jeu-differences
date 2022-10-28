@@ -8,6 +8,7 @@ import { ChatMessage } from '@app/interfaces/chat-message';
 export class ChatBoxComponent implements OnInit {
     messages: ChatMessage[];
     isAdversaryConnected: boolean;
+    message: string;
 
     ngOnInit(): void {
         this.isAdversaryConnected = false;

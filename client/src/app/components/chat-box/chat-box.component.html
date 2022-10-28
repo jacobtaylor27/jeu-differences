@@ -7,14 +7,14 @@
                     [ngClass]="{
                         'message-wrapper-adversary': message.type === 'adversary',
                         'message-wrapper-gameMaster': message.type === 'gameMaster',
-                        'message-wrapper-personnal': message.type === 'personnal'
+                        'message-wrapper-personal': message.type === 'personal'
                     }"
                 >
                     <div
                         class="message-content"
                         [ngClass]="{
                             adversary: message.type === 'adversary',
-                            personnal: message.type === 'personnal',
+                            personal: message.type === 'personal',
                             gameMaster: message.type === 'gameMaster'
                         }"  
                     >

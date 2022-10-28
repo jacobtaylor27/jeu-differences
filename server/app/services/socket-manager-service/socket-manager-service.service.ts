@@ -47,6 +47,10 @@ export class SocketManagerService {
                 }
             });
 
+            socket.on(SocketEvent.CreateGameMulti,async (player: string, mode: string, game: { card: string; isMulti: boolean }) =>{
+                // do logic
+            });
+
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
                     socket.emit(SocketEvent.Error);

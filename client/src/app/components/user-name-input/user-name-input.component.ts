@@ -43,7 +43,10 @@ export class UserNameInputComponent {
                 });
             }
             
-            this.communicationSocketService.send(SocketEvent.CreateGameMulti)
+            this.communicationSocketService.send(SocketEvent.CreateGameMulti, {
+                player: this.playerName,
+                mode: this.gameInformationHandlerService.gameMode,
+                game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti }})
         }
     }
 

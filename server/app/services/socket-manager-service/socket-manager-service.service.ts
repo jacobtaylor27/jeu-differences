@@ -48,11 +48,10 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.Message, (message: string, gameId: string) => {
-                // if (!this.gameManager.isGameFound(gameId)) {
-                //     socket.emit(SocketEvent.Error);
-                //     return;
-                // }
-                console.log(message);
+                if (!this.gameManager.isGameFound(gameId)) {
+                    socket.emit(SocketEvent.Error);
+                    return;
+                }
                 this.sio.sockets.emit(SocketEvent.Message, message);
             });
 

@@ -35,4 +35,12 @@ export class ExitButtonHandlerService {
 
         return ''; 
     }
+
+    getMessage() : string {
+        if(this.currentPage.WaitingRoom){
+            return 'Êtes-vous certain de vouloir quitter ? Vous serez redirigés vers la page de sélection de jeu.'
+        }
+
+        return 'Êtes-vous certain de vouloir quitter ? Votre progrès ne sera pas sauvegardé.'
+    }
 }

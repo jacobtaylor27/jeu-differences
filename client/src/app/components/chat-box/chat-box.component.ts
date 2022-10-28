@@ -22,29 +22,13 @@ export class ChatBoxComponent implements OnInit {
     }
     ngOnInit(): void {
         this.isAdversaryConnected = false;
-        this.messages = [
-            { content: 'Salut', type: 'adversary' },
-            { content: 'Je mappelle Thierry', type: 'adversary' },
-            { content: 'Salut je mappel jean-marc', type: 'personnal' },
-            { content: 'La partie va débuter dans 5 minutes', type: 'gameMaster' },
-            { content: 'est-ce que taime les echec', type: 'personnal' },
-            { content: 'Voici un message sans filtre', type: 'autre' },
-            { content: 'On se fait un partie après sur chess.com', type: 'personnal' },
-            { content: 'OUais cest good', type: 'adversary' },
-            { content: 'La partie va débuter dans 1 minutes', type: 'gameMaster' },
-            {
-                content: 'Je peux vraiment te dire que ça a été une belle journée, je me suis trouvé un nouveau hobbie aka tailler des citrouilles',
-                type: 'adversary',
-            },
-            { content: 'No way jadore tailler des citrouilles je suis telleent un fan de faire des trucs manuelle', type: 'personnal' },
-            { content: 'cest tellement cool', type: 'personnal' },
-            { content: 'Invite moi la prochaine fois', type: 'personnal' },
-        ];
+        this.communicationSocket.on(SocketEvent.Message, (message: string) => {
+            this.messages.push({ content: message, type: 'adversary' });
+        });
     }
 
     onClickSend(): void {
         this.messages.push({ content: this.currentMessage, type: 'personnal' });
-        console.log(this.currentMessage);
         this.communicationSocket.send(SocketEvent.Message, this.currentMessage);
         this.currentMessage = '';
     }

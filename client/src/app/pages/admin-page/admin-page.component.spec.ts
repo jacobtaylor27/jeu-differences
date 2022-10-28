@@ -6,8 +6,8 @@ import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game
 import { GameCardComponent } from '@app/components/game-card/game-card.component';
 import { GameCarouselComponent } from '@app/components/game-carousel/game-carousel.component';
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
+import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-
 import { AdminPageComponent } from './admin-page.component';
 
 describe('AdminPageComponent', () => {
@@ -23,6 +23,7 @@ describe('AdminPageComponent', () => {
                 GameCardComponent,
                 GameCardButtonsComponent,
                 GameScoreComponent,
+                PageHeaderComponent,
             ],
             imports: [AppMaterialModule, RouterTestingModule],
             providers: [HttpHandler, HttpClient],

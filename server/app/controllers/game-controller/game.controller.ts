@@ -124,16 +124,28 @@ export class GameController {
          *       404:
          *         description: The id of the game was not found
          */
-        /* Non nécessaire au sprint 1
-        this.router.delete('/:id', (req: Request, res: Response) => {
-            const deletedGame = this.gameService.deleteGameById(parseInt(req.params.id, 10));
-            if (deletedGame) {
-                res.status(HTTP_STATUS.accepted).json(deletedGame);
-            } else {
-                res.sendStatus(HTTP_STATUS.notFound);
-            }
+        this.router.delete('/cards/:id', (req: Request, res: Response) => {
+            const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
+            isGameDeleted
+                .then((isDeleted) => {
+                    const status = isDeleted ? StatusCodes.ACCEPTED : StatusCodes.NOT_FOUND;
+                    res.status(status).send();
+                })
+                .catch(() => {
+                    res.status(StatusCodes.BAD_REQUEST).send();
+                });
         });
-        */
+
+        this.router.delete('/cards', (req: Request, res: Response) => {
+            this.gameInfo
+                .deleteAllGamesInfo()
+                .then(() => {
+                    res.status(StatusCodes.ACCEPTED).send();
+                })
+                .catch(() => {
+                    res.status(StatusCodes.BAD_REQUEST).send();
+                });
+        });
 
         this.router.get('/cards', (req: Request, res: Response) => {
             this.gameInfo

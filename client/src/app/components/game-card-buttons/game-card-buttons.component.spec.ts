@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCardService } from '@app/services/game-card/game-card.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { GameCardButtonsComponent } from './game-card-buttons.component';
 
 const GAME_CARD: GameCard = {
@@ -43,10 +44,11 @@ describe('GameCardButtonsComponent', () => {
     let component: GameCardButtonsComponent;
     let fixture: ComponentFixture<GameCardButtonsComponent>;
     let spyGameCardService: jasmine.SpyObj<GameCardService>;
+    let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(async () => {
         spyGameCardService = jasmine.createSpyObj('GameCardService', ['openNameDialog', 'deleteGame', 'resetHighScores']);
-
+        spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule, RouterTestingModule],
             declarations: [GameCardButtonsComponent],
@@ -56,6 +58,10 @@ describe('GameCardButtonsComponent', () => {
                 {
                     provide: GameCardService,
                     useValue: spyGameCardService,
+                },
+                {
+                    provide: RouterService,
+                    useValue: spyRouterService,
                 },
             ],
         }).compileComponents();
@@ -80,8 +86,10 @@ describe('GameCardButtonsComponent', () => {
         expect(spyGameCardService.deleteGame).toHaveBeenCalled();
     });
 
-    it('onClickResetHighScores should call the resetHighScores method from gameCardService', () => {
-        component.onClickResetHighScores(component.gameCard);
-        expect(spyGameCardService.resetHighScores).toHaveBeenCalled();
+    it('should call the reload page method', () => {
+        component.reloadComponent();
+        expect(spyRouterService.reloadPage).toHaveBeenCalledWith('/admin');
     });
+
+    // it('onClickResetHighScores should call the resetHighScores method from gameCardService', () => {});
 });

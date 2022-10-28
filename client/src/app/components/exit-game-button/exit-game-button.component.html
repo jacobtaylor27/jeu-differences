@@ -5,16 +5,25 @@
 
     <ng-template #exitDialogContent>
         <div [ngClass]="theme">
-            <h1 mat-dialog-title>{{exitButtonService.getMessage()}}</h1>
-            <div  mat-dialog-content>Être-vous certain de vouloir <strong>quitter</strong>? Votre progrès ne sera pas sauvegardé.</div>
+            <h1 mat-dialog-title>{{exitButtonService.getTitle()}}</h1>
+            <div *ngIf="exitButtonService.currentPage.waitingRoom; else otherPage">
+                <div mat-dialog-content>{{exitButtonService.getMessage()}}</div>
+            </div>
+            <ng-template #otherPage>
+                <div mat-dialog-content>{{exitButtonService.getMessage()}}</div>
+            </ng-template>
             <div mat-dialog-actions align="end">
             <button mat-raised-button mat-dialog-close color="primary" >Annuler</button>
-                <div *ngIf="exitButtonService.isOnGamePage; else isOnCreateGame">
+                <div *ngIf="exitButtonService.currentPage.game; ">
                     <button color="primary" mat-button routerLink="/home" mat-dialog-close>Quitter</button>
                 </div>
-                <ng-template #isOnCreateGame>
+                <div *ngIf="exitButtonService.currentPage.createGame; ">
                     <button mat-button routerLink="/admin" mat-dialog-close color="primary">Quitter</button>
-                </ng-template>
+               </div>
+               <div *ngIf="exitButtonService.currentPage.waitingRoom; ">
+                <button mat-button routerLink="/select" mat-dialog-close color="primary">Quitter</button>
+                
+            </div>
         </div>
     </div>
     </ng-template>

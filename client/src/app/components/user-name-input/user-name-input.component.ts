@@ -37,13 +37,12 @@ export class UserNameInputComponent {
         if (this.isValidName()) {
             this.gameInformationHandlerService.setPlayerName(this.playerName);
             this.dialogRef.close(true);
-            if(!this.isMulti){
                 this.communicationSocketService.send(SocketEvent.CreateGame, {
                     player: this.playerName,
                     mode: this.gameInformationHandlerService.gameMode,
                     game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
                 });
-            }
+            
 
             this.router.navigate(['/waiting']);
            

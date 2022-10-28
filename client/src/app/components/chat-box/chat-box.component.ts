@@ -8,9 +8,10 @@ import { SocketEvent } from '@common/socket-event';
     templateUrl: './chat-box.component.html',
     styleUrls: ['./chat-box.component.scss'],
 })
+// this.isMulti is in gameCard;
 export class ChatBoxComponent implements OnInit {
     messages: ChatMessage[] = [];
-    isAdversaryConnected: boolean;
+    isAdversaryConnected: boolean = true;
     currentMessage: string;
 
     constructor(private readonly communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
@@ -23,7 +24,6 @@ export class ChatBoxComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.isAdversaryConnected = false;
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
             console.log('message recieved');
             this.messages.push({ content: message, type: 'adversary' });

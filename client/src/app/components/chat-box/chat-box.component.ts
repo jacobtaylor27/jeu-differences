@@ -1,5 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ChatMessage } from '@app/interfaces/chat-message';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { SocketEvent } from '@common/socket-event';
 @Component({
     selector: 'app-chat-box',
     templateUrl: './chat-box.component.html',
@@ -9,6 +11,8 @@ export class ChatBoxComponent implements OnInit {
     messages: ChatMessage[];
     isAdversaryConnected: boolean;
     currentMessage: string;
+
+    constructor(private readonly communicationSocket: CommunicationSocketService) {}
 
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
@@ -40,6 +44,8 @@ export class ChatBoxComponent implements OnInit {
 
     onClickSend(): void {
         this.messages.push({ content: this.currentMessage, type: 'personnal' });
+        console.log(this.currentMessage);
+        this.communicationSocket.send(SocketEvent.Message, this.currentMessage);
         this.currentMessage = '';
     }
 }

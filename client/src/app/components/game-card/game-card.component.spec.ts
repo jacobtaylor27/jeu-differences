@@ -1,13 +1,17 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game-card-buttons.component';
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { SocketEvent } from '@common/socket-event';
 import { of } from 'rxjs';
+import { Socket } from 'socket.io-client';
 import { GameCardComponent } from './game-card.component';
 
 const GAME_CARD: GameCard = {
@@ -41,6 +45,7 @@ const GAME_CARD: GameCard = {
     },
     isShown: true,
     isAdminCard: true,
+    isMulti: true,
 };
 
 describe('GameCardComponent', () => {
@@ -49,9 +54,16 @@ describe('GameCardComponent', () => {
     let spyTimeFormatter: jasmine.SpyObj<TimeFormatter>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
+    let socketServiceMock: CommunicationSocketService;
+    let socketHelper: SocketTestHelper;
+
     beforeEach(async () => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getImgData']);
         spyCommunicationService.getImgData.and.returnValue(of());
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new CommunicationSocketService();
+        socketServiceMock['socket'] = socketHelper as unknown as Socket;
+
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule, RouterTestingModule, HttpClientModule],
             declarations: [GameCardComponent, GameScoreComponent, GameCardButtonsComponent],
@@ -63,6 +75,10 @@ describe('GameCardComponent', () => {
                 {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
+                },
+                {
+                    provide: CommunicationSocketService,
+                    useValue: socketServiceMock,
                 },
             ],
         }).compileComponents();
@@ -113,5 +129,11 @@ describe('GameCardComponent', () => {
 
     it('hasSinglePlayerScores should return true if the game has a single player score', () => {
         expect(component.hasSinglePlayerScores()).toEqual(true);
+    });
+
+    it('should get all the games waiting for opponent', () => {
+        socketHelper.peerSideEmit(SocketEvent.GetGamesWaiting, ['1', '2']);
+        component.ngOnInit();
+        expect(GAME_CARD.isMulti).toEqual(true);
     });
 });

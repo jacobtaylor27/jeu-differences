@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { Score } from '@common/score';
+import { SocketEvent } from '@common/socket-event';
 
 @Component({
     selector: 'app-game-card',
@@ -13,8 +15,23 @@ export class GameCardComponent implements OnInit {
     favoriteTheme: string = 'deeppurple-amber-theme';
     imageSrc: string;
 
+    constructor(private readonly communicationSocket: CommunicationSocketService) {}
+
     ngOnInit() {
         this.setImagesSrc();
+        this.listenForOpenLobbies();
+    }
+
+    listenForOpenLobbies(): void {
+        this.communicationSocket.send(SocketEvent.GetGamesWaiting);
+
+        this.communicationSocket.on(SocketEvent.GetGamesWaiting, (gamesInfo: string[]) => {
+            for (const info of gamesInfo) {
+                if (this.gameCard.gameInformation.id === info) {
+                    this.gameCard.isMulti = true;
+                }
+            }
+        });
     }
 
     setImagesSrc(): void {

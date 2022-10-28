@@ -5,11 +5,12 @@ import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
+import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 @Service()
 export class SocketManagerService {
     private sio: Server;
 
-    constructor(private gameManager: GameManagerService) {}
+    constructor(private gameManager: GameManagerService, private readonly multiplayerGameManager: MultiplayerGameManager) {}
 
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
@@ -30,6 +31,9 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.CreateGame, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+                this.multiplayerGameManager.setGamesWaiting();
+                socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+
                 socket.join(id);
                 this.gameManager.setTimer(id);
                 socket.emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
@@ -66,6 +70,11 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.LeaveGame);
                 socket.leave(gameId);
             });
+
+            socket.on(SocketEvent.GetGamesWaiting, () => {
+                socket.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+            });
+
             socket.on(SocketEvent.Difference, (differenceCoord: Coordinate, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId)) {
                     socket.emit(SocketEvent.Error);

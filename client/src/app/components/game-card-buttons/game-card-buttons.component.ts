@@ -18,21 +18,22 @@ export class GameCardButtonsComponent {
         private readonly router: RouterService,
     ) {}
 
-    onClickDeleteGame(game: GameCard): void {
-        this.gameCardService.deleteGame(game.gameInformation.id);
-        this.reloadComponent();
+    isMultiplayer(): boolean {
+        return this.gameCard.isMulti;
     }
 
-    // onClickResetHighScores(game: GameCard): void {
-    //     // this.gameCardService.resetHighScores(game.gameInformation.id);
-    // }
+    onClickDeleteGame(game: GameCard): void {
+        this.gameCardService.deleteGame(game.gameInformation.id);
+        this.router.reloadPage('admin');
+    }
 
     onClickPlayGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
         this.gameCardService.openNameDialog();
     }
 
-    reloadComponent(): void {
-        this.router.reloadPage('/admin');
+    onClickCreateJoinGame(): void {
+        this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
+        this.gameCardService.openNameDialog();
     }
 }

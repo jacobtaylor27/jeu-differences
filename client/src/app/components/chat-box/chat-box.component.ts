@@ -8,7 +8,7 @@ import { ChatMessage } from '@app/interfaces/chat-message';
 export class ChatBoxComponent implements OnInit {
     messages: ChatMessage[];
     isAdversaryConnected: boolean;
-    message: string;
+    currentMessage: string;
 
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
@@ -39,7 +39,7 @@ export class ChatBoxComponent implements OnInit {
     }
 
     onClickSend(): void {
-        this.messages.push({ content: this.message, type: 'personnal' });
-        this.message = '';
+        this.messages.push({ content: this.currentMessage, type: 'personnal' });
+        this.currentMessage = '';
     }
 }

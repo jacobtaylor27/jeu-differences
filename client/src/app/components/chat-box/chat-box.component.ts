@@ -29,6 +29,7 @@ export class ChatBoxComponent implements OnInit {
         });
 
         this.communicationSocket.on(SocketEvent.DifferenceFound, () => {});
+        this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
     }
 
     onClickSend(): void {
@@ -50,6 +51,16 @@ export class ChatBoxComponent implements OnInit {
             eventMessage = `Difference trouvée par ${userName}`;
         } else {
             eventMessage = 'Difference trouvée ';
+        }
+        this.messages.push({ content: eventMessage, type: 'gameMaster' });
+    }
+
+    private differenceNotFoundMessage(userName: string, isMulti: boolean) {
+        let eventMessage: string;
+        if (isMulti) {
+            eventMessage = `Erreur par ${userName}`;
+        } else {
+            eventMessage = 'Erreur';
         }
         this.messages.push({ content: eventMessage, type: 'gameMaster' });
     }

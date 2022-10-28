@@ -10,10 +10,12 @@ export class ApprovalDialogComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     onClickApprove() {
+        // eslint-disable-next-line no-console
         console.log('Approve');
     }
 
     onClickReject() {
+        // eslint-disable-next-line no-console
         console.log('Reject');
     }
 }

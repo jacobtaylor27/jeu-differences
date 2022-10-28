@@ -30,7 +30,7 @@ export class ExitButtonHandlerService {
         }
 
         else if(this.currentPage.WaitingRoom){
-            return "Quitter la salle d'attente ? "
+            return "Quitter la salle d'attente ?"
         }
 
         return ''; 

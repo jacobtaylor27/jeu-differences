@@ -53,7 +53,7 @@ export class SocketManagerService {
                 //     return;
                 // }
                 console.log(message);
-                socket.broadcast.emit(message);
+                this.sio.sockets.emit(SocketEvent.Message, message);
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {

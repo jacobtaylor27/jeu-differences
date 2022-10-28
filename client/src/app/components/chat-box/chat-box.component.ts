@@ -21,6 +21,7 @@ export class ChatBoxComponent implements OnInit {
             this.onClickSend();
         }
     }
+
     ngOnInit(): void {
         this.isAdversaryConnected = false;
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {

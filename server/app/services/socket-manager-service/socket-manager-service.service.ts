@@ -35,7 +35,16 @@ export class SocketManagerService {
                 socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
 
                 socket.join(id);
-                socket.in(id).emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
+                this.gameManager.setTimer(id);
+                socket.emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
+                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
+                if (!game.isMulti) {
+                    setInterval(() => {
+                        if (!this.gameManager.isGameOver(id)) {
+                            this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                        }
+                    }, 1000);
+                }
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {

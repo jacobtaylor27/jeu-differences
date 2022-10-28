@@ -5,9 +5,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { TimerService } from '@app/services/timer.service';
-import { Coordinate } from '@common/coordinate';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { Coordinate } from '@common/coordinate';
 @Injectable({
     providedIn: 'root',
 })
@@ -20,15 +19,10 @@ export class DifferencesDetectionHandlerService {
 
     // eslint-disable-next-line max-params
     constructor(
-        private timer: TimerService,
         public matDialog: MatDialog,
         private readonly communicationService: CommunicationService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
-
-    setGameOver() {
-        this.isGameOver = true;
-    }
 
     setNumberDifferencesFound(nbDifferencesLeft: number, nbTotalDifference: number) {
         this.nbTotalDifferences = nbTotalDifference;
@@ -41,11 +35,11 @@ export class DifferencesDetectionHandlerService {
     }
 
     playWrongSound() {
-        this.playSound(new Audio('../assets/sounds/wronganswer.wav'));
+        this.playSound(new Audio('assets/wronganswer.wav'));
     }
 
     playCorrectSound() {
-        this.playSound(new Audio('../assets/sounds/correctanswer.wav'));
+        this.playSound(new Audio('assets/correctanswer.wav'));
     }
 
     playSound(sound: HTMLAudioElement) {
@@ -62,10 +56,8 @@ export class DifferencesDetectionHandlerService {
                 }
 
                 this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.getNbDifferences());
-                this.timer.setNbOfDifferencesFound();
                 this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
                 if (response.body.isGameOver) {
-                    this.setGameOver();
                     this.openGameOverDialog();
                 }
             });
@@ -97,11 +89,6 @@ export class DifferencesDetectionHandlerService {
 
     differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
         this.playCorrectSound();
-        this.timer.differenceFind.next();
-        if (this.isGameOver) {
-            this.timer.gameOver.next();
-        }
-
         this.displayDifferenceTemp(ctx, coords);
         this.clearDifference(ctxModified, coords);
     }

@@ -1,5 +1,4 @@
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
-import { FindDifferenceState } from '@app/classes/find-difference-state/find-difference-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
@@ -9,10 +8,12 @@ import { User } from '@app/interface/user';
 import { Coordinate } from '@common/coordinate';
 import { Score } from '@common/score';
 import { expect } from 'chai';
-import { spy, stub } from 'sinon';
+import { SinonFakeTimers, spy, stub, useFakeTimers } from 'sinon';
+import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
 
 describe('Game', () => {
     let game: Game;
+    let clock: SinonFakeTimers;
     const expectedGameInfo: PrivateGameInformation = {
         id: '1',
         idOriginalBmp: '0',
@@ -29,10 +30,15 @@ describe('Game', () => {
     const expectedMode = 'classic';
     beforeEach(() => {
         game = new Game(expectedMode, expectedPlayer, expectedGameInfo);
+        clock = useFakeTimers();
+    });
+
+    afterEach(() => {
+        clock.restore();
     });
 
     it('should create a game with specific mode, players and game information', () => {
-        const expectedGameState = new FindDifferenceState();
+        const expectedGameState = new InitTimerState();
         const newGame = new Game(expectedMode, expectedPlayer, expectedGameInfo);
         expect(newGame.information).to.deep.equal(expectedGameInfo);
         expect(newGame['players'].has(expectedPlayer.player.id)).to.equal(true);
@@ -50,12 +56,28 @@ describe('Game', () => {
         expect(game.information).to.equal(expectedGameInfo);
     });
 
+    it('should get the seconds of the timer of the game', () => {
+        stub(game, 'calculateTime').callsFake(() => 2);
+        expect(game.seconds).to.equal(2);
+    });
+
+    it('should calculate time', () => {
+        game.setTimer();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
+        clock.tick(5000);
+        expect(game.calculateTime()).to.equal(5);
+    });
+
     it('should get the status of the game', () => {
         const expectGameState = new InitGameState();
-        const stateSpyObj = stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
-        game.status();
-        expect(stateSpyObj.called).to.equal(true);
-        expect(game.status()).to.equal(expectGameState.status());
+        stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
+        expect(game.status).to.equal(expectGameState.status());
+    });
+
+    it('should set timer', () => {
+        game.setTimer();
+        expect(game['initialTime'].getDate()).to.equal(new Date().getDate());
+        expect(game.status).to.equal(GameStatus.FindDifference);
     });
 
     it('should go to the next state of the game', () => {
@@ -245,7 +267,7 @@ describe('Game', () => {
         game.leaveGame(expectedPlayer.player.id);
         // expect(game.players.has(expectedPlayer.player.id)).to.equal(false);
         const endGameState = new EndGameState();
-        expect(game.status()).to.equal(endGameState.status());
+        expect(game.status).to.equal(endGameState.status());
     });
 
     it('should check if all player leave', () => {

@@ -1,4 +1,5 @@
 import { Game } from '@app/classes/game/game';
+import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { User } from '@app/interface/user';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
@@ -12,10 +13,11 @@ import { IdGeneratorService } from '@app/services/id-generator-service/id-genera
 import { Coordinate } from '@common/coordinate';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { restore, SinonSpiedInstance, stub } from 'sinon';
+import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
 import { Container } from 'typedi';
 
 describe('GameManagerService', () => {
+    let clock: sinon.SinonFakeTimers;
     let bmpService: BmpService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpDifferenceService: BmpDifferenceInterpreter;
@@ -26,6 +28,7 @@ describe('GameManagerService', () => {
     // let differenceSpyObj: SinonSpiedInstance<BmpDifferenceInterpreter>;
 
     beforeEach(() => {
+        clock = useFakeTimers();
         bmpService = Container.get(BmpService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
@@ -39,6 +42,11 @@ describe('GameManagerService', () => {
         gameInfoSpyObj = stub(gameInfo);
         // differenceSpyObj = spy(differenceService);
         gameManager = new GameManagerService(gameInfo, differenceService);
+    });
+
+    afterEach(() => {
+        clock.restore();
+        restore();
     });
 
     it('should create a game', async () => {
@@ -60,6 +68,28 @@ describe('GameManagerService', () => {
             return undefined;
         });
         expect(gameManager.isGameFound('')).to.equal(false);
+    });
+
+    it('should set the timer', () => {
+        expect(gameManager.setTimer('1')).to.equal(null);
+        const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        const expectedGame = stub(new Game('', { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation));
+        gameManager.setTimer('1');
+        expect(expectedGame.status).to.equal(GameStatus.InitTimer);
+        expect(findGameStub.called).to.equal(true);
+    });
+
+    it('should get the timer', () => {
+        expect(gameManager.getTime('')).to.equal(null);
+        const expectedGame = new Game('', { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation);
+        expectedGame.setTimer();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
+        clock.tick(5000);
+        expectedGame.calculateTime();
+        expect(gameManager.getTime('1')).to.equal(null);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+
+        expect(gameManager.getTime('1')).to.equal(expectedGame.seconds);
     });
 
     it('should check if the game is over', () => {
@@ -177,9 +207,5 @@ describe('GameManagerService', () => {
         stub(gameManager, 'isDifference').callsFake(() => []);
         stub(gameManager, 'nbDifferencesLeft').callsFake(() => 2);
         expect(gameManager.getNbDifferencesFound({ x: 0, y: 0 }, false, '')).to.deep.equal(expectedDifference);
-    });
-
-    afterEach(() => {
-        restore();
     });
 });

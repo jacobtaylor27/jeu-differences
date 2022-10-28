@@ -247,7 +247,7 @@ export class GameController {
                 return;
             }
             this.gameManager
-                .createGame(req.body.players, req.body.mode as string, req.params.id as string)
+                .createGame({ player: req.body.players, isMulti: false }, req.body.mode as string, req.params.id)
                 .then((gameId: string) => {
                     res.status(StatusCodes.CREATED).send({ id: gameId });
                 })

@@ -3,6 +3,7 @@ export enum SocketEvent {
     Disconnect = 'disconnect',
     CreateGame = 'createGame',
     GameCreated = 'gameCreated',
+    Clock = 'clock',
     Error = 'error',
     JoinGame = 'joinGame',
     WaitPlayer = 'waitPlayer',

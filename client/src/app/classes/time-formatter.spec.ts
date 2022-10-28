@@ -8,9 +8,9 @@ describe('TimeFormatter', () => {
         }).compileComponents();
     });
     it("seconds should be converted into a time 'MM:SS'", () => {
-        const basicFormat = '00:00';
+        const basicFormat = '00 : 00';
         const basicEquivalent = 0;
-        const edgeCase = '01:33';
+        const edgeCase = '01 : 33';
         const edgeEquivalent = 93;
 
         expect(TimeFormatter.getMMSSFormat(basicEquivalent)).toEqual(basicFormat);

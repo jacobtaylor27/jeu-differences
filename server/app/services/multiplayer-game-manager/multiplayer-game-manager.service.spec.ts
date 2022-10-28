@@ -6,8 +6,8 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { MultiplayerGameManager } from './multiplayer-game-manager.service';
 import { User } from '@app/interface/user';
 
-const GAME = new Game('', { player: {} as User, isMulti: true }, {id : '1'} as PrivateGameInformation);
-const GAME_FALSE = new Game('', { player: {}as User, isMulti: false }, {id: '2'} as PrivateGameInformation);
+const GAME = new Game('', { player: {} as User, isMulti: true }, { id: '1' } as PrivateGameInformation);
+const GAME_FALSE = new Game('', { player: {} as User, isMulti: false }, { id: '2' } as PrivateGameInformation);
 
 describe('Multiplayer Game Manager', () => {
     let multiplayerGameManager: MultiplayerGameManager;
@@ -40,9 +40,8 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should return if a player is waiting in a room', () => {
-        expect(multiplayerGameManager.isGameWaiting('')).to.be.false;
+        expect(multiplayerGameManager.isGameWaiting('')).to.equal(false);
         spyGameManager['games'] = new Set([GAME]);
-        expect(multiplayerGameManager.isGameWaiting('1')).to.be.false;
-        
-    })
+        expect(multiplayerGameManager.isGameWaiting('1')).to.equal(false);
+    });
 });

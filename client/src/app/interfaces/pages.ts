@@ -1,5 +1,5 @@
 export interface Pages {
-    Game : boolean;
-    CreateGame : boolean;
-    WaitingRoom : boolean;
+    game: boolean;
+    createGame: boolean;
+    waitingRoom: boolean;
 }

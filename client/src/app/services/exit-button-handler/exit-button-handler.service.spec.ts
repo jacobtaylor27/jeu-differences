@@ -16,27 +16,27 @@ describe('ExitButtonHandlerService', () => {
 
     it('should set CreateGame to true when on CreateGamePage', () => {
         service.setCreateGamePage();
-        expect(service.currentPage.CreateGame);
-        expect(!service.currentPage.Game);
-        expect(!service.currentPage.WaitingRoom);
+        expect(service.currentPage.createGame);
+        expect(!service.currentPage.game);
+        expect(!service.currentPage.waitingRoom);
     });
 
     it('should set Game to true when on GamePage', () => {
         service.setGamePage();
-        expect(service.currentPage.Game);
-        expect(!service.currentPage.CreateGame);
-        expect(!service.currentPage.WaitingRoom);
+        expect(service.currentPage.game);
+        expect(!service.currentPage.createGame);
+        expect(!service.currentPage.waitingRoom);
     });
 
     it('should set WaitingRoom to true when on WaitingRoom', () => {
         service.setWaitingRoom();
-        expect(service.currentPage.WaitingRoom);
-        expect(!service.currentPage.CreateGame);
-        expect(!service.currentPage.Game);
+        expect(service.currentPage.waitingRoom);
+        expect(!service.currentPage.createGame);
+        expect(!service.currentPage.game);
     });
 
     it('should return correct title', () => {
-        service.currentPage = {Game : false, CreateGame: false, WaitingRoom :false}
+        service.currentPage = { game: false, createGame: false, waitingRoom: false };
         expect(service.getTitle()).toEqual('');
         service.setGamePage();
         let expectedMessage = 'Quitter la partie ?';

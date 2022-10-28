@@ -9,7 +9,7 @@ import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit
 export class WaitingRoomComponent {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(private exitButton : ExitButtonHandlerService) {
+    constructor(private exitButton: ExitButtonHandlerService) {
         this.exitButton.setWaitingRoom();
     }
 }

@@ -5,42 +5,37 @@ import { Pages } from '@app/interfaces/pages';
     providedIn: 'root',
 })
 export class ExitButtonHandlerService {
-    currentPage : Pages;
-
+    currentPage: Pages;
 
     setGamePage(): void {
-        this.currentPage = {Game : true, CreateGame : false, WaitingRoom : false}
+        this.currentPage = { game: true, createGame: false, waitingRoom: false };
     }
 
     setCreateGamePage(): void {
-        this.currentPage = {Game : false, CreateGame : true, WaitingRoom : false}
+        this.currentPage = { game: false, createGame: true, waitingRoom: false };
     }
 
     setWaitingRoom(): void {
-        this.currentPage = {Game : false, CreateGame : false, WaitingRoom : true}
+        this.currentPage = { game: false, createGame: false, waitingRoom: true };
     }
 
     getTitle(): string {
-        if(this.currentPage.Game){
-            return 'Quitter la partie ?'
+        if (this.currentPage.game) {
+            return 'Quitter la partie ?';
+        } else if (this.currentPage.createGame) {
+            return 'Quitter la création ?';
+        } else if (this.currentPage.waitingRoom) {
+            return "Quitter la salle d'attente ?";
         }
 
-        else if(this.currentPage.CreateGame){
-            return 'Quitter la création ?'
-        }
-
-        else if(this.currentPage.WaitingRoom){
-            return "Quitter la salle d'attente ?"
-        }
-
-        return ''; 
+        return '';
     }
 
-    getMessage() : string {
-        if(this.currentPage.WaitingRoom){
-            return 'Êtes-vous certain de vouloir quitter ? Vous serez redirigés vers la page de sélection de jeu.'
+    getMessage(): string {
+        if (this.currentPage.waitingRoom) {
+            return 'Êtes-vous certain de vouloir quitter ? Vous serez redirigés vers la page de sélection de jeu.';
         }
 
-        return 'Êtes-vous certain de vouloir quitter ? Votre progrès ne sera pas sauvegardé.'
+        return 'Êtes-vous certain de vouloir quitter ? Votre progrès ne sera pas sauvegardé.';
     }
 }

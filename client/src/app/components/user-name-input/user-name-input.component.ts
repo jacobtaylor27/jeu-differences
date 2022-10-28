@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, HostListener, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { SocketEvent } from '@common/socket-event';
@@ -10,6 +10,7 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./user-name-input.component.scss'],
 })
 export class UserNameInputComponent {
+    isMulti: boolean;
     playerName: string;
     favoriteTheme: string = 'deeppurple-amber-theme';
 
@@ -18,7 +19,10 @@ export class UserNameInputComponent {
         private readonly dialogRef: MatDialogRef<UserNameInputComponent>,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
         private communicationSocketService: CommunicationSocketService,
-    ) {}
+        @Inject(MAT_DIALOG_DATA) private data: { isMulti: boolean },
+    ) {
+        this.isMulti = this.data.isMulti;
+    }
 
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
@@ -34,7 +38,7 @@ export class UserNameInputComponent {
             this.communicationSocketService.send(SocketEvent.CreateGame, {
                 player: this.playerName,
                 mode: this.gameInformationHandlerService.gameMode,
-                game: { card: this.gameInformationHandlerService.getId(), isMulti: false }, // TODO: gérer le multi
+                game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
             });
         }
     }

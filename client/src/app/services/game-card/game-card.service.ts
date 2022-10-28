@@ -9,8 +9,8 @@ import { CommunicationService } from '@app/services/communication/communication.
 export class GameCardService {
     constructor(private readonly matDialog: MatDialog, private readonly communicationService: CommunicationService) {}
 
-    openNameDialog() {
-        this.matDialog.open(UserNameInputComponent);
+    openNameDialog(isMulti: boolean = false) {
+        this.matDialog.open(UserNameInputComponent, { data: { isMulti } });
     }
 
     deleteGame(id: string) {

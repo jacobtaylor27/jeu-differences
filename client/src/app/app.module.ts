@@ -36,6 +36,7 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
 import { ChatBoxComponent } from './components/chat-box/chat-box.component';
+import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -76,6 +77,7 @@ import { ChatBoxComponent } from './components/chat-box/chat-box.component';
         DialogGameOverComponent,
         WaitingRoomComponent,
         ChatBoxComponent,
+        ApprovalDialogComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

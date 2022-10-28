@@ -152,7 +152,7 @@ describe('CommunicationService', () => {
                 next: () => {},
                 error: fail,
             });
-        const req = httpMock.expectOne(CREATE_GAME);
+        const req = httpMock.expectOne(`${baseUrl}/game/card`);
         expect(req.request.method).toBe('POST');
         req.flush({
             original: { width: 0, height: 0, data: Array.from([]) },
@@ -189,7 +189,7 @@ describe('CommunicationService', () => {
             next: () => {},
             error: fail,
         });
-        const req = httpMock.expectOne(CREATE_GAME_ROOM + '/gameid');
+        const req = httpMock.expectOne(`${baseUrl}/game/create`);
         expect(req.request.method).toBe('POST');
     });
 
@@ -199,7 +199,7 @@ describe('CommunicationService', () => {
                 expect(response).toBeNull();
             },
         });
-        const req = httpMock.expectOne(CREATE_GAME_ROOM + '/gameid');
+        const req = httpMock.expectOne(CREATE_GAME_ROOM);
         expect(req.request.method).toBe('POST');
         req.error(new ProgressEvent('Random error occurred'));
     });

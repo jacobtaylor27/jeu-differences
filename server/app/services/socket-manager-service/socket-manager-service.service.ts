@@ -46,6 +46,13 @@ export class SocketManagerService {
                     }, 1000);
                 }
             });
+            socket.on(SocketEvent.Message, (gameId: string, userId: string, message: string) => {
+                if (!this.gameManager.isGameFound(gameId)) {
+                    socket.emit(SocketEvent.Error);
+                    return;
+                }
+                socket.broadcast.to(gameId).emit(message);
+            });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {

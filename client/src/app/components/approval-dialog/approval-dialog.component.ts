@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-approval-dialog',
@@ -6,5 +6,14 @@ import { Component } from '@angular/core';
     styleUrls: ['./approval-dialog.component.scss'],
 })
 export class ApprovalDialogComponent {
-    constructor() {}
+    @Input() opponentsName: string = 'John Doe';
+    favoriteTheme: string = 'deeppurple-amber-theme';
+
+    onClickApprove() {
+        console.log('Approve');
+    }
+
+    onClickReject() {
+        console.log('Reject');
+    }
 }

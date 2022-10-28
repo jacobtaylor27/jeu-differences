@@ -27,6 +27,8 @@ export class ChatBoxComponent implements OnInit {
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
             this.addingAdversaryMessage(message);
         });
+
+        this.communicationSocket.on(SocketEvent.DifferenceFound, () => {});
     }
 
     onClickSend(): void {
@@ -41,5 +43,14 @@ export class ChatBoxComponent implements OnInit {
 
     private addingPersonalMessage(message: string) {
         this.messages.push({ content: message, type: 'personal' });
+    }
+    private differenceFoundMessage(userName: string, isMulti: boolean) {
+        let eventMessage: string;
+        if (isMulti) {
+            eventMessage = `Difference trouvée par ${userName}`;
+        } else {
+            eventMessage = 'Difference trouvée ';
+        }
+        this.messages.push({ content: eventMessage, type: 'gameMaster' });
     }
 }

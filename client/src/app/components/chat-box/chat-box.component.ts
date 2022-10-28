@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ChatMessage } from '@app/interfaces/chat-message';
 @Component({
     selector: 'app-chat-box',
@@ -10,6 +10,12 @@ export class ChatBoxComponent implements OnInit {
     isAdversaryConnected: boolean;
     message: string;
 
+    @HostListener('window:keyup', ['$event'])
+    onDialogClick(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            this.onClickSend();
+        }
+    }
     ngOnInit(): void {
         this.isAdversaryConnected = false;
         this.messages = [

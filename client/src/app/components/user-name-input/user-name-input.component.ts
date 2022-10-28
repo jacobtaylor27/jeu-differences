@@ -1,6 +1,5 @@
 import { Component, HostListener, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { SocketEvent } from '@common/socket-event';
@@ -20,7 +19,6 @@ export class UserNameInputComponent {
         private readonly dialogRef: MatDialogRef<UserNameInputComponent>,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
         private communicationSocketService: CommunicationSocketService,
-        private readonly router: Router,
         @Inject(MAT_DIALOG_DATA) private data: { isMulti: boolean },
     ) {
         this.isMulti = this.data.isMulti;
@@ -42,8 +40,6 @@ export class UserNameInputComponent {
                 mode: this.gameInformationHandlerService.gameMode,
                 game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
             });
-
-            this.router.navigate(['/waiting']);
         }
     }
 

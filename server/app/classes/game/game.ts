@@ -15,6 +15,7 @@ export class Game {
     private info: PrivateGameInformation;
     private getNbDifferencesFound: Set<Coordinate[]>;
     private context: GameContext;
+    private initialTime: Date;
 
     constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
@@ -25,7 +26,7 @@ export class Game {
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
         this.id = v4();
         this.context.next();
-        this.context.next(); // go directly to the Found Difference State because timer is not initialize in the server for now
+        // go directly to the Found Difference State because timer is not initialize in the server for now
     }
 
     get identifier() {
@@ -40,8 +41,23 @@ export class Game {
         return this.info;
     }
 
-    status(): GameStatus {
+    get status(): GameStatus {
         return this.context.gameState();
+    }
+
+    get seconds() {
+        return this.calculateTime();
+    }
+
+    setTimer() {
+        this.initialTime = new Date();
+        this.context.next();
+    }
+
+    calculateTime(): number {
+        const presentTime = new Date();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
+        return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
     }
 
     findDifference(differenceCoords: Coordinate): Coordinate[] | undefined {
@@ -78,7 +94,7 @@ export class Game {
     }
 
     isGameInitialize() {
-        return this.context.gameState() === GameStatus.InitGame || this.context.gameState() === GameStatus.InitTimer;
+        return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }
 
     isAllDifferenceFound(): boolean {

@@ -1,16 +1,32 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { GameMode } from '@common/game-mode';
+import { SocketEvent } from '@common/socket-event';
+import { Socket } from 'socket.io-client';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from './game-information-handler.service';
+
+/* eslint-disable @typescript-eslint/no-empty-function */
+class SocketClientServiceMock extends CommunicationSocketService {
+    override connect() {}
+}
 
 describe('GameInformationHandlerService', () => {
     let service: GameInformationHandlerService;
     let router: Router;
+    let socketServiceMock: SocketClientServiceMock;
+    let socketHelper: SocketTestHelper;
 
     beforeEach(() => {
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new SocketClientServiceMock();
+        socketServiceMock.socket = socketHelper as unknown as Socket;
+
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
+            providers: [{ provide: CommunicationSocketService, useValue: socketServiceMock }],
         });
 
         service = TestBed.inject(GameInformationHandlerService);
@@ -36,6 +52,12 @@ describe('GameInformationHandlerService', () => {
         service.gameMode = GameMode.Classic;
 
         expect(service.propertiesAreUndefined()).toBeFalsy();
+    });
+
+    it('should handle socket', () => {
+        spyOn(router, 'navigate');
+        socketHelper.peerSideEmit(SocketEvent.Play, 'id');
+        expect(service.gameId).toBe('id');
     });
 
     it('should return false when properties are not Undefined', () => {

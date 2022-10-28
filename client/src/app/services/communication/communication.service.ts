@@ -109,8 +109,4 @@ export class CommunicationService {
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }
-
-    // getTimeValue(): Observable<Message> {
-    //     return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
-    // }
 }

@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class CommunicationSocketService {
-    private socket: Socket;
+    socket: Socket;
 
     constructor() {
         if (!this.socket) {
@@ -38,7 +38,7 @@ export class CommunicationSocketService {
         this.socket.emit(event, ...Object.values(data));
     }
 
-    private connect() {
+    connect() {
         if (this.isSocketAlive) {
             return;
         }

@@ -4,7 +4,7 @@
         <div class="game-section">
             <app-sidebar></app-sidebar>
             <section class="container">
-                <app-play-area class="play-area" tabindex="0" [gameId]="gameId"></app-play-area>
+                <app-play-area class="play-area" tabindex="0" [gameId]="this.gameInfoHandlerService.gameId"></app-play-area>
             </section>
         </div>
         <div class="chat-section">

@@ -33,7 +33,7 @@ describe('GameSelectionPageComponent', () => {
     });
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
-        expect(component.formatScoreTime(1)).toEqual('00:01');
+        expect(component.formatScoreTime(1)).toEqual('00 : 01');
     });
 
     it('getNumberOfGames should call getCarouselLength from gameCarouselService', () => {

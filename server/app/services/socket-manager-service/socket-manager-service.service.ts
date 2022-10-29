@@ -51,7 +51,8 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.WaitPlayer);
                 if (this.multiplayerGameManager.isGameWaiting(game.card)) {
                     // send request to join
-                    socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
+                    // socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
+                    this.sio.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
 
                 } else {
                     const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
@@ -61,6 +62,10 @@ export class SocketManagerService {
                     socket.join(id);
                 }
             });
+
+            socket.on(SocketEvent.AcceptPlayer, (gameId : string) =>{
+                socket.broadcast.emit(SocketEvent.JoinGame, gameId)
+            })
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {

@@ -32,7 +32,7 @@ export class SocketManagerService {
             socket.on(SocketEvent.CreateGame, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                 this.multiplayerGameManager.setGamesWaiting();
-                socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+                socket.broadcast.to(id).emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
 
                 socket.join(id);
                 this.gameManager.setTimer(id);

@@ -24,5 +24,11 @@ export class WaitingRoomComponent implements OnInit {
         // for some reasons this opens more than onces sometimes but i cant find the pattern
             this.dialog.open(ApprovalDialogComponent, {data : {opponentsName : playerName}})
         })
+
+        this.socketService.on(SocketEvent.JoinGame, (gameId : string) =>{
+            console.log('join')
+        })
     }
+    
+
 }

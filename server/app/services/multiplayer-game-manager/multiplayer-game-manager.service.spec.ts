@@ -24,7 +24,7 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should verify if the game has space for a player', () => {
-        expect(multiplayerGameManager.gameHasSpaceLeft(GAME).valueOf()).to.equal(true);
+        expect(multiplayerGameManager.gameIsMulti(GAME).valueOf()).to.equal(true);
     });
 
     it('should set the games that are waiting for an opponent', () => {

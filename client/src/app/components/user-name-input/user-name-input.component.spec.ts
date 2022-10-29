@@ -72,8 +72,16 @@ describe('UserNameInputComponent', () => {
         expect(spyClick).toHaveBeenCalled();
     });
 
-    it('should use socket communication when click', () => {
+    it('should use socket communication when click and is not multi', () => {
         component.playerName = 'test';
+        component.onClickContinue();
+        expect(spySocketCommunication.send).toHaveBeenCalled();
+        expect(spyGameInformationService.setPlayerName).toHaveBeenCalled();
+    });
+
+    it('should use socket communication when click and is multi', () => {
+        component.playerName = 'test';
+        component.isMulti = true;
         component.onClickContinue();
         expect(spySocketCommunication.send).toHaveBeenCalled();
         expect(spyGameInformationService.setPlayerName).toHaveBeenCalled();

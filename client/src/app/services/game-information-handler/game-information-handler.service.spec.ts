@@ -58,6 +58,9 @@ describe('GameInformationHandlerService', () => {
         spyOn(router, 'navigate');
         socketHelper.peerSideEmit(SocketEvent.Play, 'id');
         expect(service.gameId).toBe('id');
+
+        socketHelper.peerSideEmit(SocketEvent.WaitPlayer, 'id');
+        expect(service.gameId).toBe('id');
     });
 
     it('should return false when properties are not Undefined', () => {

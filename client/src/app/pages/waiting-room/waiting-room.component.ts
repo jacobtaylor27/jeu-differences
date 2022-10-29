@@ -29,6 +29,7 @@ export class WaitingRoomComponent implements OnInit {
 
         this.socketService.on(SocketEvent.JoinGame, ( gameId : string) =>{
             this.socketService.send(SocketEvent.JoinGame, {player : this.gameInformationHandlerService.getPlayerName(), gameId : gameId})
+            this.socketService.on(SocketEvent.Play, () => {})
         })
     }
     

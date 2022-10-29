@@ -64,14 +64,9 @@ export class SocketManagerService {
             })
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
-                if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
-                    socket.emit(SocketEvent.Error);
-                    return;
-                }
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
-                socket.emit(SocketEvent.JoinGame, gameId);
-                socket.in(gameId).emit(SocketEvent.Play);
+                this.sio.to(gameId).emit(SocketEvent.Play);
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {

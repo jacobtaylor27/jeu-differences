@@ -1,49 +1,51 @@
 import { Service } from 'typedi';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
-import { Game } from '@app/classes/game/game';
 
 @Service()
 export class MultiplayerGameManager {
-    private gamesWaiting: string[] = [];
+    private gamesWaiting: {gameId : string, roomId : string}[] = [];
 
     constructor(private readonly gameManager: GameManagerService) {}
 
-    getGamesWaiting(): string[] {
-        return this.gamesWaiting;
+    getGamesWaiting() {
+        let gamesId = [];
+        for(const game of this.gamesWaiting){
+            gamesId.push(game.gameId)
+        }
+        return gamesId
+    }
+
+    isGameWaiting(gameId : string){
+        for(const game of this.gamesWaiting){
+            if(gameId === game.gameId){
+                return true;
+            }
+            
+        }
+        return false;
+    }
+
+    getRoomIdWaiting(gameId : string){
+        for(const game of this.gamesWaiting){
+            if(gameId === game.gameId){
+                return game.roomId
+            }
+            
+        }
+        return 'pas trouve';
     }
 
     setGamesWaiting(): void {
         this.gamesWaiting = [];
         for (const game of this.gameManager.games) {
-            if (this.gameHasSpaceLeft(game)) {
-                this.addGameWaiting(game.information.id);
-            }
+            if(game.multi){
+                this.addGameWaiting({gameId : game.information.id, roomId : game.identifier});
+        }
         }
     }
 
-    gameHasSpaceLeft(game: Game): boolean {
-        return game.multi;
+    addGameWaiting(infos : {gameId : string, roomId : string}): void {
+        this.gamesWaiting.push(infos);
     }
 
-    isGameWaiting(game: string): boolean {
-        for (const gameWaiting of this.gameManager.games) {
-            if (game === gameWaiting.information.id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getGameWaitingId(game : string) {
-        for (const gameWaiting of this.gameManager.games) {
-            if (game === gameWaiting.information.id) {
-                return gameWaiting.identifier;
-            }
-    }
-        return '';
-}
-
-    addGameWaiting(gameId: string): void {
-        this.gamesWaiting.push(gameId);
-    }
 }

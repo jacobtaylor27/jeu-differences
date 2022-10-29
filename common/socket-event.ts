@@ -1,4 +1,5 @@
 export enum SocketEvent {
+    AcceptPlayer = "acceptPlayer",
     Connection = 'connection',
     Disconnect = 'disconnect',
     CreateGame = 'createGame',

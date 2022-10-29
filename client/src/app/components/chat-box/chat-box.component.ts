@@ -15,7 +15,8 @@ export class ChatBoxComponent implements OnInit {
     currentMessage: string;
 
     constructor(private readonly communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
-
+// question: 
+// i need to recieve the userName of the player in the events : differenceFound, differenceNotFound and the user that left the game;
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
@@ -28,8 +29,9 @@ export class ChatBoxComponent implements OnInit {
             this.addingAdversaryMessage(message);
         });
 
-        this.communicationSocket.on(SocketEvent.DifferenceFound, () => {});
-        this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
+        // this.communicationSocket.on(SocketEvent.DifferenceFound, () => {});
+        // this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
+        // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
     }
 
     onClickSend(): void {
@@ -45,23 +47,29 @@ export class ChatBoxComponent implements OnInit {
     private addingPersonalMessage(message: string) {
         this.messages.push({ content: message, type: 'personal' });
     }
-    private differenceFoundMessage(userName: string, isMulti: boolean) {
-        let eventMessage: string;
-        if (isMulti) {
-            eventMessage = `Difference trouvée par ${userName}`;
-        } else {
-            eventMessage = 'Difference trouvée ';
-        }
-        this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    }
 
-    private differenceNotFoundMessage(userName: string, isMulti: boolean) {
-        let eventMessage: string;
-        if (isMulti) {
-            eventMessage = `Erreur par ${userName}`;
-        } else {
-            eventMessage = 'Erreur';
-        }
-        this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    }
+    // private differenceFoundMessage(userName: string, isMulti: boolean) {
+    //     let eventMessage: string;
+    //     if (isMulti) {
+    //         eventMessage = `Difference trouvée par ${userName}`;
+    //     } else {
+    //         eventMessage = 'Difference trouvée ';
+    //     }
+    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
+    // }
+
+    // private differenceNotFoundMessage(userName: string, isMulti: boolean) {
+    //     let eventMessage: string;
+    //     if (isMulti) {
+    //         eventMessage = `Erreur par ${userName}`;
+    //     } else {
+    //         eventMessage = 'Erreur';
+    //     }
+    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
+    // }
+
+    // private leavingGameMessage(userName: string) {
+    //     const eventMessage = `${userName} a abandonné la partie`;
+    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
+    // }
 }

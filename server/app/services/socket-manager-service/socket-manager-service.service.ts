@@ -89,7 +89,7 @@ export class SocketManagerService {
                     return;
                 }
                 if (!this.gameManager.isDifference(gameId, differenceCoord)) {
-                    socket.emit(SocketEvent.DifferenceNotFound);
+                    socket.to(gameId).emit(SocketEvent.DifferenceNotFound);
                     return;
                 }
                 socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, true, gameId));

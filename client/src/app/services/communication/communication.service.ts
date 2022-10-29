@@ -74,7 +74,6 @@ export class CommunicationService {
         return this.http.post<{ id: string }>(`${this.baseUrl}/game/create`, { players: [playerName], mode: gameMode }, { observe: 'response' }).pipe(
             catchError(() => {
                 // eslint-disable-next-line no-console
-                console.log(gameId);
                 return of(null);
             }),
         );

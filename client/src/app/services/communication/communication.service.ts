@@ -70,10 +70,9 @@ export class CommunicationService {
             );
     }
 
-    createGameRoom(playerName: string, gameMode: GameMode, gameId: string) {
+    createGameRoom(playerName: string, gameMode: GameMode) {
         return this.http.post<{ id: string }>(`${this.baseUrl}/game/create`, { players: [playerName], mode: gameMode }, { observe: 'response' }).pipe(
             catchError(() => {
-                // eslint-disable-next-line no-console
                 return of(null);
             }),
         );

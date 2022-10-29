@@ -16,16 +16,18 @@ export class ApprovalDialogComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA)
         public data: {
-            opponentsName : string
-        }, private socketService : CommunicationSocketService, private readonly gameInformationHandlerService: GameInformationHandlerService
-    ){
-
-        this.opponentsName = data.opponentsName}
+            opponentsName: string;
+        },
+        private socketService: CommunicationSocketService,
+        private readonly gameInformationHandlerService: GameInformationHandlerService,
+    ) {
+        this.opponentsName = data.opponentsName;
+    }
 
     onClickApprove() {
-        // eslint-disable-next-line no-console
-        this.socketService.send(SocketEvent.AcceptPlayer, {gameId : this.gameInformationHandlerService.gameId})
-        this.socketService.on(SocketEvent.Play, () => {})
+        this.socketService.send(SocketEvent.AcceptPlayer, { gameId: this.gameInformationHandlerService.gameId });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        this.socketService.on(SocketEvent.Play, () => {});
     }
 
     onClickReject() {

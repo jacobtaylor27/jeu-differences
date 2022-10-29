@@ -14,24 +14,25 @@ import { SocketEvent } from '@common/socket-event';
 export class WaitingRoomComponent implements OnInit {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    constructor(private exitButton: ExitButtonHandlerService, 
-        private socketService : CommunicationSocketService,
-        public dialog : MatDialog,
-        private readonly gameInformationHandlerService: GameInformationHandlerService) {
+    // eslint-disable-next-line max-params
+    constructor(
+        private exitButton: ExitButtonHandlerService,
+        private socketService: CommunicationSocketService,
+        public dialog: MatDialog,
+        private readonly gameInformationHandlerService: GameInformationHandlerService,
+    ) {
         this.exitButton.setWaitingRoom();
     }
 
     ngOnInit(): void {
-        this.socketService.on(SocketEvent.RequestToJoin, (playerName : string) => {
-        // for some reasons this opens more than onces sometimes but i cant find the pattern
-            this.dialog.open(ApprovalDialogComponent, {data : {opponentsName : playerName}})
-        })
+        this.socketService.on(SocketEvent.RequestToJoin, (playerName: string) => {
+            this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: playerName } });
+        });
 
-        this.socketService.on(SocketEvent.JoinGame, ( gameId : string) =>{
-            this.socketService.send(SocketEvent.JoinGame, {player : this.gameInformationHandlerService.getPlayerName(), gameId : gameId})
-            this.socketService.on(SocketEvent.Play, () => {})
-        })
+        this.socketService.on(SocketEvent.JoinGame, (gameId: string) => {
+            this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayerName(), gameId });
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            this.socketService.on(SocketEvent.Play, () => {});
+        });
     }
-    
-
 }

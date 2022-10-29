@@ -14,9 +14,7 @@ export class GameInformationHandlerService {
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
 
-    constructor(private readonly router: Router, private readonly socket: CommunicationSocketService) {
-       
-    }
+    constructor(private readonly router: Router, private readonly socket: CommunicationSocketService) {}
 
     propertiesAreUndefined(): boolean {
         return this.gameInformation === undefined || this.playerName === undefined || this.gameMode === undefined;

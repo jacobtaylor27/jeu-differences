@@ -51,7 +51,7 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.WaitPlayer);
                 if (this.multiplayerGameManager.isGameWaiting(game.card)) {
                     // send request to join
-                    socket.broadcast.emit(SocketEvent.RequestToJoin, player)
+                    socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
 
                 } else {
                     const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);

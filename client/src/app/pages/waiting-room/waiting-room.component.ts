@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApprovalDialogComponent } from '@app/components/approval-dialog/approval-dialog.component';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -15,7 +16,8 @@ export class WaitingRoomComponent implements OnInit {
 
     constructor(private exitButton: ExitButtonHandlerService, 
         private socketService : CommunicationSocketService,
-        public dialog : MatDialog,) {
+        public dialog : MatDialog,
+        private readonly gameInformationHandlerService: GameInformationHandlerService) {
         this.exitButton.setWaitingRoom();
     }
 
@@ -25,8 +27,8 @@ export class WaitingRoomComponent implements OnInit {
             this.dialog.open(ApprovalDialogComponent, {data : {opponentsName : playerName}})
         })
 
-        this.socketService.on(SocketEvent.JoinGame, (gameId : string) =>{
-            console.log('join')
+        this.socketService.on(SocketEvent.JoinGame, ( gameId : string) =>{
+            this.socketService.send(SocketEvent.JoinGame, {player : this.gameInformationHandlerService.getPlayerName(), gameId : gameId})
         })
     }
     

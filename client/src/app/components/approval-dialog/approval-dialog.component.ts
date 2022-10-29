@@ -1,7 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
-import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -17,7 +16,7 @@ export class ApprovalDialogComponent {
         @Inject(MAT_DIALOG_DATA)
         public data: {
             opponentsName : string
-        }, private socketService : CommunicationSocketService,  private readonly gameInformationHandlerService: GameInformationHandlerService,
+        }, private socketService : CommunicationSocketService,
     ){
 
         this.opponentsName = data.opponentsName}
@@ -25,7 +24,7 @@ export class ApprovalDialogComponent {
     onClickApprove() {
         // eslint-disable-next-line no-console
         console.log('Approve');
-        this.socketService.send(SocketEvent.AcceptPlayer, {gameId : this.gameInformationHandlerService.gameId})
+        this.socketService.send(SocketEvent.AcceptPlayer)
     }
 
     onClickReject() {

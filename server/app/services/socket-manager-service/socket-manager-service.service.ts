@@ -43,9 +43,9 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.CreateGameMulti, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
-                socket.emit(SocketEvent.WaitPlayer);
+               
                 if (this.multiplayerGameManager.isGameWaiting(game.card)) {
-                    // send request to join
+                    socket.emit(SocketEvent.WaitPlayer);
                     // socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
                     this.sio.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
 
@@ -53,7 +53,7 @@ export class SocketManagerService {
                     const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                     this.multiplayerGameManager.setGamesWaiting();
                     socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
-
+                    socket.emit(SocketEvent.WaitPlayer, id);
                     socket.join(id);
                 }
             });

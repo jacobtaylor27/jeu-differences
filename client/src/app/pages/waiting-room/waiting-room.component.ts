@@ -21,7 +21,7 @@ export class WaitingRoomComponent implements OnInit {
 
     ngOnInit(): void {
         this.socketService.on(SocketEvent.RequestToJoin, (playerName : string) => {
-        
+        // for some reasons this opens more than onces sometimes but i cant find the pattern
             this.dialog.open(ApprovalDialogComponent, {data : {opponentsName : playerName}})
         })
     }

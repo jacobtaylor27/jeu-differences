@@ -19,12 +19,8 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should add a game id', () => {
-        multiplayerGameManager.addGameWaiting('test');
+        multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
         expect(multiplayerGameManager.getGamesWaiting()).to.have.lengthOf(1);
-    });
-
-    it('should verify if the game has space for a player', () => {
-        expect(multiplayerGameManager.gameIsMulti(GAME).valueOf()).to.equal(true);
     });
 
     it('should set the games that are waiting for an opponent', () => {

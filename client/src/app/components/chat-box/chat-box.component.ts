@@ -15,8 +15,10 @@ export class ChatBoxComponent implements OnInit {
     currentMessage: string;
 
     constructor(private readonly communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
-// question: 
-// i need to recieve the userName of the player in the events : differenceFound, differenceNotFound and the user that left the game;
+    // question:
+    // i need to recieve the userName of the player in the events : differenceFound, differenceNotFound and the user that left the game;
+    // adding time into format: HH:MM:SS for each event.
+    // changing in a dynamic way the view of gamePage (double check with Laurie and Jacob).
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
         if (event.key === 'Enter') {

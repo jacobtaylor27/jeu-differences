@@ -15,7 +15,7 @@ export class GameInformationHandlerService {
     gameMode: GameMode = GameMode.Classic;
 
     constructor(private readonly router: Router, private readonly socket: CommunicationSocketService) {
-        this.handleSocketEvent();
+       
     }
 
     propertiesAreUndefined(): boolean {
@@ -33,6 +33,7 @@ export class GameInformationHandlerService {
             this.router.navigate(['/waiting']);
         });
     }
+
     handleNotDefined(): void {
         if (this.propertiesAreUndefined()) {
             this.router.navigate(['/']);

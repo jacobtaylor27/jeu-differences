@@ -34,6 +34,15 @@ export class MultiplayerGameManager {
         return false;
     }
 
+    getGameWaitingId(game : string) {
+        for (const gameWaiting of this.gameManager.games) {
+            if (game === gameWaiting.information.id) {
+                return gameWaiting.identifier;
+            }
+    }
+        return '';
+}
+
     addGameWaiting(gameId: string): void {
         this.gamesWaiting.push(gameId);
     }

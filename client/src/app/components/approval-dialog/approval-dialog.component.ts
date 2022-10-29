@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-approval-dialog',
@@ -6,8 +7,16 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./approval-dialog.component.scss'],
 })
 export class ApprovalDialogComponent {
-    @Input() opponentsName: string = 'John Doe';
+    @Input() opponentsName: string;
     favoriteTheme: string = 'deeppurple-amber-theme';
+
+    constructor(
+        @Inject(MAT_DIALOG_DATA)
+        public data: {
+            opponentsName : string
+        },
+    ){
+        this.opponentsName = data.opponentsName}
 
     onClickApprove() {
         // eslint-disable-next-line no-console

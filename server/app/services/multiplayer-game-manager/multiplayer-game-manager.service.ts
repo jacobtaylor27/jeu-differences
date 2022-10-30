@@ -30,7 +30,7 @@ export class MultiplayerGameManager {
                 return game.roomId;
             }
         }
-        return 'pas trouve';
+        return '';
     }
 
     setGamesWaiting(): void {

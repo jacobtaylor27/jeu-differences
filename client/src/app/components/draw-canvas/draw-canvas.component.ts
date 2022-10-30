@@ -88,22 +88,10 @@ export class DrawCanvasComponent implements AfterViewInit {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        if (this.pencil.state !== Tool.Pencil) {
-            this.erase(event);
-            return;
-        }
-        this.drawPoint(event);
+        this.drawPoint(event, this.pencil.state);
     }
 
-    erase(event: MouseEvent) {
-        const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        ctx.rect(this.coordDraw.x, this.coordDraw.y, this.pencil.width.eraser, this.pencil.width.eraser);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-        this.updateImage();
-    }
-
+    drawPoint(event: MouseEvent, tool: Tool) {
     drawPoint(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();

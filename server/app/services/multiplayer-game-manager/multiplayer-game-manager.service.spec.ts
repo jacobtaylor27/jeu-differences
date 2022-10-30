@@ -37,7 +37,7 @@ describe('Multiplayer Game Manager', () => {
 
     it('should return if a player is waiting in a room', () => {
         expect(multiplayerGameManager.isGameWaiting('')).to.equal(false);
-        spyGameManager['games'] = new Set([GAME]);
+        multiplayerGameManager['gamesWaiting'] = [{ gameId: '1', roomId: '1' }];
         expect(multiplayerGameManager.isGameWaiting('1')).to.equal(true);
     });
 });

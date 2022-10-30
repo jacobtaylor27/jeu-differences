@@ -18,7 +18,7 @@ export class ApprovalDialogComponent {
         public data: {
             opponentsName: string;
         },
-        private socketService: CommunicationSocketService,
+        public socketService: CommunicationSocketService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
     ) {
         this.opponentsName = data.opponentsName;

@@ -31,7 +31,6 @@ export class ApprovalDialogComponent {
     }
 
     onClickReject() {
-        // eslint-disable-next-line no-console
-        console.log('Reject');
+        this.socketService.send(SocketEvent.RejectPlayer);
     }
 }

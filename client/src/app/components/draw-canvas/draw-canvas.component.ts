@@ -98,7 +98,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     erase(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        ctx.rect(this.coordDraw.x, this.coordDraw.y, this.pencil.width, this.pencil.width);
+        ctx.rect(this.coordDraw.x, this.coordDraw.y, this.pencil.width.eraser, this.pencil.width.eraser);
         ctx.fillStyle = 'white';
         ctx.fill();
         this.updateImage();
@@ -107,7 +107,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     drawPoint(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
-        ctx.lineWidth = this.pencil.width;
+        ctx.lineWidth = this.pencil.width.pencil;
         ctx.lineCap = this.pencil.cap;
         ctx.strokeStyle = this.pencil.color;
         ctx.moveTo(this.coordDraw.x, this.coordDraw.y);

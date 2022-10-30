@@ -40,7 +40,8 @@ export class ToolBoxComponent {
     }
 
     changePencilWith(event: MatSliderChange): void {
-        this.pencil.width = event.value !== null ? event.value : 0;
+        this.pencil.width.pencil = event.value !== null && this.pencil.state === Tool.Pencil ? event.value : 0;
+        this.pencil.width.eraser = event.value !== null && this.pencil.state === Tool.Eraser ? event.value : 0;
         this.toolService.$pencil.next(this.pencil);
     }
 

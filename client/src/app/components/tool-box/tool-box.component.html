@@ -14,7 +14,7 @@
             step="0.5"
             [value]="this.pencil.width.pencil"
             thumbLabel
-            (change)="changePencilWith($event)"
+            (change)="changePencilWidth($event)"
             [displayWith]="formatLabel"
             *ngIf="this.pencil.state === this.tool.Pencil"
         ></mat-slider>
@@ -24,7 +24,7 @@
             step="1"
             [value]="this.pencil.width.eraser"
             thumbLabel
-            (change)="changePencilWith($event)"
+            (change)="changePencilWidth($event)"
             [displayWith]="formatLabel"
             *ngIf="this.pencil.state === this.tool.Eraser"
         ></mat-slider>

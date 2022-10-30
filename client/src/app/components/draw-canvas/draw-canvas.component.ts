@@ -80,6 +80,10 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
     }
 
+    initializeState(event: MouseEvent) {
+        return event.buttons === 0 ? this.stop() : this.start(event);
+    }
+
     stop() {
         this.isClick = false;
     }

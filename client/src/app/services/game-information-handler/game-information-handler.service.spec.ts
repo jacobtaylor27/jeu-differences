@@ -25,13 +25,15 @@ describe('GameInformationHandlerService', () => {
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
-            providers: [{ provide: CommunicationSocketService, useValue: socketServiceMock }, {
-                provide: Router,
-                useValue: spyRouter,
-            },],
+            providers: [
+                { provide: CommunicationSocketService, useValue: socketServiceMock },
+                {
+                    provide: Router,
+                    useValue: spyRouter,
+                },
+            ],
         });
 
         service = TestBed.inject(GameInformationHandlerService);
@@ -53,8 +55,8 @@ describe('GameInformationHandlerService', () => {
             multiplayerScore: [],
             nbDifferences: 0,
         };
-        service.gameMode = GameMode.Classic
-        spyRouter.navigate.and.returnValue(Promise.resolve(true));;
+        service.gameMode = GameMode.Classic;
+        spyRouter.navigate.and.returnValue(Promise.resolve(true));
         expect(service.propertiesAreUndefined()).toBeFalsy();
     });
 

@@ -8,6 +8,7 @@ import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
 import { ApprovalDialogComponent } from './approval-dialog.component';
 
+/* eslint-disable @typescript-eslint/no-empty-function */
 class SocketClientServiceMock extends CommunicationSocketService {
     override connect() {}
 }
@@ -30,8 +31,11 @@ describe('ApprovalDialogComponent', () => {
         socketServiceMock.socket = socketHelper as unknown as Socket;
         await TestBed.configureTestingModule({
             declarations: [ApprovalDialogComponent],
-            providers: [{ provide: MAT_DIALOG_DATA, useValue: model },{ provide: CommunicationSocketService, useValue: socketServiceMock }],
-            imports : [RouterTestingModule, HttpClientModule]
+            providers: [
+                { provide: MAT_DIALOG_DATA, useValue: model },
+                { provide: CommunicationSocketService, useValue: socketServiceMock },
+            ],
+            imports: [RouterTestingModule, HttpClientModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ApprovalDialogComponent);

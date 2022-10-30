@@ -34,7 +34,7 @@ describe('CreateGamePageComponent', () => {
             $resetDiff: new Subject(),
         });
         await TestBed.configureTestingModule({
-            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent, DialogCreateGameComponent],
+            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent, DialogCreateGameComponent, PageHeaderComponent],
             imports: [HttpClientTestingModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },

@@ -39,5 +39,17 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.isGameWaiting('')).to.equal(false);
         multiplayerGameManager['gamesWaiting'] = [{ gameId: '1', roomId: '1' }];
         expect(multiplayerGameManager.isGameWaiting('1')).to.equal(true);
+        expect(multiplayerGameManager.isGameWaiting('3')).to.equal(false);
     });
+
+    it('should get Room Id', () => {
+        spyGameManager['games'] = new Set([]);
+        multiplayerGameManager.setGamesWaiting();
+        expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal('');
+        spyGameManager['games'] = new Set([GAME]);
+        multiplayerGameManager.setGamesWaiting();
+        const [first] = spyGameManager['games'].values()
+        expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal(first.identifier);
+        expect(multiplayerGameManager.getRoomIdWaiting('3')).to.equal('');
+    })
 });

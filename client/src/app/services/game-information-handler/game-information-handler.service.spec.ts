@@ -15,22 +15,26 @@ class SocketClientServiceMock extends CommunicationSocketService {
 
 describe('GameInformationHandlerService', () => {
     let service: GameInformationHandlerService;
-    let router: Router;
     let socketServiceMock: SocketClientServiceMock;
     let socketHelper: SocketTestHelper;
+    let spyRouter: jasmine.SpyObj<Router>;
 
     beforeEach(() => {
         socketHelper = new SocketTestHelper();
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
+        spyRouter = jasmine.createSpyObj('Router', ['navigate']);
+
 
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
-            providers: [{ provide: CommunicationSocketService, useValue: socketServiceMock }],
+            providers: [{ provide: CommunicationSocketService, useValue: socketServiceMock }, {
+                provide: Router,
+                useValue: spyRouter,
+            },],
         });
 
         service = TestBed.inject(GameInformationHandlerService);
-        router = TestBed.inject(Router);
     });
 
     it('should be created', () => {
@@ -49,18 +53,18 @@ describe('GameInformationHandlerService', () => {
             multiplayerScore: [],
             nbDifferences: 0,
         };
-        service.gameMode = GameMode.Classic;
-
+        service.gameMode = GameMode.Classic
+        spyRouter.navigate.and.returnValue(Promise.resolve(true));;
         expect(service.propertiesAreUndefined()).toBeFalsy();
     });
 
     it('should handle socket', () => {
-        spyOn(router, 'navigate');
+        service.handleSocketEvent();
         socketHelper.peerSideEmit(SocketEvent.Play, 'id');
-        expect(service.gameId).toBe('id');
+        expect(service.gameId).toEqual('id');
 
         socketHelper.peerSideEmit(SocketEvent.WaitPlayer, 'id');
-        expect(service.gameId).toBe('id');
+        expect(service.gameId).toEqual('id');
     });
 
     it('should return false when properties are not Undefined', () => {
@@ -68,9 +72,8 @@ describe('GameInformationHandlerService', () => {
     });
 
     it('should return to homepage if properties are undefined', () => {
-        const spyRouter = spyOn(router, 'navigate');
         service.handleNotDefined();
-        expect(spyRouter).toHaveBeenCalledWith(['/']);
+        expect(spyRouter.navigate).toHaveBeenCalled();
     });
 
     it('should set PlayerName', () => {

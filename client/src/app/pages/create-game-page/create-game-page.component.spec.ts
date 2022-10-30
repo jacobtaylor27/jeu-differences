@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
+import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -23,7 +24,7 @@ describe('CreateGamePageComponent', () => {
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
-        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
+        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
         communicationSpyObject = jasmine.createSpyObj('CommunicationService', ['validateGame']);
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
             $uploadImageInSource: new Subject(),

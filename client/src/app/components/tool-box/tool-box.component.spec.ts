@@ -87,4 +87,11 @@ describe('ToolBoxComponent', () => {
         component.openUploadDialog();
         expect(dialogSpyObj.open).toHaveBeenCalled();
     });
+
+    it('should switch the background-color of the pencil and eraser button', () => {
+        component.changeButtonColor(Tool.Pencil);
+        expect(component.colorButton).toEqual({ pencil: 'primary', eraser: 'background' });
+        component.changeButtonColor(Tool.Eraser);
+        expect(component.colorButton).toEqual({ pencil: 'background', eraser: 'primary' });
+    });
 });

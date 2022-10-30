@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -48,9 +48,10 @@ describe('DialogCreateGameComponent', () => {
 
     it('should post the game', () => {
         spyCommunicationService.createGame.and.callFake(() => {
-            return of();
+            return of({} as HttpResponse<Record<string, never>>);
         });
         component.createGame();
+        expect(spyRouter.navigate).toHaveBeenCalled();
         expect(spyCommunicationService.createGame).toHaveBeenCalled();
 
         spyCommunicationService.createGame.and.callFake(() => {

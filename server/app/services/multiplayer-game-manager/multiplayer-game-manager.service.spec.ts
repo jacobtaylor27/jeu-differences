@@ -48,8 +48,8 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal('');
         spyGameManager['games'] = new Set([GAME]);
         multiplayerGameManager.setGamesWaiting();
-        const [first] = spyGameManager['games'].values()
+        const [first] = spyGameManager['games'].values();
         expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal(first.identifier);
         expect(multiplayerGameManager.getRoomIdWaiting('3')).to.equal('');
-    })
+    });
 });

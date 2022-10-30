@@ -61,6 +61,10 @@ export class SocketManagerService {
                 // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
             });
 
+            socket.on(SocketEvent.RejectPlayer, () => {
+                socket.broadcast.emit(SocketEvent.RejectPlayer);
+            });
+
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);

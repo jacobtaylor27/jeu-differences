@@ -64,6 +64,16 @@ describe('ToolBoxComponent', () => {
         expect(component.pencil.width.pencil).toEqual(expectedWidth);
     });
 
+    it('should change the width of the eraser', async () => {
+        const expectedWidth = 3;
+        component.pencil.state = Tool.Eraser;
+        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+            expect(newPencil).toEqual(component.pencil);
+        });
+        component.changePencilWidth({ value: expectedWidth } as MatSliderChange);
+        expect(component.pencil.width.eraser).toEqual(expectedWidth);
+    });
+
     it('should do nothing if the value is null', () => {
         toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
             expect(newPencil).toEqual(component.pencil);

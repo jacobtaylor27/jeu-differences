@@ -4,6 +4,7 @@ import { ApprovalDialogComponent } from '@app/components/approval-dialog/approva
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -17,8 +18,9 @@ export class WaitingRoomComponent implements OnInit {
     // eslint-disable-next-line max-params
     constructor(
         private exitButton: ExitButtonHandlerService,
-        private socketService: CommunicationSocketService,
+        public socketService: CommunicationSocketService,
         public dialog: MatDialog,
+        private readonly routerService : RouterService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
     ) {
         this.exitButton.setWaitingRoom();
@@ -31,7 +33,7 @@ export class WaitingRoomComponent implements OnInit {
 
         this.socketService.on(SocketEvent.RejectPlayer, () => {
             // add a error message;
-            this.gameInformationHandlerService.redirectToSelect();
+            this.routerService.navigateTo('select');
         });
 
         this.socketService.on(SocketEvent.JoinGame, (gameId: string) => {

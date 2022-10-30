@@ -32,7 +32,7 @@ export class GameInformationHandlerService {
         });
     }
 
-    redirectToSelect(){
+    redirectToSelect() {
         this.router.navigate(['/select']);
     }
 

@@ -29,7 +29,7 @@ export class WaitingRoomComponent implements OnInit {
             this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: playerName } });
         });
 
-        this.socketService.on(SocketEvent.RejectPlayer, () =>{
+        this.socketService.on(SocketEvent.RejectPlayer, () => {
             // add a error message;
             this.gameInformationHandlerService.redirectToSelect();
         });

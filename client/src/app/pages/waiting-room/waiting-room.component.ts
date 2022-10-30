@@ -20,7 +20,7 @@ export class WaitingRoomComponent implements OnInit {
         private exitButton: ExitButtonHandlerService,
         public socketService: CommunicationSocketService,
         public dialog: MatDialog,
-        private readonly routerService : RouterService,
+        private readonly routerService: RouterService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
     ) {
         this.exitButton.setWaitingRoom();

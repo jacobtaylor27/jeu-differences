@@ -3,7 +3,7 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
-import { RouterService } from '../router-service/router.service';
+import { RouterService } from '@app/services/router-service/router.service';
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +14,7 @@ export class GameInformationHandlerService {
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
 
-    constructor(private readonly routerService : RouterService, private readonly socket: CommunicationSocketService) {}
+    constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
 
     propertiesAreUndefined(): boolean {
         return this.gameInformation === undefined || this.playerName === undefined || this.gameMode === undefined;

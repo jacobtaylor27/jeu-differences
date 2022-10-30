@@ -35,6 +35,7 @@ export class GameCarouselComponent implements OnInit {
                         gameInformation: gameInfo,
                         isAdminCard: this.isAdmin,
                         isShown: false,
+                        isMulti: false,
                     };
                     this.gameCards.push(newCard);
                 }

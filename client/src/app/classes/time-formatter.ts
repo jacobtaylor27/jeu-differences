@@ -13,6 +13,6 @@ export class TimeFormatter {
         const DEFAULT_PRECISION = 2;
         const minutes: string = Math.floor(second / MINUTES_IN_AN_HOUR).toString();
         const seconds: string = (second % SECONDS_IN_AN_MINUTE).toString();
-        return `${minutes.padStart(DEFAULT_PRECISION, '0')}:${seconds.padStart(DEFAULT_PRECISION, '0')}`;
+        return `${minutes.padStart(DEFAULT_PRECISION, '0')} : ${seconds.padStart(DEFAULT_PRECISION, '0')}`;
     }
 }

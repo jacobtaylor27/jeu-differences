@@ -1,24 +1,21 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
-import { GameCard } from '@app/interfaces/game-card';
-import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameCardService {
-    constructor(private readonly matDialog: MatDialog, private readonly gameCardHandlerService: GameCardHandlerService) {}
+    constructor(private readonly matDialog: MatDialog, private readonly communicationService: CommunicationService) {}
 
-    openNameDialog() {
-        this.matDialog.open(UserNameInputComponent);
+    openNameDialog(isMulti: boolean = false) {
+        this.matDialog.open(UserNameInputComponent, { data: { isMulti } });
     }
 
-    deleteGame(game: GameCard) {
-        this.gameCardHandlerService.deleteGame(game);
+    deleteGame(id: string) {
+        this.communicationService.deleteGame(id).subscribe();
     }
 
-    resetHighScores(game: GameCard) {
-        this.gameCardHandlerService.resetHighScores(game);
-    }
+    // resetHighScores(id: string) {}
 }

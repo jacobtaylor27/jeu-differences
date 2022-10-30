@@ -1,8 +1,3 @@
-// .container {
-//     display: flex;
-//     justify-content: space-around;
-//     align-items: center;
-// }
 .page {
     min-height: 100vh;
     height: auto;
@@ -21,15 +16,14 @@
     outline: none;
 }
 .container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 1080px;
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: center;
     display: flex;
 }
-
-// .image {
-//     border: 3px solid black;
-// }
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.chat-section {
+    margin-top: 35vh;
+    width: 380px;
+}

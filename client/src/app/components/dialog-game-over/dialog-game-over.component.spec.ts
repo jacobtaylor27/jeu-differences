@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DialogGameOverComponent } from './dialog-gameover.component';
+import { DialogGameOverComponent } from './dialog-game-over.component';
 
-describe('DialogGameoverComponent', () => {
+describe('DialogGameOverComponent', () => {
     let component: DialogGameOverComponent;
     let fixture: ComponentFixture<DialogGameOverComponent>;
 

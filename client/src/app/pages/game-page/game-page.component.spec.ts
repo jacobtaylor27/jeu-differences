@@ -1,4 +1,4 @@
-import { HttpClientModule, HttpResponse } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -10,8 +10,9 @@ import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { of } from 'rxjs';
 import { GamePageComponent } from './game-page.component';
+import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
+import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 
 describe('GamePageComponent', () => {
     let component: GamePageComponent;
@@ -43,7 +44,8 @@ describe('GamePageComponent', () => {
                 CluesAreaComponent,
                 DifferencesAreaComponent,
                 ExitGameButtonComponent,
-                // TimerStopwatchComponent,
+                PageHeaderComponent,
+                ChatBoxComponent,
             ],
             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
             providers: [
@@ -63,28 +65,5 @@ describe('GamePageComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('should create game room on init', () => {
-        const spyCreateGame = spyOn(component, 'createGameRoom');
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        spyCreateGame.and.callFake(() => {});
-        component.ngOnInit();
-        expect(spyCreateGame).toHaveBeenCalled();
-    });
-
-    it('should createGameRoom properly', () => {
-        communicationServiceSpy.createGameRoom.and.callFake(() => {
-            return of({} as HttpResponse<{ id: string }>);
-        });
-        component.createGameRoom();
-        expect(component.gameId).toBeUndefined();
-        expect(communicationServiceSpy.createGameRoom).toHaveBeenCalled();
-
-        communicationServiceSpy.createGameRoom.and.callFake(() => {
-            return of({ body: { id: '1' } } as HttpResponse<{ id: string }>);
-        });
-        component.createGameRoom();
-        expect(communicationServiceSpy.createGameRoom).toHaveBeenCalled();
     });
 });

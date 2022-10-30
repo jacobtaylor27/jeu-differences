@@ -10,6 +10,7 @@ import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { Theme } from '@app/enums/theme';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
+import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 @Component({
@@ -30,7 +31,9 @@ export class CreateGamePageComponent implements AfterViewInit {
         public dialog: MatDialog,
         private drawService: DrawService,
         private communication: CommunicationService,
+        exitButtonService: ExitButtonHandlerService,
     ) {
+        exitButtonService.setCreateGamePage();
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
         });

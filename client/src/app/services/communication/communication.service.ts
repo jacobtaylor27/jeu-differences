@@ -1,6 +1,5 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CREATE_GAME, CREATE_GAME_ROOM, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
 import { PublicGameInformation } from '@common/game-information';
@@ -26,10 +25,18 @@ export class CommunicationService {
         return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
     }
 
+    deleteAllGameCards(): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/game/cards`).pipe(catchError(this.handleError<void>('deleteAllGameCards')));
+    }
+
+    deleteGame(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/game/cards/${id}`).pipe(catchError(this.handleError<void>('deleteGame')));
+    }
+
     validateGame(original: ImageData, modify: ImageData, radius: number) {
         return this.http
             .post<{ numberDifference: number; width: number; height: number; data: number[] }>(
-                VALID_GAME,
+                `${this.baseUrl}/game/card/validation`,
                 {
                     original: { width: original.width, height: original.height, data: Array.from(original.data) },
                     modify: { width: modify.width, height: modify.height, data: Array.from(modify.data) },
@@ -43,10 +50,11 @@ export class CommunicationService {
                 }),
             );
     }
+
     createGame(image: { original: ImageData; modify: ImageData }, radius: number, name: string) {
         return this.http
             .post<Record<string, never>>(
-                CREATE_GAME,
+                `${this.baseUrl}/game/card`,
                 {
                     original: { width: image.original.width, height: image.original.height, data: Array.from(image.original.data) },
                     modify: { width: image.modify.width, height: image.modify.height, data: Array.from(image.modify.data) },
@@ -63,19 +71,19 @@ export class CommunicationService {
     }
 
     createGameRoom(playerName: string, gameMode: GameMode, gameId: string) {
-        return this.http
-            .post<{ id: string }>(`${CREATE_GAME_ROOM}/${gameId}`, { players: [playerName], mode: gameMode }, { observe: 'response' })
-            .pipe(
-                catchError(() => {
-                    return of(null);
-                }),
-            );
+        return this.http.post<{ id: string }>(`${this.baseUrl}/game/create`, { players: [playerName], mode: gameMode }, { observe: 'response' }).pipe(
+            catchError(() => {
+                // eslint-disable-next-line no-console
+                console.log(gameId);
+                return of(null);
+            }),
+        );
     }
 
     validateCoordinates(id: string, coordinate: Vec2) {
         return this.http
             .post<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>(
-                VALIDATE_COORD,
+                `${this.baseUrl}/game/difference`,
                 {
                     x: coordinate.x,
                     y: coordinate.y,
@@ -101,8 +109,4 @@ export class CommunicationService {
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }
-
-    // getTimeValue(): Observable<Message> {
-    //     return this.http.get<Message>(`${this.baseUrl}/game`).pipe(catchError(this.handleError<Message>('getTimeValue')));
-    // }
 }

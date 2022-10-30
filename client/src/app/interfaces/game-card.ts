@@ -4,4 +4,5 @@ export interface GameCard {
     gameInformation: PublicGameInformation;
     isShown: boolean;
     isAdminCard: boolean;
+    isMulti: boolean;
 }

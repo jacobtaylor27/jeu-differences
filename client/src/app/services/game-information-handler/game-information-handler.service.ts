@@ -32,6 +32,10 @@ export class GameInformationHandlerService {
         });
     }
 
+    redirectToSelect(){
+        this.router.navigate(['/select']);
+    }
+
     handleNotDefined(): void {
         if (this.propertiesAreUndefined()) {
             this.router.navigate(['/']);

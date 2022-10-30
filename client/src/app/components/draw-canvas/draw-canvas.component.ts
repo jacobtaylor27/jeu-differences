@@ -96,12 +96,11 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     drawPoint(event: MouseEvent, tool: Tool) {
-    drawPoint(event: MouseEvent) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
-        ctx.lineWidth = this.pencil.width.pencil;
+        ctx.lineWidth = tool === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser;
         ctx.lineCap = this.pencil.cap;
-        ctx.strokeStyle = this.pencil.color;
+        ctx.strokeStyle = tool === Tool.Pencil ? this.pencil.color : 'white';
         ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         ctx.lineTo(this.coordDraw.x, this.coordDraw.y);

@@ -51,6 +51,7 @@ export class GameManagerService {
 
     addPlayer(player: User, gameId: string) {
         const game = this.findGame(gameId);
+       
         game?.addPlayer(player);
     }
 

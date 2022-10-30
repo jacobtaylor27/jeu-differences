@@ -164,4 +164,16 @@ describe('DrawCanvasComponent', () => {
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
     });
+
+    it('should stop if the mouseup when initialize state of the canvas', () => {
+        const spyStop = spyOn(component, 'stop');
+        component.initializeState({ buttons: 0 } as MouseEvent);
+        expect(spyStop).toHaveBeenCalled();
+    });
+
+    it('should start to draw if the mousedown when initialize state of the canvas', () => {
+        const spyStop = spyOn(component, 'start');
+        component.initializeState({ buttons: 1 } as MouseEvent);
+        expect(spyStop).toHaveBeenCalled();
+    });
 });

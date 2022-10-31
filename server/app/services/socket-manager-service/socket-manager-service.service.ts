@@ -50,7 +50,7 @@ export class SocketManagerService {
 
                     socket.emit(SocketEvent.WaitPlayer);
 
-                    if (this.multiplayerGameManager.requestsOnHold.get(roomId)?.length === 1) {
+                    if (this.multiplayerGameManager.theresOneRequest(roomId)) {
                         this.sio
                             .to(this.multiplayerGameManager.getRoomIdWaiting(game.card))
                             .emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });

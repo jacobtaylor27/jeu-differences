@@ -26,6 +26,31 @@ export class GameInfoService {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
 
+    async getGamesInfo(pageNb: number): Promise<GameCarousel> {
+        const nbOfGames = await this.collection.countDocuments();
+        const nbOfPages = Math.ceil(nbOfGames / NB_TO_RETRIEVE);
+        const currentPage = this.validatePageNumber(pageNb, nbOfPages);
+
+        // skip pages to only retrieve the one we want
+        const games = await this.collection.find({}, { skip: (currentPage - 1) * NB_TO_RETRIEVE, limit: NB_TO_RETRIEVE }).toArray();
+
+        return {
+            games,
+            information: {
+                currentPage,
+                gamesOnPage: games.length,
+                nbOfGames,
+                nbOfPages,
+                hasNext: currentPage < nbOfPages,
+                hasPrevious: currentPage > 1,
+            },
+        };
+    }
+
+    validatePageNumber(pageNb: number, total: number): number {
+        return pageNb < 1 ? 1 : pageNb > total ? 1 : pageNb;
+    }
+
     async getAllGameInfos(): Promise<PrivateGameInformation[]> {
         return await this.collection.find({}).toArray();
     }

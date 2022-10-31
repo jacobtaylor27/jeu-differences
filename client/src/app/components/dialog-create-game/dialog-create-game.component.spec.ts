@@ -1,5 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Canvas } from '@app/enums/canvas';
@@ -30,7 +31,7 @@ describe('DialogCreateGameComponent', () => {
                 { provide: MAT_DIALOG_DATA, useValue: model },
                 { provide: CommunicationService, useValue: spyCommunicationService },
             ],
-            imports: [AppMaterialModule, BrowserAnimationsModule, HttpClientModule],
+            imports: [AppMaterialModule, BrowserAnimationsModule, HttpClientModule, FormsModule, ReactiveFormsModule],
         }).compileComponents();
         fixture = TestBed.createComponent(DialogCreateGameComponent);
         component = fixture.componentInstance;

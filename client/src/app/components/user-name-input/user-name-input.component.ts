@@ -41,6 +41,7 @@ export class UserNameInputComponent {
                     mode: this.gameInformationHandlerService.gameMode,
                     game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
                 });
+                this.gameInformationHandlerService.handleSocketEvent();
                 return;
             }
 
@@ -49,6 +50,7 @@ export class UserNameInputComponent {
                 mode: this.gameInformationHandlerService.gameMode,
                 game: { card: this.gameInformationHandlerService.getId(), isMulti: this.isMulti },
             });
+            this.gameInformationHandlerService.handleSocketEvent();
         }
     }
 

@@ -6,7 +6,7 @@ import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
 import { SocketEvent } from '@common/socket-event';
-import {User} from '@common/user'
+import { User } from '@common/user';
 @Component({
     selector: 'app-waiting-room',
     templateUrl: './waiting-room.component.html',
@@ -28,12 +28,11 @@ export class WaitingRoomComponent implements OnInit {
 
     ngOnInit(): void {
         this.socketService.on(SocketEvent.RequestToJoin, (player: User) => {
-            if(this.gameInformationHandlerService.isReadyToAccept){
+            if (this.gameInformationHandlerService.isReadyToAccept) {
                 this.gameInformationHandlerService.isReadyToAccept = false;
-                this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: player.name, opponentsRoomId: player.id} });
-            }
-            else {
-                this.gameInformationHandlerService.requestsNotTreated.push(player)
+                this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: player.name, opponentsRoomId: player.id } });
+            } else {
+                this.gameInformationHandlerService.requestsNotTreated.push(player);
             }
         });
 

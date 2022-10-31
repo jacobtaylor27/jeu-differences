@@ -14,8 +14,8 @@ export class GameInformationHandlerService {
     roomId: string;
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
-    isReadyToAccept : boolean = true;
-    requestsNotTreated : User[] = [];
+    isReadyToAccept: boolean = true;
+    requestsNotTreated: User[] = [];
 
     constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
 

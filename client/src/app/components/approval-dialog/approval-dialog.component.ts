@@ -17,7 +17,7 @@ export class ApprovalDialogComponent {
         @Inject(MAT_DIALOG_DATA)
         public data: {
             opponentsName: string;
-            opponentsRoomId : string;
+            opponentsRoomId: string;
         },
         public socketService: CommunicationSocketService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
@@ -26,19 +26,21 @@ export class ApprovalDialogComponent {
     }
 
     onClickApprove() {
-        this.socketService.send(SocketEvent.AcceptPlayer, { gameId: this.gameInformationHandlerService.roomId, opponentsRoomId : this.data.opponentsRoomId});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        this.socketService.send(SocketEvent.AcceptPlayer, {
+            gameId: this.gameInformationHandlerService.roomId,
+            opponentsRoomId: this.data.opponentsRoomId,
+        });
 
-        for(let request of this.gameInformationHandlerService.requestsNotTreated){
-            this.socketService.send(SocketEvent.RejectPlayer, {opponentsRoomId : request.id });
+        for (const request of this.gameInformationHandlerService.requestsNotTreated) {
+            this.socketService.send(SocketEvent.RejectPlayer, { opponentsRoomId: request.id });
         }
-        
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         this.socketService.on(SocketEvent.Play, () => {});
-    
     }
 
     onClickReject() {
         this.gameInformationHandlerService.isReadyToAccept = true;
-        this.socketService.send(SocketEvent.RejectPlayer, {opponentsRoomId : this.data.opponentsRoomId});
+        this.socketService.send(SocketEvent.RejectPlayer, { opponentsRoomId: this.data.opponentsRoomId });
     }
 }

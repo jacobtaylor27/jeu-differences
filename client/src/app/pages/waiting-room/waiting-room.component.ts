@@ -6,7 +6,7 @@ import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
 import { SocketEvent } from '@common/socket-event';
-
+import {User} from '@common/user'
 @Component({
     selector: 'app-waiting-room',
     templateUrl: './waiting-room.component.html',

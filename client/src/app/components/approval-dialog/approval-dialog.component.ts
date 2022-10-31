@@ -30,17 +30,15 @@ export class ApprovalDialogComponent {
             gameId: this.gameInformationHandlerService.roomId,
             opponentsRoomId: this.data.opponentsRoomId,
         });
-
-        for (const request of this.gameInformationHandlerService.requestsNotTreated) {
-            this.socketService.send(SocketEvent.RejectPlayer, { opponentsRoomId: request.id });
-        }
-
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         this.socketService.on(SocketEvent.Play, () => {});
     }
 
     onClickReject() {
         this.gameInformationHandlerService.isReadyToAccept = true;
-        this.socketService.send(SocketEvent.RejectPlayer, { opponentsRoomId: this.data.opponentsRoomId });
+        this.socketService.send(SocketEvent.RejectPlayer, {
+            roomId: this.gameInformationHandlerService.roomId,
+            opponentsRoomId: this.data.opponentsRoomId,
+        });
     }
 }

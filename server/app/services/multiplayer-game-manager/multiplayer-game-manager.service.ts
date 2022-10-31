@@ -3,10 +3,19 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 
 @Service()
 export class MultiplayerGameManager {
+    requestsOnHold: Map<string, User[]> = new Map();
     private gamesWaiting: { gameId: string; roomId: string }[] = [];
 
     constructor(private readonly gameManager: GameManagerService) {}
 
+    addNewRequest(roomId: string, player: User) {
+        if (this.requestsOnHold.has(roomId)) {
+            this.requestsOnHold.set(roomId, [...(this.requestsOnHold.get(roomId) as User[]), player]);
+            return;
+        }
+
+        this.requestsOnHold.set(roomId, [player]);
+    }
     getGamesWaiting() {
         const gamesId = [];
         for (const game of this.gamesWaiting) {

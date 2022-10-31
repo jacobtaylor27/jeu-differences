@@ -148,27 +148,66 @@ export class GameController {
         });
 
         this.router.get('/cards', (req: Request, res: Response) => {
-            this.gameInfo
-                .getAllGameInfos()
-                .then((games: PrivateGameInformation[]) => {
-                    res.status(StatusCodes.OK).send({
-                        games: games.map((game: PrivateGameInformation) => {
-                            return {
-                                id: game.id,
-                                name: game.name,
-                                thumbnail: game.thumbnail,
-                                nbDifferences: game.differences.length,
-                                idEditedBmp: game.idEditedBmp,
-                                idOriginalBmp: game.idOriginalBmp,
-                                multiplayerScore: game.multiplayerScore,
-                                soloScore: game.soloScore,
+            const page = req.query.page;
+            if (page) {
+                const pageNb = parseInt(page.toString(), 10);
+                this.gameInfo
+                    .getGamesInfo(pageNb)
+                    .then(
+                        (gameCarousel: {
+                            games: PrivateGameInformation[];
+                            information: {
+                                currentPage: number;
+                                gamesOnPage: number;
+                                nbOfGames: number;
+                                nbOfPages: number;
+                                hasNext: boolean;
+                                hasPrevious: boolean;
                             };
-                        }),
+                        }) => {
+                            res.status(StatusCodes.OK).send({
+                                carouselInfo: gameCarousel.information,
+                                games: gameCarousel.games.map((game: PrivateGameInformation) => {
+                                    return {
+                                        id: game.id,
+                                        name: game.name,
+                                        thumbnail: game.thumbnail,
+                                        nbDifferences: game.differences.length,
+                                        idEditedBmp: game.idEditedBmp,
+                                        idOriginalBmp: game.idOriginalBmp,
+                                        multiplayerScore: game.multiplayerScore,
+                                        soloScore: game.soloScore,
+                                    };
+                                }),
+                            });
+                        },
+                    )
+                    .catch(() => {
+                        res.status(StatusCodes.BAD_REQUEST).send();
                     });
-                })
-                .catch(() => {
-                    res.status(StatusCodes.NOT_FOUND).send();
-                });
+            } else {
+                this.gameInfo
+                    .getAllGameInfos()
+                    .then((games: PrivateGameInformation[]) => {
+                        res.status(StatusCodes.OK).send({
+                            games: games.map((game: PrivateGameInformation) => {
+                                return {
+                                    id: game.id,
+                                    name: game.name,
+                                    thumbnail: game.thumbnail,
+                                    nbDifferences: game.differences.length,
+                                    idEditedBmp: game.idEditedBmp,
+                                    idOriginalBmp: game.idOriginalBmp,
+                                    multiplayerScore: game.multiplayerScore,
+                                    soloScore: game.soloScore,
+                                };
+                            }),
+                        });
+                    })
+                    .catch(() => {
+                        res.status(StatusCodes.NOT_FOUND).send();
+                    });
+            }
         });
 
         this.router.get('/cards/:id', (req: Request, res: Response) => {

@@ -68,11 +68,21 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
+                for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
+                    if (player.id !== opponentsRoomId) {
+                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
+                    }
+                }
                 this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, roomId);
-                // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
             });
 
-            socket.on(SocketEvent.RejectPlayer, (opponentsRoomId: string) => {
+            socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {
+                this.multiplayerGameManager.deleteFirstRequest(roomId);
+                if (this.multiplayerGameManager.requestsOnHold.get(roomId)?.length !== 0) {
+                    const newPlayerRequest = this.multiplayerGameManager.getNewRequest(roomId);
+                    this.sio.to(roomId).emit(SocketEvent.RequestToJoin, newPlayerRequest);
+                }
+
                 this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
             });
 

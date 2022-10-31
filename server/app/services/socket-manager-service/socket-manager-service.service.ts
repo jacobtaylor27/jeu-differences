@@ -46,9 +46,15 @@ export class SocketManagerService {
                 if (this.multiplayerGameManager.isGameWaiting(game.card)) {
                     socket.emit(SocketEvent.WaitPlayer);
                     // socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
-                    this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, {name : player, id : socket.id});
+                    this.sio
+                        .to(this.multiplayerGameManager.getRoomIdWaiting(game.card))
+                        .emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
                 } else {
-                    const roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+                    const roomId = await this.gameManager.createGame(
+                        { player: { name: player, id: socket.id }, isMulti: game.isMulti },
+                        mode,
+                        game.card,
+                    );
                     this.multiplayerGameManager.setGamesWaiting();
                     socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
                     socket.emit(SocketEvent.WaitPlayer, roomId);
@@ -56,12 +62,12 @@ export class SocketManagerService {
                 }
             });
 
-            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId:string) => {
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
                 this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, roomId);
                 // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
             });
 
-            socket.on(SocketEvent.RejectPlayer, (opponentsRoomId : string) => {
+            socket.on(SocketEvent.RejectPlayer, (opponentsRoomId: string) => {
                 this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
             });
 

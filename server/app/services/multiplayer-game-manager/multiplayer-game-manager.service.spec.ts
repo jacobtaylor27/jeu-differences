@@ -19,12 +19,8 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should add a game id', () => {
-        multiplayerGameManager.addGameWaiting('test');
+        multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
         expect(multiplayerGameManager.getGamesWaiting()).to.have.lengthOf(1);
-    });
-
-    it('should verify if the game has space for a player', () => {
-        expect(multiplayerGameManager.gameHasSpaceLeft(GAME).valueOf()).to.equal(true);
     });
 
     it('should set the games that are waiting for an opponent', () => {
@@ -41,7 +37,19 @@ describe('Multiplayer Game Manager', () => {
 
     it('should return if a player is waiting in a room', () => {
         expect(multiplayerGameManager.isGameWaiting('')).to.equal(false);
-        spyGameManager['games'] = new Set([GAME]);
+        multiplayerGameManager['gamesWaiting'] = [{ gameId: '1', roomId: '1' }];
         expect(multiplayerGameManager.isGameWaiting('1')).to.equal(true);
+        expect(multiplayerGameManager.isGameWaiting('3')).to.equal(false);
+    });
+
+    it('should get Room Id', () => {
+        spyGameManager['games'] = new Set([]);
+        multiplayerGameManager.setGamesWaiting();
+        expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal('');
+        spyGameManager['games'] = new Set([GAME]);
+        multiplayerGameManager.setGamesWaiting();
+        const [first] = spyGameManager['games'].values();
+        expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal(first.identifier);
+        expect(multiplayerGameManager.getRoomIdWaiting('3')).to.equal('');
     });
 });

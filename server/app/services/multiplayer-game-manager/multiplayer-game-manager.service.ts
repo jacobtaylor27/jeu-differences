@@ -1,40 +1,39 @@
 import { Service } from 'typedi';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
-import { Game } from '@app/classes/game/game';
 
 @Service()
 export class MultiplayerGameManager {
-    private gamesWaiting: string[] = [];
+    private gamesWaiting: { gameId: string; roomId: string }[] = [];
 
     constructor(private readonly gameManager: GameManagerService) {}
 
-    getGamesWaiting(): string[] {
-        return this.gamesWaiting;
+    getGamesWaiting() {
+        const gamesId = [];
+        for (const game of this.gamesWaiting) {
+            gamesId.push(game.gameId);
+        }
+        return gamesId;
+    }
+
+    isGameWaiting(gameId: string) {
+        return this.gamesWaiting.map((game: { gameId: string; roomId: string }) => game.gameId).includes(gameId);
+    }
+
+    getRoomIdWaiting(gameId: string) {
+        const gameWaiting = this.gamesWaiting.find((game: { gameId: string; roomId: string }) => game.gameId === gameId);
+        return !gameWaiting ? '' : gameWaiting.roomId;
     }
 
     setGamesWaiting(): void {
         this.gamesWaiting = [];
         for (const game of this.gameManager.games) {
-            if (this.gameHasSpaceLeft(game)) {
-                this.addGameWaiting(game.information.id);
+            if (game.multi) {
+                this.addGameWaiting({ gameId: game.information.id, roomId: game.identifier });
             }
         }
     }
 
-    gameHasSpaceLeft(game: Game): boolean {
-        return game.multi;
-    }
-
-    isGameWaiting(game: string): boolean {
-        for (const gameWaiting of this.gameManager.games) {
-            if (game === gameWaiting.information.id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    addGameWaiting(gameId: string): void {
-        this.gamesWaiting.push(gameId);
+    addGameWaiting(infos: { gameId: string; roomId: string }): void {
+        this.gamesWaiting.push(infos);
     }
 }

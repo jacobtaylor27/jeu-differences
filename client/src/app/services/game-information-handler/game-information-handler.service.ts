@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
+import { RouterService } from '@app/services/router-service/router.service';
 
 @Injectable({
     providedIn: 'root',
@@ -14,9 +14,7 @@ export class GameInformationHandlerService {
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
 
-    constructor(private readonly router: Router, private readonly socket: CommunicationSocketService) {
-        this.handleSocketEvent();
-    }
+    constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
 
     propertiesAreUndefined(): boolean {
         return this.gameInformation === undefined || this.playerName === undefined || this.gameMode === undefined;
@@ -25,17 +23,18 @@ export class GameInformationHandlerService {
     handleSocketEvent() {
         this.socket.on(SocketEvent.Play, (gameId: string) => {
             this.gameId = gameId;
-            this.router.navigate(['/game']);
+            this.routerService.navigateTo('game');
         });
 
         this.socket.on(SocketEvent.WaitPlayer, (gameId: string) => {
             this.gameId = gameId;
-            this.router.navigate(['/waiting']);
+            this.routerService.navigateTo('waiting');
         });
     }
+
     handleNotDefined(): void {
         if (this.propertiesAreUndefined()) {
-            this.router.navigate(['/']);
+            this.routerService.navigateTo('/');
         }
     }
 

@@ -10,6 +10,8 @@ import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
 import { BmpController } from './controllers/bmp-controller/bmp.controller';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import compression = require('compression');
 
 @Service()
 export class Application {
@@ -60,6 +62,7 @@ export class Application {
         this.app.use(express.urlencoded({ limit: '100mb', extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors());
+        this.app.use(compression());
     }
 
     private errorHandling(): void {

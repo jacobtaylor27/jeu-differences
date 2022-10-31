@@ -16,23 +16,23 @@ describe('ExitButtonHandlerService', () => {
 
     it('should set CreateGame to true when on CreateGamePage', () => {
         service.setCreateGamePage();
-        expect(service.currentPage.createGame);
-        expect(!service.currentPage.game);
-        expect(!service.currentPage.waitingRoom);
+        expect(service.currentPage.createGame).toBeTrue();
+        expect(service.currentPage.game).toBeFalse();
+        expect(service.currentPage.waitingRoom).toBeFalse();
     });
 
     it('should set Game to true when on GamePage', () => {
         service.setGamePage();
-        expect(service.currentPage.game);
-        expect(!service.currentPage.createGame);
-        expect(!service.currentPage.waitingRoom);
+        expect(service.currentPage.game).toBeTrue();
+        expect(service.currentPage.createGame).toBeFalse();
+        expect(service.currentPage.waitingRoom).toBeFalse();
     });
 
     it('should set WaitingRoom to true when on WaitingRoom', () => {
         service.setWaitingRoom();
-        expect(service.currentPage.waitingRoom);
-        expect(!service.currentPage.createGame);
-        expect(!service.currentPage.game);
+        expect(service.currentPage.waitingRoom).toBeTrue();
+        expect(service.currentPage.createGame).toBeFalse();
+        expect(service.currentPage.game).toBeFalse();
     });
 
     it('should return correct title', () => {

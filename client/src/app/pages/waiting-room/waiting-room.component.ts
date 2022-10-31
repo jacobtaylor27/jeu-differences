@@ -27,8 +27,8 @@ export class WaitingRoomComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.socketService.on(SocketEvent.RequestToJoin, (playerName: string) => {
-            this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: playerName } });
+        this.socketService.on(SocketEvent.RequestToJoin, (playerName: User) => {
+            this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: playerName.name } });
         });
 
         this.socketService.on(SocketEvent.RejectPlayer, () => {

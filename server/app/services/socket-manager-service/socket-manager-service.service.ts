@@ -70,7 +70,7 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
                 for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
-                    if (player.id !== opponentsRoomId) {
+                    if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, roomId)) {
                         this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
                     }
                 }

@@ -26,9 +26,8 @@ describe('Multiplayer Game Manager', () => {
 
     it('should be true if theres no request', () => {
         multiplayerGameManager.requestsOnHold = new Map();
-        console.log(multiplayerGameManager.requestsOnHold.get('roomId'))
         expect(multiplayerGameManager.theresARequest('room')).to.equal(false);
-        multiplayerGameManager.requestsOnHold.set('room', [{name : 'name', id : '1'}])
+        multiplayerGameManager.requestsOnHold.set('room', [{ name: 'name', id: '1' }]);
         expect(multiplayerGameManager.theresARequest('')).to.equal(false);
         expect(multiplayerGameManager.theresARequest('room')).to.equal(true);
     });
@@ -59,8 +58,7 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(0);
 
         multiplayerGameManager.requestsOnHold = new Map();
-        expect(multiplayerGameManager.deleteFirstRequest('room') === undefined).to.equal(true)
-
+        expect(multiplayerGameManager.deleteFirstRequest('room') === undefined).to.equal(true);
     });
 
     it('should get the oldest request', () => {

@@ -15,8 +15,7 @@ export class MultiplayerGameManager {
 
     theresARequest(roomId: string) {
         const length = this.requestsOnHold.get(roomId)?.length;
-        return (length ? length > 0 : false);
-           
+        return length ? length > 0 : false;
     }
 
     isNotAPlayersRequest(playersRoom: string, opponentsRoomId: string) {

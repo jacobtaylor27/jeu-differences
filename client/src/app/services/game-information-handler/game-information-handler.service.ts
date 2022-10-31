@@ -4,7 +4,6 @@ import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { RouterService } from '@app/services/router-service/router.service';
-import { User } from '@common/user';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +14,6 @@ export class GameInformationHandlerService {
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
     isReadyToAccept: boolean = true;
-    requestsNotTreated: User[] = [];
 
     constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
 

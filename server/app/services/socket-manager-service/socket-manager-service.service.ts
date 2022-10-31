@@ -62,8 +62,8 @@ export class SocketManagerService {
                 // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
             });
 
-            socket.on(SocketEvent.RejectPlayer, () => {
-                socket.broadcast.emit(SocketEvent.RejectPlayer);
+            socket.on(SocketEvent.RejectPlayer, (opponentsRoomId : string) => {
+                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {

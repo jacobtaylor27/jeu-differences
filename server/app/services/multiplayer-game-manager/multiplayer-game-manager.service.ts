@@ -1,10 +1,12 @@
 import { Service } from 'typedi';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { User } from '@common/user';
 
 @Service()
 export class MultiplayerGameManager {
     requestsOnHold: Map<string, User[]> = new Map();
     private gamesWaiting: { gameId: string; roomId: string }[] = [];
+    
 
     constructor(private readonly gameManager: GameManagerService) {}
 
@@ -20,6 +22,11 @@ export class MultiplayerGameManager {
     deleteFirstRequest(roomId: string) {
         this.requestsOnHold.set(roomId, this.requestsOnHold.get(roomId)?.slice(1) as User[]);
     }
+
+    getNewRequest(roomId: string) {
+        return (this.requestsOnHold.get(roomId) as User[])[0];
+    }
+
     getGamesWaiting() {
         const gamesId = [];
         for (const game of this.gamesWaiting) {

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { Container } from 'typedi';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from './multiplayer-game-manager.service';
-import { User } from '@app/interface/user';
+import { User } from '@common/user';
 
 const GAME = new Game('', { player: {} as User, isMulti: true }, { id: '1' } as PrivateGameInformation);
 const GAME_FALSE = new Game('', { player: {} as User, isMulti: false }, { id: '2' } as PrivateGameInformation);

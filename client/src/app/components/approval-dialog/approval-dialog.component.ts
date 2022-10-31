@@ -17,6 +17,7 @@ export class ApprovalDialogComponent {
         @Inject(MAT_DIALOG_DATA)
         public data: {
             opponentsName: string;
+            opponentsRoomId : string;
         },
         public socketService: CommunicationSocketService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
@@ -31,6 +32,6 @@ export class ApprovalDialogComponent {
     }
 
     onClickReject() {
-        this.socketService.send(SocketEvent.RejectPlayer);
+        this.socketService.send(SocketEvent.RejectPlayer, {opponentsRoomId : this.data.opponentsRoomId});
     }
 }

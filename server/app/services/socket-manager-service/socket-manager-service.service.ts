@@ -56,8 +56,8 @@ export class SocketManagerService {
                 }
             });
 
-            socket.on(SocketEvent.AcceptPlayer, (roomId: string) => {
-                socket.broadcast.emit(SocketEvent.JoinGame, roomId);
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId:string) => {
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, roomId);
                 console.log("ROOM ID WHEN ACCEPTED : " + roomId)
                 // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
             });

@@ -6,6 +6,7 @@ import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
+import { User } from '@common/user';
 @Service()
 export class SocketManagerService {
     private sio: Server;

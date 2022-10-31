@@ -25,9 +25,15 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should be true if theres no request', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
         expect(multiplayerGameManager.theresNoRequest('')).to.equal(true);
         multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
-        expect(multiplayerGameManager.theresOneRequest('')).to.equal(false);
+        expect(multiplayerGameManager.theresNoRequest('')).to.equal(true);
+        multiplayerGameManager.deleteFirstRequest('room');
+        expect(multiplayerGameManager.theresNoRequest('room')).to.equal(true);
+
+    
+
     });
 
     it('should return true if its not a current players request', () => {

@@ -59,6 +59,6 @@ export class ToolBoxComponent {
     }
 
     changeButtonColor(tool: Tool) {
-        this.colorButton = tool === Tool.Eraser ? { pencil: 'background', eraser: 'primary' } : { pencil: 'primary', eraser: 'background' };
+        this.colorButton = tool === Tool.Eraser ? { pencil: 'primary', eraser: 'background' } : { pencil: 'background', eraser: 'primary' };
     }
 }

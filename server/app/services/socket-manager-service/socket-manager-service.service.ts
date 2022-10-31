@@ -48,16 +48,17 @@ export class SocketManagerService {
                     // socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
                     this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, player);
                 } else {
-                    const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+                    const roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                     this.multiplayerGameManager.setGamesWaiting();
                     socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
-                    socket.emit(SocketEvent.WaitPlayer, id);
-                    socket.join(id);
+                    socket.emit(SocketEvent.WaitPlayer, roomId);
+                    socket.join(roomId);
                 }
             });
 
-            socket.on(SocketEvent.AcceptPlayer, (gameId: string) => {
-                socket.broadcast.emit(SocketEvent.JoinGame, gameId);
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string) => {
+                socket.broadcast.emit(SocketEvent.JoinGame, roomId);
+                console.log("ROOM ID WHEN ACCEPTED : " + roomId)
                 // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
             });
 
@@ -68,7 +69,7 @@ export class SocketManagerService {
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
-                socket.to(gameId).emit(SocketEvent.Play);
+                this.sio.to(gameId).emit(SocketEvent.Play);
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {

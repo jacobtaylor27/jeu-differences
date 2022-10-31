@@ -29,10 +29,6 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.theresNoRequest('')).to.equal(true);
         multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
         expect(multiplayerGameManager.theresNoRequest('')).to.equal(true);
-        multiplayerGameManager.deleteFirstRequest('room');
-        expect(multiplayerGameManager.theresNoRequest('room')).to.equal(true);
-
-    
 
     });
 

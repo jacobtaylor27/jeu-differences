@@ -46,7 +46,7 @@ export class SocketManagerService {
                 if (this.multiplayerGameManager.isGameWaiting(game.card)) {
                     socket.emit(SocketEvent.WaitPlayer);
                     // socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
-                    this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, player);
+                    this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, {name : player, id : socket.id});
                 } else {
                     const roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                     this.multiplayerGameManager.setGamesWaiting();

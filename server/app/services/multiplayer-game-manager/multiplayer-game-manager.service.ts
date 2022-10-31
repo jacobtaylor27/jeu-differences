@@ -6,7 +6,6 @@ import { User } from '@common/user';
 export class MultiplayerGameManager {
     requestsOnHold: Map<string, User[]> = new Map();
     private gamesWaiting: { gameId: string; roomId: string }[] = [];
-    
 
     constructor(private readonly gameManager: GameManagerService) {}
 

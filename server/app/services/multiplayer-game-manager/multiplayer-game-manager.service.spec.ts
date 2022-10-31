@@ -24,6 +24,12 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.theresOneRequest('room')).to.equal(true);
     });
 
+    it('should be true if theres no request', () => {
+        expect(multiplayerGameManager.theresNoRequest('')).to.equal(true);
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        expect(multiplayerGameManager.theresOneRequest('')).to.equal(false);
+    });
+
     it('should add a game id', () => {
         multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
         expect(multiplayerGameManager.getGamesWaiting()).to.have.lengthOf(1);

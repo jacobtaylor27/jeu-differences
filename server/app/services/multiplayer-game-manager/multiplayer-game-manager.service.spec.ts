@@ -44,6 +44,16 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.requestsOnHold.get('room')?.length).equal(2);
     });
 
+    it('should get the oldest request', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        multiplayerGameManager.addNewRequest('room', { name: 'name2', id: '2' });
+
+        const result = multiplayerGameManager.getNewRequest('room');
+        expect(result.name).to.equal('name');
+        expect(result.id).to.equal('1');
+    });
+
     it('should add a game id', () => {
         multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
         expect(multiplayerGameManager.getGamesWaiting()).to.have.lengthOf(1);

@@ -18,6 +18,12 @@ describe('Multiplayer Game Manager', () => {
         spyGameManager = Container.get(GameManagerService);
     });
 
+    it('should be true if theres only one request', () => {
+        expect(multiplayerGameManager.theresOneRequest('')).to.equal(false);
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        expect(multiplayerGameManager.theresOneRequest('room')).to.equal(true);
+    });
+
     it('should add a game id', () => {
         multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
         expect(multiplayerGameManager.getGamesWaiting()).to.have.lengthOf(1);

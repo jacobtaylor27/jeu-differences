@@ -6,6 +6,12 @@ import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+
+interface Command {
+    name: string;
+    event: Event;
+}
+
 @Component({
     selector: 'app-draw-canvas',
     templateUrl: './draw-canvas.component.html',
@@ -19,6 +25,33 @@ export class DrawCanvasComponent implements AfterViewInit {
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
+    commands: Command[];
+    commandType = {
+        draw: (event: MouseEvent) => {
+            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            ctx.beginPath();
+            ctx.lineWidth = this.pencil.width.pencil;
+            ctx.lineCap = this.pencil.cap;
+            ctx.strokeStyle = Tool.Pencil;
+            ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
+            this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+            ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
+            ctx.stroke();
+            this.updateImage();
+        },
+        erase: (event: MouseEvent) => {
+            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            ctx.beginPath();
+            ctx.lineWidth = this.pencil.width.eraser;
+            ctx.lineCap = this.pencil.cap;
+            ctx.strokeStyle = 'white';
+            ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
+            this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+            ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
+            ctx.stroke();
+            this.updateImage();
+        },
+    };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
@@ -74,7 +107,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.drawService.$differenceImage.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
     }
 
-    // https://daily-dev-tips.com/posts/javascript-mouse-drawing-on-the-canvas/
     start(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
@@ -92,19 +124,12 @@ export class DrawCanvasComponent implements AfterViewInit {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        this.drawPoint(event, this.pencil.state);
+        // TODO: faire la distinction entre l'efface et le crayon
+        this.pushAndApplyCommand({ name: 'draw', event });
     }
 
-    drawPoint(event: MouseEvent, tool: Tool) {
-        const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        ctx.beginPath();
-        ctx.lineWidth = tool === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser;
-        ctx.lineCap = this.pencil.cap;
-        ctx.strokeStyle = tool === Tool.Pencil ? this.pencil.color : 'white';
-        ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
-        ctx.stroke();
-        this.updateImage();
+    pushAndApplyCommand(command: Command) {
+        this.commands.push(command);
+        this.commandType.
     }
 }

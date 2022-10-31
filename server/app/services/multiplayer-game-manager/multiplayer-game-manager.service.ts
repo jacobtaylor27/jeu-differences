@@ -9,6 +9,9 @@ export class MultiplayerGameManager {
 
     constructor(private readonly gameManager: GameManagerService) {}
 
+    theresOneRequest(roomId: string) {
+        return this.requestsOnHold.get(roomId)?.length === 1;
+    }
     addNewRequest(roomId: string, player: User) {
         if (this.requestsOnHold.has(roomId)) {
             this.requestsOnHold.set(roomId, [...(this.requestsOnHold.get(roomId) as User[]), player]);

@@ -34,6 +34,7 @@ export class ApprovalDialogComponent {
     }
 
     onClickReject() {
+        this.gameInformationHandlerService.isReadyToAccept = true;
         this.socketService.send(SocketEvent.RejectPlayer, {opponentsRoomId : this.data.opponentsRoomId});
     }
 }

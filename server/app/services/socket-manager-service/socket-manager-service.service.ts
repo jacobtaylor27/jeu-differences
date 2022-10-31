@@ -6,6 +6,8 @@ import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
+import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
+import { User } from '@common/user';
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -44,24 +46,27 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.CreateGameMulti, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
                 if (this.multiplayerGameManager.isGameWaiting(game.card)) {
+                    const roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
+                    this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
+
                     socket.emit(SocketEvent.WaitPlayer);
-                    // socket.broadcast.to(this.multiplayerGameManager.getGameWaitingId(game.card)).emit(SocketEvent.RequestToJoin, player)
-                    this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, player);
+
+                    if (this.multiplayerGameManager.theresOneRequest(roomId)) {
+                        this.sio
+                            .to(this.multiplayerGameManager.getRoomIdWaiting(game.card))
+                            .emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
+                    }
                 } else {
-                    const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+                    const roomId = await this.gameManager.createGame(
+                        { player: { name: player, id: socket.id }, isMulti: game.isMulti },
+                        mode,
+                        game.card,
+                    );
                     this.multiplayerGameManager.setGamesWaiting();
                     socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
-                    socket.emit(SocketEvent.WaitPlayer, id);
-                    socket.join(id);
+                    socket.emit(SocketEvent.WaitPlayer, roomId);
+                    socket.join(roomId);
                 }
-            });
-
-            socket.on(SocketEvent.Message, (message: string, gameId: string) => {
-                if (!this.gameManager.isGameFound(gameId)) {
-                    socket.emit(SocketEvent.Error);
-                    return;
-                }
-                this.sio.sockets.emit(SocketEvent.Message, message);
             });
 
             socket.on(SocketEvent.AcceptPlayer, (gameId: string) => {
@@ -69,8 +74,14 @@ export class SocketManagerService {
                 // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
             });
 
-            socket.on(SocketEvent.RejectPlayer, () => {
-                socket.broadcast.emit(SocketEvent.RejectPlayer);
+            socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {
+                this.multiplayerGameManager.deleteFirstRequest(roomId);
+                if (this.multiplayerGameManager.theresARequest(roomId)) {
+                    const newPlayerRequest = this.multiplayerGameManager.getNewRequest(roomId);
+                    this.sio.to(roomId).emit(SocketEvent.RequestToJoin, newPlayerRequest);
+                }
+
+                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {

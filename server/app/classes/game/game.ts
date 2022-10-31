@@ -4,7 +4,7 @@ import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { User } from '@app/interface/user';
+import { User } from '@common/user';
 import { Coordinate } from '@common/coordinate';
 import { v4 } from 'uuid';
 

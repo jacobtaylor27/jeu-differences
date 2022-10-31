@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { Container } from 'typedi';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from './multiplayer-game-manager.service';
-import { User } from '@app/interface/user';
+import { User } from '@common/user';
 
 const GAME = new Game('', { player: {} as User, isMulti: true }, { id: '1' } as PrivateGameInformation);
 const GAME_FALSE = new Game('', { player: {} as User, isMulti: false }, { id: '2' } as PrivateGameInformation);
@@ -16,6 +16,59 @@ describe('Multiplayer Game Manager', () => {
     beforeEach(() => {
         multiplayerGameManager = Container.get(MultiplayerGameManager);
         spyGameManager = Container.get(GameManagerService);
+    });
+
+    it('should be true if theres only one request', () => {
+        expect(multiplayerGameManager.theresOneRequest('')).to.equal(false);
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        expect(multiplayerGameManager.theresOneRequest('room')).to.equal(true);
+    });
+
+    it('should be true if theres no request', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
+        expect(multiplayerGameManager.theresARequest('room')).to.equal(false);
+        multiplayerGameManager.requestsOnHold.set('room', [{ name: 'name', id: '1' }]);
+        expect(multiplayerGameManager.theresARequest('')).to.equal(false);
+        expect(multiplayerGameManager.theresARequest('room')).to.equal(true);
+    });
+
+    it('should return true if its not a current players request', () => {
+        expect(multiplayerGameManager.isNotAPlayersRequest('1', '1')).to.equal(false);
+        expect(multiplayerGameManager.isNotAPlayersRequest('1', '2')).to.equal(true);
+    });
+
+    it('should add new Request', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).equal(1);
+
+        multiplayerGameManager.addNewRequest('room', { name: 'name2', id: '2' });
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).equal(2);
+    });
+
+    it('should delete first request', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
+
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        multiplayerGameManager.addNewRequest('room', { name: 'name2', id: '2' });
+        multiplayerGameManager.deleteFirstRequest('room');
+
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(1);
+        multiplayerGameManager.deleteFirstRequest('room');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(0);
+
+        multiplayerGameManager.requestsOnHold = new Map();
+        expect(multiplayerGameManager.deleteFirstRequest('room') === undefined).to.equal(true);
+    });
+
+    it('should get the oldest request', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        multiplayerGameManager.addNewRequest('room', { name: 'name2', id: '2' });
+
+        const result = multiplayerGameManager.getNewRequest('room');
+        expect(result.name).to.equal('name');
+        expect(result.id).to.equal('1');
     });
 
     it('should add a game id', () => {

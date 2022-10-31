@@ -79,7 +79,7 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {
                 this.multiplayerGameManager.deleteFirstRequest(roomId);
-                if (this.multiplayerGameManager.theresNoRequest(roomId)) {
+                if (this.multiplayerGameManager.theresARequest(roomId)) {
                     const newPlayerRequest = this.multiplayerGameManager.getNewRequest(roomId);
                     this.sio.to(roomId).emit(SocketEvent.RequestToJoin, newPlayerRequest);
                 }

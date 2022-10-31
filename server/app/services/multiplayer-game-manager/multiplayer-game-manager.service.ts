@@ -13,8 +13,10 @@ export class MultiplayerGameManager {
         return this.requestsOnHold.get(roomId)?.length === 1;
     }
 
-    theresNoRequest(roomId: string) {
-        return this.requestsOnHold.get(roomId)?.length !== 0;
+    theresARequest(roomId: string) {
+        const length = this.requestsOnHold.get(roomId)?.length;
+        return (length ? length > 0 : false);
+           
     }
 
     isNotAPlayersRequest(playersRoom: string, opponentsRoomId: string) {

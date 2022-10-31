@@ -10,7 +10,7 @@ import { RouterService } from '@app/services/router-service/router.service';
 })
 export class GameInformationHandlerService {
     playerName: string;
-    gameId: string;
+    roomId: string;
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
 
@@ -22,12 +22,12 @@ export class GameInformationHandlerService {
 
     handleSocketEvent() {
         this.socket.on(SocketEvent.Play, (gameId: string) => {
-            this.gameId = gameId;
+            this.roomId = gameId;
             this.routerService.navigateTo('game');
         });
 
-        this.socket.on(SocketEvent.WaitPlayer, (gameId: string) => {
-            this.gameId = gameId;
+        this.socket.on(SocketEvent.WaitPlayer, (roomId: string) => {
+            this.roomId = roomId;
             this.routerService.navigateTo('waiting');
         });
     }

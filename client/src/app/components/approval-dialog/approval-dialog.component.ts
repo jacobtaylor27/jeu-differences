@@ -25,7 +25,7 @@ export class ApprovalDialogComponent {
     }
 
     onClickApprove() {
-        this.socketService.send(SocketEvent.AcceptPlayer, { gameId: this.gameInformationHandlerService.gameId });
+        this.socketService.send(SocketEvent.AcceptPlayer, { gameId: this.gameInformationHandlerService.roomId });
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         this.socketService.on(SocketEvent.Play, () => {});
     }

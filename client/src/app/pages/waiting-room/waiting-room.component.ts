@@ -6,7 +6,7 @@ import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
 import { SocketEvent } from '@common/socket-event';
-
+import { User } from '@common/user';
 @Component({
     selector: 'app-waiting-room',
     templateUrl: './waiting-room.component.html',
@@ -27,8 +27,8 @@ export class WaitingRoomComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.socketService.on(SocketEvent.RequestToJoin, (playerName: string) => {
-            this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: playerName } });
+        this.socketService.on(SocketEvent.RequestToJoin, (player: User) => {
+            this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: player.name, opponentsRoomId: player.id } });
         });
 
         this.socketService.on(SocketEvent.RejectPlayer, () => {
@@ -36,8 +36,9 @@ export class WaitingRoomComponent implements OnInit {
             this.routerService.navigateTo('select');
         });
 
-        this.socketService.on(SocketEvent.JoinGame, (gameId: string) => {
-            this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayerName(), gameId });
+        this.socketService.on(SocketEvent.JoinGame, (roomId: string) => {
+            this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayerName(), roomId });
+            this.gameInformationHandlerService.roomId = roomId;
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             this.socketService.on(SocketEvent.Play, () => {});
         });

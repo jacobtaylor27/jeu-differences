@@ -16,6 +16,11 @@ export class MultiplayerGameManager {
     theresNoRequest(roomId: string) {
         return this.requestsOnHold.get(roomId)?.length !== 0;
     }
+
+    isNotAPlayersRequest(playersRoom: string, opponentsRoomId: string) {
+        return playersRoom !== opponentsRoomId;
+    }
+
     addNewRequest(roomId: string, player: User) {
         if (this.requestsOnHold.has(roomId)) {
             this.requestsOnHold.set(roomId, [...(this.requestsOnHold.get(roomId) as User[]), player]);

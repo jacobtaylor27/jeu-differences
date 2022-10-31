@@ -16,6 +16,10 @@ export class MultiplayerGameManager {
 
         this.requestsOnHold.set(roomId, [player]);
     }
+
+    deleteFirstRequest(roomId: string) {
+        this.requestsOnHold.set(roomId, this.requestsOnHold.get(roomId)?.slice(1) as User[]);
+    }
     getGamesWaiting() {
         const gamesId = [];
         for (const game of this.gamesWaiting) {

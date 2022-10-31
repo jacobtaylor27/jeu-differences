@@ -46,6 +46,7 @@ describe('Multiplayer Game Manager', () => {
 
     it('should delete first request', () => {
         multiplayerGameManager.requestsOnHold = new Map();
+
         multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
         multiplayerGameManager.addNewRequest('room', { name: 'name2', id: '2' });
         multiplayerGameManager.deleteFirstRequest('room');
@@ -53,6 +54,10 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(1);
         multiplayerGameManager.deleteFirstRequest('room');
         expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(0);
+
+        multiplayerGameManager.requestsOnHold = new Map();
+        expect(multiplayerGameManager.deleteFirstRequest('room') === undefined).to.equal(true)
+
     });
 
     it('should get the oldest request', () => {

@@ -30,6 +30,17 @@ export class ChatBoxComponent implements OnInit {
         // this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
         // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
     }
+    isOpponentMessage(message: ChatMessage) {
+        return message.type === 'opponent';
+    }
+
+    isPersonalMessage(message: ChatMessage) {
+        return message.type === 'personal';
+    }
+
+    isEventMessage(message: ChatMessage) {
+        return message.type === 'gameMaster';
+    }
 
     onClickSend(): void {
         this.addingMessage(this.currentMessage, 'personal');

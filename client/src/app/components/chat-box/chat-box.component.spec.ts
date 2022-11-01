@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
+import { ChatMessage } from '@app/interfaces/chat-message';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { SocketEvent } from '@common/socket-event';
@@ -84,5 +85,26 @@ describe('ChatBoxComponent', () => {
         expect(spySend).toHaveBeenCalled();
         expect(spyAddingMessage).toHaveBeenCalled();
         expect(component.currentMessage).toEqual('');
+    });
+
+    it('should return true if it is an opponent message', () => {
+        const message: ChatMessage = { content: 'message', type: 'opponent' };
+        const wrongTypeMessage: ChatMessage = { content: 'message', type: 'personal' };
+        expect(component.isOpponentMessage(message)).toEqual(true);
+        expect(component.isOpponentMessage(wrongTypeMessage)).toEqual(false);
+    });
+
+    it('should return true if it is a personal message', () => {
+        const message: ChatMessage = { content: 'message', type: 'personal' };
+        const wrongTypeMessage: ChatMessage = { content: 'message', type: 'gameMaster' };
+        expect(component.isPersonalMessage(message)).toEqual(true);
+        expect(component.isPersonalMessage(wrongTypeMessage)).toEqual(false);
+    });
+
+    it('should return true if it is an Event message', () => {
+        const message: ChatMessage = { content: 'message', type: 'gameMaster' };
+        const wrongTypeMessage: ChatMessage = { content: 'message', type: 'personal' };
+        expect(component.isEventMessage(message)).toEqual(true);
+        expect(component.isEventMessage(wrongTypeMessage)).toEqual(false);
     });
 });

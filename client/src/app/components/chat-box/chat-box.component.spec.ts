@@ -52,4 +52,13 @@ describe('ChatBoxComponent', () => {
         socketHelper.peerSideEmit(SocketEvent.Message, 'message');
         expect(spyAddingMessage).toHaveBeenCalled();
     });
+
+    it('should add the user message into array with personal type', () => {
+        component.messages = [];
+        const messageTest = 'message';
+        component.addingPersonalMessage(messageTest);
+        expect(component.messages).toHaveSize(1);
+        expect(component.messages[0].type).toEqual('personal');
+    });
+
 });

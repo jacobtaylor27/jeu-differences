@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
-
 class SocketClientServiceMock extends CommunicationSocketService {
     override connect() {}
 }
@@ -27,7 +28,7 @@ describe('ChatBoxComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [ChatBoxComponent],
-            imports: [AppMaterialModule, BrowserAnimationsModule],
+            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
             providers: [
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
                 { provide: Router, useValue: spyRouter },

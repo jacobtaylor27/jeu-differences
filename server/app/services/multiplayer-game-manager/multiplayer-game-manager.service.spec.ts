@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Container } from 'typedi';
 import { MultiplayerGameManager } from './multiplayer-game-manager.service';
 
-describe.only('Multiplayer Game Manager', () => {
+describe('Multiplayer Game Manager', () => {
     let multiplayerGameManager: MultiplayerGameManager;
 
     beforeEach(() => {

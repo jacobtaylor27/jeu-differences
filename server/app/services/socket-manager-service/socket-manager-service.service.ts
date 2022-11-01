@@ -1,5 +1,4 @@
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
-import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
@@ -7,7 +6,6 @@ import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
-import { User } from '@common/user';
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -69,11 +67,8 @@ export class SocketManagerService {
                 }
             });
             socket.on(SocketEvent.Message, (message: string, roomId: string) => {
-                console.log(roomId);
-                console.log(message);
-                console.log(socket.rooms);
-                console.log(console.log('Number of clients', this.sio.sockets.adapter.rooms.get('_ims4qmIhv9U5ELNAAAD')?.size));
-                this.sio.to(roomId).emit(SocketEvent.Message, message);
+                socket.broadcast.to(roomId).emit(SocketEvent.Message, message);
+                // this.sio.to(roomId).emit(SocketEvent.Message, message);
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
@@ -98,17 +93,10 @@ export class SocketManagerService {
                 this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
             });
 
-            socket.on(SocketEvent.JoinGame, (player: string, roomId: string) => {
-                this.gameManager.addPlayer({ name: player, id: socket.id }, roomId);
-                socket.join(roomId);
-                this.sio.to(roomId).emit(SocketEvent.Play);
-                this.gameManager.setTimer(roomId);
-                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
-                setInterval(() => {
-                    if (!this.gameManager.isGameOver(roomId)) {
-                        this.sio.sockets.to(roomId).emit('clock', this.gameManager.getTime(roomId));
-                    }
-                }, 1000);
+            socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
+                this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
+                socket.join(gameId);
+                this.sio.to(gameId).emit(SocketEvent.Play);
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {

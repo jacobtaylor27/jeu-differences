@@ -23,12 +23,13 @@ export class GameInformationHandlerService {
 
     handleSocketEvent() {
         this.socket.on(SocketEvent.Play, (gameId: string) => {
-            this.roomId = gameId;
+            // this.roomId = gameId;
             this.routerService.navigateTo('game');
         });
 
         this.socket.on(SocketEvent.WaitPlayer, (roomId: string) => {
             this.roomId = roomId;
+            console.log("ROOOM ID PLAYER 1 RECEIVED " + roomId)
             this.routerService.navigateTo('waiting');
         });
     }

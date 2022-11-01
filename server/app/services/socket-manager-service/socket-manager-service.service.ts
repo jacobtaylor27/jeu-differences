@@ -34,7 +34,7 @@ export class SocketManagerService {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                 socket.join(id);
                 this.gameManager.setTimer(id);
-                socket.emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
+                socket.emit(SocketEvent.Play, id);
                 /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
                 setInterval(() => {
                     if (!this.gameManager.isGameOver(id)) {

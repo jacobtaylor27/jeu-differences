@@ -84,10 +84,10 @@ describe('Multiplayer Game Manager', () => {
 
     it('should get Room Id', () => {
         multiplayerGameManager['gamesWaiting'] = [];
-        multiplayerGameManager.addGameWaiting({gameId: '1', roomId: '1'});
+        multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
         expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal('1');
         multiplayerGameManager['gamesWaiting'] = [];
-        multiplayerGameManager.addGameWaiting({gameId: '2', roomId: '2'});
+        multiplayerGameManager.addGameWaiting({ gameId: '2', roomId: '2' });
         const first = multiplayerGameManager['gamesWaiting'][0];
         expect(multiplayerGameManager.getRoomIdWaiting('2')).to.equal(first.roomId);
         expect(multiplayerGameManager.getRoomIdWaiting('3')).to.equal('');

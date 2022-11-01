@@ -68,6 +68,13 @@ export class SocketManagerService {
                     socket.join(roomId);
                 }
             });
+            socket.on(SocketEvent.Message, (message: string, roomId: string) => {
+                console.log(roomId);
+                console.log(message);
+                console.log(socket.rooms);
+                console.log(console.log('Number of clients', this.sio.sockets.adapter.rooms.get('_ims4qmIhv9U5ELNAAAD')?.size));
+                this.sio.to(roomId).emit(SocketEvent.Message, message);
+            });
 
             socket.on(SocketEvent.AcceptPlayer, (gameId: string) => {
                 socket.broadcast.emit(SocketEvent.JoinGame, gameId);

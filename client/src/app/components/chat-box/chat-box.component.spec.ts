@@ -61,4 +61,12 @@ describe('ChatBoxComponent', () => {
         expect(component.messages[0].type).toEqual('personal');
     });
 
+    it('should add the adversary user message into array with adversary type', () => {
+        component.messages = [];
+        const messageTest = 'message';
+        component.addingAdversaryMessage(messageTest);
+        expect(component.messages).toHaveSize(1);
+        expect(component.messages[0].type).toEqual('adversary');
+    });
+
 });

@@ -61,7 +61,7 @@ export class SocketManagerService {
                         mode,
                         game.card,
                     );
-                    this.multiplayerGameManager.setGamesWaiting();
+                    this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
                     socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
                     socket.emit(SocketEvent.WaitPlayer, roomId);
                     socket.join(roomId);

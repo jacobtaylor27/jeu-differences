@@ -90,10 +90,17 @@ export class SocketManagerService {
                 this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
             });
 
-            socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
-                this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
-                socket.join(gameId);
-                this.sio.to(gameId).emit(SocketEvent.Play);
+            socket.on(SocketEvent.JoinGame, (player: string, roomId: string) => {
+                this.gameManager.addPlayer({ name: player, id: socket.id }, roomId);
+                socket.join(roomId);
+                this.sio.to(roomId).emit(SocketEvent.Play);
+                this.gameManager.setTimer(roomId);
+                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
+                setInterval(() => {
+                    if (!this.gameManager.isGameOver(roomId)) {
+                        this.sio.sockets.to(roomId).emit('clock', this.gameManager.getTime(roomId));
+                    }
+                }, 1000);
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {

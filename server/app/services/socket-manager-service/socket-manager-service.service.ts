@@ -35,7 +35,7 @@ export class SocketManagerService {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
                 socket.join(id);
                 this.gameManager.setTimer(id);
-                socket.emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
+                socket.emit(SocketEvent.Play, id);
                 /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
                 setInterval(() => {
                     if (!this.gameManager.isGameOver(id)) {
@@ -62,7 +62,7 @@ export class SocketManagerService {
                         mode,
                         game.card,
                     );
-                    this.multiplayerGameManager.setGamesWaiting();
+                    this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
                     socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
                     socket.emit(SocketEvent.WaitPlayer, roomId);
                     socket.join(roomId);
@@ -76,9 +76,16 @@ export class SocketManagerService {
                 this.sio.to(roomId).emit(SocketEvent.Message, message);
             });
 
-            socket.on(SocketEvent.AcceptPlayer, (gameId: string) => {
-                socket.broadcast.emit(SocketEvent.JoinGame, gameId);
-                // socket.broadcast.emit(SocketEvent.JoinGame, {data : {opponentsName : opponentsName, gameId : gameId}})
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
+                this.multiplayerGameManager.removeGameWaiting(roomId);
+                this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+                for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
+                    if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, roomId)) {
+                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
+                    }
+                }
+                this.multiplayerGameManager.deleteAllRequests(roomId);
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, roomId);
             });
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {
@@ -91,10 +98,17 @@ export class SocketManagerService {
                 this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
             });
 
-            socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
-                this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
-                socket.join(gameId);
-                this.sio.to(gameId).emit(SocketEvent.Play);
+            socket.on(SocketEvent.JoinGame, (player: string, roomId: string) => {
+                this.gameManager.addPlayer({ name: player, id: socket.id }, roomId);
+                socket.join(roomId);
+                this.sio.to(roomId).emit(SocketEvent.Play);
+                this.gameManager.setTimer(roomId);
+                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
+                setInterval(() => {
+                    if (!this.gameManager.isGameOver(roomId)) {
+                        this.sio.sockets.to(roomId).emit('clock', this.gameManager.getTime(roomId));
+                    }
+                }, 1000);
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {

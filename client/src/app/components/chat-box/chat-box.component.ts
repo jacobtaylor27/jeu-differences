@@ -13,7 +13,7 @@ export class ChatBoxComponent implements OnInit {
     isAdversaryConnected: boolean = true;
     currentMessage: string;
 
-    constructor(private readonly communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
+    constructor(public communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
@@ -37,11 +37,11 @@ export class ChatBoxComponent implements OnInit {
         this.currentMessage = '';
     }
 
-    private addingAdversaryMessage(message: string) {
+    addingAdversaryMessage(message: string) {
         this.messages.push({ content: message, type: 'adversary' });
     }
 
-    private addingPersonalMessage(message: string) {
+    addingPersonalMessage(message: string) {
         this.messages.push({ content: message, type: 'personal' });
     }
 

@@ -1,21 +1,12 @@
-import { Game } from '@app/classes/game/game';
-import { PrivateGameInformation } from '@app/interface/game-info';
 import { expect } from 'chai';
 import { Container } from 'typedi';
-import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from './multiplayer-game-manager.service';
-import { User } from '@common/user';
 
-const GAME = new Game('', { player: {} as User, isMulti: true }, { id: '1' } as PrivateGameInformation);
-const GAME_FALSE = new Game('', { player: {} as User, isMulti: false }, { id: '2' } as PrivateGameInformation);
-
-describe('Multiplayer Game Manager', () => {
+describe.only('Multiplayer Game Manager', () => {
     let multiplayerGameManager: MultiplayerGameManager;
-    let spyGameManager: GameManagerService;
 
     beforeEach(() => {
         multiplayerGameManager = Container.get(MultiplayerGameManager);
-        spyGameManager = Container.get(GameManagerService);
     });
 
     it('should be true if theres only one request', () => {
@@ -84,13 +75,13 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should get Room Id', () => {
-        spyGameManager['games'] = new Set([]);
-        multiplayerGameManager.setGamesWaiting();
-        expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal('');
-        spyGameManager['games'] = new Set([GAME]);
-        multiplayerGameManager.setGamesWaiting();
-        const [first] = spyGameManager['games'].values();
-        expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal(first.identifier);
+        multiplayerGameManager['gamesWaiting'] = [];
+        multiplayerGameManager.addGameWaiting({gameId: '1', roomId: '1'});
+        expect(multiplayerGameManager.getRoomIdWaiting('1')).to.equal('1');
+        multiplayerGameManager['gamesWaiting'] = [];
+        multiplayerGameManager.addGameWaiting({gameId: '2', roomId: '2'});
+        const first = multiplayerGameManager['gamesWaiting'][0];
+        expect(multiplayerGameManager.getRoomIdWaiting('2')).to.equal(first.roomId);
         expect(multiplayerGameManager.getRoomIdWaiting('3')).to.equal('');
     });
 });

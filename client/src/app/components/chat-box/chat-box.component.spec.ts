@@ -47,4 +47,9 @@ describe('ChatBoxComponent', () => {
         component.onDialogClick(key);
         expect(spyClick).toHaveBeenCalled();
     });
+    it('should push the message into messages array when message event is heard', () => {
+        const spyAddingMessage = spyOn(component, 'addingAdversaryMessage');
+        socketHelper.peerSideEmit(SocketEvent.Message, 'message');
+        expect(spyAddingMessage).toHaveBeenCalled();
+    });
 });

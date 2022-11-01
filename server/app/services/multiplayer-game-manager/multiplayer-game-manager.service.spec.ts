@@ -62,6 +62,14 @@ describe.only('Multiplayer Game Manager', () => {
         expect(result.id).to.equal('1');
     });
 
+    it('should delete all requests of a room', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        multiplayerGameManager.addNewRequest('room', { name: 'name2', id: '2' });
+        multiplayerGameManager.deleteAllRequests('room');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(undefined);
+    });
+
     it('should add a game id', () => {
         multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
         expect(multiplayerGameManager.getGamesWaiting()).to.have.lengthOf(1);

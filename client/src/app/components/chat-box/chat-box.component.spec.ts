@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
-import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { Socket } from 'socket.io-client';
 
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -20,9 +20,11 @@ describe('ChatBoxComponent', () => {
         socketHelper = new SocketTestHelper();
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
+
         await TestBed.configureTestingModule({
             declarations: [ChatBoxComponent],
             imports: [AppMaterialModule, BrowserAnimationsModule],
+            providers: [{ provide: CommunicationSocketService, useValue: socketServiceMock }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ChatBoxComponent);

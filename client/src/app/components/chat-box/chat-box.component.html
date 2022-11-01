@@ -1,6 +1,6 @@
 <mat-card class="main-wrapper">
     <mat-card-title> Messages </mat-card-title>
-    <div class="chat-area">
+    <div class="chat-area" #scroll >
         <div *ngFor="let message of messages">
             <div class="message-wrapper">
                 <div

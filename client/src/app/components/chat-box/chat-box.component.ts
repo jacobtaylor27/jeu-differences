@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ChatMessage } from '@app/interfaces/chat-message';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -8,17 +8,25 @@ import { SocketEvent } from '@common/socket-event';
     templateUrl: './chat-box.component.html',
     styleUrls: ['./chat-box.component.scss'],
 })
-export class ChatBoxComponent implements OnInit {
+export class ChatBoxComponent implements OnInit, AfterViewInit {
+    @ViewChild('scroll', { static: true }) scroll: ElementRef;
     messages: ChatMessage[] = [];
     isOpponentConnected: boolean = true;
     currentMessage: string;
 
     constructor(public communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
+
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             this.onClickSend();
         }
+    }
+
+    scrollDown() {
+        setTimeout(() => {
+            this.scroll.nativeElement.scrollTo(0, this.scroll.nativeElement.scrollHeight);
+        }, 0);
     }
 
     ngOnInit(): void {
@@ -30,6 +38,11 @@ export class ChatBoxComponent implements OnInit {
         // this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
         // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
     }
+
+    ngAfterViewInit() {
+        this.scroll.nativeElement.scrollTo(0, this.scroll.nativeElement.scrollHeight);
+    }
+
     isOpponentMessage(message: ChatMessage) {
         return message.type === 'opponent';
     }
@@ -50,6 +63,7 @@ export class ChatBoxComponent implements OnInit {
 
     addingMessage(message: string, senderType: string) {
         this.messages.push({ content: message, type: senderType });
+        this.scrollDown();
     }
 
     // private differenceFoundMessage(userName: string, isMulti: boolean) {

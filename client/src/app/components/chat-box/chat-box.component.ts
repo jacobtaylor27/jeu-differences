@@ -23,7 +23,7 @@ export class ChatBoxComponent implements OnInit {
 
     ngOnInit(): void {
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
-            this.addingAdversaryMessage(message);
+            this.addingMessage(message, 'adversary');
         });
 
         // this.communicationSocket.on(SocketEvent.DifferenceFound, () => {});
@@ -32,17 +32,13 @@ export class ChatBoxComponent implements OnInit {
     }
 
     onClickSend(): void {
-        this.addingPersonalMessage(this.currentMessage);
+        this.addingMessage(this.currentMessage, 'personal');
         this.communicationSocket.send(SocketEvent.Message, { message: this.currentMessage, roomId: this.gameInformation.roomId });
         this.currentMessage = '';
     }
 
-    addingAdversaryMessage(message: string) {
-        this.messages.push({ content: message, type: 'adversary' });
-    }
-
-    addingPersonalMessage(message: string) {
-        this.messages.push({ content: message, type: 'personal' });
+    addingMessage(message: string, senderType: string) {
+        this.messages.push({ content: message, type: senderType });
     }
 
     // private differenceFoundMessage(userName: string, isMulti: boolean) {

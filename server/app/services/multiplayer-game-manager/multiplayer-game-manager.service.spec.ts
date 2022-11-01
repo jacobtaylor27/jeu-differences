@@ -76,18 +76,6 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.getGamesWaiting()).to.have.lengthOf(1);
     });
 
-    it('should set the games that are waiting for an opponent', () => {
-        spyGameManager['games'] = new Set([GAME]);
-        multiplayerGameManager.setGamesWaiting();
-        expect(multiplayerGameManager['gamesWaiting'].length).to.equal(1);
-    });
-
-    it('should not set the games if is multi is false', () => {
-        spyGameManager['games'] = new Set([GAME_FALSE]);
-        multiplayerGameManager.setGamesWaiting();
-        expect(multiplayerGameManager['gamesWaiting'].length).to.equal(0);
-    });
-
     it('should return if a player is waiting in a room', () => {
         expect(multiplayerGameManager.isGameWaiting('')).to.equal(false);
         multiplayerGameManager['gamesWaiting'] = [{ gameId: '1', roomId: '1' }];

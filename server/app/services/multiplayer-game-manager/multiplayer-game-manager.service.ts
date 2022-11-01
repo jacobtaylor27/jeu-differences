@@ -72,4 +72,15 @@ export class MultiplayerGameManager {
     addGameWaiting(infos: { gameId: string; roomId: string }): void {
         this.gamesWaiting.push(infos);
     }
+
+    removeGameWaiting(roomId: string) {
+        console.log(this.gamesWaiting)
+
+        this.gamesWaiting = this.gamesWaiting.filter((game : {gameId : string, roomId : string }) =>
+            game.roomId !== roomId
+        );
+        console.log(this.gamesWaiting)
+
+       
+    }
 }

@@ -57,11 +57,6 @@ export class MultiplayerGameManager {
         return !gameWaiting ? '' : gameWaiting.roomId;
     }
 
-    getGameId(roomId: string) {
-        const gameWaiting = this.gamesWaiting.find((game: { gameId: string; roomId: string }) => game.roomId === roomId);
-        return !gameWaiting ? '' : gameWaiting.roomId;
-    }
-
     addGameWaiting(infos: { gameId: string; roomId: string }): void {
         this.gamesWaiting.push(infos);
     }

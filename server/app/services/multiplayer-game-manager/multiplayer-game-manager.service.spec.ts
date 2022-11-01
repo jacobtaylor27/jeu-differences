@@ -92,4 +92,13 @@ describe.only('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.getRoomIdWaiting('2')).to.equal(first.roomId);
         expect(multiplayerGameManager.getRoomIdWaiting('3')).to.equal('');
     });
+
+    it('it should remove game waiting of a room', () => {
+        multiplayerGameManager['gamesWaiting'] = [];
+        multiplayerGameManager.addGameWaiting({ gameId: '1', roomId: '1' });
+        multiplayerGameManager.addGameWaiting({ gameId: '2', roomId: '2' });
+
+        multiplayerGameManager.removeGameWaiting('1');
+        expect(multiplayerGameManager['gamesWaiting'].length).to.equal(1);
+    });
 });

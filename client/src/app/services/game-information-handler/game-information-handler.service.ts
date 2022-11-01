@@ -29,7 +29,6 @@ export class GameInformationHandlerService {
 
         this.socket.on(SocketEvent.WaitPlayer, (roomId: string) => {
             this.roomId = roomId;
-            console.log("ROOOM ID PLAYER 1 RECEIVED " + roomId)
             this.routerService.navigateTo('waiting');
         });
     }

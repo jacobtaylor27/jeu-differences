@@ -38,7 +38,6 @@ export class ChatBoxComponent implements OnInit {
 
     onClickSend(): void {
         this.addingPersonalMessage(this.currentMessage);
-        console.log(this.gameInformation.roomId)
         this.communicationSocket.send(SocketEvent.Message, { message: this.currentMessage, roomId: this.gameInformation.roomId });
         this.currentMessage = '';
     }

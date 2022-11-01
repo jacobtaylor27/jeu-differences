@@ -10,7 +10,7 @@ import { SocketEvent } from '@common/socket-event';
 })
 export class ChatBoxComponent implements OnInit {
     messages: ChatMessage[] = [];
-    isAdversaryConnected: boolean = true;
+    isOpponentConnected: boolean = true;
     currentMessage: string;
 
     constructor(public communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
@@ -23,7 +23,7 @@ export class ChatBoxComponent implements OnInit {
 
     ngOnInit(): void {
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
-            this.addingMessage(message, 'adversary');
+            this.addingMessage(message, 'opponent');
         });
 
         // this.communicationSocket.on(SocketEvent.DifferenceFound, () => {});

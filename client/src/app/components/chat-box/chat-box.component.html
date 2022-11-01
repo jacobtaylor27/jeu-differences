@@ -5,7 +5,7 @@
             <div class="message-wrapper">
                 <div
                     [ngClass]="{
-                        'message-wrapper-adversary': message.type === 'adversary',
+                        'message-wrapper-opponent': message.type === 'opponent',
                         'message-wrapper-gameMaster': message.type === 'gameMaster',
                         'message-wrapper-personal': message.type === 'personal'
                     }"
@@ -13,7 +13,7 @@
                     <div
                         class="message-content"
                         [ngClass]="{
-                            adversary: message.type === 'adversary',
+                            opponent: message.type === 'opponent',
                             personal: message.type === 'personal',
                             gameMaster: message.type === 'gameMaster'
                         }"  
@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-    <mat-form-field *ngIf="isAdversaryConnected" appearance="outline" class="input-area" >
+    <mat-form-field *ngIf="isOpponentConnected" appearance="outline" class="input-area" >
         <input matInput placeholder="Entrez un message..." maxlength="200" [(ngModel)]="currentMessage" />
         <button mat-icon-button matSuffix (click)="onClickSend()">
             <mat-icon>send</mat-icon>

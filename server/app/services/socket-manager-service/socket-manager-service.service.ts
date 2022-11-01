@@ -6,6 +6,7 @@ import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
+import { User } from '@common/user';
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -31,44 +32,75 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.CreateGame, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
                 const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
-                this.multiplayerGameManager.setGamesWaiting();
-                socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
-
                 socket.join(id);
                 this.gameManager.setTimer(id);
-                socket.emit(game.isMulti ? SocketEvent.WaitPlayer : SocketEvent.Play, id);
+                socket.emit(SocketEvent.Play, id);
                 /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
-                if (!game.isMulti) {
-                    setInterval(() => {
-                        if (!this.gameManager.isGameOver(id)) {
-                            this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
-                        }
-                    }, 1000);
-                }
+                setInterval(() => {
+                    if (!this.gameManager.isGameOver(id)) {
+                        this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
+                    }
+                }, 1000);
             });
 
             socket.on(SocketEvent.CreateGameMulti, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
-                socket.emit(SocketEvent.WaitPlayer);
                 if (this.multiplayerGameManager.isGameWaiting(game.card)) {
-                    // join
-                } else {
-                    const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
-                    this.multiplayerGameManager.setGamesWaiting();
-                    socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+                    const roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
+                    this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
 
-                    socket.join(id);
+                    socket.emit(SocketEvent.WaitPlayer);
+
+                    if (this.multiplayerGameManager.theresOneRequest(roomId)) {
+                        this.sio
+                            .to(this.multiplayerGameManager.getRoomIdWaiting(game.card))
+                            .emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
+                    }
+                } else {
+                    const roomId = await this.gameManager.createGame(
+                        { player: { name: player, id: socket.id }, isMulti: game.isMulti },
+                        mode,
+                        game.card,
+                    );
+                    this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
+                    socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+                    socket.emit(SocketEvent.WaitPlayer, roomId);
+                    socket.join(roomId);
                 }
             });
 
-            socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
-                if (!this.gameManager.isGameFound(gameId) || this.gameManager.isGameAlreadyFull(gameId)) {
-                    socket.emit(SocketEvent.Error);
-                    return;
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
+                this.multiplayerGameManager.removeGameWaiting(roomId);
+                this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+                for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
+                    if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, roomId)) {
+                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
+                    }
                 }
-                this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
-                socket.join(gameId);
-                socket.emit(SocketEvent.JoinGame, gameId);
-                socket.in(gameId).emit(SocketEvent.Play);
+                this.multiplayerGameManager.deleteAllRequests(roomId);
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, roomId);
+            });
+
+            socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {
+                this.multiplayerGameManager.deleteFirstRequest(roomId);
+                if (this.multiplayerGameManager.theresARequest(roomId)) {
+                    const newPlayerRequest = this.multiplayerGameManager.getNewRequest(roomId);
+                    this.sio.to(roomId).emit(SocketEvent.RequestToJoin, newPlayerRequest);
+                }
+
+                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
+            });
+
+            socket.on(SocketEvent.JoinGame, (player: string, roomId: string) => {
+                this.gameManager.addPlayer({ name: player, id: socket.id }, roomId);
+                socket.join(roomId);
+                this.sio.to(roomId).emit(SocketEvent.Play);
+                this.gameManager.setTimer(roomId);
+                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
+                setInterval(() => {
+                    if (!this.gameManager.isGameOver(roomId)) {
+                        this.sio.sockets.to(roomId).emit('clock', this.gameManager.getTime(roomId));
+                    }
+                }, 1000);
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {

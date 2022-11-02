@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { Injectable } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
-import { CardRange } from '@app/interfaces/range';
 import { PublicGameInformation } from '@common/game-information';
 
 @Injectable({
@@ -9,7 +8,6 @@ import { PublicGameInformation } from '@common/game-information';
 })
 export class GameCardHandlerService {
     gamesInfo: PublicGameInformation[];
-    private activeCardsRange: CardRange = { start: 0, end: 3 };
     private gameCards: GameCard[] = [];
 
     getGameCards(): GameCard[] {
@@ -20,16 +18,14 @@ export class GameCardHandlerService {
         this.gameCards = cards;
     }
 
-    getActiveCardsRange(): CardRange {
-        return this.activeCardsRange;
-    }
-
     hasNextCards(): boolean {
-        return this.activeCardsRange.end < this.gameCards.length - 1;
+        // return this.activeCardsRange.end < this.gameCards.length - 1;
+        return true;
     }
 
     hasPreviousCards(): boolean {
-        return this.activeCardsRange.start > 0;
+        // return this.activeCardsRange.start > 0;
+        return false;
     }
 
     getNumberOfCards(): number {
@@ -50,44 +46,14 @@ export class GameCardHandlerService {
         }
     }
 
-    increaseActiveRange(): void {
-        this.activeCardsRange.start += 4;
-        this.activeCardsRange.end += 4;
-    }
-
-    decreaseActiveRange(): void {
-        this.activeCardsRange.start -= 4;
-        this.activeCardsRange.end -= 4;
-    }
-
     getActiveCards(): GameCard[] {
         return this.gameCards.filter((gameCard) => gameCard.isShown === true);
-    }
-
-    setActiveCards(range: CardRange): void {
-        this.hideAllCards();
-
-        let end = range.end;
-
-        if (range.end > this.gameCards.length - 1) {
-            end = this.gameCards.length - 1;
-        }
-
-        for (let i = range.start; i <= end; i++) {
-            this.gameCards[i].isShown = true;
-        }
     }
 
     setCardMode(isAdmin: boolean = false): void {
         for (const gameCard of this.gameCards) {
             gameCard.isAdminCard = isAdmin;
         }
-    }
-
-    resetActiveRange(): void {
-        this.activeCardsRange.start = 0;
-        this.activeCardsRange.end = 3;
-        this.setActiveCards(this.activeCardsRange);
     }
 
     resetHighScores(game: GameCard) {

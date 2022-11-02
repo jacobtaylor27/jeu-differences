@@ -9,7 +9,7 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 interface Command {
     name: string;
-    event: Event;
+    event: MouseEvent;
 }
 
 @Component({
@@ -68,6 +68,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        this.commands = [];
         this.toolBoxService.$uploadImageInDiff.subscribe(async (newImage: ImageBitmap) => {
             (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
             this.updateImage();
@@ -124,12 +125,12 @@ export class DrawCanvasComponent implements AfterViewInit {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        // TODO: faire la distinction entre l'efface et le crayon
+        // TODO: Faire la distinction entre le crayon et l'efface
         this.pushAndApplyCommand({ name: 'draw', event });
     }
 
     pushAndApplyCommand(command: Command) {
         this.commands.push(command);
-        this.commandType.
+        this.commandType.draw(command.event);
     }
 }

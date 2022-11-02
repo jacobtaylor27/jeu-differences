@@ -32,7 +32,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
-    currentCommand: Command = { name: 'draw', stroke: { lines: [] } };
+    currentCommand: Command = { name: '', stroke: { lines: [] } };
     commandType = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -48,9 +48,9 @@ export class DrawCanvasComponent implements AfterViewInit {
         erase: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
-            ctx.lineWidth = this.pencil.width.pencil;
+            ctx.lineWidth = this.pencil.width.eraser;
             ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = Tool.Pencil;
+            ctx.strokeStyle = Tool.Eraser;
             ctx.moveTo(coordInit.x, coordInit.y);
             ctx.lineTo(coordFinal.x, coordFinal.y);
             ctx.stroke();
@@ -149,7 +149,6 @@ export class DrawCanvasComponent implements AfterViewInit {
     start(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: 'draw', stroke: { lines: [] } };
     }
 
     initializeState(event: MouseEvent) {
@@ -165,16 +164,23 @@ export class DrawCanvasComponent implements AfterViewInit {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        // TODO: Faire la distinction entre le crayon et l'efface
         const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.currentCommand.stroke.lines.push({ initCoord, finalCoord });
-        this.pushAndApplyCommand({ name: 'draw', stroke: this.currentCommand.stroke });
+        if (this.pencil.state === Tool.Pencil) {
+            this.pushAndApplyCommand({ name: 'draw', stroke: this.currentCommand.stroke });
+        } else {
+            this.pushAndApplyCommand({ name: 'erase', stroke: this.currentCommand.stroke });
+        }
     }
 
     pushAndApplyCommand(command: Command) {
         const lastLine = command.stroke.lines[command.stroke.lines.length - 1];
-        this.commandType.draw(lastLine.initCoord, lastLine.finalCoord);
+        if (command.name === 'draw') {
+            this.commandType.draw(lastLine.initCoord, lastLine.finalCoord);
+        } else {
+            this.commandType.erase(lastLine.initCoord, lastLine.finalCoord);
+        }
     }
 }

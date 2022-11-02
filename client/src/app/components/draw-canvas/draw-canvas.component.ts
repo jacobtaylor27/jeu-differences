@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { Tool } from '@app/enums/tool';
@@ -21,7 +21,6 @@ export class DrawCanvasComponent implements AfterViewInit {
     @ViewChild('imageDifference', { static: false }) img!: ElementRef<HTMLCanvasElement>;
     @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('paint', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
-
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
@@ -65,6 +64,35 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     get height() {
         return SIZE.y;
+    }
+
+    @HostListener('window:keyup', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        if (!event.ctrlKey) {
+            return;
+        }
+        if (event.key !== 'z' && event.key !== 'Z') {
+            return;
+        }
+        if (event.shiftKey) {
+            this.handleCtrlShiftZ();
+        } else {
+            this.handleCtrlZ();
+        }
+    }
+
+    handleCtrlShiftZ() {
+        console.log('handleCtrlShiftZ was handled');
+    }
+
+    handleCtrlZ() {
+        this.commands.forEach((command) => {
+            if (command.name === 'draw') {
+                this.commandType.draw(command.event);
+            } else {
+                this.commandType.erase(command.event);
+            }
+        });
     }
 
     ngAfterViewInit() {

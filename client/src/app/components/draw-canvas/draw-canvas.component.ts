@@ -113,17 +113,18 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.updateImage();
         });
         this.toolBoxService.$resetDiff.subscribe(() =>
-            this.reset(
+            this.resetCanvasAndImage(
                 this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
                 this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             ),
         );
-        this.reset(
+        this.resetCanvasAndImage(
             this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
         );
     }
-    reset(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
+
+    resetCanvasAndImage(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
         this.resetCanvas(ctxCanvas);
         this.resetImage(ctxImage);
     }
@@ -147,17 +148,17 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.drawService.$differenceImage.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
     }
 
-    start(event: MouseEvent) {
+    startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         this.currentCommand = { name: 'draw', stroke: { lines: [] } };
     }
 
-    initializeState(event: MouseEvent) {
-        return event.buttons === 0 ? this.stop() : this.start(event);
+    enterCanvas(event: MouseEvent) {
+        return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event);
     }
 
-    stop() {
+    stopDrawing() {
         this.isClick = false;
         this.commands.push(this.currentCommand);
     }

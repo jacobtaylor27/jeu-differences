@@ -4,11 +4,11 @@
     <canvas
         id="canvas"
         #paint
-        (mouseout)="stop()"
-        (mouseenter)="initializeState($event)"
-        (mousedown)="start($event)"
+        (mouseout)="stopDrawing()"
+        (mouseenter)="enterCanvas($event)"
+        (mousedown)="startDrawing($event)"
         (mousemove)="draw($event)"
-        (mouseup)="stop()"
+        (mouseup)="stopDrawing()"
         [width]="this.width"
         [height]="this.height"
     ></canvas>

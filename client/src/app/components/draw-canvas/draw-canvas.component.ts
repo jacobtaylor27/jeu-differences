@@ -79,7 +79,19 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     handleCtrlShiftZ() {
-        console.log('handleCtrlShiftZ was handled');
+        if (this.indexOfStroke >= this.commands.length - 1) {
+            return;
+        }
+        this.indexOfStroke++;
+
+        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        console.log(this.indexOfStroke);
+        for (let i = 0; i < this.indexOfStroke + 1; i++) {
+            const command = this.commands[i];
+            command.stroke.lines.forEach((line) => {
+                this.execute.draw(line.initCoord, line.finalCoord);
+            });
+        }
     }
 
     // Il y a un bug si la souris commence à l'intérieur du canvas.

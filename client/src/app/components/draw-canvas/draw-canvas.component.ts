@@ -32,7 +32,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
-    currentStroke: Stroke;
+    currentCommand: Command = { name: 'draw', stroke: { lines: [] } };
     commandType = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -95,18 +95,16 @@ export class DrawCanvasComponent implements AfterViewInit {
     handleCtrlZ() {
         this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
         this.commands.splice(-1, 1);
-        /*
+
         this.commands.forEach((command) => {
             if (command.name === 'draw') {
                 command.stroke.lines.forEach((line) => {
                     this.commandType.draw(line.initCoord, line.finalCoord);
-                    console.log('line drawn');
                 });
             } else {
                 // this.commandType.erase(command.event);
             }
         });
-        */
     }
 
     ngAfterViewInit() {
@@ -152,7 +150,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     start(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentStroke = { lines: [] };
+        this.currentCommand = { name: 'draw', stroke: { lines: [] } };
     }
 
     initializeState(event: MouseEvent) {
@@ -161,6 +159,7 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     stop() {
         this.isClick = false;
+        this.commands.push(this.currentCommand);
     }
 
     draw(event: MouseEvent) {
@@ -171,12 +170,11 @@ export class DrawCanvasComponent implements AfterViewInit {
         const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.currentStroke.lines.push({ initCoord, finalCoord });
-        this.pushAndApplyCommand({ name: 'draw', stroke: this.currentStroke });
+        this.currentCommand.stroke.lines.push({ initCoord, finalCoord });
+        this.pushAndApplyCommand({ name: 'draw', stroke: this.currentCommand.stroke });
     }
 
     pushAndApplyCommand(command: Command) {
-        this.commands.push(command);
         const lastLine = command.stroke.lines[command.stroke.lines.length - 1];
         this.commandType.draw(lastLine.initCoord, lastLine.finalCoord);
     }

@@ -9,7 +9,8 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 interface Command {
     name: string;
-    event: MouseEvent;
+    initCoord: Vec2;
+    finalCoord: Vec2;
 }
 
 @Component({
@@ -89,7 +90,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             if (command.name === 'draw') {
                 this.commandType.draw({ x: 0, y: 0 }, { x: 0, y: 0 });
             } else {
-                this.commandType.erase(command.event);
+                // this.commandType.erase(command.event);
             }
         });
     }
@@ -152,14 +153,14 @@ export class DrawCanvasComponent implements AfterViewInit {
             return;
         }
         // TODO: Faire la distinction entre le crayon et l'efface
-        this.pushAndApplyCommand({ name: 'draw', event });
+        const coordInit: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        const coordFinal = { x: this.coordDraw.x, y: this.coordDraw.y };
+        this.pushAndApplyCommand({ name: 'draw', initCoord: coordInit, finalCoord: coordFinal });
     }
 
     pushAndApplyCommand(command: Command) {
         this.commands.push(command);
-        const coordInit: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, command.event);
-        const coordFinal = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.commandType.draw(coordInit, coordFinal);
+        this.commandType.draw(command.initCoord, command.finalCoord);
     }
 }

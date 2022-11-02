@@ -26,26 +26,25 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
     commandType = {
-        draw: (event: MouseEvent) => {
+        draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
             ctx.lineWidth = this.pencil.width.pencil;
             ctx.lineCap = this.pencil.cap;
             ctx.strokeStyle = Tool.Pencil;
-            ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
-            this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-            ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
+            ctx.moveTo(coordInit.x, coordInit.y);
+            ctx.lineTo(coordFinal.x, coordFinal.y);
             ctx.stroke();
             this.updateImage();
         },
         erase: (event: MouseEvent) => {
+            this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
             ctx.lineWidth = this.pencil.width.eraser;
             ctx.lineCap = this.pencil.cap;
             ctx.strokeStyle = 'white';
             ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
-            this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
             ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
             ctx.stroke();
             this.updateImage();
@@ -88,7 +87,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     handleCtrlZ() {
         this.commands.forEach((command) => {
             if (command.name === 'draw') {
-                this.commandType.draw(command.event);
+                this.commandType.draw({ x: 0, y: 0 }, { x: 0, y: 0 });
             } else {
                 this.commandType.erase(command.event);
             }
@@ -158,6 +157,9 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     pushAndApplyCommand(command: Command) {
         this.commands.push(command);
-        this.commandType.draw(command.event);
+        const coordInit: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, command.event);
+        const coordFinal = { x: this.coordDraw.x, y: this.coordDraw.y };
+        this.commandType.draw(coordInit, coordFinal);
     }
 }

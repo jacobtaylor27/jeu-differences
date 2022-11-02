@@ -83,15 +83,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             return;
         }
         this.indexOfStroke++;
-
-        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-        console.log(this.indexOfStroke);
-        for (let i = 0; i < this.indexOfStroke + 1; i++) {
-            const command = this.commands[i];
-            command.stroke.lines.forEach((line) => {
-                this.execute.draw(line.initCoord, line.finalCoord);
-            });
-        }
+        this.displayStrokes();
     }
 
     // Il y a un bug si la souris commence à l'intérieur du canvas.
@@ -101,7 +93,10 @@ export class DrawCanvasComponent implements AfterViewInit {
             return;
         }
         this.indexOfStroke--;
+        this.displayStrokes();
+    }
 
+    displayStrokes() {
         this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
         console.log(this.indexOfStroke);
         for (let i = 0; i < this.indexOfStroke + 1; i++) {

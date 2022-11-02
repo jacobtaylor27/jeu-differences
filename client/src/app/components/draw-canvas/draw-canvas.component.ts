@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
-import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -33,20 +32,30 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
     indexOfStroke: number = -1;
-    currentCommand: Command = { name: 'draw', stroke: { lines: [] } };
+    currentCommand: Command = { name: '', stroke: { lines: [] } };
     execute = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
             ctx.lineWidth = this.pencil.width.pencil;
             ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = Tool.Pencil;
+            ctx.strokeStyle = this.pencil.color;
             ctx.moveTo(coordInit.x, coordInit.y);
             ctx.lineTo(coordFinal.x, coordFinal.y);
             ctx.stroke();
             this.updateImage();
         },
-        erase: (event: MouseEvent) => {},
+        erase: (coordInit: Vec2, coordFinal: Vec2) => {
+            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            ctx.beginPath();
+            ctx.lineWidth = this.pencil.width.eraser;
+            ctx.lineCap = this.pencil.cap;
+            ctx.strokeStyle = '#000000';
+            ctx.moveTo(coordInit.x, coordInit.y);
+            ctx.lineTo(coordFinal.x, coordFinal.y);
+            ctx.stroke();
+            this.updateImage();
+        },
     };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
@@ -151,7 +160,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: 'draw', stroke: { lines: [] } };
+        this.currentCommand = { name: '', stroke: { lines: [] } };
     }
 
     enterCanvas(event: MouseEvent) {
@@ -163,6 +172,11 @@ export class DrawCanvasComponent implements AfterViewInit {
     stopDrawing() {
         this.isClick = false;
         this.indexOfStroke++;
+        if (this.pencil.state === 'Pencil') {
+            this.currentCommand.name = 'draw';
+        } else {
+            this.currentCommand.name = 'erase';
+        }
         this.commands[this.indexOfStroke] = this.currentCommand;
     }
 
@@ -175,6 +189,10 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.currentCommand.stroke.lines.push({ initCoord, finalCoord });
-        this.execute.draw(initCoord, finalCoord);
+        if (this.pencil.state === 'Pencil') {
+            this.execute.draw(initCoord, finalCoord);
+        } else {
+            this.execute.erase(initCoord, finalCoord);
+        }
     }
 }

@@ -24,7 +24,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
-    commands: Command[];
+    commands: Command[] = [];
     commandType = {
         draw: (event: MouseEvent) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -96,7 +96,6 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.commands = [];
         this.toolBoxService.$uploadImageInDiff.subscribe(async (newImage: ImageBitmap) => {
             (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
             this.updateImage();

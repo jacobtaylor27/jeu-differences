@@ -8,11 +8,16 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 interface Stroke {
     lines: Line[];
+    color: string;
+    width: number;
+    cap: string;
 }
+
 interface Line {
     initCoord: Vec2;
     finalCoord: Vec2;
 }
+
 interface Command {
     name: string;
     stroke: Stroke;
@@ -32,7 +37,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
     indexOfStroke: number = -1;
-    currentCommand: Command = { name: '', stroke: { lines: [] } };
+    currentCommand: Command = { name: '', stroke: { lines: [], color: '', width: 0, cap: '' } };
     execute = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -160,7 +165,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: '', stroke: { lines: [] } };
+        this.currentCommand = { name: '', stroke: { lines: [], color: '', width: 0, cap: '' } };
     }
 
     enterCanvas(event: MouseEvent) {

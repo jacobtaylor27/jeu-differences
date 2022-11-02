@@ -45,18 +45,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             ctx.stroke();
             this.updateImage();
         },
-        erase: (event: MouseEvent) => {
-            this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            ctx.beginPath();
-            ctx.lineWidth = this.pencil.width.eraser;
-            ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = 'white';
-            ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
-            ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
-            ctx.stroke();
-            this.updateImage();
-        },
+        erase: (event: MouseEvent) => {},
     };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
@@ -172,11 +161,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.currentCommand.stroke.lines.push({ initCoord, finalCoord });
-        this.pushAndApplyCommand({ name: 'draw', stroke: this.currentCommand.stroke });
-    }
-
-    pushAndApplyCommand(command: Command) {
-        const lastLine = command.stroke.lines[command.stroke.lines.length - 1];
-        this.commandType.draw(lastLine.initCoord, lastLine.finalCoord);
+        this.commandType.draw(initCoord, finalCoord);
     }
 }

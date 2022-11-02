@@ -7,10 +7,16 @@ import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
-interface Command {
-    name: string;
+interface Stroke {
+    lines: Line[];
+}
+interface Line {
     initCoord: Vec2;
     finalCoord: Vec2;
+}
+interface Command {
+    name: string;
+    stroke: Stroke;
 }
 
 @Component({
@@ -26,6 +32,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
+    currentStroke: Stroke;
     commandType = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -86,13 +93,20 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     handleCtrlZ() {
+        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        this.commands.splice(-1, 1);
+        /*
         this.commands.forEach((command) => {
             if (command.name === 'draw') {
-                this.commandType.draw({ x: 0, y: 0 }, { x: 0, y: 0 });
+                command.stroke.lines.forEach((line) => {
+                    this.commandType.draw(line.initCoord, line.finalCoord);
+                    console.log('line drawn');
+                });
             } else {
                 // this.commandType.erase(command.event);
             }
         });
+        */
     }
 
     ngAfterViewInit() {
@@ -138,6 +152,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     start(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        this.currentStroke = { lines: [] };
     }
 
     initializeState(event: MouseEvent) {
@@ -153,14 +168,16 @@ export class DrawCanvasComponent implements AfterViewInit {
             return;
         }
         // TODO: Faire la distinction entre le crayon et l'efface
-        const coordInit: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        const coordFinal = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.pushAndApplyCommand({ name: 'draw', initCoord: coordInit, finalCoord: coordFinal });
+        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        this.currentStroke.lines.push({ initCoord, finalCoord });
+        this.pushAndApplyCommand({ name: 'draw', stroke: this.currentStroke });
     }
 
     pushAndApplyCommand(command: Command) {
         this.commands.push(command);
-        this.commandType.draw(command.initCoord, command.finalCoord);
+        const lastLine = command.stroke.lines[command.stroke.lines.length - 1];
+        this.commandType.draw(lastLine.initCoord, lastLine.finalCoord);
     }
 }

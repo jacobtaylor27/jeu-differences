@@ -39,7 +39,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             ctx.beginPath();
             ctx.lineWidth = this.pencil.width.pencil;
             ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = Tool.Pencil;
+            ctx.strokeStyle = this.pencil.color;
             ctx.moveTo(coordInit.x, coordInit.y);
             ctx.lineTo(coordFinal.x, coordFinal.y);
             ctx.stroke();
@@ -50,7 +50,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             ctx.beginPath();
             ctx.lineWidth = this.pencil.width.eraser;
             ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = Tool.Eraser;
+            ctx.strokeStyle = '#ffffff';
             ctx.moveTo(coordInit.x, coordInit.y);
             ctx.lineTo(coordFinal.x, coordFinal.y);
             ctx.stroke();

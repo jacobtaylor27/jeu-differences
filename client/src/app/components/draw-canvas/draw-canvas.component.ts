@@ -175,7 +175,6 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     pushAndApplyCommand(command: Command) {
-        this.commands.push(command);
         const lastLine = command.stroke.lines[command.stroke.lines.length - 1];
         if (command.name === 'draw') {
             this.commandType.draw(lastLine.initCoord, lastLine.finalCoord);

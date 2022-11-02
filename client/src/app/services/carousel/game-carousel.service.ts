@@ -28,10 +28,6 @@ export class GameCarouselService {
         return this.gameCardHandlerService.getNumberOfCards();
     }
 
-    resetRange(): void {
-        this.gameCardHandlerService.resetActiveRange();
-    }
-
     setCardMode(makeAdmin: boolean = false): void {
         this.gameCardHandlerService.setCardMode(makeAdmin);
     }
@@ -41,20 +37,20 @@ export class GameCarouselService {
     }
 
     hasPreviousCards(): boolean {
-        return this.gameCardHandlerService.hasPreviousCards();
+        //
+        return false;
     }
 
     hasNextCards(): boolean {
-        return this.gameCardHandlerService.hasNextCards();
+        //
+        return true;
     }
 
     showPreviousFour(): void {
-        this.gameCardHandlerService.decreaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.getActiveCardsRange());
+        // request previous four
     }
 
     showNextFour(): void {
-        this.gameCardHandlerService.increaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.getActiveCardsRange());
+        // request next four
     }
 }

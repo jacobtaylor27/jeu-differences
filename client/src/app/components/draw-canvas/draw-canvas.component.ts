@@ -33,6 +33,9 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
     currentCommand: Command = { name: '', stroke: { lines: [] } };
+    // It makes sens to have an index starting at -1 since the element is empty (Array out of bound)
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    indexCurrentCommand: number = -1;
     commandType = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -92,8 +95,15 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     handleCtrlZ() {
+        // Verify if the index is greater than the initial index
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        if (this.indexCurrentCommand <= -1) {
+            return;
+        }
+        this.indexCurrentCommand--;
         this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-        this.commands.splice(-1, 1);
+
+        this.commands[this.indexCurrentCommand];
 
         this.commands.forEach((command) => {
             if (command.name === 'draw') {

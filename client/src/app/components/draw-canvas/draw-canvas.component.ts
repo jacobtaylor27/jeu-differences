@@ -32,6 +32,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
+    indexOfStroke: number = -1;
     currentCommand: Command = { name: 'draw', stroke: { lines: [] } };
     execute = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
@@ -81,19 +82,22 @@ export class DrawCanvasComponent implements AfterViewInit {
         console.log('handleCtrlShiftZ was handled');
     }
 
+    // Il y a un bug si la souris commence à l'intérieur du canvas.
+    // this.commands va contenir un élément supplémentaire.
     handleCtrlZ() {
-        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-        this.commands.splice(-1, 1);
+        if (this.indexOfStroke <= -1) {
+            return;
+        }
+        this.indexOfStroke--;
 
-        this.commands.forEach((command) => {
-            if (command.name === 'draw') {
-                command.stroke.lines.forEach((line) => {
-                    this.execute.draw(line.initCoord, line.finalCoord);
-                });
-            } else {
-                // this.commandType.erase(command.event);
-            }
-        });
+        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        console.log(this.indexOfStroke);
+        for (let i = 0; i < this.indexOfStroke + 1; i++) {
+            const command = this.commands[i];
+            command.stroke.lines.forEach((line) => {
+                this.execute.draw(line.initCoord, line.finalCoord);
+            });
+        }
     }
 
     ngAfterViewInit() {
@@ -144,12 +148,15 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     enterCanvas(event: MouseEvent) {
-        return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event);
+        //return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event);
     }
+
+    leaveCanvas(event: MouseEvent) {}
 
     stopDrawing() {
         this.isClick = false;
-        this.commands.push(this.currentCommand);
+        this.indexOfStroke++;
+        this.commands[this.indexOfStroke] = this.currentCommand;
     }
 
     draw(event: MouseEvent) {

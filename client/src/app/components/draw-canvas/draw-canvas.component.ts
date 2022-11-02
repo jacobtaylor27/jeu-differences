@@ -45,15 +45,14 @@ export class DrawCanvasComponent implements AfterViewInit {
             ctx.stroke();
             this.updateImage();
         },
-        erase: (event: MouseEvent) => {
-            this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        erase: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
-            ctx.lineWidth = this.pencil.width.eraser;
+            ctx.lineWidth = this.pencil.width.pencil;
             ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = 'white';
-            ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
-            ctx.lineTo(this.coordDraw.x, this.coordDraw.y);
+            ctx.strokeStyle = Tool.Pencil;
+            ctx.moveTo(coordInit.x, coordInit.y);
+            ctx.lineTo(coordFinal.x, coordFinal.y);
             ctx.stroke();
             this.updateImage();
         },

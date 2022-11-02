@@ -33,7 +33,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
     currentCommand: Command = { name: 'draw', stroke: { lines: [] } };
-    commandType = {
+    execute = {
         draw: (coordInit: Vec2, coordFinal: Vec2) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
@@ -88,7 +88,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.commands.forEach((command) => {
             if (command.name === 'draw') {
                 command.stroke.lines.forEach((line) => {
-                    this.commandType.draw(line.initCoord, line.finalCoord);
+                    this.execute.draw(line.initCoord, line.finalCoord);
                 });
             } else {
                 // this.commandType.erase(command.event);
@@ -161,6 +161,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.currentCommand.stroke.lines.push({ initCoord, finalCoord });
-        this.commandType.draw(initCoord, finalCoord);
+        this.execute.draw(initCoord, finalCoord);
     }
 }

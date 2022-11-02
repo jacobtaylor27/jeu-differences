@@ -1,7 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { BMP_EXTENSION, DB_GAME_COLLECTION, DEFAULT_BMP_ASSET_PATH, ID_PREFIX } from '@app/constants/database';
+import { DB_GAME_COLLECTION, DEFAULT_BMP_ASSET_PATH } from '@app/constants/database';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
-import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+// import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
@@ -11,15 +11,14 @@ import { Service } from 'typedi';
 import { v4 } from 'uuid';
 @Service()
 export class GameInfoService {
-    private srcPath: string = DEFAULT_BMP_ASSET_PATH;
+    // private srcPath: string = DEFAULT_BMP_ASSET_PATH;
 
     // eslint-disable-next-line max-params
     constructor(
         private readonly databaseService: DatabaseService,
         private readonly bmpService: BmpService,
         private readonly bmpSubtractorService: BmpSubtractorService,
-        private readonly bmpDifferenceInterpreter: BmpDifferenceInterpreter,
-        private readonly bmpEncoderService: BmpEncoderService,
+        private readonly bmpDifferenceInterpreter: BmpDifferenceInterpreter, // private readonly bmpEncoderService: BmpEncoderService,
     ) {}
 
     get collection(): Collection<PrivateGameInformation> {
@@ -49,9 +48,10 @@ export class GameInfoService {
             name,
             idOriginalBmp,
             idEditedBmp,
-            thumbnail:
-                'data:image/png;base64,' +
-                (await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION)),
+            // thumbnail:
+            // 'data:image/png;base64,' +
+            // (await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION)),
+            thumbnail: 'data:image/png;base64,thumbnail',
             differenceRadius: radius,
             differences,
             idDifferenceBmp,

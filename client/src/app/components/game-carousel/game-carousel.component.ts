@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Theme } from '@app/enums/theme';
+import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -24,26 +25,46 @@ export class GameCarouselComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.fetchGameInformation();
+        this.fetchFirstFourCards();
     }
 
-    fetchGameInformation(): void {
-        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: PublicGameInformation[] }>) => {
+    // fetchGameInformation(): void {
+    //     this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: PublicGameInformation[] }>) => {
+    //         if (response && response.body) {
+    //             for (const gameInfo of response.body.games) {
+    //                 const newCard: GameCard = {
+    //                     gameInformation: gameInfo,
+    //                     isAdminCard: this.isAdmin,
+    //                     isShown: false,
+    //                     isMulti: false,
+    //                 };
+    //                 this.gameCards.push(newCard);
+    //             }
+    //             this.gameCarouselService.setCards(this.gameCards);
+    //             this.isLoaded = true;
+    //         }
+    //     });
+    // }
+
+    fetchFirstFourCards(): void {
+        this.communicationService.getGamesInfoByPage(1).subscribe((response: HttpResponse<{ carouselRange: CarouselResponse }>) => {
             if (response && response.body) {
-                for (const gameInfo of response.body.games) {
-                    const newCard: GameCard = {
-                        gameInformation: gameInfo,
-                        isAdminCard: this.isAdmin,
-                        isShown: false,
-                        isMulti: false,
-                    };
-                    this.gameCards.push(newCard);
-                }
-                this.gameCarouselService.setCards(this.gameCards);
+                this.setGameCards(response.body.carouselRange.games);
                 this.isLoaded = true;
-                this.resetStartingRange();
             }
         });
+    }
+
+    setGameCards(games: PublicGameInformation[]): void {
+        for (const gameInfo of games) {
+            this.gameCards.push({
+                gameInformation: gameInfo,
+                isAdminCard: this.isAdmin,
+                isShown: false,
+                isMulti: false,
+            });
+        }
+        this.gameCarouselService.setCards(this.gameCards);
     }
 
     getCardsCount(): number {
@@ -56,10 +77,6 @@ export class GameCarouselComponent implements OnInit {
 
     hasCards(): boolean {
         return this.gameCarouselService.hasCards();
-    }
-
-    resetStartingRange(): void {
-        this.gameCarouselService.resetRange();
     }
 
     onClickPrevious(): void {

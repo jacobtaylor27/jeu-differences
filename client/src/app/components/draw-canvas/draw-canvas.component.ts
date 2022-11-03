@@ -59,7 +59,6 @@ export class DrawCanvasComponent implements AfterViewInit {
             ctx.beginPath();
             ctx.lineWidth = strokeStyle.width;
             ctx.lineCap = strokeStyle.cap;
-            ctx.strokeStyle = strokeStyle.color;
             ctx.moveTo(line.initCoord.x, line.initCoord.y);
             ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
             ctx.stroke();

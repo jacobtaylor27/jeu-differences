@@ -41,24 +41,13 @@ export class DrawCanvasComponent implements AfterViewInit {
     indexOfStroke: number = -1;
     currentCommand: Command = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
     execute = {
-        draw: (line: Line, strokeStyle: StrokeStyle) => {
+        createStroke: (line: Line, strokeStyle: StrokeStyle, destination: GlobalCompositeOperation) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
-            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalCompositeOperation = destination;
             ctx.lineWidth = strokeStyle.width;
             ctx.lineCap = strokeStyle.cap;
             ctx.strokeStyle = strokeStyle.color;
-            ctx.moveTo(line.initCoord.x, line.initCoord.y);
-            ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
-            ctx.stroke();
-            this.updateImage();
-        },
-        erase: (line: Line, strokeStyle: StrokeStyle) => {
-            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.lineWidth = strokeStyle.width;
-            ctx.lineCap = strokeStyle.cap;
             ctx.moveTo(line.initCoord.x, line.initCoord.y);
             ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
             ctx.stroke();
@@ -119,7 +108,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         for (let i = 0; i < this.indexOfStroke + 1; i++) {
             const command = this.commands[i];
             command.stroke.lines.forEach((line) => {
-                this.execute.draw(line, command.stroke.style);
+                this.execute.createStroke(line, command.stroke.style, 'source-over');
             });
         }
     }
@@ -200,10 +189,10 @@ export class DrawCanvasComponent implements AfterViewInit {
 
         if (this.pencil.state === 'Pencil') {
             this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.pencil };
-            this.execute.draw(line, this.currentCommand.stroke.style);
+            this.execute.createStroke(line, this.currentCommand.stroke.style, 'source-over');
         } else {
             this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
-            this.execute.erase(line, this.currentCommand.stroke.style);
+            this.execute.createStroke(line, this.currentCommand.stroke.style, 'destination-out');
         }
     }
 }

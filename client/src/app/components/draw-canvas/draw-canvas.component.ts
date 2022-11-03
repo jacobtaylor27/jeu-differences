@@ -146,7 +146,8 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     updateImage() {
-        const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
+        const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
         ctx.drawImage(this.img.nativeElement, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
         ctx.drawImage(this.canvas.nativeElement, 0, 0);

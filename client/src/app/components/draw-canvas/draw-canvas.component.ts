@@ -154,17 +154,17 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.drawService.$differenceImage.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
     }
 
-    startDrawing(event: MouseEvent) {
-        this.isClick = true;
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
-    }
-
     enterCanvas(event: MouseEvent) {
         //return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event);
     }
 
     leaveCanvas(event: MouseEvent) {}
+
+    startDrawing(event: MouseEvent) {
+        this.isClick = true;
+        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        this.currentCommand = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
+    }
 
     stopDrawing() {
         this.isClick = false;
@@ -181,10 +181,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        const line = { initCoord, finalCoord };
+        const line = this.updateMouseCoordinates(event);
         this.currentCommand.stroke.lines.push(line);
 
         if (this.pencil.state === 'Pencil') {
@@ -194,5 +191,12 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
             this.execute.createStroke(line, this.currentCommand.stroke.style, 'destination-out');
         }
+    }
+
+    updateMouseCoordinates(event: MouseEvent): Line {
+        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        return { initCoord, finalCoord };
     }
 }

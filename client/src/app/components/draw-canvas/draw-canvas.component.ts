@@ -40,20 +40,6 @@ export class DrawCanvasComponent implements AfterViewInit {
     commands: Command[] = [];
     indexOfStroke: number = -1;
     currentCommand: Command = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
-    execute = {
-        createStroke: (line: Line, strokeStyle: StrokeStyle, destination: GlobalCompositeOperation) => {
-            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            ctx.beginPath();
-            ctx.globalCompositeOperation = destination;
-            ctx.lineWidth = strokeStyle.width;
-            ctx.lineCap = strokeStyle.cap;
-            ctx.strokeStyle = strokeStyle.color;
-            ctx.moveTo(line.initCoord.x, line.initCoord.y);
-            ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
-            ctx.stroke();
-            this.updateImage();
-        },
-    };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
@@ -102,13 +88,26 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.displayStrokes();
     }
 
+    createStroke(line: Line, strokeStyle: StrokeStyle, destination: GlobalCompositeOperation) {
+        const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        ctx.beginPath();
+        ctx.globalCompositeOperation = destination;
+        ctx.lineWidth = strokeStyle.width;
+        ctx.lineCap = strokeStyle.cap;
+        ctx.strokeStyle = strokeStyle.color;
+        ctx.moveTo(line.initCoord.x, line.initCoord.y);
+        ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
+        ctx.stroke();
+        this.updateImage();
+    }
+
     displayStrokes() {
         this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
         console.log(this.indexOfStroke);
         for (let i = 0; i < this.indexOfStroke + 1; i++) {
             const command = this.commands[i];
             command.stroke.lines.forEach((line) => {
-                this.execute.createStroke(line, command.stroke.style, 'source-over');
+                this.createStroke(line, command.stroke.style, 'source-over');
             });
         }
     }
@@ -186,10 +185,10 @@ export class DrawCanvasComponent implements AfterViewInit {
 
         if (this.pencil.state === 'Pencil') {
             this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.pencil };
-            this.execute.createStroke(line, this.currentCommand.stroke.style, 'source-over');
+            this.createStroke(line, this.currentCommand.stroke.style, 'source-over');
         } else {
             this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
-            this.execute.createStroke(line, this.currentCommand.stroke.style, 'destination-out');
+            this.createStroke(line, this.currentCommand.stroke.style, 'destination-out');
         }
     }
 

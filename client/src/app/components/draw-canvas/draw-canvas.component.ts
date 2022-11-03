@@ -44,6 +44,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         draw: (line: Line, strokeStyle: StrokeStyle) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
+            ctx.globalCompositeOperation = 'source-over';
             ctx.lineWidth = strokeStyle.width;
             ctx.lineCap = strokeStyle.cap;
             ctx.strokeStyle = strokeStyle.color;
@@ -54,6 +55,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         },
         erase: (line: Line, strokeStyle: StrokeStyle) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
             ctx.lineWidth = strokeStyle.width;
             ctx.lineCap = strokeStyle.cap;

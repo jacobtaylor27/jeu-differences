@@ -207,7 +207,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             const line = {
                 initCoord,
                 finalCoord,
-                color: this.pencil.color,
+                color: '#ffffff',
                 width: this.pencil.width.eraser,
                 cap: this.pencil.cap,
             };

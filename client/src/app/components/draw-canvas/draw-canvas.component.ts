@@ -191,7 +191,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        // TODO: Faire la distinction entre le crayon et l'efface
         const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };

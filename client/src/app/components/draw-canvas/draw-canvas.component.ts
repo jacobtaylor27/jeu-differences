@@ -8,14 +8,14 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 interface Stroke {
     lines: Line[];
-    color: string;
-    width: number;
-    cap: string;
 }
 
 interface Line {
     initCoord: Vec2;
     finalCoord: Vec2;
+    color: string;
+    width: number;
+    cap: CanvasLineCap;
 }
 
 interface Command {
@@ -37,27 +37,27 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
     indexOfStroke: number = -1;
-    currentCommand: Command = { name: '', stroke: { lines: [], color: '', width: 0, cap: '' } };
+    currentCommand: Command = { name: '', stroke: { lines: [] } };
     execute = {
-        draw: (coordInit: Vec2, coordFinal: Vec2) => {
+        draw: (line: Line) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
-            ctx.lineWidth = this.pencil.width.pencil;
-            ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = this.pencil.color;
-            ctx.moveTo(coordInit.x, coordInit.y);
-            ctx.lineTo(coordFinal.x, coordFinal.y);
+            ctx.lineWidth = line.width;
+            ctx.lineCap = line.cap;
+            ctx.strokeStyle = line.color;
+            ctx.moveTo(line.initCoord.x, line.initCoord.y);
+            ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
             ctx.stroke();
             this.updateImage();
         },
-        erase: (coordInit: Vec2, coordFinal: Vec2) => {
+        erase: (line: Line) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
-            ctx.lineWidth = this.pencil.width.eraser;
-            ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = '#000000';
-            ctx.moveTo(coordInit.x, coordInit.y);
-            ctx.lineTo(coordFinal.x, coordFinal.y);
+            ctx.lineWidth = line.width;
+            ctx.lineCap = line.cap;
+            ctx.strokeStyle = line.color;
+            ctx.moveTo(line.initCoord.x, line.initCoord.y);
+            ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
             ctx.stroke();
             this.updateImage();
         },
@@ -116,7 +116,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         for (let i = 0; i < this.indexOfStroke + 1; i++) {
             const command = this.commands[i];
             command.stroke.lines.forEach((line) => {
-                this.execute.draw(line.initCoord, line.finalCoord);
+                this.execute.draw(line);
             });
         }
     }
@@ -165,7 +165,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: '', stroke: { lines: [], color: '', width: 0, cap: '' } };
+        this.currentCommand = { name: '', stroke: { lines: [] } };
     }
 
     enterCanvas(event: MouseEvent) {
@@ -193,11 +193,26 @@ export class DrawCanvasComponent implements AfterViewInit {
         const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.currentCommand.stroke.lines.push({ initCoord, finalCoord });
         if (this.pencil.state === 'Pencil') {
-            this.execute.draw(initCoord, finalCoord);
+            const line = {
+                initCoord,
+                finalCoord,
+                color: this.pencil.color,
+                width: this.pencil.width.pencil,
+                cap: this.pencil.cap,
+            };
+            this.currentCommand.stroke.lines.push(line);
+            this.execute.draw(line);
         } else {
-            this.execute.erase(initCoord, finalCoord);
+            const line = {
+                initCoord,
+                finalCoord,
+                color: this.pencil.color,
+                width: this.pencil.width.eraser,
+                cap: this.pencil.cap,
+            };
+            this.currentCommand.stroke.lines.push(line);
+            this.execute.erase(line);
         }
     }
 }

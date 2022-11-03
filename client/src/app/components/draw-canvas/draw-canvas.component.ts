@@ -8,14 +8,16 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 interface Stroke {
     lines: Line[];
+    style: StrokeStyle;
 }
-
-interface Line {
-    initCoord: Vec2;
-    finalCoord: Vec2;
+interface StrokeStyle {
     color: string;
     width: number;
     cap: CanvasLineCap;
+}
+interface Line {
+    initCoord: Vec2;
+    finalCoord: Vec2;
 }
 
 interface Command {
@@ -37,25 +39,25 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
     indexOfStroke: number = -1;
-    currentCommand: Command = { name: '', stroke: { lines: [] } };
+    currentCommand: Command = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
     execute = {
-        draw: (line: Line) => {
+        draw: (line: Line, strokeStyle: StrokeStyle) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
-            ctx.lineWidth = line.width;
-            ctx.lineCap = line.cap;
-            ctx.strokeStyle = line.color;
+            ctx.lineWidth = strokeStyle.width;
+            ctx.lineCap = strokeStyle.cap;
+            ctx.strokeStyle = strokeStyle.color;
             ctx.moveTo(line.initCoord.x, line.initCoord.y);
             ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
             ctx.stroke();
             this.updateImage();
         },
-        erase: (line: Line) => {
+        erase: (line: Line, strokeStyle: StrokeStyle) => {
             const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             ctx.beginPath();
-            ctx.lineWidth = line.width;
-            ctx.lineCap = line.cap;
-            ctx.strokeStyle = line.color;
+            ctx.lineWidth = strokeStyle.width;
+            ctx.lineCap = strokeStyle.cap;
+            ctx.strokeStyle = strokeStyle.color;
             ctx.moveTo(line.initCoord.x, line.initCoord.y);
             ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
             ctx.stroke();
@@ -116,7 +118,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         for (let i = 0; i < this.indexOfStroke + 1; i++) {
             const command = this.commands[i];
             command.stroke.lines.forEach((line) => {
-                this.execute.draw(line);
+                this.execute.draw(line, command.stroke.style);
             });
         }
     }
@@ -165,7 +167,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: '', stroke: { lines: [] } };
+        this.currentCommand = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
     }
 
     enterCanvas(event: MouseEvent) {
@@ -193,26 +195,15 @@ export class DrawCanvasComponent implements AfterViewInit {
         const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        const line = { initCoord, finalCoord };
+        this.currentCommand.stroke.lines.push(line);
+
         if (this.pencil.state === 'Pencil') {
-            const line = {
-                initCoord,
-                finalCoord,
-                color: this.pencil.color,
-                width: this.pencil.width.pencil,
-                cap: this.pencil.cap,
-            };
-            this.currentCommand.stroke.lines.push(line);
-            this.execute.draw(line);
+            this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.pencil };
+            this.execute.draw(line, this.currentCommand.stroke.style);
         } else {
-            const line = {
-                initCoord,
-                finalCoord,
-                color: '#ffffff',
-                width: this.pencil.width.eraser,
-                cap: this.pencil.cap,
-            };
-            this.currentCommand.stroke.lines.push(line);
-            this.execute.erase(line);
+            this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
+            this.execute.erase(line, this.currentCommand.stroke.style);
         }
     }
 }

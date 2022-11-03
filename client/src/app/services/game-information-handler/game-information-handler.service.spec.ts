@@ -63,10 +63,10 @@ describe('GameInformationHandlerService', () => {
     it('should handle socket', () => {
         service.handleSocketEvent();
         socketHelper.peerSideEmit(SocketEvent.Play, 'id');
-        expect(service.gameId).toEqual('id');
+        expect(service.roomId).toEqual('id');
 
         socketHelper.peerSideEmit(SocketEvent.WaitPlayer, 'id');
-        expect(service.gameId).toEqual('id');
+        expect(service.roomId).toEqual('id');
     });
 
     it('should return false when properties are not Undefined', () => {

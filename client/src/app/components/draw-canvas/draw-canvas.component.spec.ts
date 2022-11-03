@@ -49,19 +49,19 @@ describe('DrawCanvasComponent', () => {
     it('start should change the click state and call to reposition the pointer', () => {
         drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
         component.isClick = false;
-        component.start({} as MouseEvent);
+        component.startDrawing({} as MouseEvent);
         expect(component.isClick).toBeTrue();
         expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
         component.isClick = false;
-        component.start({} as MouseEvent);
+        component.startDrawing({} as MouseEvent);
         expect(component.isClick).toBeTrue();
     });
     it('should stop to draw in the canvas', () => {
         component.isClick = true;
-        component.stop();
+        component.stopDrawing();
         expect(component.isClick).toBeFalse();
         component.isClick = false;
-        component.stop();
+        component.stopDrawing();
         expect(component.isClick).toBeFalse();
     });
 
@@ -167,13 +167,13 @@ describe('DrawCanvasComponent', () => {
 
     it('should stop if the mouseup when initialize state of the canvas', () => {
         const spyStop = spyOn(component, 'stop');
-        component.initializeState({ buttons: 0 } as MouseEvent);
+        component.enterCanvas({ buttons: 0 } as MouseEvent);
         expect(spyStop).toHaveBeenCalled();
     });
 
     it('should start to draw if the mousedown when initialize state of the canvas', () => {
         const spyStop = spyOn(component, 'start');
-        component.initializeState({ buttons: 1 } as MouseEvent);
+        component.enterCanvas({ buttons: 1 } as MouseEvent);
         expect(spyStop).toHaveBeenCalled();
     });
 });

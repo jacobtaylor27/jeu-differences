@@ -59,7 +59,8 @@ export class CreateGamePageComponent implements AfterViewInit {
     }
 
     createSourceImageFromCanvas(): ImageData {
-        return (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
+        return (this.sourceImg.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D).getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
     }
 
     manageErrorInForm(validationImageErrors: string) {

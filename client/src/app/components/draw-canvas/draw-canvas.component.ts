@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
-import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -9,11 +8,18 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 interface Stroke {
     lines: Line[];
+    style: StrokeStyle;
+}
+interface StrokeStyle {
+    color: string;
+    width: number;
+    cap: CanvasLineCap;
 }
 interface Line {
     initCoord: Vec2;
     finalCoord: Vec2;
 }
+
 interface Command {
     name: string;
     stroke: Stroke;
@@ -32,31 +38,10 @@ export class DrawCanvasComponent implements AfterViewInit {
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
     commands: Command[] = [];
-    currentCommand: Command = { name: '', stroke: { lines: [] } };
-    commandType = {
-        draw: (coordInit: Vec2, coordFinal: Vec2) => {
-            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            ctx.beginPath();
-            ctx.lineWidth = this.pencil.width.pencil;
-            ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = this.pencil.color;
-            ctx.moveTo(coordInit.x, coordInit.y);
-            ctx.lineTo(coordFinal.x, coordFinal.y);
-            ctx.stroke();
-            this.updateImage();
-        },
-        erase: (coordInit: Vec2, coordFinal: Vec2) => {
-            const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            ctx.beginPath();
-            ctx.lineWidth = this.pencil.width.eraser;
-            ctx.lineCap = this.pencil.cap;
-            ctx.strokeStyle = '#ffffff';
-            ctx.moveTo(coordInit.x, coordInit.y);
-            ctx.lineTo(coordFinal.x, coordFinal.y);
-            ctx.stroke();
-            this.updateImage();
-        },
-    };
+    // Having an index of -1 makes way more sens, because the default index is out of bound.
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    indexOfStroke: number = -1;
+    currentCommand: Command = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
@@ -88,21 +73,44 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     handleCtrlShiftZ() {
-        console.log('handleCtrlShiftZ was handled');
+        if (this.indexOfStroke >= this.commands.length - 1) {
+            return;
+        }
+        this.indexOfStroke++;
+        this.displayStrokes();
     }
 
     handleCtrlZ() {
-        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        // same justification as before
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        if (this.indexOfStroke <= -1) {
+            return;
+        }
+        this.indexOfStroke--;
+        this.displayStrokes();
+    }
 
-        this.commands.forEach((command) => {
-            if (command.name === 'draw') {
-                command.stroke.lines.forEach((line) => {
-                    this.commandType.draw(line.initCoord, line.finalCoord);
-                });
-            } else {
-                // this.commandType.erase(command.event);
-            }
-        });
+    createStroke(line: Line, strokeStyle: StrokeStyle, destination: GlobalCompositeOperation) {
+        const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        ctx.beginPath();
+        ctx.globalCompositeOperation = destination;
+        ctx.lineWidth = strokeStyle.width;
+        ctx.lineCap = strokeStyle.cap;
+        ctx.strokeStyle = strokeStyle.color;
+        ctx.moveTo(line.initCoord.x, line.initCoord.y);
+        ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
+        ctx.stroke();
+        this.updateImage();
+    }
+
+    displayStrokes() {
+        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        for (let i = 0; i < this.indexOfStroke + 1; i++) {
+            const command = this.commands[i];
+            command.stroke.lines.forEach((line) => {
+                this.createStroke(line, command.stroke.style, 'source-over');
+            });
+        }
     }
 
     ngAfterViewInit() {
@@ -111,17 +119,18 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.updateImage();
         });
         this.toolBoxService.$resetDiff.subscribe(() =>
-            this.reset(
+            this.resetCanvasAndImage(
                 this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
                 this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             ),
         );
-        this.reset(
+        this.resetCanvasAndImage(
             this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
         );
     }
-    reset(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
+
+    resetCanvasAndImage(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
         this.resetCanvas(ctxCanvas);
         this.resetImage(ctxImage);
     }
@@ -138,48 +147,57 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     updateImage() {
-        const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
+        const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
         ctx.drawImage(this.img.nativeElement, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
         ctx.drawImage(this.canvas.nativeElement, 0, 0);
         this.drawService.$differenceImage.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
     }
 
-    start(event: MouseEvent) {
+    enterCanvas(event: MouseEvent) {
+        // return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event, true);
+    }
+
+    leaveCanvas(event: MouseEvent) {}
+
+    startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        this.currentCommand = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
     }
 
-    initializeState(event: MouseEvent) {
-        return event.buttons === 0 ? this.stop() : this.start(event);
-    }
-
-    stop() {
+    stopDrawing() {
         this.isClick = false;
-        this.commands.push(this.currentCommand);
+        this.indexOfStroke++;
+        if (this.pencil.state === 'Pencil') {
+            this.currentCommand.name = 'draw';
+        } else {
+            this.currentCommand.name = 'erase';
+        }
+        this.commands[this.indexOfStroke] = this.currentCommand;
     }
 
     draw(event: MouseEvent) {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.currentCommand.stroke.lines.push({ initCoord, finalCoord });
-        if (this.pencil.state === Tool.Pencil) {
-            this.pushAndApplyCommand({ name: 'draw', stroke: this.currentCommand.stroke });
+        const line = this.updateMouseCoordinates(event);
+        this.currentCommand.stroke.lines.push(line);
+
+        if (this.pencil.state === 'Pencil') {
+            this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.pencil };
+            this.createStroke(line, this.currentCommand.stroke.style, 'source-over');
         } else {
-            this.pushAndApplyCommand({ name: 'erase', stroke: this.currentCommand.stroke });
+            this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
+            this.createStroke(line, this.currentCommand.stroke.style, 'destination-out');
         }
     }
 
-    pushAndApplyCommand(command: Command) {
-        const lastLine = command.stroke.lines[command.stroke.lines.length - 1];
-        if (command.name === 'draw') {
-            this.commandType.draw(lastLine.initCoord, lastLine.finalCoord);
-        } else {
-            this.commandType.erase(lastLine.initCoord, lastLine.finalCoord);
-        }
+    updateMouseCoordinates(event: MouseEvent): Line {
+        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        return { initCoord, finalCoord };
     }
 }

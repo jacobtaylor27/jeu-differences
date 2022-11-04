@@ -23,6 +23,10 @@ export class DifferencesAreaComponent implements OnInit {
         this.setNbDifferencesFound();
     }
 
+    getPlayersName() : string[] {
+        return this.gameInformationHandlerService.playersName;
+    }
+
     setNbDifferencesFound() {
         if (!this.differenceDetectionHandler.nbDifferencesFound) {
             this.nbDifferences = '0 / ' + this.gameInformationHandlerService.getNbDifferences();

@@ -1,10 +1,10 @@
 import { Game } from '@app/classes/game/game';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { User } from '@common/user';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
+import { User } from '@common/user';
 import { Service } from 'typedi';
 
 @Service()
@@ -68,12 +68,17 @@ export class GameManagerService {
         }
     }
 
-    getNbDifferencesFound(coord: Coordinate, isPlayerFoundDifference: boolean, gameId: string): DifferenceFound {
-        return {
-            difference: { coords: this.isDifference(gameId, coord) as Coordinate[], isPlayerFoundDifference },
-            isGameOver: this.isGameOver(gameId) as boolean,
-            nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
-        };
+    getNbDifferencesFound(coord: Coordinate, gameId: string, isPlayerFoundDifference?: boolean): DifferenceFound {
+        return isPlayerFoundDifference
+            ? {
+                  coords: this.isDifference(gameId, coord) as Coordinate[],
+                  nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
+                  isPlayerFoundDifference,
+              }
+            : {
+                  coords: this.isDifference(gameId, coord) as Coordinate[],
+                  nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
+              };
     }
 
     private findGame(gameId: string): Game | undefined {

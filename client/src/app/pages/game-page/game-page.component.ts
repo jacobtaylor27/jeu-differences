@@ -29,3 +29,11 @@ export class GamePageComponent {
         this.socket.on(SocketEvent.Win, () => this.openGameOverDialog(true));
         this.socket.on(SocketEvent.Lose, () => this.openGameOverDialog(false));
     }
+
+    openGameOverDialog(isWin: boolean) {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.minWidth = '50%';
+        this.dialog.open(DialogGameOverComponent, { data: { isWin }, ...dialogConfig });
+    }
+}

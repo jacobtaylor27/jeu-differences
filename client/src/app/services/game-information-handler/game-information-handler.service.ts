@@ -9,7 +9,7 @@ import { SocketEvent } from '@common/socket-event';
     providedIn: 'root',
 })
 export class GameInformationHandlerService {
-    playerName: string;
+    playersName: string[] = [];
     roomId: string;
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
@@ -19,7 +19,7 @@ export class GameInformationHandlerService {
     constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
 
     propertiesAreUndefined(): boolean {
-        return this.gameInformation === undefined || this.playerName === undefined || this.gameMode === undefined;
+        return this.gameInformation === undefined || this.playersName === undefined || this.gameMode === undefined;
     }
 
     handleSocketEvent() {
@@ -44,8 +44,9 @@ export class GameInformationHandlerService {
     }
 
     setPlayerName(name: string): void {
-        this.playerName = name;
+        this.playersName.push(name);
     }
+
 
     getOriginalBmpId(): string {
         return this.gameInformation.idOriginalBmp;

@@ -2,6 +2,7 @@ import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -21,6 +22,7 @@ export class ApprovalDialogComponent {
         },
         public socketService: CommunicationSocketService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
+        private readonly routerService : RouterService,
     ) {
         this.opponentsName = data.opponentsName;
     }

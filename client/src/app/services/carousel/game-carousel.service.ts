@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { GameCard } from '@app/interfaces/game-card';
 import { CarouselInformation } from '@common/carousel-information';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameCarouselService {
-    games: GameCard[] = [];
     carouselInformation: CarouselInformation = {
         currentPage: 0,
         gamesOnPage: 0,
@@ -26,12 +24,6 @@ export class GameCarouselService {
 
     hasMoreThanOneCard(): boolean {
         return this.carouselInformation.nbOfGames > 1;
-    }
-
-    setCardMode(makeAdmin: boolean = false): void {
-        for (const gameCard of this.games) {
-            gameCard.isAdminCard = makeAdmin;
-        }
     }
 
     hasCards(): boolean {

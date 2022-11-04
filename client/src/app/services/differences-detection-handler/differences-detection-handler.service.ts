@@ -70,12 +70,11 @@ export class DifferencesDetectionHandlerService {
             if (!data.isPlayerFoundDifference) {
                 this.setNumberDifferencesFound(data.nbDifferencesLeft, this.gameInfoHandlerService.getNbDifferences());
             }
-
-    openGameOverDialog() {
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.disableClose = true;
-        dialogConfig.minWidth = '50%';
-        this.matDialog.open(DialogGameOverComponent, dialogConfig);
+            this.differenceDetected(ctx, this.contextImgModified, data.coords);
+        });
+        this.socketService.once(SocketEvent.DifferenceNotFound, () => {
+            this.differenceNotDetected(mousePosition, ctx);
+        });
     }
 
     setContextImgModified(ctx: CanvasRenderingContext2D) {

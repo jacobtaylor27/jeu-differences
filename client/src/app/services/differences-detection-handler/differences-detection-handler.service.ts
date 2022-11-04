@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
+import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/interfaces/vec2';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { Coordinate } from '@common/coordinate';
+import { DifferenceFound } from '@common/difference';
 import { SocketEvent } from '@common/socket-event';
-import { CommunicationSocketService } from '../communication-socket/communication-socket.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -47,8 +47,8 @@ export class DifferencesDetectionHandlerService {
     }
 
     getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
-        this.socketService.send(SocketEvent.Difference, {differenceCoord: mousePosition, gameId: id});
-
+        this.socketService.send(SocketEvent.Difference, { differenceCoord: mousePosition, gameId: id });
+        this.handleSocket(ctx, mousePosition);
         // this.communicationService
         //     .validateCoordinates(id, mousePosition)
         //     .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
@@ -65,20 +65,11 @@ export class DifferencesDetectionHandlerService {
         //     });
     }
 
-    handleSocket(ctx : CanvasRenderingContext2D){
-        // this.socketService.on(SocketEvent.DifferenceFoundMulti, 
-        //     (data : {difference: {coords : Coordinate, isPlayerFound : boolean}, isGameOver : boolean, nbDifferencesLeft : number, isOpponent : boolean}) => {
-        //         this.setNumberDifferencesFound(data.nbDifferencesLeft, this.gameInfoHandlerService.getNbDifferences());
-        //          this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
-        //     } )
-
-
-        // SOLO
-        this.socketService.on(SocketEvent.DifferenceFound,
-            (data : {difference: {coords : Coordinate[], isPlayerFound : boolean}, isGameOver : boolean, nbDifferencesLeft : number}) => {
-                    this.setNumberDifferencesFound(data.nbDifferencesLeft, this.gameInfoHandlerService.getNbDifferences());
-                     this.differenceDetected(ctx, this.contextImgModified, data.difference.coords); });
-    }
+    handleSocket(ctx: CanvasRenderingContext2D, mousePosition: Vec2) {
+        this.socketService.once(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+            if (!data.isPlayerFoundDifference) {
+                this.setNumberDifferencesFound(data.nbDifferencesLeft, this.gameInfoHandlerService.getNbDifferences());
+            }
 
     openGameOverDialog() {
         const dialogConfig = new MatDialogConfig();

@@ -38,6 +38,7 @@ export class GameCarouselComponent implements OnInit {
     }
 
     getPage(pageNb: number): void {
+        this.isLoaded = false;
         this.communicationService.getGamesInfoByPage(pageNb).subscribe((response: HttpResponse<CarouselResponse>) => {
             if (response && response.body) {
                 this.setCarouselInformation(response.body.carouselInfo);

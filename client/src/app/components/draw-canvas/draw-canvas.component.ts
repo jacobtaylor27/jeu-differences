@@ -8,7 +8,6 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 interface Stroke {
     lines: Line[];
-    style: StrokeStyle;
 }
 interface StrokeStyle {
     color: string;
@@ -23,6 +22,7 @@ interface Line {
 interface Command {
     name: string;
     stroke: Stroke;
+    style: StrokeStyle;
 }
 
 @Component({
@@ -41,7 +41,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     // Having an index of -1 makes way more sens, because the default index is out of bound.
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfStroke: number = -1;
-    currentCommand: Command = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
+    currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round' } };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
@@ -108,7 +108,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         for (let i = 0; i < this.indexOfStroke + 1; i++) {
             const command = this.commands[i];
             command.stroke.lines.forEach((line) => {
-                this.createStroke(line, command.stroke.style, 'source-over');
+                this.createStroke(line, command.style, 'source-over');
             });
         }
     }
@@ -164,7 +164,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: '', stroke: { lines: [], style: { color: '', width: 0, cap: 'round' } } };
+        this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round' } };
     }
 
     stopDrawing() {
@@ -186,11 +186,11 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.currentCommand.stroke.lines.push(line);
 
         if (this.pencil.state === 'Pencil') {
-            this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.pencil };
-            this.createStroke(line, this.currentCommand.stroke.style, 'source-over');
+            this.currentCommand.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.pencil };
+            this.createStroke(line, this.currentCommand.style, 'source-over');
         } else {
-            this.currentCommand.stroke.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
-            this.createStroke(line, this.currentCommand.stroke.style, 'destination-out');
+            this.currentCommand.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
+            this.createStroke(line, this.currentCommand.style, 'destination-out');
         }
     }
 

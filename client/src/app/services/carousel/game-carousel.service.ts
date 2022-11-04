@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { GameCard } from '@app/interfaces/game-card';
-import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { CarouselInformation } from '@common/carousel-information';
 
 @Injectable({
@@ -16,12 +15,6 @@ export class GameCarouselService {
         hasNext: false,
         hasPrevious: false,
     };
-
-    constructor(private readonly gameCardHandlerService: GameCardHandlerService) {}
-
-    getCards(): GameCard[] {
-        return this.gameCardHandlerService.getGameCards();
-    }
 
     setCarouselInformation(carouselInfo: CarouselInformation): void {
         this.carouselInformation = carouselInfo;

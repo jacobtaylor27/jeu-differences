@@ -28,6 +28,7 @@ export class ApprovalDialogComponent {
     }
 
     onClickApprove() {
+        this.gameInformationHandlerService.setPlayerName(this.opponentsName);
         this.socketService.send(SocketEvent.AcceptPlayer, {
             gameId: this.gameInformationHandlerService.roomId,
             opponentsRoomId: this.data.opponentsRoomId,

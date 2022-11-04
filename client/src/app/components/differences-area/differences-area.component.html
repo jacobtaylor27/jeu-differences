@@ -1,8 +1,8 @@
 <section class="gamers-infos">
-    <div class="gamer-info" *ngFor="let player of this.getPlayersName()">
-        <p class="first-player-name player-name">Nom du joueur : {{ player }}</p>
+    <div class="gamer-info" *ngFor="let player of this.players">
+        <p class="first-player-name player-name">Nom du joueur : {{ player.name }}</p>
         <section class="differences">
-            <p>{{ setNbDifferencesFound() }}</p>
+            <p>{{ player.nbDifference }}</p>
             <mat-icon class="magnifying-glass">search</mat-icon>
         </section>
     </div>

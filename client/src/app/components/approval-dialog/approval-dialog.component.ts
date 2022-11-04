@@ -22,7 +22,7 @@ export class ApprovalDialogComponent {
         },
         public socketService: CommunicationSocketService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
-        private readonly routerService : RouterService,
+        private readonly routerService: RouterService,
     ) {
         this.opponentsName = data.opponentsName;
     }
@@ -32,11 +32,12 @@ export class ApprovalDialogComponent {
         this.socketService.send(SocketEvent.AcceptPlayer, {
             gameId: this.gameInformationHandlerService.roomId,
             opponentsRoomId: this.data.opponentsRoomId,
-            playerName : this.gameInformationHandlerService.getPlayerName(),
+            playerName: this.gameInformationHandlerService.getPlayer().name,
         });
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        this.socketService.on(SocketEvent.Play, () => 
-        { this.routerService.navigateTo('game');});
+        this.socketService.on(SocketEvent.Play, () => {
+            this.routerService.navigateTo('game');
+        });
     }
 
     onClickReject() {

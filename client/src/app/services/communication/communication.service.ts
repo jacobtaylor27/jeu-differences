@@ -105,7 +105,7 @@ export class CommunicationService {
         return this.http.get<{ games: PublicGameInformation[] }>(`${this.baseUrl}/game/cards`, { observe: 'response' }).pipe();
     }
 
-    getGamesInfoByPage(page: number): Observable<HttpResponse<CarouselResponse>> {
+    getGamesInfoByPage(page: number = 1): Observable<HttpResponse<CarouselResponse>> {
         return this.http.get<CarouselResponse>(`${this.baseUrl}/game/cards/?page=${page}`, { observe: 'response' }).pipe();
     }
 

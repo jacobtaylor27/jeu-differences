@@ -61,11 +61,10 @@ export class GameCarouselComponent implements OnInit {
         for (const card of games) {
             this.games.push({
                 gameInformation: card,
-                isAdminCard: false,
+                isAdminCard: this.isAdmin,
                 isMulti: false,
             });
         }
-        // this.gameCarouselService.setCards(games);
     }
 
     getCardsCount(): number {

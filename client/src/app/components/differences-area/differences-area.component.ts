@@ -43,12 +43,7 @@ export class DifferencesAreaComponent implements OnInit {
         );
     }
 
-    setNbDifferencesFound() {
-        if (!this.differenceDetectionHandler.nbDifferencesFound) {
-            this.nbDifferences = '0 / ' + this.gameInformationHandlerService.getNbDifferences();
-        } else {
-            this.nbDifferences = this.differenceDetectionHandler.nbDifferencesFound + ' / ' + this.gameInformationHandlerService.getNbDifferences();
-        }
-        return this.nbDifferences;
+    private getPlayerIndex(playerName: string) {
+        return this.players.findIndex((player: { name: string; nbDifference: string }) => player.name === playerName);
     }
 }

@@ -22,10 +22,6 @@ export class AdminCommandsComponent {
 
     onClickDeleteGames(): void {
         this.adminService.deleteAllGames();
-        this.reloadComponent();
-    }
-
-    reloadComponent(): void {
         this.router.reloadPage('admin');
     }
 }

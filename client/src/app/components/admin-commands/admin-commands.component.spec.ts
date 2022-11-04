@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { AdminService } from '@app/services/admin-service/admin.service';
@@ -12,7 +11,7 @@ describe('AdminCommandsComponent', () => {
     let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(async () => {
-        spyAdminService = jasmine.createSpyObj('AdminService', ['openSettings', 'deleteAllGames', 'resetAllHighScores', 'hasGameCards']);
+        spyAdminService = jasmine.createSpyObj('AdminService', ['openSettings', 'deleteAllGames', 'resetAllHighScores', 'hasCards']);
         spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
@@ -38,7 +37,10 @@ describe('AdminCommandsComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('hasCards should call hasGameCards from adminService', () => {});
+    it('hasCards should call hasCards from adminService', () => {
+        component.hasCards();
+        expect(spyAdminService.hasCards).toHaveBeenCalled();
+    });
 
     it('onClickModifySettings should call openSettings from adminService', () => {
         component.onClickModifySettings();
@@ -48,12 +50,6 @@ describe('AdminCommandsComponent', () => {
     it('onClickDeleteGames should call deleteAllGames from admin service', () => {
         component.onClickDeleteGames();
         expect(spyAdminService.deleteAllGames).toHaveBeenCalled();
-    });
-
-    it('onClickResetHighScores should call resetAllHighScores from admin service', () => {});
-
-    it('should reload component', () => {
-        component.reloadComponent();
         expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
     });
 });

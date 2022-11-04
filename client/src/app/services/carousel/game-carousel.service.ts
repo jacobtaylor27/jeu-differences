@@ -5,7 +5,14 @@ import { CarouselInformation } from '@common/carousel-information';
     providedIn: 'root',
 })
 export class GameCarouselService {
-    carouselInformation: CarouselInformation;
+    carouselInformation: CarouselInformation = {
+        currentPage: 0,
+        gamesOnPage: 0,
+        nbOfGames: 0,
+        nbOfPages: 0,
+        hasNext: false,
+        hasPrevious: false,
+    };
 
     setCarouselInformation(carouselInfo: CarouselInformation): void {
         this.carouselInformation = carouselInfo;

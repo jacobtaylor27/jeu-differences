@@ -9,7 +9,7 @@ import { SocketEvent } from '@common/socket-event';
     providedIn: 'root',
 })
 export class GameInformationHandlerService {
-    playersName: string[] = [];
+    playersName: {player : string, nbDifferences : number}[] = [];
     roomId: string;
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
@@ -44,7 +44,7 @@ export class GameInformationHandlerService {
     }
 
     setPlayerName(name: string): void {
-        this.playersName.push(name);
+        this.playersName.push({player : name, nbDifferences : 0});
     }
 
 
@@ -90,10 +90,10 @@ export class GameInformationHandlerService {
 
     getPlayerName(): string {
         this.handleNotDefined();
-        return this.playersName[0];
+        return this.playersName[0].player;
     }
 
     getOpponentName(): string {
-        return this.playersName[1];
+        return this.playersName[1].player;
     }
 }

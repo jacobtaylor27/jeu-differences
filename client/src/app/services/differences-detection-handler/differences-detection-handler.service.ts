@@ -24,9 +24,16 @@ export class DifferencesDetectionHandlerService {
         private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
 
-    setNumberDifferencesFound(nbDifferencesLeft: number, nbTotalDifference: number) {
+    setNumberDifferencesFound(isOpponent : boolean, nbTotalDifference: number) {
         this.nbTotalDifferences = nbTotalDifference;
-        this.nbDifferencesFound = nbTotalDifference - nbDifferencesLeft;
+        if(isOpponent){
+            this.gameInfoHandlerService.playersName[1].nbDifferences ++;
+        }
+        else{
+            this.gameInfoHandlerService.playersName[0].nbDifferences++;
+        }
+       
+        this.nbDifferencesFound ++;
     }
 
     resetNumberDifferencesFound() {

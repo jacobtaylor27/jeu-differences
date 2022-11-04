@@ -1,7 +1,7 @@
 import { Coordinate } from './coordinate';
 
 export interface DifferenceFound {
-    difference: { coords: Coordinate[]; isPlayerFoundDifference: boolean };
-    isGameOver: boolean;
+    coords: Coordinate[];
     nbDifferencesLeft: number;
+    isPlayerFoundDifference?: boolean;
 }

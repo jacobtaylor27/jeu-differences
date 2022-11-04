@@ -14,6 +14,7 @@ export class GameInformationHandlerService {
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
     isReadyToAccept: boolean = true;
+    isMulti : boolean = false;
 
     constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
 
@@ -22,13 +23,16 @@ export class GameInformationHandlerService {
     }
 
     handleSocketEvent() {
-        this.socket.on(SocketEvent.Play, (gameId: string) => {
-            this.roomId = gameId;
-            this.routerService.navigateTo('game');
-        });
-
+        if(!this.isMulti){
+            this.socket.on(SocketEvent.Play, (gameId: string) => {
+                this.roomId = gameId;
+                this.routerService.navigateTo('game');
+            });
+        }
+       
         this.socket.on(SocketEvent.WaitPlayer, (roomId: string) => {
             this.roomId = roomId;
+            this.isMulti = true;
             this.routerService.navigateTo('waiting');
         });
     }

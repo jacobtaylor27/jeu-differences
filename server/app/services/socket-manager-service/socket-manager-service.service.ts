@@ -71,7 +71,7 @@ export class SocketManagerService {
                 socket.broadcast.to(roomId).emit(SocketEvent.Message, message);
             });
 
-            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName : string) => {
                 this.multiplayerGameManager.removeGameWaiting(roomId);
                 this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
                 for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
@@ -80,7 +80,7 @@ export class SocketManagerService {
                     }
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
-                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, roomId);
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, {roomId, playerName});
             });
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {

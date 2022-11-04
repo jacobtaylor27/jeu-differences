@@ -4,32 +4,34 @@ import { RouterService } from '@app/services/router-service/router.service';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameInformationHandlerService {
-    playersName: {player : string, nbDifferences : number}[] = [];
+    players: { name: string; nbDifferences: number }[] = [];
     roomId: string;
+    $differenceFound: Subject<string> = new Subject();
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
     isReadyToAccept: boolean = true;
-    isMulti : boolean = false;
+    isMulti: boolean = false;
 
     constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
 
     propertiesAreUndefined(): boolean {
-        return this.gameInformation === undefined || this.playersName === undefined || this.gameMode === undefined;
+        return this.gameInformation === undefined || this.players === undefined || this.gameMode === undefined;
     }
 
     handleSocketEvent() {
-        if(!this.isMulti){
+        if (!this.isMulti) {
             this.socket.on(SocketEvent.Play, (gameId: string) => {
                 this.roomId = gameId;
                 this.routerService.navigateTo('game');
             });
         }
-       
+
         this.socket.on(SocketEvent.WaitPlayer, (roomId: string) => {
             this.roomId = roomId;
             this.isMulti = true;
@@ -44,9 +46,8 @@ export class GameInformationHandlerService {
     }
 
     setPlayerName(name: string): void {
-        this.playersName.push({player : name, nbDifferences : 0});
+        this.players.push({ name, nbDifferences: 0 });
     }
-
 
     getOriginalBmpId(): string {
         return this.gameInformation.idOriginalBmp;
@@ -56,7 +57,11 @@ export class GameInformationHandlerService {
         return this.gameInformation.idEditedBmp;
     }
 
-    getNbDifferences(): number {
+    getNbDifferences(playerName: string) {
+        return this.players.find((player) => player.name === playerName)?.nbDifferences;
+    }
+
+    getNbTotalDifferences(): number {
         return this.gameInformation.nbDifferences;
     }
 
@@ -88,12 +93,12 @@ export class GameInformationHandlerService {
         return this.gameInformation.name;
     }
 
-    getPlayerName(): string {
+    getPlayer(): { name: string; nbDifferences: number } {
         this.handleNotDefined();
-        return this.playersName[0].player;
+        return this.players[0];
     }
 
-    getOpponentName(): string {
-        return this.playersName[1].player;
+    getOpponent(): { name: string; nbDifferences: number } {
+        return this.players[1];
     }
 }

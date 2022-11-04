@@ -57,7 +57,7 @@ export class DifferencesDetectionHandlerService {
                     return;
                 }
 
-                this.setNumberDifferencesFound(false, this.gameInfoHandlerService.getNbDifferences());
+                this.setNumberDifferencesFound(false, this.gameInfoHandlerService.getNbTotalDifferences());
                 this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
                 if (response.body.isGameOver) {
                     this.openGameOverDialog();

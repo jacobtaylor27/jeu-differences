@@ -106,7 +106,7 @@ export class CommunicationService {
     }
 
     getGamesInfoByPage(page: number): Observable<HttpResponse<{ carouselRange: CarouselResponse }>> {
-        return this.http.get<{ carouselRange: CarouselResponse }>(`${this.baseUrl}/game/cards/?p=${page}`, { observe: 'response' }).pipe();
+        return this.http.get<{ carouselRange: CarouselResponse }>(`${this.baseUrl}/game/cards/?page=${page}`, { observe: 'response' }).pipe();
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

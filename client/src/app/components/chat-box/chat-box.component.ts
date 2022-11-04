@@ -72,12 +72,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     // }
 
     // private differenceNotFoundMessage(userName: string, isMulti: boolean) {
-    //     let eventMessage: string;
-    //     if (isMulti) {
-    //         eventMessage = `Erreur par ${userName}`;
-    //     } else {
-    //         eventMessage = 'Erreur';
-    //     }
+    //     const eventMessage: string = isMulti ? `Erreur par ${userName}` : 'Erreur';
     //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
     // }
 

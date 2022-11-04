@@ -90,6 +90,10 @@ export class GameInformationHandlerService {
 
     getPlayerName(): string {
         this.handleNotDefined();
-        return this.playerName;
+        return this.playersName[0];
+    }
+
+    getOpponentName(): string {
+        return this.playersName[1];
     }
 }

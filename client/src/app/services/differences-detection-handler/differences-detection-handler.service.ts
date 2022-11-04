@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
 import { Vec2 } from '@app/interfaces/vec2';
-import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { Coordinate } from '@common/coordinate';
+import { SocketEvent } from '@common/socket-event';
+import { CommunicationSocketService } from '../communication-socket/communication-socket.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -20,7 +20,7 @@ export class DifferencesDetectionHandlerService {
     // eslint-disable-next-line max-params
     constructor(
         public matDialog: MatDialog,
-        private readonly communicationService: CommunicationService,
+        private readonly socketService: CommunicationSocketService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
 
@@ -47,20 +47,37 @@ export class DifferencesDetectionHandlerService {
     }
 
     getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
-        this.communicationService
-            .validateCoordinates(id, mousePosition)
-            .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
-                if (!response || !response.body) {
-                    this.differenceNotDetected(mousePosition, ctx);
-                    return;
-                }
+        this.socketService.send(SocketEvent.Difference, {differenceCoord: mousePosition, gameId: id});
 
-                this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.getNbDifferences());
-                this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
-                if (response.body.isGameOver) {
-                    this.openGameOverDialog();
-                }
-            });
+        // this.communicationService
+        //     .validateCoordinates(id, mousePosition)
+        //     .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
+        //         if (!response || !response.body) {
+        //             this.differenceNotDetected(mousePosition, ctx);
+        //             return;
+        //         }
+
+        //         this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.getNbDifferences());
+        //         this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
+        //         if (response.body.isGameOver) {
+        //             this.openGameOverDialog();
+        //         }
+        //     });
+    }
+
+    handleSocket(ctx : CanvasRenderingContext2D){
+        // this.socketService.on(SocketEvent.DifferenceFoundMulti, 
+        //     (data : {difference: {coords : Coordinate, isPlayerFound : boolean}, isGameOver : boolean, nbDifferencesLeft : number, isOpponent : boolean}) => {
+        //         this.setNumberDifferencesFound(data.nbDifferencesLeft, this.gameInfoHandlerService.getNbDifferences());
+        //          this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
+        //     } )
+
+
+        // SOLO
+        this.socketService.on(SocketEvent.DifferenceFound,
+            (data : {difference: {coords : Coordinate[], isPlayerFound : boolean}, isGameOver : boolean, nbDifferencesLeft : number}) => {
+                    this.setNumberDifferencesFound(data.nbDifferencesLeft, this.gameInfoHandlerService.getNbDifferences());
+                     this.differenceDetected(ctx, this.contextImgModified, data.difference.coords); });
     }
 
     openGameOverDialog() {

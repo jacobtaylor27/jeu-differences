@@ -125,9 +125,9 @@ export class SocketManagerService {
                     socket.to(gameId).emit(SocketEvent.DifferenceNotFound);
                     return;
                 }
-                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, true, gameId));
+                // socket.emit(SocketEvent.Difference, {...this.gameManager.getNbDifferencesFound(differenceCoord, true, gameId), isOpponent : false});
                 if (this.gameManager.isGameMultiplayer(gameId)) {
-                    socket.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, false, gameId));
+                    socket.to(gameId).emit(SocketEvent.DifferenceFoundMulti, {...this.gameManager.getNbDifferencesFound(differenceCoord, false, gameId), isOpponent : false});
                 }
             });
         });

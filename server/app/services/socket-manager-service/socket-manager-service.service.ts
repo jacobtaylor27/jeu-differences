@@ -122,7 +122,7 @@ export class SocketManagerService {
                     return;
                 }
                 if (!this.gameManager.isDifference(gameId, differenceCoord)) {
-                    socket.to(gameId).emit(SocketEvent.DifferenceNotFound);
+                    socket.emit(SocketEvent.DifferenceNotFound, differenceCoord);
                     return;
                 }
                 if (this.gameManager.isGameOver(gameId)) {
@@ -132,6 +132,13 @@ export class SocketManagerService {
                     if (this.gameManager.isGameOver(gameId)) {
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, gameId, true));
+                    socket.broadcast
+                        .to(gameId)
+                        .emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, gameId, false));
+                    return;
+                }
+                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, gameId));
             });
         });
     }

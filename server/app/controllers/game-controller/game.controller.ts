@@ -173,7 +173,7 @@ export class GameController {
                                     return {
                                         id: game.id,
                                         name: game.name,
-                                        thumbnail: game.thumbnail,
+                                        thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(game.thumbnail),
                                         nbDifferences: game.differences.length,
                                         idEditedBmp: game.idEditedBmp,
                                         idOriginalBmp: game.idOriginalBmp,

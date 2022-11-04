@@ -33,7 +33,8 @@ export class ApprovalDialogComponent {
             opponentsRoomId: this.data.opponentsRoomId,
         });
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        this.socketService.on(SocketEvent.Play, () => {});
+        this.socketService.on(SocketEvent.Play, () => 
+        { this.routerService.navigateTo('game');});
     }
 
     onClickReject() {

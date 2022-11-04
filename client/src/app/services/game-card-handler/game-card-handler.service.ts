@@ -40,16 +40,6 @@ export class GameCardHandlerService {
         return this.gameCards.length > 0;
     }
 
-    hideAllCards(): void {
-        for (const gameCard of this.gameCards) {
-            gameCard.isShown = false;
-        }
-    }
-
-    getActiveCards(): GameCard[] {
-        return this.gameCards.filter((gameCard) => gameCard.isShown === true);
-    }
-
     setCardMode(isAdmin: boolean = false): void {
         for (const gameCard of this.gameCards) {
             gameCard.isAdminCard = isAdmin;

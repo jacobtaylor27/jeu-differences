@@ -36,7 +36,6 @@ const GAME_CARD: GameCard = {
         ],
         nbDifferences: 1,
     },
-    isShown: true,
     isAdminCard: true,
     isMulti: true,
 };

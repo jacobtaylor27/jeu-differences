@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameCardService } from './game-card.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,25 +37,21 @@ const GAME_CARD: GameCard = {
         ],
         nbDifferences: 1,
     },
-    isShown: true,
     isAdminCard: true,
     isMulti: true,
 };
 
 describe('GameCardService', () => {
     let service: GameCardService;
-    let spyGameCardHandlerService: jasmine.SpyObj<GameCardHandlerService>;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
     beforeEach(() => {
-        spyGameCardHandlerService = jasmine.createSpyObj<GameCardHandlerService>('GameCardHandlerService', ['resetHighScores']);
         spyCommunicationService = jasmine.createSpyObj<CommunicationService>('CommunicationService', ['deleteGame']);
         spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, NoopAnimationsModule, HttpClientModule],
             providers: [
-                { provide: GameCardHandlerService, useValue: spyGameCardHandlerService },
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: CommunicationService, useValue: spyCommunicationService },
             ],

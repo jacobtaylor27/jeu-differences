@@ -2,11 +2,11 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
+import { User } from '@common/user';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
-import { User } from '@common/user';
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -106,7 +106,7 @@ export class SocketManagerService {
                 }
                 this.gameManager.leaveGame(socket.id, gameId);
                 if (this.gameManager.isGameMultiplayer(gameId)) {
-                    socket.to(gameId).emit(SocketEvent.Win);
+                    socket.broadcast.to(gameId).emit(SocketEvent.Win);
                 }
                 socket.emit(SocketEvent.LeaveGame);
                 socket.leave(gameId);
@@ -125,10 +125,13 @@ export class SocketManagerService {
                     socket.to(gameId).emit(SocketEvent.DifferenceNotFound);
                     return;
                 }
-                // socket.emit(SocketEvent.Difference, {...this.gameManager.getNbDifferencesFound(differenceCoord, true, gameId), isOpponent : false});
-                if (this.gameManager.isGameMultiplayer(gameId)) {
-                    socket.to(gameId).emit(SocketEvent.DifferenceFoundMulti, {...this.gameManager.getNbDifferencesFound(differenceCoord, false, gameId), isOpponent : false});
+                if (this.gameManager.isGameOver(gameId)) {
+                    socket.emit(SocketEvent.Win);
                 }
+                if (this.gameManager.isGameMultiplayer(gameId)) {
+                    if (this.gameManager.isGameOver(gameId)) {
+                        socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+                    }
             });
         });
     }

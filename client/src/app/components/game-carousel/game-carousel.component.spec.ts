@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameCardComponent } from '@app/components/game-card/game-card.component';
@@ -11,7 +10,7 @@ import { PublicGameInformation } from '@common/game-information';
 import { of } from 'rxjs';
 import { GameCarouselComponent } from './game-carousel.component';
 
-fdescribe('GameCarouselComponent', () => {
+describe('GameCarouselComponent', () => {
     let component: GameCarouselComponent;
     let fixture: ComponentFixture<GameCarouselComponent>;
     let spyGameCarouselService: GameCarouselService;

@@ -24,7 +24,8 @@ export class DifferencesAreaComponent implements OnInit {
                   { name: opponentPlayer.name, nbDifference: this.setNbDifferencesFound(opponentPlayer.name) as string },
               ];
         this.gameInformationHandlerService.$differenceFound.subscribe((playerName: string) => {
-            if (this.getPlayerIndex(playerName) === undefined) {
+            const notFindIndex = -1;
+            if (this.getPlayerIndex(playerName) === notFindIndex) {
                 return;
             }
             this.players[this.getPlayerIndex(playerName)].nbDifference = this.setNbDifferencesFound(playerName);
@@ -35,15 +36,15 @@ export class DifferencesAreaComponent implements OnInit {
         this.differenceDetectionHandler.resetNumberDifferencesFound();
     }
 
-    private setNbDifferencesFound(playerName: string): string {
-        return (
-            this.gameInformationHandlerService.getNbDifferences(playerName)?.toString() +
-            ' / ' +
-            this.gameInformationHandlerService.getNbTotalDifferences().toString()
-        );
+    getPlayerIndex(playerName: string) {
+        return this.players.findIndex((player: { name: string; nbDifference: string }) => player.name === playerName);
     }
 
-    private getPlayerIndex(playerName: string) {
-        return this.players.findIndex((player: { name: string; nbDifference: string }) => player.name === playerName);
+    setNbDifferencesFound(playerName: string): string {
+        const nbPlayerDifference = this.gameInformationHandlerService.getNbDifferences(playerName);
+        if (nbPlayerDifference === undefined) {
+            return '';
+        }
+        return nbPlayerDifference.toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
     }
 }

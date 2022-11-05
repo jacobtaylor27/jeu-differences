@@ -76,6 +76,7 @@ describe('SidebarComponent', () => {
                 },
             ],
             nbDifferences: 10,
+            isMulti: false,
         };
     });
 

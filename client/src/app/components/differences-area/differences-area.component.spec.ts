@@ -29,9 +29,6 @@ describe('DifferencesAreaComponent', () => {
         spyGameInfosService.getPlayer.and.callFake(() => {
             return { name: 'test', nbDifferences: 0 };
         });
-        spyGameInfosService.getOpponent.and.callFake(() => {
-            return { name: 'test2', nbDifferences: 0 };
-        });
         spyGameInfosService.getNbDifferences.and.returnValue(0);
         spyGameInfosService.getNbTotalDifferences.and.returnValue(10);
         await TestBed.configureTestingModule({
@@ -72,4 +69,14 @@ describe('DifferencesAreaComponent', () => {
         });
         spyGameInfosService.$differenceFound.next('test');
     });
-});
+
+    it('should not set the nb of differences found during the game if the player is not find', () => {
+        component.players = [{ name: 'test', nbDifference: '0/10' }];
+        spyOn(Object.getPrototypeOf(component), 'getPlayerIndex').and.callFake(() => -1);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyNbDifferenceFound = spyOn(Object.getPrototypeOf(component), 'setNbDifferencesFound').and.callFake(() => '1/10');
+        spyGameInfosService.$differenceFound.subscribe(() => {
+            expect(spyNbDifferenceFound).not.toHaveBeenCalled();
+        });
+        spyGameInfosService.$differenceFound.next('test');
+    });

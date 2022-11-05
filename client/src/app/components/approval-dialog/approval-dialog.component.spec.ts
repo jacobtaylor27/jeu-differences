@@ -61,9 +61,14 @@ describe('ApprovalDialogComponent', () => {
     });
 
     it('should send to server that the player accepted the request and start the game', () => {
+        gameInformationHandlerService.getPlayer.and.callFake(() => {
+            return { name: 'test', nbDifferences: 0 };
+        });
         const spySend = spyOn(component.socketService, 'send');
         component.onClickApprove();
         expect(spySend).toHaveBeenCalled();
         socketHelper.peerSideEmit(SocketEvent.Play);
+        expect(routerSpyObj.navigateTo).toHaveBeenCalled();
+        expect(gameInformationHandlerService.setPlayerName).toHaveBeenCalled();
     });
 });

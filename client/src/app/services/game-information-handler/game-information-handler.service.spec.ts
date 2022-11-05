@@ -44,7 +44,7 @@ describe('GameInformationHandlerService', () => {
     });
 
     it('should return false when properties are not Undefined', () => {
-        service.playerName = 'test';
+        service.players = [{ name: 'test', nbDifferences: 0 }];
         service.gameInformation = {
             id: '1',
             name: 'test',
@@ -79,10 +79,12 @@ describe('GameInformationHandlerService', () => {
         expect(spyRouter.navigate).toHaveBeenCalled();
     });
 
-    it('should set PlayerName', () => {
-        const expectedName = 'test';
-        service.setPlayerName(expectedName);
-        expect(service.playerName).toEqual(expectedName);
+    it('should set Player', () => {
+        const expectedPlayer = { name: 'test', nbDifferences: 0 };
+        service.setPlayerName(expectedPlayer.name);
+        expect(service.players.find((player: { name: string; nbDifferences: number }) => player.name === expectedPlayer.name)).toEqual(
+            expectedPlayer,
+        );
     });
 
     it('should return nb of differences', () => {

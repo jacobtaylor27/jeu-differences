@@ -214,3 +214,9 @@ describe('GameInformationHandlerService', () => {
         service.resetPlayers();
         expect(service.players).toEqual([]);
     });
+
+    it('should get the nb of difference', () => {
+        service.players = [{ name: 'test', nbDifferences: 0 }];
+        expect(service.getNbDifferences('test')).toEqual(0);
+        expect(service.getNbDifferences('playerNotFound')).toEqual(undefined);
+    });

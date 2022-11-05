@@ -220,3 +220,13 @@ describe('GameInformationHandlerService', () => {
         expect(service.getNbDifferences('test')).toEqual(0);
         expect(service.getNbDifferences('playerNotFound')).toEqual(undefined);
     });
+
+    it('should get the opponent information', () => {
+        const expectedPlayers = [
+            { name: 'mainPlayer', nbDifferences: 0 },
+            { name: 'opponentPlayer', nbDifferences: 0 },
+        ];
+        service.players = expectedPlayers;
+        expect(service.getOpponent()).toEqual(expectedPlayers[1]);
+    });
+});

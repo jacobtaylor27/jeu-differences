@@ -24,7 +24,7 @@ export class DifferencesAreaComponent implements OnInit {
                   { name: opponentPlayer.name, nbDifference: this.setNbDifferencesFound(opponentPlayer.name) as string },
               ];
         this.gameInformationHandlerService.$differenceFound.subscribe((playerName: string) => {
-            if (!this.getPlayerIndex(playerName)) {
+            if (this.getPlayerIndex(playerName) === undefined) {
                 return;
             }
             this.players[this.getPlayerIndex(playerName)].nbDifference = this.setNbDifferencesFound(playerName);

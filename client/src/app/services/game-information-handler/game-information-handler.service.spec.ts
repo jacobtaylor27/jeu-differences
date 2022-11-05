@@ -209,4 +209,8 @@ describe('GameInformationHandlerService', () => {
         service.gameInformation = gameInformation;
         expect(service.getGameInformation()).toEqual(gameInformation);
     });
-});
+
+    it('reset player', () => {
+        service.resetPlayers();
+        expect(service.players).toEqual([]);
+    });

@@ -86,3 +86,9 @@ describe('DifferencesAreaComponent', () => {
         expect(component.getPlayerIndex('test2')).toEqual(-1);
         expect(component.getPlayerIndex('test')).toEqual(0);
     });
+
+    it('should return string empty when player not found', () => {
+        spyGameInfosService.getNbDifferences.and.callFake(() => undefined);
+        expect(component.setNbDifferencesFound('')).toEqual('');
+    });
+});

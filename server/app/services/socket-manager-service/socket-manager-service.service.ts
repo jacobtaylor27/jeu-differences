@@ -2,11 +2,11 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
+import { User } from '@common/user';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
-import { User } from '@common/user';
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -71,7 +71,7 @@ export class SocketManagerService {
                 socket.broadcast.to(roomId).emit(SocketEvent.Message, message);
             });
 
-            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName : string) => {
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {
                 this.multiplayerGameManager.removeGameWaiting(roomId);
                 this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
                 for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
@@ -80,7 +80,7 @@ export class SocketManagerService {
                     }
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
-                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, {roomId, playerName});
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
             });
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {

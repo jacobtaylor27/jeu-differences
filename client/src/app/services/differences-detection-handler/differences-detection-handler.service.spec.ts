@@ -51,7 +51,8 @@ describe('DifferencesDetectionHandlerService', () => {
     });
 
     it('should set number of differences found', () => {
-        service.setNumberDifferencesFound(1, 3);
+        service.nbDifferencesFound = 1;
+        service.setNumberDifferencesFound(false, 3);
         expect(service.nbDifferencesFound).toEqual(2);
         expect(service.nbTotalDifferences).toEqual(3);
     });

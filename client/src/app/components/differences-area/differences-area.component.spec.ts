@@ -80,3 +80,9 @@ describe('DifferencesAreaComponent', () => {
         });
         spyGameInfosService.$differenceFound.next('test');
     });
+
+    it('should not find a player and return -1 as index', () => {
+        component.players = [{ name: 'test', nbDifference: '0/10' }];
+        expect(component.getPlayerIndex('test2')).toEqual(-1);
+        expect(component.getPlayerIndex('test')).toEqual(0);
+    });

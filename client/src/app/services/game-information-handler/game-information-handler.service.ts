@@ -44,7 +44,9 @@ export class GameInformationHandlerService {
             this.routerService.navigateTo('/');
         }
     }
-
+    resetPlayers() {
+        this.players = [];
+    }
     setPlayerName(name: string): void {
         this.players.push({ name, nbDifferences: 0 });
     }

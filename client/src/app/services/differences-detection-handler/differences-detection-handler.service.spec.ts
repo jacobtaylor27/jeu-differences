@@ -6,9 +6,9 @@ import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { Coordinate } from '@common/coordinate';
-import { of } from 'rxjs';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { Coordinate } from '@common/coordinate';
+import { of, Subject } from 'rxjs';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 describe('DifferencesDetectionHandlerService', () => {
@@ -19,7 +19,13 @@ describe('DifferencesDetectionHandlerService', () => {
 
     beforeEach(() => {
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
-        spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences']);
+        spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences', 'getNbTotalDifferences'], {
+            players: [
+                { name: 'test', nbDifferences: 0 },
+                { name: 'test2', nbDifferences: 0 },
+            ],
+            $differenceFound: new Subject<string>(),
+        });
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['validateCoordinates']);
 
         TestBed.configureTestingModule({

@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
-import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from './game-information-handler.service';
 
 /* eslint-disable @typescript-eslint/no-empty-function */
@@ -54,6 +54,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         service.gameMode = GameMode.Classic;
         spyRouter.navigate.and.returnValue(Promise.resolve(true));
@@ -94,8 +95,9 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 10,
+            isMulti: false,
         };
-        expect(service.getNbDifferences()).toEqual(service.gameInformation.nbDifferences);
+        expect(service.getNbTotalDifferences()).toEqual(service.gameInformation.nbDifferences);
     });
 
     it('should return id', () => {
@@ -108,6 +110,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getId()).toEqual(service.gameInformation.id);
     });
@@ -122,6 +125,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getOriginalBmpId()).toEqual('original');
     });
@@ -136,6 +140,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getModifiedBmpId()).toEqual('edited');
     });
@@ -153,6 +158,7 @@ describe('GameInformationHandlerService', () => {
             differenceRadius: 2,
             differences: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         service.setGameInformation(gameInformation);
         expect(service.gameInformation).toEqual(gameInformation);
@@ -178,6 +184,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getGameName()).toEqual('test');
     });
@@ -195,13 +202,9 @@ describe('GameInformationHandlerService', () => {
             differenceRadius: 2,
             differences: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         service.gameInformation = gameInformation;
         expect(service.getGameInformation()).toEqual(gameInformation);
-    });
-
-    it('should get player name', () => {
-        service.playerName = 'test';
-        expect(service.getPlayerName()).toEqual('test');
     });
 });

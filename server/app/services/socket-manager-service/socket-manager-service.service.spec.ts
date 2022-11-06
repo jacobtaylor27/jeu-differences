@@ -32,7 +32,7 @@ describe('SocketManager', () => {
         expect(service['sio']).to.not.equal(undefined);
     });
 
-//                 callback();
+    it('should connect to socket', () => {
         let isConnect = false;
         const fakeSockets = {
             // eslint-disable-next-line no-unused-vars
@@ -40,36 +40,39 @@ describe('SocketManager', () => {
                 return;
             },
             // eslint-disable-next-line no-unused-vars
-//                 return;
+            to: (id: string) => {
                 return;
             },
         };
 
-//     it('should create a game', async () => {
-//         const fakeSockets = {
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (eventName: string, _message: string) => {
-//                 expect(eventName).to.equal(SocketEvent.CreateGame);
-//             },
-//         };
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (_eventName: string, callback: () => void) => {},
+            // eslint-disable-next-line no-unused-vars
+            emit: (_eventName: string, _message: string) => {
+                return;
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            broadcast: fakeSockets,
+        };
 
-//         const fakeSocket = {
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+        service['sio'] = {
+            sockets: fakeSockets,
 //             on: async (eventName: string, callback: () => Promise<void>) => {
-//                 if (eventName === SocketEvent.CreateGame) {
-//                     await callback();
-//                 }
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (eventName: string, message: string) => {
-//                 return;
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             join: (id: string) => {
-//                 return;
-//             },
-//             in: () => fakeSockets,
-//         };
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    isConnect = true;
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        service.handleSockets();
+        expect(isConnect).to.equal(true);
+    });
 
 //         service['sio'] = {
 //             // eslint-disable-next-line @typescript-eslint/no-explicit-any

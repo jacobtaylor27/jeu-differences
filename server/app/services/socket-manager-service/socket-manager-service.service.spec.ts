@@ -400,33 +400,35 @@ describe('SocketManager', () => {
         service.handleSockets();
     });
 
-//         service['sio'] = {
-//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//             on: (eventName: string, callback: (socket: any) => void) => {
-//                 if (eventName === SocketEvent.Connection) {
-//                     callback(fakeSocket);
-//                 }
-//             },
-//         } as io.Server;
-//         stub(service['gameManager'], 'isGameFound').callsFake(() => false);
-//         service.handleSockets();
-//     });
+    it('should get games waiting', () => {
+        const expectedGames = ['game1', 'game2'];
+
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.GetGamesWaiting) callback();
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            emit: (eventName: string, message: any) => {
+                expect(eventName).to.equal(SocketEvent.GetGamesWaiting);
+                expect(message).to.deep.equal(expectedGames);
+            },
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => expectedGames);
+        service.handleSockets();
+    });
 
 //     it('should return an error if no difference found and the game is found', () => {
 //         const fakeSocket = {
 //             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
-//             on: (eventName: string, callback: () => void) => {
-//                 if (eventName === SocketEvent.Difference) callback();
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (eventName: string, message: string) => {
-//                 expect(eventName).to.equal(SocketEvent.DifferenceNotFound);
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             join: (id: string) => {
-//                 return;
-//             },
-//         };
 
 //         service['sio'] = {
 //             // eslint-disable-next-line @typescript-eslint/no-explicit-any

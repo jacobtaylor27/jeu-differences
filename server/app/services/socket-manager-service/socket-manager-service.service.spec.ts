@@ -115,6 +115,31 @@ describe('SocketManager', () => {
         service.handleSockets();
     });
 
+    it('should create a game in multi', async () => {
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: async (eventName: string, callback: () => Promise<void>) => {
+                if (eventName === SocketEvent.CreateGameMulti) {
+                    await callback();
+                }
+            },
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service, 'createGameMulti')
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            .callsFake(async () => new Promise(() => {}))
+            .resolves();
+        service.handleSockets();
+    });
+
     it('should not leave a game if the game is not found', () => {
         const fakeSockets = {
             // eslint-disable-next-line no-unused-vars
@@ -659,5 +684,62 @@ describe('SocketManager', () => {
         expect(spyEmit.called).to.equal(true);
         expect(spyJoin.called).to.equal(true);
     });
+
+    it('should add a request to a game that is already create', async () => {
+        service['sio'] = {
+            to: () => {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                return { emit: () => {} };
+            },
+        } as unknown as io.Server;
+        const fakeSocket = {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            join: () => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            emit: () => {},
+        } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+        const spyEmit = stub(fakeSocket, 'emit');
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        const spyRoomWaiting = stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => '');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyAddRequest = stub(service['multiplayerGameManager'], 'addNewRequest').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'theresOneRequest').callsFake(() => true);
+        await service.createGameMulti('', '', { card: '', isMulti: true }, fakeSocket);
+        expect(spyEmit.called).to.equal(true);
+        expect(spyRoomWaiting.called).to.equal(true);
+        expect(spyAddRequest.called).to.equal(true);
+    });
+
+    it('should create a game if no game is already created', async () => {
+        service['sio'] = {
+            to: () => {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                return { emit: () => {} };
+            },
+        } as unknown as io.Server;
+        const fakeSocket = {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            join: () => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            emit: () => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            broadcast: { emit: () => {} },
+        } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+        const spyEmit = stub(fakeSocket, 'emit');
         const spyJoin = stub(fakeSocket, 'join');
+        const spyBroadcastEmit = stub(fakeSocket.broadcast, 'emit');
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => false);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyAddGameToWaiting = stub(service['multiplayerGameManager'], 'addGameWaiting').callsFake(() => {});
+        const spyCreateGame = stub(service['gameManager'], 'createGame').callsFake(async () => {
+            return new Promise(() => '');
+        });
+        spyCreateGame.resolves();
+        await service.createGameMulti('', '', { card: '', isMulti: true }, fakeSocket);
+        expect(spyEmit.called).to.equal(true);
+        expect(spyJoin.called).to.equal(true);
+        expect(spyBroadcastEmit.called).to.equal(true);
+        expect(spyAddGameToWaiting.called).to.equal(true);
+        expect(spyCreateGame.called).to.equal(true);
+    });
 });

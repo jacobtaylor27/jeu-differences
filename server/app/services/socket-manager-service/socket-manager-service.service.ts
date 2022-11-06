@@ -129,3 +129,24 @@ export class SocketManagerService {
         socket.emit(SocketEvent.Play, id);
         this.gameManager.sendTimer(this.sio, id);
     }
+
+    // eslint-disable-next-line max-params
+    async createGameMulti(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
+        if (this.multiplayerGameManager.isGameWaiting(game.card)) {
+            const roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
+            this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
+
+            socket.emit(SocketEvent.WaitPlayer);
+
+            if (this.multiplayerGameManager.theresOneRequest(roomId)) {
+                this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
+            }
+        } else {
+            const roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+            this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
+            socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+            socket.emit(SocketEvent.WaitPlayer, roomId);
+            socket.join(roomId);
+        }
+    }
+}

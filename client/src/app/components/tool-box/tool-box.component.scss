@@ -31,11 +31,19 @@ input[type='color']:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 15vw;
+    width: 20vw;
 }
 
 .commonTool {
     width: 5vw;
     display: flex;
     justify-content: space-between;
+}
+
+.width-container {
+    display: flex;
+}
+
+.width-container > p {
+    margin: 10px 0 0 0;
 }

@@ -80,6 +80,10 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
     }
 
+    initializeState(event: MouseEvent) {
+        return event.buttons === 0 ? this.stop() : this.start(event);
+    }
+
     stop() {
         this.isClick = false;
     }
@@ -88,28 +92,15 @@ export class DrawCanvasComponent implements AfterViewInit {
         if (!this.isClick || !this.pencil) {
             return;
         }
-        if (this.pencil.state !== Tool.Pencil) {
-            this.erase(event);
-            return;
-        }
-        this.drawPoint(event);
+        this.drawPoint(event, this.pencil.state);
     }
 
-    erase(event: MouseEvent) {
-        const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        ctx.rect(this.coordDraw.x, this.coordDraw.y, this.pencil.width, this.pencil.width);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-        this.updateImage();
-    }
-
-    drawPoint(event: MouseEvent) {
+    drawPoint(event: MouseEvent, tool: Tool) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
-        ctx.lineWidth = this.pencil.width;
+        ctx.lineWidth = tool === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser;
         ctx.lineCap = this.pencil.cap;
-        ctx.strokeStyle = this.pencil.color;
+        ctx.strokeStyle = tool === Tool.Pencil ? this.pencil.color : 'white';
         ctx.moveTo(this.coordDraw.x, this.coordDraw.y);
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
         ctx.lineTo(this.coordDraw.x, this.coordDraw.y);

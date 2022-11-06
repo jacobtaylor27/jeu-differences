@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { Theme } from '@app/enums/theme';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -14,7 +15,7 @@ export class GameCarouselComponent implements OnInit {
     @Input() isAdmin: boolean = false;
     isLoaded: boolean;
     gameCards: GameCard[] = [];
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
     constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
 

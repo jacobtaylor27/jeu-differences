@@ -84,46 +84,57 @@ describe('DrawCanvasComponent', () => {
     it('drawPoint should set the style of the pencil and create the point', () => {
         component.coordDraw = { x: 0, y: 0 };
         component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
-        component.pencil = { width: 5, cap: 'round', color: '#000000', state: Tool.Pencil };
+        component.pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
         drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
         const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
         const moveToSpy = spyOn(ctx, 'moveTo');
         const lineToSpy = spyOn(ctx, 'lineTo');
         const stokeSpy = spyOn(ctx, 'stroke');
-        component.drawPoint({} as MouseEvent);
+        component.drawPoint({} as MouseEvent, Tool.Pencil);
         expect(beginPathSpy).toHaveBeenCalled();
         expect(moveToSpy).toHaveBeenCalled();
         expect(lineToSpy).toHaveBeenCalled();
         expect(stokeSpy).toHaveBeenCalled();
         expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
-        expect(ctx.lineWidth).toEqual(component.pencil.width);
+        expect(ctx.lineWidth).toEqual(component.pencil.width.pencil);
         expect(ctx.lineCap).toEqual(component.pencil.cap);
         expect(ctx.strokeStyle).toEqual(component.pencil.color);
     });
 
     it('should not erase if the client is clicking and select the eraser', () => {
         component.pencil.state = Tool.Eraser;
+        const expectedEvent = {} as MouseEvent;
         component.isClick = true;
-        const eraseSpy = spyOn(component, 'erase');
         const drawSpy = spyOn(component, 'drawPoint');
-        component.draw({} as MouseEvent);
-        expect(eraseSpy).toHaveBeenCalled();
-        expect(drawSpy).not.toHaveBeenCalled();
+        component.draw(expectedEvent);
+        expect(drawSpy).toHaveBeenCalledWith(expectedEvent, Tool.Eraser);
     });
 
     it('should erase a point', () => {
-        drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
+        component.coordDraw = { x: 0, y: 0 };
         component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        component.pencil = { width: { pencil: 5, eraser: 2 }, cap: 'round', color: '#000000', state: Tool.Pencil };
+        drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
+        const expectedWhite = '#ffffff';
         const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const clearRectSpy = spyOn(ctx, 'rect');
-        component.erase({} as MouseEvent);
-        expect(clearRectSpy).toHaveBeenCalled();
+        const beginPathSpy = spyOn(ctx, 'beginPath');
+        const moveToSpy = spyOn(ctx, 'moveTo');
+        const lineToSpy = spyOn(ctx, 'lineTo');
+        const stokeSpy = spyOn(ctx, 'stroke');
+        component.drawPoint({} as MouseEvent, Tool.Eraser);
+        expect(beginPathSpy).toHaveBeenCalled();
+        expect(moveToSpy).toHaveBeenCalled();
+        expect(lineToSpy).toHaveBeenCalled();
+        expect(stokeSpy).toHaveBeenCalled();
         expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
+        expect(ctx.lineWidth).toEqual(component.pencil.width.eraser);
+        expect(ctx.lineCap).toEqual(component.pencil.cap);
+        expect(ctx.strokeStyle).toEqual(expectedWhite);
     });
 
     it('should receive a new pencil', () => {
-        const expectedPencil = { cap: 'round', width: 3, state: Tool.Eraser, color: '#000100' } as Pencil;
+        const expectedPencil = { cap: 'round', width: { pencil: 3, eraser: 3 }, state: Tool.Eraser, color: '#000100' } as Pencil;
         toolBoxServiceSpyObj.$pencil.next(expectedPencil);
         expect(component.pencil).toEqual(expectedPencil);
     });
@@ -152,5 +163,17 @@ describe('DrawCanvasComponent', () => {
         });
         component.ngAfterViewInit();
         toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
+    });
+
+    it('should stop if the mouseup when initialize state of the canvas', () => {
+        const spyStop = spyOn(component, 'stop');
+        component.initializeState({ buttons: 0 } as MouseEvent);
+        expect(spyStop).toHaveBeenCalled();
+    });
+
+    it('should start to draw if the mousedown when initialize state of the canvas', () => {
+        const spyStop = spyOn(component, 'start');
+        component.initializeState({ buttons: 1 } as MouseEvent);
+        expect(spyStop).toHaveBeenCalled();
     });
 });

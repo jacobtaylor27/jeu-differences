@@ -1,12 +1,12 @@
 <div [ngClass]="theme">
-    <div *ngIf="this.isWin; loseContent">
+    <div *ngIf="this.isWin">
         <h1 mat-dialog-title>Partie terminée !</h1>
         <div mat-dialog-content>Félicitations, tu as gagné</div>
     </div>
-    <ng-template #loseContent>
+    <div *ngIf="!this.isWin">
         <h1 mat-dialog-title>Partie terminée !</h1>
-        <div mat-dialog-content>Bonne partie, tu as perdu</div>
-    </ng-template>
+        <div mat-dialog-content>Bonne partie, mais tu as perdu</div>
+    </div>
     <div mat-dialog-actions align="end">
         <button mat-raised-button routerLink="/home" mat-dialog-close color="primary" mat-primary>Quitter</button>
     </div>

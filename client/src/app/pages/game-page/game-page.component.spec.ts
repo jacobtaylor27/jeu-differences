@@ -94,4 +94,21 @@ describe('GamePageComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should open the game over dialog', () => {
+        component.openGameOverDialog(false);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+    });
+
+    it('should open the game over dialog with when you win the game', () => {
+        const spyOpenGameOverDialog = spyOn(component, 'openGameOverDialog');
+        socketHelper.peerSideEmit(SocketEvent.Win);
+        expect(spyOpenGameOverDialog).toHaveBeenCalled();
+    });
+
+    it('should open the game over dialog with when you lose the game', () => {
+        const spyOpenGameOverDialog = spyOn(component, 'openGameOverDialog');
+        socketHelper.peerSideEmit(SocketEvent.Lose);
+        expect(spyOpenGameOverDialog).toHaveBeenCalled();
+    });
 });

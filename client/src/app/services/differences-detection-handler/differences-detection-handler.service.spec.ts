@@ -222,25 +222,4 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(spyDifferenceDetected).toHaveBeenCalled();
         expect(spySetNbDifferences).toHaveBeenCalled();
     });
-
-    it('should verify with server if coord is valid and game over', () => {
-        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        spyCommunicationService.validateCoordinates.and.callFake(() => {
-            return of({ body: { difference: [{ x: 0, y: 0 }], isGameOver: true, differencesLeft: 1 } } as HttpResponse<{
-                difference: Coordinate[];
-                isGameOver: boolean;
-                differencesLeft: number;
-            }>);
-        });
-
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() => {});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const spyOpenDialog = spyOn(service, 'openGameOverDialog').and.callFake(() => {});
-        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
-        expect(spyDifferenceDetected).toHaveBeenCalled();
-        expect(spyOpenDialog).toHaveBeenCalled();
-    });
 });

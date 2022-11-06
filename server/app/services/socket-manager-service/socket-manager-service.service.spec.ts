@@ -33,35 +33,17 @@ describe('SocketManager', () => {
     });
 
 //                 callback();
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (_eventName: string, _message: string) => {
+        let isConnect = false;
+        const fakeSockets = {
+            // eslint-disable-next-line no-unused-vars
+            emit: (_eventName: string, _message: string) => {
+                return;
+            },
+            // eslint-disable-next-line no-unused-vars
 //                 return;
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             join: (id: string) => {
-//                 return;
-//             },
-//         };
-//         const fakeSockets = {
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (_eventName: string, _message: string) => {
-//                 return;
-//             },
-//         };
-//         service['sio'] = {
-//             sockets: fakeSockets,
-//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//             on: (eventName: string, callback: (socket: any) => void) => {
-//                 if (eventName === SocketEvent.Connection) {
-//                     isConnect = true;
-//                     callback(fakeSocket);
-//                 }
-//             },
-//         } as io.Server;
-//         service.handleSockets();
-//         expect(isConnect).to.equal(true);
-//     });
+                return;
+            },
+        };
 
 //     it('should create a game', async () => {
 //         const fakeSockets = {

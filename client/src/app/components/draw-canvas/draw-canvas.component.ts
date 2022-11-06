@@ -41,7 +41,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     commands: Command[] = [];
     // Having an index of -1 makes way more sens, because the default index is out of bound.
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    indexOfStroke: number = -1;
+    indexOfCommand: number = -1;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
@@ -74,21 +74,21 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     handleCtrlShiftZ() {
-        if (this.indexOfStroke >= this.commands.length - 1) {
+        if (this.indexOfCommand >= this.commands.length - 1) {
             return;
         }
-        this.indexOfStroke++;
-        this.displayStrokes();
+        this.indexOfCommand++;
+        this.executeCommands();
     }
 
     handleCtrlZ() {
         // same justification as before
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        if (this.indexOfStroke <= -1) {
+        if (this.indexOfCommand <= -1) {
             return;
         }
-        this.indexOfStroke--;
-        this.displayStrokes();
+        this.indexOfCommand--;
+        this.executeCommands();
     }
 
     createStroke(line: Line, strokeStyle: StrokeStyle) {
@@ -104,13 +104,20 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.updateImage();
     }
 
-    displayStrokes() {
-        this.resetCanvas(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-        for (let i = 0; i < this.indexOfStroke + 1; i++) {
+    executeCommands() {
+        this.clearForeground(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+
+        for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command = this.commands[i];
-            command.stroke.lines.forEach((line) => {
-                this.createStroke(line, command.style);
-            });
+            console.log(command.name);
+            if (command.name === 'draw' || command.name === 'erase') {
+                command.stroke.lines.forEach((line) => {
+                    this.createStroke(line, command.style);
+                });
+            }
+            if (command.name === 'resetForeground') {
+                this.clearForeground(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+            }
         }
     }
 
@@ -137,6 +144,17 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     resetCanvas(ctxCanvas: CanvasRenderingContext2D) {
+        this.clearForeground(ctxCanvas);
+        this.indexOfCommand++;
+        this.currentCommand = {
+            name: 'resetForeground',
+            stroke: { lines: [] },
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
+        this.commands[this.indexOfCommand] = this.currentCommand;
+    }
+
+    clearForeground(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         this.updateImage();
     }
@@ -170,13 +188,13 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     stopDrawing() {
         this.isClick = false;
-        this.indexOfStroke++;
+        this.indexOfCommand++;
         if (this.pencil.state === 'Pencil') {
             this.currentCommand.name = 'draw';
         } else {
             this.currentCommand.name = 'erase';
         }
-        this.commands[this.indexOfStroke] = this.currentCommand;
+        this.commands[this.indexOfCommand] = this.currentCommand;
     }
 
     draw(event: MouseEvent) {
@@ -193,7 +211,7 @@ export class DrawCanvasComponent implements AfterViewInit {
                 width: this.pencil.width.pencil,
                 destination: 'source-over',
             };
-        } else {
+        } else if (this.pencil.state === 'Eraser') {
             this.currentCommand.style = {
                 color: this.pencil.color,
                 cap: this.pencil.cap,

@@ -17,8 +17,11 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
+import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
+import { ChatBoxComponent } from './components/chat-box/chat-box.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
+import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
 import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
@@ -28,15 +31,13 @@ import { GameCarouselComponent } from './components/game-carousel/game-carousel.
 import { GameConstantFieldComponent } from './components/game-constant-field/game-constant-field.component';
 import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
 import { GameScoreComponent } from './components/game-score/game-score.component';
+import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
-import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
-import { ChatBoxComponent } from './components/chat-box/chat-box.component';
-import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -74,6 +75,7 @@ import { ApprovalDialogComponent } from './components/approval-dialog/approval-d
         GameCardButtonsComponent,
         GameScoreComponent,
         PageHeaderComponent,
+        LoadingScreenComponent,
         DialogGameOverComponent,
         WaitingRoomComponent,
         ChatBoxComponent,

@@ -4,6 +4,7 @@ import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { User } from '@common/user';
 // import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
@@ -11,6 +12,7 @@ import { GameInfoService } from '@app/services/game-info-service/game-info.servi
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
+
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
@@ -25,7 +27,7 @@ describe('GameManagerService', () => {
     let gameManager: GameManagerService;
     let gameInfoSpyObj: SinonSpiedInstance<GameInfoService>;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
-    // // let bmpEncoderService: BmpEncoderService;
+    let bmpEncoderService: BmpEncoderService;
     // let differenceSpyObj: SinonSpiedInstance<BmpDifferenceInterpreter>;
 
     beforeEach(() => {
@@ -38,7 +40,7 @@ describe('GameManagerService', () => {
             return '5';
         });
         // bmpEncoderService = Container.get(BmpEncoderService);
-        const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService /* bmpEncoderService*/);
+        const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
         gameInfoSpyObj = stub(gameInfo);
         // differenceSpyObj = spy(differenceService);

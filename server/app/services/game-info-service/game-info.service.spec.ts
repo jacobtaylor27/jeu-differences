@@ -1,7 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { DB_URL } from '@app/constants/database';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
-// import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseServiceMock } from '@app/services/database-service/database.service.mock';
@@ -23,12 +23,12 @@ describe('GameInfo Service', async () => {
     let bmpDifferenceService: BmpDifferenceInterpreter;
     let databaseService: DatabaseServiceMock;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
-    // let bmpEncoderService: BmpEncoderService;
+    let bmpEncoderService: BmpEncoderService;
 
     beforeEach(async () => {
         bmpService = Container.get(BmpService);
         databaseService = new DatabaseServiceMock();
-        // bmpEncoderService = Container.get(BmpEncoderService);
+        bmpEncoderService = Container.get(BmpEncoderService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
         idGeneratorService = sinon.createStubInstance(IdGeneratorService);
@@ -41,7 +41,7 @@ describe('GameInfo Service', async () => {
             bmpService,
             bmpSubtractorService,
             bmpDifferenceService,
-            // bmpEncoderService,
+            bmpEncoderService,
         );
         gameInfoService['srcPath'] = tmpdir();
         await databaseService.start(DB_URL);
@@ -135,12 +135,12 @@ describe('GameInfo Service', async () => {
             },
         } as unknown as Bmp);
         const addGameSpy = stub(gameInfoService, 'addGameInfo').resolves();
-        // const bmpEncoderSpy = stub(bmpEncoderService, 'base64Encode').resolves();
+        const bmpEncoderSpy = stub(bmpEncoderService, 'base64Encode').resolves();
         await gameInfoService
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             .addGameInfoWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0)
             .then(() => {
-                // expect(bmpEncoderSpy.called).to.equal(true);
+                expect(bmpEncoderSpy.called).to.equal(true);
                 expect(addGameSpy.called).to.equal(true);
             });
     });

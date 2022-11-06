@@ -6,6 +6,8 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import LZString = require('lz-string');
 import { Service } from 'typedi';
 
 @Service()
@@ -156,7 +158,7 @@ export class GameController {
                             return {
                                 id: game.id,
                                 name: game.name,
-                                thumbnail: game.thumbnail,
+                                thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(game.thumbnail),
                                 nbDifferences: game.differences.length,
                                 idEditedBmp: game.idEditedBmp,
                                 idOriginalBmp: game.idOriginalBmp,

@@ -110,13 +110,11 @@ export class SocketManagerService {
                     if (this.gameManager.isGameOver(gameId)) {
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
-                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, gameId, true));
-                    socket.broadcast
-                        .to(gameId)
-                        .emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, gameId, false));
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
                     return;
                 }
-                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, gameId));
+                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
             });
         });
     }

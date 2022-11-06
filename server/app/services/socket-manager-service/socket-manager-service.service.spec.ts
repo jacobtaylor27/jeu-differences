@@ -440,28 +440,37 @@ describe('SocketManager', () => {
 //         stub(service['gameManager'], 'isDifference').callsFake(() => null);
 //         service.handleSockets();
 //     });
+    it('should reject player', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.RejectPlayer) callback();
+            },
+        };
 
-//     it('should return found difference in solo if the game is  found', () => {
-//         const expectedDifferenceFound = {
-//             difference: { coords: [], isPlayerFoundDifference: true },
-//             isGameOver: false,
-//             nbDifferencesLeft: 2,
-//         };
-//         const fakeSocket = {
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
-//             on: (eventName: string, callback: () => void) => {
-//                 if (eventName === SocketEvent.Difference) callback();
-//             },
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
-//             emit: (eventName: string, message: any) => {
-//                 expect(eventName).to.equal(SocketEvent.DifferenceFound);
-//                 expect(message).to.deep.equal(expectedDifferenceFound);
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             join: (id: string) => {
-//                 return;
-//             },
-//         };
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => {
+                return {
+                    // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-unused-expressions, no-unused-vars
+                    emit: (eventName: string, message: unknown) => {
+                        expect(eventName === SocketEvent.RequestToJoin || eventName === SocketEvent.RejectPlayer).to.equal(true);
+                    },
+                };
+            },
+        } as unknown as io.Server;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['multiplayerGameManager'], 'deleteFirstRequest').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'theresARequest').callsFake(() => true);
+        stub(service['multiplayerGameManager'], 'getNewRequest').callsFake(() => {
+            return { name: 'test', id: '' };
+        });
+        service.handleSockets();
+    });
 
 //         service['sio'] = {
 //             // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -10,13 +10,13 @@ import { Service } from 'typedi';
 
 @Service()
 export class GameManagerService {
-    games: Set<Game> = new Set();
+    games: Map<string, Game> = new Map();
     constructor(private gameInfo: GameInfoService, public differenceService: BmpDifferenceInterpreter) {}
 
     async createGame(playerInfo: { player: User; isMulti: boolean }, mode: string, gameCardId: string) {
         const gameCard: PrivateGameInformation = await this.gameInfo.getGameInfoById(gameCardId);
         const game = new Game(mode, playerInfo, gameCard);
-        this.games.add(game);
+        this.games.set(game.identifier, game);
         return game.identifier;
     }
 
@@ -84,25 +84,25 @@ export class GameManagerService {
         const game = this.findGame(gameId);
         game?.leaveGame(playerId);
         this.deleteTimer(gameId);
-        if (game?.hasNoPlayer()) {
-            this.games.delete(game);
+        if (game && game.hasNoPlayer()) {
+            this.games.delete(gameId);
         }
     }
 
-    getNbDifferencesFound(coord: Coordinate, gameId: string, isPlayerFoundDifference?: boolean): DifferenceFound {
+    getNbDifferencesFound(differenceCoords: Coordinate[], gameId: string, isPlayerFoundDifference?: boolean): DifferenceFound {
         return isPlayerFoundDifference
             ? {
-                  coords: this.isDifference(gameId, coord) as Coordinate[],
+                  coords: differenceCoords,
                   nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
                   isPlayerFoundDifference,
               }
             : {
-                  coords: this.isDifference(gameId, coord) as Coordinate[],
+                  coords: differenceCoords,
                   nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
               };
     }
 
     private findGame(gameId: string): Game | undefined {
-        return Array.from(this.games.values()).find((game: Game) => game.identifier === gameId);
+        return this.games.get(gameId);
     }
 }

@@ -10,9 +10,13 @@ import { Subject } from 'rxjs';
 })
 export class DrawService {
     $differenceImage: Subject<ImageData>;
+    $sourceImage: Subject<ImageData>;
+
     constructor(private toolService: ToolBoxService) {
         this.$differenceImage = new Subject();
+        this.$sourceImage = new Subject();
     }
+
     reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {
         return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
     }

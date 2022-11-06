@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
@@ -19,11 +19,10 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./create-game-page.component.scss'],
 })
 export class CreateGamePageComponent implements AfterViewInit {
-    @ViewChild('sourceImg', { static: false }) sourceImg!: ElementRef<HTMLCanvasElement>;
-
     form: FormGroup;
     theme: typeof Theme = Theme;
-    imageDifference: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
+    leftDifferenceImage: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
+    rightDifferenceImage: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
     canvasPosition: typeof PropagateCanvasEvent = PropagateCanvasEvent;
     // eslint-disable-next-line max-params
     constructor(
@@ -40,27 +39,14 @@ export class CreateGamePageComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.toolBoxService.$uploadImageInSource.subscribe((newImage: ImageBitmap) =>
-            (this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0),
-        );
-
-        this.toolBoxService.$resetSource.subscribe(() => this.resetCanvas(this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D));
         this.drawService.$differenceImage.subscribe((newImageDifference: ImageData) => {
-            this.imageDifference = newImageDifference;
+            this.leftDifferenceImage = newImageDifference;
+        });
+        this.drawService.$sourceImage.subscribe((newImageDifference: ImageData) => {
+            this.rightDifferenceImage = newImageDifference;
         });
         this.toolBoxService.$resetDiff.next();
-        this.resetCanvas(this.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-    }
-
-    resetCanvas(ctx: CanvasRenderingContext2D) {
-        ctx.rect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-    }
-
-    createSourceImageFromCanvas(): ImageData {
-        const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
-        return (this.sourceImg.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D).getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        this.toolBoxService.$resetSource.next();
     }
 
     manageErrorInForm(validationImageErrors: string) {
@@ -73,8 +59,8 @@ export class CreateGamePageComponent implements AfterViewInit {
         this.dialog.open(DialogCreateGameComponent, {
             data: {
                 expansionRadius: parseInt((this.form.get('expansionRadius') as FormControl).value, 10),
-                src: this.createSourceImageFromCanvas(),
-                difference: this.imageDifference,
+                src: this.rightDifferenceImage,
+                difference: this.leftDifferenceImage,
                 nbDifference,
                 differenceImage,
             },
@@ -82,10 +68,9 @@ export class CreateGamePageComponent implements AfterViewInit {
     }
 
     isGameValid() {
-        const original: ImageData = this.createSourceImageFromCanvas();
         this.dialog.open(LoadingScreenComponent, { panelClass: 'custom-dialog-container' });
         return this.communication
-            .validateGame(original, this.imageDifference, parseInt((this.form.get('expansionRadius') as FormControl).value, 10))
+            .validateGame(this.rightDifferenceImage, this.leftDifferenceImage, parseInt((this.form.get('expansionRadius') as FormControl).value, 10))
             .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {
                 this.dialog.closeAll();
                 if (!response || !response.body) {

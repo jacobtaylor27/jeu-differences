@@ -20,7 +20,7 @@
             (change)="changePencilWidth($event)"
             [displayWith]="formatLabel"
         ></mat-slider>
-        <p>{{ this.pencil.width.pencil }} px</p>
+        <p class="pencil-width">{{ this.pencil.width.pencil }} px</p>
     </div>
     <div class="width-container" *ngIf="this.pencil.state === this.tool.Eraser">
         <mat-slider
@@ -32,7 +32,7 @@
             (change)="changePencilWidth($event)"
             [displayWith]="formatLabel"
         ></mat-slider>
-        <p>{{ this.pencil.width.eraser }} px</p>
+        <p class="pencil-width">{{ this.pencil.width.eraser }} px</p>
     </div>
     <button mat-mini-fab color="primary" type="button">
         <mat-icon matTooltip="Réinitialiser avant-plan">

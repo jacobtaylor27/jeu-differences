@@ -22,6 +22,10 @@ export class GameContext {
         this.state.next(this.isMulti);
     }
 
+    end() {
+        this.state.end();
+    }
+
     transitionTo(newState: GameState) {
         this.state = newState;
         this.state.setContext(this);

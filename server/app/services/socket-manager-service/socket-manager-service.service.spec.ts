@@ -585,19 +585,25 @@ describe('SocketManager', () => {
         service.handleSockets();
     });
 
-//         service['sio'] = {
-//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//             on: (eventName: string, callback: (socket: any) => void) => {
-//                 if (eventName === SocketEvent.Connection) {
-//                     callback(fakeSocket);
-//                 }
-//             },
-//         } as io.Server;
-//         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.difference.coords);
-//         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
-//         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
-//         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
-//         service.handleSockets();
-//     });
+    it('should disconnect a client', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Disconnect) callback();
+            },
+        };
 
-//
+        service['sio'] = {
+            sockets: fakeSocket,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as unknown as io.Server;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyLog = stub(console, 'log').callsFake(() => {});
+        service.handleSockets();
+        expect(spyLog.called).to.equal(true);
+    });
+});

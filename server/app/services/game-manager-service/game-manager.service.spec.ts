@@ -11,6 +11,7 @@ import { IdGeneratorService } from '@app/services/id-generator-service/id-genera
 import { Coordinate } from '@common/coordinate';
 import { User } from '@common/user';
 
+import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
@@ -24,10 +25,12 @@ describe('GameManagerService', () => {
     let bmpDifferenceService: BmpDifferenceInterpreter;
     let gameManager: GameManagerService;
     let gameInfoSpyObj: SinonSpiedInstance<GameInfoService>;
+    let bmpEncoderService: BmpEncoderService;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
 
     beforeEach(() => {
         clock = useFakeTimers();
+        bmpEncoderService = Container.get(BmpEncoderService);
         bmpService = Container.get(BmpService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
@@ -35,7 +38,7 @@ describe('GameManagerService', () => {
         idGeneratorService['generateNewId'].callsFake(() => {
             return '5';
         });
-        const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService);
+        const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
         gameInfoSpyObj = stub(gameInfo);
         gameManager = new GameManagerService(gameInfo, differenceService);

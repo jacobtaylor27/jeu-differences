@@ -5,7 +5,6 @@ import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { Coordinate } from '@common/coordinate';
-import { DifferenceFound } from '@common/difference';
 import { SocketEvent } from '@common/socket-event';
 @Injectable({
     providedIn: 'root',
@@ -50,14 +49,10 @@ export class DifferencesDetectionHandlerService {
 
     getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         this.socketService.send(SocketEvent.Difference, { differenceCoord: mousePosition, gameId: id });
-        this.handleSocket(ctx, mousePosition);
+        this.handleSocketDifferenceNotFound(ctx, mousePosition);
     }
 
-    handleSocket(ctx: CanvasRenderingContext2D, mousePosition: Vec2) {
-        this.socketService.once(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
-            this.setNumberDifferencesFound(!data.isPlayerFoundDifference, this.gameInfoHandlerService.getNbTotalDifferences());
-            this.differenceDetected(ctx, this.contextImgModified, data.coords);
-        });
+    handleSocketDifferenceNotFound(ctx: CanvasRenderingContext2D, mousePosition: Vec2) {
         this.socketService.once(SocketEvent.DifferenceNotFound, () => {
             this.differenceNotDetected(mousePosition, ctx);
         });

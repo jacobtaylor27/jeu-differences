@@ -55,6 +55,17 @@ export class PlayAreaComponent implements AfterViewInit {
         }
     }
 
+    handleSocketDifferenceFound() {
+        this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+            this.differencesDetectionHandlerService.setNumberDifferencesFound(
+                !data.isPlayerFoundDifference,
+                this.gameInfoHandlerService.getNbTotalDifferences(),
+            );
+            this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
+            this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
+        });
+    }
+
     getContextImgOriginal() {
         return this.canvasImgOriginal.nativeElement.getContext('2d') as CanvasRenderingContext2D;
     }

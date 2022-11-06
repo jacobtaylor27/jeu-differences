@@ -3,21 +3,34 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { SIZE } from '@app/constants/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { Coordinate } from '@common/coordinate';
+import { SocketEvent } from '@common/socket-event';
 import { of, Subject } from 'rxjs';
+import { Socket } from 'socket.io-client';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
+
+class SocketClientServiceMock extends CommunicationSocketService {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    override connect() {}
+}
 
 describe('DifferencesDetectionHandlerService', () => {
     let service: DifferencesDetectionHandlerService;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
     let spyGameInfoHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
-
+    let socketHelper: SocketTestHelper;
+    let socketServiceMock: SocketClientServiceMock;
     beforeEach(() => {
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new SocketClientServiceMock();
+        socketServiceMock.socket = socketHelper as unknown as Socket;
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['getNbDifferences', 'getNbTotalDifferences'], {
             players: [
@@ -34,6 +47,7 @@ describe('DifferencesDetectionHandlerService', () => {
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: GameInformationHandlerService, useValue: spyGameInfoHandlerService },
                 { provide: CommunicationService, useValue: spyCommunicationService },
+                { provide: CommunicationSocketService, useValue: socketServiceMock },
             ],
         });
         service = TestBed.inject(DifferencesDetectionHandlerService);

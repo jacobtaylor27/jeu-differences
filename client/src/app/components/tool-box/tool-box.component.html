@@ -34,6 +34,12 @@
         ></mat-slider>
         <p>{{ this.pencil.width.eraser }} px</p>
     </div>
+    <button mat-mini-fab color="primary" type="button">
+        <mat-icon matTooltip="Réinitialiser avant-plan">
+            <img class="icon" src="assets/delete-foreground.png" />
+        </mat-icon>
+    </button>
+
     <button mat-mini-fab color="primary" type="button" (click)="openUploadDialog()">
         <mat-icon matTooltip="Ajouter arrière-plan">image</mat-icon>
     </button>

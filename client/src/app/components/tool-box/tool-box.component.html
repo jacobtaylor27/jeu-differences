@@ -1,7 +1,10 @@
 <div class="tool-container">
     <div class="drawTool" *ngIf="this.canvas === canvasPosition.Difference">
         <button mat-mini-fab [color]="this.colorButton.eraser" type="button" (click)="this.changePencilState(this.tool.Eraser)" name="eraser">
-            <mat-icon><img class="icon" src="assets/eraser-icon.png" /></mat-icon>
+            <mat-icon>
+                <img class="icon" src="assets/eraser-icon-white.png" *ngIf="this.colorButton.eraser === 'primary'" />
+                <img class="icon" src="assets/eraser-icon-black.png" *ngIf="this.colorButton.eraser === 'accent'" />
+            </mat-icon>
         </button>
 
         <button mat-mini-fab type="button" (click)="changePencilState(this.tool.Pencil)" [color]="this.colorButton.pencil" name="pencil">

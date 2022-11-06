@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { DifferenceFound } from '@common/difference';
+import { SocketEvent } from '@common/socket-event';
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
     styleUrls: ['./play-area.component.scss'],
 })
-export class PlayAreaComponent implements AfterViewInit {
+export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     @ViewChild('actionsGameOriginal') canvasOriginal: ElementRef<HTMLCanvasElement>;
     @ViewChild('actionsGameModified') canvasModified: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgOriginal') canvasImgOriginal: ElementRef<HTMLCanvasElement>;
@@ -27,7 +30,10 @@ export class PlayAreaComponent implements AfterViewInit {
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
         private readonly mouseHandlerService: MouseHandlerService,
-    ) {}
+        private readonly communicationSocketService: CommunicationSocketService,
+    ) {
+        this.handleSocketDifferenceFound();
+    }
 
     get width(): number {
         return SIZE.x;
@@ -46,6 +52,10 @@ export class PlayAreaComponent implements AfterViewInit {
         this.displayImage(false, this.getContextDifferences());
         this.displayImage(false, this.getContextImgOriginal());
         this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
+    }
+
+    ngOnDestroy() {
+        this.communicationSocketService.off(SocketEvent.DifferenceFound);
     }
 
     onClick($event: MouseEvent, canvas: string) {

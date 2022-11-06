@@ -106,7 +106,6 @@ export class SocketManagerService {
                 if (this.gameManager.isGameMultiplayer(gameId)) {
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
                 }
-                socket.emit(SocketEvent.LeaveGame);
                 socket.leave(gameId);
             });
 

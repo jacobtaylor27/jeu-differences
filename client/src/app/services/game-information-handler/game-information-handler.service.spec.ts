@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
-import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from './game-information-handler.service';
 
 /* eslint-disable @typescript-eslint/no-empty-function */
@@ -44,7 +44,7 @@ describe('GameInformationHandlerService', () => {
     });
 
     it('should return false when properties are not Undefined', () => {
-        service.playerName = 'test';
+        service.players = [{ name: 'test', nbDifferences: 0 }];
         service.gameInformation = {
             id: '1',
             name: 'test',
@@ -54,6 +54,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         service.gameMode = GameMode.Classic;
         spyRouter.navigate.and.returnValue(Promise.resolve(true));
@@ -78,10 +79,12 @@ describe('GameInformationHandlerService', () => {
         expect(spyRouter.navigate).toHaveBeenCalled();
     });
 
-    it('should set PlayerName', () => {
-        const expectedName = 'test';
-        service.setPlayerName(expectedName);
-        expect(service.playerName).toEqual(expectedName);
+    it('should set Player', () => {
+        const expectedPlayer = { name: 'test', nbDifferences: 0 };
+        service.setPlayerName(expectedPlayer.name);
+        expect(service.players.find((player: { name: string; nbDifferences: number }) => player.name === expectedPlayer.name)).toEqual(
+            expectedPlayer,
+        );
     });
 
     it('should return nb of differences', () => {
@@ -94,8 +97,9 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 10,
+            isMulti: false,
         };
-        expect(service.getNbDifferences()).toEqual(service.gameInformation.nbDifferences);
+        expect(service.getNbTotalDifferences()).toEqual(service.gameInformation.nbDifferences);
     });
 
     it('should return id', () => {
@@ -108,6 +112,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getId()).toEqual(service.gameInformation.id);
     });
@@ -122,6 +127,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getOriginalBmpId()).toEqual('original');
     });
@@ -136,6 +142,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getModifiedBmpId()).toEqual('edited');
     });
@@ -153,6 +160,7 @@ describe('GameInformationHandlerService', () => {
             differenceRadius: 2,
             differences: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         service.setGameInformation(gameInformation);
         expect(service.gameInformation).toEqual(gameInformation);
@@ -178,6 +186,7 @@ describe('GameInformationHandlerService', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         expect(service.getGameName()).toEqual('test');
     });
@@ -195,13 +204,29 @@ describe('GameInformationHandlerService', () => {
             differenceRadius: 2,
             differences: [],
             nbDifferences: 0,
+            isMulti: false,
         };
         service.gameInformation = gameInformation;
         expect(service.getGameInformation()).toEqual(gameInformation);
     });
 
-    it('should get player name', () => {
-        service.playerName = 'test';
-        expect(service.getPlayerName()).toEqual('test');
+    it('reset player', () => {
+        service.resetPlayers();
+        expect(service.players).toEqual([]);
+    });
+
+    it('should get the nb of difference', () => {
+        service.players = [{ name: 'test', nbDifferences: 0 }];
+        expect(service.getNbDifferences('test')).toEqual(0);
+        expect(service.getNbDifferences('playerNotFound')).toEqual(undefined);
+    });
+
+    it('should get the opponent information', () => {
+        const expectedPlayers = [
+            { name: 'mainPlayer', nbDifferences: 0 },
+            { name: 'opponentPlayer', nbDifferences: 0 },
+        ];
+        service.players = expectedPlayers;
+        expect(service.getOpponent()).toEqual(expectedPlayers[1]);
     });
 });

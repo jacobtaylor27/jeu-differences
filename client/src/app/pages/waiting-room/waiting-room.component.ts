@@ -36,11 +36,15 @@ export class WaitingRoomComponent implements OnInit {
             this.routerService.navigateTo('select');
         });
 
-        this.socketService.on(SocketEvent.JoinGame, (roomId: string) => {
-            this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayerName(), roomId });
-            this.gameInformationHandlerService.roomId = roomId;
+        this.socketService.on(SocketEvent.JoinGame, (data: { roomId: string; playerName: string }) => {
+            this.gameInformationHandlerService.setPlayerName(data.playerName);
+
+            this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
+            this.gameInformationHandlerService.roomId = data.roomId;
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            this.socketService.on(SocketEvent.Play, () => {});
+            this.socketService.on(SocketEvent.Play, () => {
+                this.routerService.navigateTo('game');
+            });
         });
     }
 }

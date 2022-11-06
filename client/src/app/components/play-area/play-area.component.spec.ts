@@ -72,9 +72,10 @@ describe('PlayAreaComponent', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 1,
+            isMulti: false,
         };
         gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
-        gameInformationHandlerServiceSpy.playerName = 'test';
+        gameInformationHandlerServiceSpy.players = [{ name: 'test', nbDifferences: 0 }];
     });
 
     it('should create', () => {

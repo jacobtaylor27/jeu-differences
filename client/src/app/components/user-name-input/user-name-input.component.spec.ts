@@ -23,7 +23,12 @@ describe('UserNameInputComponent', () => {
 
     beforeEach(async () => {
         spySocketCommunication = jasmine.createSpyObj('CommunicationSocketService', ['send']);
-        spyGameInformationService = jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName', 'getId', 'handleSocketEvent']);
+        spyGameInformationService = jasmine.createSpyObj('GameInformationHandlerService', [
+            'setPlayerName',
+            'getId',
+            'handleSocketEvent',
+            'resetPlayers',
+        ]);
         await TestBed.configureTestingModule({
             declarations: [UserNameInputComponent, AdminCommandsComponent],
             imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],

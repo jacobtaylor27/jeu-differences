@@ -24,9 +24,11 @@ export class DifferencesDetectionHandlerService {
         private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
 
-    setNumberDifferencesFound(nbDifferencesLeft: number, nbTotalDifference: number) {
+    setNumberDifferencesFound(isOpponent: boolean, nbTotalDifference: number) {
         this.nbTotalDifferences = nbTotalDifference;
-        this.nbDifferencesFound = nbTotalDifference - nbDifferencesLeft;
+        this.gameInfoHandlerService.players[isOpponent ? 1 : 0].nbDifferences++;
+        this.gameInfoHandlerService.$differenceFound.next(this.gameInfoHandlerService.players[isOpponent ? 1 : 0].name);
+        this.nbDifferencesFound++;
     }
 
     resetNumberDifferencesFound() {
@@ -49,26 +51,12 @@ export class DifferencesDetectionHandlerService {
     getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
         this.socketService.send(SocketEvent.Difference, { differenceCoord: mousePosition, gameId: id });
         this.handleSocket(ctx, mousePosition);
-        // this.communicationService
-        //     .validateCoordinates(id, mousePosition)
-        //     .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
-        //         if (!response || !response.body) {
-        //             this.differenceNotDetected(mousePosition, ctx);
-        //             return;
-        //         }
-
-        //         this.setNumberDifferencesFound(response.body.differencesLeft, this.gameInfoHandlerService.getNbDifferences());
-        //         this.differenceDetected(ctx, this.contextImgModified, response.body.difference);
-        //         if (response.body.isGameOver) {
-        //             this.openGameOverDialog();
-        //         }
-        //     });
     }
 
     handleSocket(ctx: CanvasRenderingContext2D, mousePosition: Vec2) {
         this.socketService.once(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
             if (!data.isPlayerFoundDifference) {
-                this.setNumberDifferencesFound(data.nbDifferencesLeft, this.gameInfoHandlerService.getNbDifferences());
+                this.setNumberDifferencesFound(!data.isPlayerFoundDifference, this.gameInfoHandlerService.getNbTotalDifferences());
             }
             this.differenceDetected(ctx, this.contextImgModified, data.coords);
         });

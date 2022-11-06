@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
@@ -11,7 +11,7 @@ import { SocketEvent } from '@common/socket-event';
     templateUrl: './game-page.component.html',
     styleUrls: ['./game-page.component.scss'],
 })
-export class GamePageComponent {
+export class GamePageComponent implements OnDestroy {
     favoriteTheme: string = 'deeppurple-amber-theme';
     clock: string;
 
@@ -38,4 +38,7 @@ export class GamePageComponent {
         this.dialog.open(DialogGameOverComponent, dialogConfig);
     }
 
+    ngOnDestroy(): void {
+        this.socket.send(SocketEvent.LeaveGame, { gameId: this.gameInfoHandlerService.roomId });
+    }
 }

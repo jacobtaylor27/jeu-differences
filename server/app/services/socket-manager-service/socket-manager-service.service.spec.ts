@@ -514,35 +514,52 @@ describe('SocketManager', () => {
         service.handleSockets();
     });
 
+    it('should not accept if no request found', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.AcceptPlayer) callback();
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
+            emit: (eventName: string, message: any) => {
+                expect(eventName).to.equal(SocketEvent.GetGamesWaiting);
+            },
+            // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+            join: (id: string) => {},
+        };
+
         service['sio'] = {
+            sockets: fakeSocket,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             on: (eventName: string, callback: (socket: any) => void) => {
                 if (eventName === SocketEvent.Connection) {
                     callback(fakeSocket);
                 }
             },
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
-//             emit: (eventName: string, message: any) => {
-//                 expect(eventName).to.equal(SocketEvent.DifferenceFound);
-//                 expect(message).to.deep.equal(expectedDifferenceFound);
-//             },
-//         };
+            // eslint-disable-next-line no-unused-vars
+            to: (id: string) => fakeSocket,
+        } as unknown as io.Server;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['multiplayerGameManager'], 'removeGameWaiting').callsFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => undefined);
+        service.handleSockets();
+    });
 
-//         const fakeSocket = {
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+    it('should accept a player if a main player accepted', () => {
+        const fakeSocket = {
 //             on: (eventName: string, callback: () => void) => {
-//                 if (eventName === SocketEvent.Difference) callback();
+                if (eventName === SocketEvent.AcceptPlayer) callback();
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
+            emit: (eventName: string, message: any) => {
+                expect(
+                    eventName === SocketEvent.JoinGame || eventName === SocketEvent.GetGamesWaiting || eventName === SocketEvent.RejectPlayer,
+                ).to.equal(true);
+            },
+            // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+            join: (id: string) => {},
 //             },
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
-//             emit: (eventName: string, message: any) => {
-//                 expect(eventName).to.equal(SocketEvent.DifferenceFound);
-//                 expect(message).to.deep.equal(expectedDifferenceFound);
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             join: (id: string) => {
-//                 return;
-//             },
-//             to: () => fakeSockets,
+
 //         };
 
 //         service['sio'] = {

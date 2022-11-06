@@ -99,7 +99,8 @@ export class SocketManagerService {
                     socket.emit(SocketEvent.Error);
                     return;
                 }
-                if (!this.gameManager.isDifference(gameId, differenceCoord)) {
+                const differences = this.gameManager.isDifference(gameId, socket.id, differenceCoord);
+                if (!differences) {
                     socket.emit(SocketEvent.DifferenceNotFound, differenceCoord);
                     return;
                 }

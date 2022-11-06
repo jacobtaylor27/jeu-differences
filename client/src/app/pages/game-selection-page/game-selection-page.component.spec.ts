@@ -10,7 +10,7 @@ describe('GameSelectionPageComponent', () => {
     let spyGameCarouselService: jasmine.SpyObj<GameCarouselService>;
 
     beforeEach(async () => {
-        spyGameCarouselService = jasmine.createSpyObj('GameCarouselService', ['setCardMode', 'getCards', 'getCarouselLength', 'hasCards']);
+        spyGameCarouselService = jasmine.createSpyObj('GameCarouselService', ['setCardMode', 'getCards', 'getNumberOfCards', 'hasCards']);
         await TestBed.configureTestingModule({
             declarations: [GameSelectionPageComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -37,7 +37,10 @@ describe('GameSelectionPageComponent', () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    it('getNumberOfGames should call getCarouselLength from gameCarouselService', () => {});
+    it('getNumberOfGames should call get number of cards from gameCarouselService', () => {
+        component.getNumberOfGames();
+        expect(spyGameCarouselService.getNumberOfCards).toHaveBeenCalled();
+    });
 
     it('hasGames should call hasCards from gameCarouselService', () => {
         component.hasGames();

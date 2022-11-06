@@ -79,6 +79,9 @@ export class SocketManagerService {
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
                 this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
+                socket.join(roomId);
+                this.gameManager.setTimer(roomId);
+                this.gameManager.sendTimer(this.sio, roomId);
             });
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {

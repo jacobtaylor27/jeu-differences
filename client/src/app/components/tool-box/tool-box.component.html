@@ -10,7 +10,7 @@
         <button mat-mini-fab type="button" (click)="changePencilState(this.tool.Pencil)" [color]="this.colorButton.pencil" name="pencil">
             <mat-icon matTooltip="Dessiner">edit</mat-icon>
         </button>
-        <input type="color" (change)="changePencilColor(colorSelector.value)" name="colorSelector" #colorSelector />
+        <input type="color" (change)="changePencilColor(colorSelector.value)" name="colorSelector" #colorSelector class="colorSelector"/>
         <div class="width-container" *ngIf="this.pencil.state === this.tool.Pencil">
             <mat-slider
                 min="1"

@@ -547,7 +547,7 @@ describe('SocketManager', () => {
 
     it('should accept a player if a main player accepted', () => {
         const fakeSocket = {
-//             on: (eventName: string, callback: () => void) => {
+            on: (eventName: string, callback: () => void) => {
                 if (eventName === SocketEvent.AcceptPlayer) callback();
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
@@ -558,9 +558,32 @@ describe('SocketManager', () => {
             },
             // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
             join: (id: string) => {},
-//             },
+        };
 
-//         };
+        service['sio'] = {
+            sockets: fakeSocket,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            // eslint-disable-next-line no-unused-vars
+            to: (id: string) => fakeSocket,
+        } as unknown as io.Server;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['gameManager'], 'setTimer').callsFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['gameManager'], 'sendTimer').callsFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['multiplayerGameManager'], 'removeGameWaiting').callsFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['multiplayerGameManager'], 'deleteAllRequests').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'isNotAPlayersRequest').callsFake(() => true);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ name: 'test', id: '0' }]);
+        service.handleSockets();
+    });
 
 //         service['sio'] = {
 //             // eslint-disable-next-line @typescript-eslint/no-explicit-any

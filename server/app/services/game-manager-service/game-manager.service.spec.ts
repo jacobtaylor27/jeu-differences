@@ -126,23 +126,23 @@ describe('GameManagerService', () => {
         expect(gameManager['findGame']('')).to.equal(undefined);
         const expectedIdGame = '';
         const expectedGame = { identifier: expectedIdGame } as Game;
-        gameManager['games'].add(expectedGame);
+        gameManager['games'].set(expectedIdGame, expectedGame);
         expect(gameManager['findGame'](expectedIdGame)).to.deep.equal(expectedGame);
     });
 
     it('should check if the game is found and the difference is not null', () => {
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
-        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(null);
+        expect(gameManager.isDifference('', '', { x: 0, y: 0 })).to.deep.equal(null);
         const game = { isDifferenceFound: () => null } as unknown as Game;
         findGameSpy.callsFake(() => game);
-        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(null);
+        expect(gameManager.isDifference('', '', { x: 0, y: 0 })).to.deep.equal(null);
     });
 
     it('should return the difference within a specific coord', () => {
         const expectedDifferences = [{} as Coordinate];
         const game = { isDifferenceFound: () => expectedDifferences } as unknown as Game;
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
-        expect(gameManager.isDifference('', { x: 0, y: 0 })).to.deep.equal(expectedDifferences);
+        expect(gameManager.isDifference('', '', { x: 0, y: 0 })).to.deep.equal(expectedDifferences);
         expect(findGameSpy.called).to.equal(true);
     });
 
@@ -206,7 +206,7 @@ describe('GameManagerService', () => {
         stub(gameManager, 'isGameOver').callsFake(() => false);
         stub(gameManager, 'isDifference').callsFake(() => []);
         stub(gameManager, 'nbDifferencesLeft').callsFake(() => 2);
-        expect(gameManager.getNbDifferencesFound({ x: 0, y: 0 }, '')).to.deep.equal(expectedDifference);
+        expect(gameManager.getNbDifferencesFound([], '')).to.deep.equal(expectedDifference);
     });
 
     it('should send timer to a player', async () => {

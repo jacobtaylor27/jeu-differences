@@ -71,7 +71,7 @@ export class Game {
 
     isDifferenceFound(playerId: string, differenceCoords: Coordinate) {
         const differences = this.findDifference(differenceCoords);
-        if (!differences || this.isDifferenceAlreadyFound(playerId, differences)) {
+        if (!differences || this.isDifferenceAlreadyFound(differences)) {
             return null;
         }
         this.addCoordinatesOnDifferenceFound(playerId, differences);
@@ -80,7 +80,7 @@ export class Game {
 
     addCoordinatesOnDifferenceFound(playerId: string, differenceCoords: Coordinate[]) {
         const player = this.getNbDifferencesFound.get(playerId);
-        if (this.isDifferenceAlreadyFound(playerId, differenceCoords) || !player) {
+        if (this.isDifferenceAlreadyFound(differenceCoords) || !player) {
             return;
         }
         this.getNbDifferencesTotalFound.add(differenceCoords);
@@ -90,7 +90,7 @@ export class Game {
         }
     }
 
-    isDifferenceAlreadyFound(playerId: string, differenceCoords: Coordinate[]) {
+    isDifferenceAlreadyFound(differenceCoords: Coordinate[]) {
         return this.getNbDifferencesTotalFound.has(differenceCoords);
     }
 

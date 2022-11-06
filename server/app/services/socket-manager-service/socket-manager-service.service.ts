@@ -2,7 +2,6 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
-import { User } from '@common/user';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
@@ -69,7 +68,11 @@ export class SocketManagerService {
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {
                 this.multiplayerGameManager.removeGameWaiting(roomId);
                 this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
-                for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
+                const request = this.multiplayerGameManager.getRequest(roomId);
+                if (!request) {
+                    return;
+                }
+                for (const player of request) {
                     if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, roomId)) {
                         this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
                     }

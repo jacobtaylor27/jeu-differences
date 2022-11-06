@@ -190,11 +190,6 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(clearRectSpy).toHaveBeenCalled();
     });
 
-    it('should open dialog', () => {
-        service.openGameOverDialog();
-        expect(spyMatDialog.open).toHaveBeenCalled();
-    });
-
     it('should verify with server if coord is not valid', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;

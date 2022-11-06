@@ -34,6 +34,8 @@ export class GamePageComponent {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.minWidth = '50%';
-        this.dialog.open(DialogGameOverComponent, { data: { isWin }, ...dialogConfig });
+        dialogConfig.data = { isWin };
+        this.dialog.open(DialogGameOverComponent, dialogConfig);
     }
+
 }

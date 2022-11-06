@@ -35,12 +35,7 @@ export class SocketManagerService {
                 socket.join(id);
                 this.gameManager.setTimer(id);
                 socket.emit(SocketEvent.Play, id);
-                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
-                setInterval(() => {
-                    if (!this.gameManager.isGameOver(id)) {
-                        this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
-                    }
-                }, 1000);
+                this.gameManager.sendTimer(this.sio, id);
             });
 
             socket.on(SocketEvent.CreateGameMulti, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {

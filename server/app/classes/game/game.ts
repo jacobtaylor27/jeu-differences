@@ -4,12 +4,13 @@ import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { User } from '@common/user';
 import { Coordinate } from '@common/coordinate';
+import { User } from '@common/user';
 import { v4 } from 'uuid';
 
 export class Game {
     players: Map<string, string>;
+    timerId: NodeJS.Timer;
     private id: string;
     private isMulti: boolean;
     private info: PrivateGameInformation;

@@ -5,6 +5,7 @@ import { GameInfoService } from '@app/services/game-info-service/game-info.servi
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { User } from '@common/user';
+import { Server } from 'socket.io';
 import { Service } from 'typedi';
 
 @Service()
@@ -21,6 +22,17 @@ export class GameManagerService {
 
     setTimer(gameId: string) {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).setTimer() : null;
+    }
+
+    sendTimer(sio: Server, gameId: string) {
+        const game = this.findGame(gameId);
+        if (!game) {
+            return;
+        }
+        game.timerId = setInterval(() => {
+            sio.sockets.to(gameId).emit('clock', this.getTime(gameId));
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        }, 1000);
     }
 
     getTime(gameId: string) {

@@ -5,6 +5,7 @@ import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
 import { restore, stub } from 'sinon';
 import * as io from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Container } from 'typedi';
 
 describe('SocketManager', () => {
@@ -74,19 +75,46 @@ describe('SocketManager', () => {
         expect(isConnect).to.equal(true);
     });
 
-//         service['sio'] = {
-//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//             on: (eventName: string, callback: (socket: any) => void) => {
-//                 if (eventName === SocketEvent.Connection) {
-//                     callback(fakeSocket);
-//                 }
-//             },
-//         } as io.Server;
-//         stub(service['gameManager'], 'createGame')
-//             .callsFake(async () => new Promise(() => ''))
-//             .resolves();
-//         service.handleSockets();
-//     });
+    it('should create a game in solo', async () => {
+        const fakeSockets = {
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, _message: string) => {
+                expect(eventName).to.equal(SocketEvent.CreateGame);
+            },
+        };
+
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: async (eventName: string, callback: () => Promise<void>) => {
+                if (eventName === SocketEvent.CreateGame) {
+                    await callback();
+                }
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {
+                return;
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            in: () => fakeSockets,
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'createGame')
+            .callsFake(async () => new Promise(() => ''))
+            .resolves();
+        service.handleSockets();
+    });
+
     it('should not leave a game if the game is not found', () => {
         const fakeSockets = {
             // eslint-disable-next-line no-unused-vars
@@ -606,4 +634,30 @@ describe('SocketManager', () => {
         service.handleSockets();
         expect(spyLog.called).to.equal(true);
     });
+
+    it('should create a game in solo', async () => {
+        const fakeSocket = {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            join: () => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            emit: () => {},
+        } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spySetTimer = stub(service['gameManager'], 'setTimer').callsFake(() => {});
+        const spyCreateGame = stub(service['gameManager'], 'createGame').callsFake(async () => {
+            return new Promise(() => '');
+        });
+        spyCreateGame.resolves();
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spySendTimer = stub(service['gameManager'], 'sendTimer').callsFake(() => {});
+        const spyEmit = stub(fakeSocket, 'emit');
+        const spyJoin = stub(fakeSocket, 'join');
+        await service.createGameSolo('player', '', { card: '', isMulti: false }, fakeSocket);
+        expect(spySetTimer.called).to.equal(true);
+        expect(spyCreateGame.called).to.equal(true);
+        expect(spySendTimer.called).to.equal(true);
+        expect(spyEmit.called).to.equal(true);
+        expect(spyJoin.called).to.equal(true);
+    });
+        const spyJoin = stub(fakeSocket, 'join');
 });

@@ -47,9 +47,9 @@ export class GameManagerService {
         return this.findGame(gameId) ? (this.findGame(gameId) as Game).seconds : null;
     }
 
-    isDifference(gameId: string, coord: Coordinate) {
+    isDifference(gameId: string, playerId: string, coord: Coordinate) {
         const game = this.findGame(gameId);
-        return !game ? null : game.isDifferenceFound(coord);
+        return !game ? null : game.isDifferenceFound(playerId, coord);
     }
 
     isGameFound(gameId: string) {

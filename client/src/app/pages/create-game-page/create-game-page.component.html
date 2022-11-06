@@ -9,9 +9,7 @@
                 <app-tool-box [canvas]="canvasPosition.Difference" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>
 
-            <div class="toolbox-container">
-                <app-tool-box [canvas]="canvasPosition.Both"></app-tool-box>
-            </div>
+            <app-common-tool-box [canvas]="canvasPosition.Both"></app-common-tool-box>
 
             <div class="drawImg">
                 <label for="sourceImg">Tableau comparatif</label>

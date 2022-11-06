@@ -1,7 +1,7 @@
 <div class="tool-container">
     <div class="drawTool" *ngIf="this.canvas === canvasPosition.Difference">
         <button mat-mini-fab [color]="this.colorButton.eraser" type="button" (click)="this.changePencilState(this.tool.Eraser)" name="eraser">
-            <mat-icon>auto_fix_normal</mat-icon>
+            <mat-icon><img class="icon" src="assets/eraser-icon.png" /></mat-icon>
         </button>
 
         <button mat-mini-fab type="button" (click)="changePencilState(this.tool.Pencil)" [color]="this.colorButton.pencil" name="pencil">
@@ -35,10 +35,10 @@
     </div>
     <div class="commonTool">
         <button mat-mini-fab color="primary" type="button" (click)="openUploadDialog()">
-            <mat-icon>cloud_upload</mat-icon>
+            <mat-icon>image</mat-icon>
         </button>
         <button mat-mini-fab color="primary" type="button" (click)="this.drawService.reset(this.canvas)">
-            <mat-icon>rotate_left</mat-icon>
+            <mat-icon>image_not_supported</mat-icon>
         </button>
     </div>
 </div>

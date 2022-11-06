@@ -164,23 +164,22 @@ describe('Game', () => {
 
         isAlreadyDifferenceFoundSpy.callsFake(() => false);
         const expectedCoordinates = [{ x: 0, y: 0 }];
-        game.addCoordinatesOnDifferenceFound(expectedCoordinates);
+        game.addCoordinatesOnDifferenceFound('', expectedCoordinates);
         expect(isAlreadyDifferenceFoundSpy.calledTwice).to.equal(true);
         expect(isAllDifferenceFoundSpy.called).to.equal(true);
-        expect(isGameOverSpy.called).to.equal(false);
         expect(getNbDifferencesFoundSpy.called).to.equal(true);
 
         isAlreadyDifferenceFoundSpy.callsFake(() => false);
         isAllDifferenceFoundSpy.callsFake(() => true);
-        const nextStateSpy = spy(game['context'], 'next');
+        const nextStateSpy = spy(game['context'], 'end');
         isGameOverSpy.callsFake(() => false);
-        game.addCoordinatesOnDifferenceFound([{} as Coordinate]);
+        game.addCoordinatesOnDifferenceFound('', [{} as Coordinate]);
         expect(getNbDifferencesFoundSpy.called).to.equal(true);
         expect(nextStateSpy.called).to.equal(true);
     });
 
     it('should verify if the difference is already found', () => {
-        const getNbDifferencesFoundSpy = stub(game['getNbDifferencesFound'], 'has').callsFake(() => false);
+        const getNbDifferencesFoundSpy = stub(game['getNbDifferencesTotalFound'], 'has').callsFake(() => false);
         expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(false);
         getNbDifferencesFoundSpy.callsFake(() => true);
         expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(true);
@@ -204,17 +203,17 @@ describe('Game', () => {
 
     it('should return null if no difference is found or already found', () => {
         const findDifferenceSpy = stub(game, 'findDifference').callsFake(() => undefined);
-        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);
         expect(findDifferenceSpy.called).to.equal(true);
         const expectedDifferences = [] as Coordinate[];
         findDifferenceSpy.callsFake(() => expectedDifferences);
         const isDifferenceAlreadyFoundSpy = stub(game, 'isDifferenceAlreadyFound').callsFake(() => true);
-        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);
         expect(isDifferenceAlreadyFoundSpy.called).to.equal(true);
         isDifferenceAlreadyFoundSpy.callsFake(() => false);
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const addCoordinatesOnDifferenceFoundSpy = stub(game, 'addCoordinatesOnDifferenceFound').callsFake(() => {});
-        expect(game.isDifferenceFound({} as Coordinate)).to.equal(expectedDifferences);
+        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(expectedDifferences);
         expect(addCoordinatesOnDifferenceFoundSpy.called).to.equal(true);
     });
 

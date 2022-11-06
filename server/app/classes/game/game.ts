@@ -15,6 +15,7 @@ export class Game {
     private isMulti: boolean;
     private info: PrivateGameInformation;
     private getNbDifferencesFound: Map<string, Set<Coordinate[]>>;
+    private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
     private initialTime: Date;
 
@@ -22,7 +23,7 @@ export class Game {
         this.info = info;
         this.players = new Map();
         this.isMulti = playerInfo.isMulti;
-        this.getNbDifferencesFound = new Set();
+        this.getNbDifferencesFound = new Map();
         this.getNbDifferencesTotalFound = new Set();
         this.addPlayer(playerInfo.player);
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
@@ -82,9 +83,10 @@ export class Game {
         if (this.isDifferenceAlreadyFound(playerId, differenceCoords) || !player) {
             return;
         }
-        this.getNbDifferencesFound.add(differenceCoords);
-        if (this.isAllDifferenceFound() && !this.isGameOver()) {
-            this.context.next();
+        this.getNbDifferencesTotalFound.add(differenceCoords);
+        player.add(differenceCoords);
+        if (this.isAllDifferenceFound(playerId) && !this.isGameOver()) {
+            this.context.end();
         }
     }
 

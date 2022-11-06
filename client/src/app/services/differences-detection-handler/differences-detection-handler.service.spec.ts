@@ -201,6 +201,7 @@ describe('DifferencesDetectionHandlerService', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected').and.callFake(() => {});
         service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        socketHelper.peerSideEmit(SocketEvent.DifferenceNotFound);
         expect(spyDifferenceNotDetected).toHaveBeenCalled();
     });
 
@@ -219,6 +220,7 @@ describe('DifferencesDetectionHandlerService', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spySetNbDifferences = spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
         service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
+        socketHelper.peerSideEmit(SocketEvent.DifferenceFound, { coords: [{ x: 0, y: 0 }], nbDifferencesLeft: 1 });
         expect(spyDifferenceDetected).toHaveBeenCalled();
         expect(spySetNbDifferences).toHaveBeenCalled();
     });

@@ -111,4 +111,10 @@ describe('GamePageComponent', () => {
         socketHelper.peerSideEmit(SocketEvent.Lose);
         expect(spyOpenGameOverDialog).toHaveBeenCalled();
     });
+
+    it('should emit LeaveGame when the player quit the page', () => {
+        const spyEmit = spyOn(socketHelper, 'emit');
+        component.ngOnDestroy();
+        expect(spyEmit).toHaveBeenCalled();
+    });
 });

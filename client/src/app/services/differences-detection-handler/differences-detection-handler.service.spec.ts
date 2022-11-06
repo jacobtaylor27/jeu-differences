@@ -73,9 +73,9 @@ describe('DifferencesDetectionHandlerService', () => {
 
     it('should set the difference found for each player', () => {
         const expectedBeforeMainPlayerScore = 0;
-        service.setNumberDifferencesFound(false, 3);
-        expect(spyGameInfoHandlerService.players[0].nbDifferences).toEqual(expectedBeforeMainPlayerScore + 1);
         service.setNumberDifferencesFound(true, 3);
+        expect(spyGameInfoHandlerService.players[0].nbDifferences).toEqual(expectedBeforeMainPlayerScore + 1);
+        service.setNumberDifferencesFound(false, 3);
         expect(spyGameInfoHandlerService.players[1].nbDifferences).toEqual(expectedBeforeMainPlayerScore + 1);
     });
     it('should reset number differences found', () => {
@@ -203,25 +203,5 @@ describe('DifferencesDetectionHandlerService', () => {
         service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
         socketHelper.peerSideEmit(SocketEvent.DifferenceNotFound);
         expect(spyDifferenceNotDetected).toHaveBeenCalled();
-    });
-
-    it('should verify with server if coord is valid', () => {
-        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        spyCommunicationService.validateCoordinates.and.callFake(() => {
-            return of({ body: { difference: [{ x: 0, y: 0 }], isGameOver: false, differencesLeft: 1 } } as HttpResponse<{
-                difference: Coordinate[];
-                isGameOver: boolean;
-                differencesLeft: number;
-            }>);
-        });
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const spyDifferenceDetected = spyOn(service, 'differenceDetected').and.callFake(() => {});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const spySetNbDifferences = spyOn(service, 'setNumberDifferencesFound').and.callFake(() => {});
-        service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
-        socketHelper.peerSideEmit(SocketEvent.DifferenceFound, { coords: [{ x: 0, y: 0 }], nbDifferencesLeft: 1 });
-        expect(spyDifferenceDetected).toHaveBeenCalled();
-        expect(spySetNbDifferences).toHaveBeenCalled();
     });
 });

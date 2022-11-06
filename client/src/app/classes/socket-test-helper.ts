@@ -17,6 +17,10 @@ export class SocketTestHelper {
 
         this.callbacks.get(event)!.push(callback);
     }
+    // eslint-disable-next-line no-unused-vars
+    off(event?: string) {
+        return;
+    }
 
     once(event: string, callback: CallbackSignature): void {
         if (!this.callbacks.has(event)) {
@@ -39,7 +43,6 @@ export class SocketTestHelper {
         if (!this.callbacks.has(event)) {
             return;
         }
-
         for (const callback of this.callbacks.get(event)!) {
             callback(params);
         }

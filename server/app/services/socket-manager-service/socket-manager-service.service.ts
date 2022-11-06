@@ -4,7 +4,6 @@ import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
 @Service()
 export class SocketManagerService {
@@ -141,21 +140,5 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, gameId));
             });
         });
-    }
-
-    async send<T>(gameId: string, event: { name: SocketEvent; data?: T }) {
-        this.sio
-            .in(gameId)
-            .fetchSockets()
-            .then((socketsClient) => {
-                socketsClient.forEach((socketClient) => {
-                    const socket = this.sio.sockets.sockets.get(socketClient.id) as Socket<DefaultEventsMap, DefaultEventsMap>;
-                    if (!event.data) {
-                        socket.emit(event.name);
-                        return;
-                    }
-                    socket.emit(event.name, event.data);
-                });
-            });
     }
 }

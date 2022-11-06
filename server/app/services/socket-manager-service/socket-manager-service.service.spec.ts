@@ -426,22 +426,34 @@ describe('SocketManager', () => {
         service.handleSockets();
     });
 
-//     it('should return an error if no difference found and the game is found', () => {
-//         const fakeSocket = {
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+    it('should handle a message receive from client', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Message) callback();
+            },
+            broadcast: {
+                to: () => {
+                    return {
+                        // eslint-disable-next-line no-unused-vars
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.Message);
+                        },
+                    };
+                },
+            },
+        };
 
-//         service['sio'] = {
-//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//             on: (eventName: string, callback: (socket: any) => void) => {
-//                 if (eventName === SocketEvent.Connection) {
-//                     callback(fakeSocket);
-//                 }
-//             },
-//         } as io.Server;
-//         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
-//         stub(service['gameManager'], 'isDifference').callsFake(() => null);
-//         service.handleSockets();
-//     });
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        service.handleSockets();
+    });
+
     it('should reject player', () => {
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {

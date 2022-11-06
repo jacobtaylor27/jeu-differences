@@ -13,6 +13,7 @@ interface StrokeStyle {
     color: string;
     width: number;
     cap: CanvasLineCap;
+    destination: GlobalCompositeOperation;
 }
 interface Line {
     initCoord: Vec2;
@@ -41,7 +42,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     // Having an index of -1 makes way more sens, because the default index is out of bound.
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfStroke: number = -1;
-    currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round' } };
+    currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
         this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
@@ -90,10 +91,10 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.displayStrokes();
     }
 
-    createStroke(line: Line, strokeStyle: StrokeStyle, destination: GlobalCompositeOperation) {
+    createStroke(line: Line, strokeStyle: StrokeStyle) {
         const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
-        ctx.globalCompositeOperation = destination;
+        ctx.globalCompositeOperation = strokeStyle.destination;
         ctx.lineWidth = strokeStyle.width;
         ctx.lineCap = strokeStyle.cap;
         ctx.strokeStyle = strokeStyle.color;
@@ -108,7 +109,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         for (let i = 0; i < this.indexOfStroke + 1; i++) {
             const command = this.commands[i];
             command.stroke.lines.forEach((line) => {
-                this.createStroke(line, command.style, 'source-over');
+                this.createStroke(line, command.style);
             });
         }
     }
@@ -164,7 +165,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
-        this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round' } };
+        this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
     }
 
     stopDrawing() {
@@ -186,12 +187,21 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.currentCommand.stroke.lines.push(line);
 
         if (this.pencil.state === 'Pencil') {
-            this.currentCommand.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.pencil };
-            this.createStroke(line, this.currentCommand.style, 'source-over');
+            this.currentCommand.style = {
+                color: this.pencil.color,
+                cap: this.pencil.cap,
+                width: this.pencil.width.pencil,
+                destination: 'source-over',
+            };
         } else {
-            this.currentCommand.style = { color: this.pencil.color, cap: this.pencil.cap, width: this.pencil.width.eraser };
-            this.createStroke(line, this.currentCommand.style, 'destination-out');
+            this.currentCommand.style = {
+                color: this.pencil.color,
+                cap: this.pencil.cap,
+                width: this.pencil.width.eraser,
+                destination: 'destination-out',
+            };
         }
+        this.createStroke(line, this.currentCommand.style);
     }
 
     updateMouseCoordinates(event: MouseEvent): Line {

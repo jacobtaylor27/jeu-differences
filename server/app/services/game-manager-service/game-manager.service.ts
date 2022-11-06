@@ -35,6 +35,14 @@ export class GameManagerService {
         }, 1000);
     }
 
+    deleteTimer(gameId: string) {
+        const game = this.findGame(gameId);
+        if (!game) {
+            return;
+        }
+        clearInterval(game.timerId);
+    }
+
     getTime(gameId: string) {
         return this.findGame(gameId) ? (this.findGame(gameId) as Game).seconds : null;
     }
@@ -75,6 +83,7 @@ export class GameManagerService {
     leaveGame(playerId: string, gameId: string) {
         const game = this.findGame(gameId);
         game?.leaveGame(playerId);
+        this.deleteTimer(gameId);
         if (game?.hasNoPlayer()) {
             this.games.delete(game);
         }

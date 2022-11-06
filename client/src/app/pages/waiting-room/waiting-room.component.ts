@@ -42,7 +42,8 @@ export class WaitingRoomComponent implements OnInit {
             this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
             this.gameInformationHandlerService.roomId = data.roomId;
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            this.socketService.on(SocketEvent.Play, () => {
+            this.socketService.on(SocketEvent.Play, (id: string) => {
+                this.gameInformationHandlerService.roomId = id;
                 this.routerService.navigateTo('game');
             });
         });

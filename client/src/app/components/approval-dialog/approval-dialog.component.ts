@@ -35,8 +35,9 @@ export class ApprovalDialogComponent {
             opponentsRoomId: this.data.opponentsRoomId,
             playerName: this.gameInformationHandlerService.getPlayer().name,
         });
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        this.socketService.on(SocketEvent.Play, () => {
+
+        this.socketService.on(SocketEvent.Play, (id: string) => {
+            this.gameInformationHandlerService.roomId = id;
             this.routerService.navigateTo('game');
         });
     }

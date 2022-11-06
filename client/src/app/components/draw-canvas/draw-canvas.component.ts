@@ -101,7 +101,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         ctx.moveTo(line.initCoord.x, line.initCoord.y);
         ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
         ctx.stroke();
-        this.updateImage();
     }
 
     executeCommands() {
@@ -118,6 +117,7 @@ export class DrawCanvasComponent implements AfterViewInit {
                 this.clearForeground(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
             }
         }
+        this.updateImage();
     }
 
     ngAfterViewInit() {
@@ -219,6 +219,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             };
         }
         this.createStroke(line, this.currentCommand.style);
+        this.updateImage();
     }
 
     updateMouseCoordinates(event: MouseEvent): Line {

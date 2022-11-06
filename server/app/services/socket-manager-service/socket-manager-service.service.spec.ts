@@ -19,16 +19,19 @@ describe('SocketManager', () => {
         restore();
     });
 
-//     it('set the server', () => {
-//         service.server = server['server'];
-//         expect(service['sio']).to.not.equal(undefined);
-//     });
+    it('should throw an error if the server is not set', () => {
+        try {
+            service.handleSockets();
+        } catch (err) {
+            expect(err.message).to.equal('Server instance not set');
+        }
+    });
 
-//     it('should connect to socket', () => {
-//         let isConnect = false;
-//         const fakeSocket = {
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
-//             on: (_eventName: string, callback: () => void) => {
+    it('set the server', () => {
+        service.server = server['server'];
+        expect(service['sio']).to.not.equal(undefined);
+    });
+
 //                 callback();
 //             },
 //             // eslint-disable-next-line no-unused-vars

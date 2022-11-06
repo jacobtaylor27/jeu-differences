@@ -45,7 +45,11 @@ input[type='color']:hover {
 }
 
 .width-container > p {
-    margin: 10px 0 0 0;
+    min-width: 5ch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px;
 }
 
 .icon {
@@ -57,8 +61,4 @@ input[type='color']:hover {
     max-width: 40px;
     min-height: 40px;
     max-height: 40px;
-}
-
-.pencil-width {
-    min-width: 5ch;
 }

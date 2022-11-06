@@ -1,27 +1,23 @@
-// /* eslint-disable max-lines */
-// import { Server } from '@app/server';
-// import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
-// import { SocketEvent } from '@common/socket-event';
-// import { expect } from 'chai';
-// import { restore, spy, stub } from 'sinon';
-// import * as io from 'socket.io';
-// import { Container } from 'typedi';
+/* eslint-disable max-lines */
+import { Server } from '@app/server';
+import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
+import { SocketEvent } from '@common/socket-event';
+import { expect } from 'chai';
+import { restore, stub } from 'sinon';
+import * as io from 'socket.io';
+import { Container } from 'typedi';
 
-// describe('SocketManager', () => {
-//     let server: Server;
-//     let service: SocketManagerService;
-//     beforeEach(() => {
-//         server = Container.get(Server);
-//         service = server['socketManager'];
-//     });
+describe('SocketManager', () => {
+    let server: Server;
+    let service: SocketManagerService;
+    beforeEach(() => {
+        server = Container.get(Server);
+        service = server['socketManager'];
+    });
 
-//     it('should throw an error if the server is not set', () => {
-//         try {
-//             service.handleSockets();
-//         } catch (err) {
-//             expect(err.message).to.equal('Server instance not set');
-//         }
-//     });
+    afterEach(() => {
+        restore();
+    });
 
 //     it('set the server', () => {
 //         service.server = server['server'];

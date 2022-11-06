@@ -156,60 +156,249 @@ describe('SocketManager', () => {
         service.handleSockets();
         expect(spyLeaveGame.called).to.equal(true);
     });
+
+    it('should find difference if the game is not found', () => {
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.Error);
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
         };
 
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isGameFound').callsFake(() => false);
+        service.handleSockets();
+    });
 
-//     it('should not leave a game if the game is not found', () => {
-//         const fakeSockets = {
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (eventName: string, _message: string) => {
-//                 expect(eventName).to.equal(SocketEvent.Error);
-//             },
-//         };
+    it('should return an error if no difference found and the game is found', () => {
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.DifferenceNotFound);
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+        };
 
-//         const fakeSocket = {
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
-//             on: (eventName: string, callback: () => void) => {
-//                 if (eventName === SocketEvent.LeaveGame) callback();
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (eventName: string, message: string) => {
-//                 return;
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             join: (id: string) => {
-//                 return;
-//             },
-//             in: () => fakeSockets,
-//         };
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'isDifference').callsFake(() => null);
+        service.handleSockets();
+    });
 
-//         service['sio'] = {
-//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//             on: (eventName: string, callback: (socket: any) => void) => {
-//                 if (eventName === SocketEvent.Connection) {
-//                     callback(fakeSocket);
-//                 }
-//             },
-//         } as io.Server;
-//         stub(service['gameManager'], 'isGameFound').callsFake(() => false);
-//         service.handleSockets();
-//     });
+    it('should return found difference in solo if the game is found', () => {
+        const expectedDifferenceFound = {
+            coords: [],
+            isPlayerFoundDifference: true,
+            isGameOver: false,
+            nbDifferencesLeft: 2,
+        };
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+            emit: (eventName: string, message: any) => {
+                expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                expect(message).to.deep.equal(expectedDifferenceFound);
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+        };
 
-//     it('should find difference if the game is not found', () => {
-//         const fakeSocket = {
-//             // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
-//             on: (eventName: string, callback: () => void) => {
-//                 if (eventName === SocketEvent.Difference) callback();
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             emit: (eventName: string, message: string) => {
-//                 expect(eventName).to.equal(SocketEvent.Error);
-//             },
-//             // eslint-disable-next-line no-unused-vars
-//             join: (id: string) => {
-//                 return;
-//             },
-//         };
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => false);
+        service.handleSockets();
+    });
+
+    it('should return found difference in solo if the game is found and game over the game', () => {
+        const expectedDifferenceFound = {
+            coords: [],
+            isPlayerFoundDifference: true,
+            isGameOver: false,
+            nbDifferencesLeft: 2,
+        };
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+            emit: (eventName: string, message: any) => {
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.DifferenceFound).to.equal(true);
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => false);
+        service.handleSockets();
+    });
+
+    it('should return found difference in multi if the game is found', () => {
+        const expectedDifferenceFound = {
+            coords: [],
+            isPlayerFoundDifference: true,
+            isGameOver: false,
+            nbDifferencesLeft: 2,
+        };
+        const fakeSockets = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+            emit: (eventName: string, message: any) => {
+                expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                expect(message).to.deep.equal(expectedDifferenceFound);
+            },
+            // eslint-disable-next-line no-unused-vars
+            to: (id: string) => {
+                // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+                return { emit: (eventName: string, message: unknown) => {} };
+            },
+        };
+
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+            emit: (eventName: string, message: any) => {
+                expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                expect(message).to.deep.equal(expectedDifferenceFound);
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            to: () => fakeSockets,
+            broadcast: fakeSockets,
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
+        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => false);
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        service.handleSockets();
+    });
+
+    it('should return found difference in multi if the game is found and game over the game', () => {
+        const expectedDifferenceFound = {
+            coords: [],
+            isPlayerFoundDifference: true,
+            isGameOver: false,
+            nbDifferencesLeft: 2,
+        };
+        const fakeSockets = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+            emit: (eventName: string, message: any) => {
+                expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                expect(message).to.deep.equal(expectedDifferenceFound);
+            },
+            // eslint-disable-next-line no-unused-vars
+            to: (id: string) => {
+                return {
+                    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+                    emit: (eventName: string, message: unknown) => {
+                        expect(eventName === SocketEvent.Lose || eventName === SocketEvent.DifferenceFound).to.equal(true);
+                    },
+                };
+            },
+        };
+
+        const fakeSocket = {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+            emit: (eventName: string, message: any) => {
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.DifferenceFound).to.equal(true);
+            },
+            // eslint-disable-next-line no-unused-vars
+            join: (id: string) => {
+                return;
+            },
+            to: () => fakeSockets,
+            broadcast: fakeSockets,
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
+        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => true);
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        service.handleSockets();
+    });
 
 //         service['sio'] = {
 //             // eslint-disable-next-line @typescript-eslint/no-explicit-any

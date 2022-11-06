@@ -55,9 +55,7 @@ export class DifferencesDetectionHandlerService {
 
     handleSocket(ctx: CanvasRenderingContext2D, mousePosition: Vec2) {
         this.socketService.once(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
-            if (!data.isPlayerFoundDifference) {
-                this.setNumberDifferencesFound(!data.isPlayerFoundDifference, this.gameInfoHandlerService.getNbTotalDifferences());
-            }
+            this.setNumberDifferencesFound(!data.isPlayerFoundDifference, this.gameInfoHandlerService.getNbTotalDifferences());
             this.differenceDetected(ctx, this.contextImgModified, data.coords);
         });
         this.socketService.once(SocketEvent.DifferenceNotFound, () => {

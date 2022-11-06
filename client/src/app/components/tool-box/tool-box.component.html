@@ -8,26 +8,30 @@
             <mat-icon>edit</mat-icon>
         </button>
         <input type="color" (change)="changePencilColor(colorSelector.value)" name="colorSelector" #colorSelector />
-        <mat-slider
-            min="1"
-            max="5"
-            step="0.5"
-            [value]="this.pencil.width.pencil"
-            thumbLabel
-            (change)="changePencilWidth($event)"
-            [displayWith]="formatLabel"
-            *ngIf="this.pencil.state === this.tool.Pencil"
-        ></mat-slider>
-        <mat-slider
-            min="2"
-            max="10"
-            step="1"
-            [value]="this.pencil.width.eraser"
-            thumbLabel
-            (change)="changePencilWidth($event)"
-            [displayWith]="formatLabel"
-            *ngIf="this.pencil.state === this.tool.Eraser"
-        ></mat-slider>
+        <div class="width-container" *ngIf="this.pencil.state === this.tool.Pencil">
+            <mat-slider
+                min="1"
+                max="5"
+                step="0.5"
+                [value]="this.pencil.width.pencil"
+                thumbLabel
+                (change)="changePencilWidth($event)"
+                [displayWith]="formatLabel"
+            ></mat-slider>
+            <p>{{ this.pencil.width.pencil }} px</p>
+        </div>
+        <div class="width-container" *ngIf="this.pencil.state === this.tool.Eraser">
+            <mat-slider
+                min="2"
+                max="10"
+                step="1"
+                [value]="this.pencil.width.eraser"
+                thumbLabel
+                (change)="changePencilWidth($event)"
+                [displayWith]="formatLabel"
+            ></mat-slider>
+            <p>{{ this.pencil.width.eraser }} px</p>
+        </div>
     </div>
     <div class="commonTool">
         <button mat-mini-fab color="primary" type="button" (click)="openUploadDialog()">

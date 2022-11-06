@@ -1,21 +1,21 @@
 <mat-card class="main-wrapper">
     <mat-card-title> Messages </mat-card-title>
-    <div class="chat-area">
+    <div class="chat-area" #scroll >
         <div *ngFor="let message of messages">
             <div class="message-wrapper">
                 <div
                     [ngClass]="{
-                        'message-wrapper-adversary': message.type === 'adversary',
-                        'message-wrapper-gameMaster': message.type === 'gameMaster',
-                        'message-wrapper-personnal': message.type === 'personnal'
+                        'message-wrapper-opponent': isOpponentMessage(message),
+                        'message-wrapper-gameMaster': isEventMessage(message),
+                        'message-wrapper-personal': isPersonalMessage(message)
                     }"
                 >
                     <div
                         class="message-content"
                         [ngClass]="{
-                            adversary: message.type === 'adversary',
-                            personnal: message.type === 'personnal',
-                            gameMaster: message.type === 'gameMaster'
+                            opponent: isOpponentMessage(message),
+                            personal: isPersonalMessage(message),
+                            gameMaster: isEventMessage(message)
                         }"
                     >
                         {{ message.content }}
@@ -24,9 +24,9 @@
             </div>
         </div>
     </div>
-    <mat-form-field appearance="outline" class="input-area">
-        <input matInput placeholder="Entrez un message..." maxlength="200" disabled="{{ !isAdversaryConnected }}" />
-        <button mat-icon-button matSuffix>
+    <mat-form-field *ngIf="isOpponentConnected" appearance="outline" class="input-area">
+        <input matInput placeholder="Entrez un message..." maxlength="200" [(ngModel)]="currentMessage" />
+        <button mat-icon-button matSuffix (click)="onClickSend()">
             <mat-icon>send</mat-icon>
         </button>
     </mat-form-field>

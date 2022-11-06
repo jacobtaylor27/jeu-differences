@@ -9,6 +9,8 @@ import { PrivateGameInformation } from '@app/interface/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import LZString = require('lz-string');
 @Service()
 export class GameInfoService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;
@@ -43,15 +45,16 @@ export class GameInfoService {
         );
         const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
         const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
+        const compressedThumbnail = LZString.compressToUTF16(
+            await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION),
+        );
 
         await this.addGameInfo({
             id: v4(),
             name,
             idOriginalBmp,
             idEditedBmp,
-            thumbnail:
-                'data:image/png;base64,' +
-                (await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION)),
+            thumbnail: compressedThumbnail,
             differenceRadius: radius,
             differences,
             idDifferenceBmp,

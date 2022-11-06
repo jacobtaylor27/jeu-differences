@@ -1,7 +1,6 @@
 import { Game } from '@app/classes/game/game';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { User } from '@app/interface/user';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
@@ -11,6 +10,7 @@ import { GameInfoService } from '@app/services/game-info-service/game-info.servi
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
 import { Coordinate } from '@common/coordinate';
+import { User } from '@common/user';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
@@ -36,7 +36,7 @@ describe('GameManagerService', () => {
         idGeneratorService['generateNewId'].callsFake(() => {
             return '5';
         });
-        bmpEncoderService = Container.get(BmpEncoderService);
+        // bmpEncoderService = Container.get(BmpEncoderService);
         const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
         gameInfoSpyObj = stub(gameInfo);

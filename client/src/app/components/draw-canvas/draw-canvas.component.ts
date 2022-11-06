@@ -125,7 +125,17 @@ export class DrawCanvasComponent implements AfterViewInit {
             (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
             this.updateImage();
         });
+        this.toolBoxService.$uploadImageInSource.subscribe(async (newImage: ImageBitmap) => {
+            (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
+            this.updateImage();
+        });
         this.toolBoxService.$resetDiff.subscribe(() =>
+            this.resetCanvasAndImage(
+                this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+                this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+            ),
+        );
+        this.toolBoxService.$resetSource.subscribe(() =>
             this.resetCanvasAndImage(
                 this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
                 this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,

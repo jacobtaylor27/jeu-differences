@@ -111,13 +111,4 @@ describe('Bmp subractor service', async () => {
         const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadiusOf0px, blackBmp, radius);
         expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
     });
-
-    it('getDifferenceBMP(...) Should apply 15 pixel enlargement radius for a real image', async () => {
-        const radius = 15;
-        const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/white_bmp.bmp');
-        const bmpWithRadius = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/maxplus_diff.bmp');
-        const bmpWithRadiusOf3px = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/real_img_15px.bmp');
-        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpWithRadius, whiteBmp, radius);
-        expect(bmpWithRadiusOf3px).to.deep.equal(bmpResulting);
-    });
 });

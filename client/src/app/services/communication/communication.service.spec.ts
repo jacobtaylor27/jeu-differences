@@ -184,7 +184,7 @@ describe('CommunicationService', () => {
     });
 
     it('should send a request to create a game room', () => {
-        service.createGameRoom('playername', GameMode.Classic, 'gameid').subscribe({
+        service.createGameRoom('playername', GameMode.Classic).subscribe({
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             next: () => {},
             error: fail,
@@ -194,7 +194,7 @@ describe('CommunicationService', () => {
     });
 
     it('should handle http error when create a game room', () => {
-        service.createGameRoom('playername', GameMode.Classic, 'gameid').subscribe({
+        service.createGameRoom('playername', GameMode.Classic).subscribe({
             next: (response) => {
                 expect(response).toBeNull();
             },

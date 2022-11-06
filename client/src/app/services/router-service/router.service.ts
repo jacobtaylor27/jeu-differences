@@ -12,4 +12,8 @@ export class RouterService {
             this.router.navigate([`/${page}`]);
         });
     }
+
+    navigateTo(page: string) {
+        this.router.navigate([`/${page}`]);
+    }
 }

@@ -1,6 +1,6 @@
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -8,7 +8,6 @@ import { Canvas } from '@app/enums/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { of } from 'rxjs';
-
 import { DialogCreateGameComponent } from './dialog-create-game.component';
 
 describe('DialogCreateGameComponent', () => {
@@ -35,7 +34,7 @@ describe('DialogCreateGameComponent', () => {
                 { provide: CommunicationService, useValue: spyCommunicationService },
                 { provide: Router, useValue: spyRouter },
             ],
-            imports: [AppMaterialModule, BrowserAnimationsModule, HttpClientModule, ReactiveFormsModule],
+            imports: [AppMaterialModule, BrowserAnimationsModule, HttpClientModule, FormsModule, ReactiveFormsModule],
         }).compileComponents();
         fixture = TestBed.createComponent(DialogCreateGameComponent);
         component = fixture.componentInstance;

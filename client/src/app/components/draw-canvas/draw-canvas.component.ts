@@ -109,7 +109,6 @@ export class DrawCanvasComponent implements AfterViewInit {
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command = this.commands[i];
-            console.log(command.name);
             if (command.name === 'draw' || command.name === 'erase') {
                 command.stroke.lines.forEach((line) => {
                     this.createStroke(line, command.style);

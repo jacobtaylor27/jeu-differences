@@ -17,4 +17,8 @@ export class CommonToolBoxComponent {
     openUploadDialog(): void {
         this.dialog.open(DialogUploadFormComponent, { data: { canvas: this.canvas } });
     }
+
+    swapForegrounds(): void {
+      console.log('swap foregrounds')
+    }
 }

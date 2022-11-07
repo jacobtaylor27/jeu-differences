@@ -72,6 +72,19 @@ describe('ApprovalDialogComponent', () => {
         expect(routerSpyObj.navigateTo).toHaveBeenCalled();
         expect(gameInformationHandlerService.setPlayerName).toHaveBeenCalled();
     });
+
+    it('shoud open snack bar when player left', () => {
+        gameInformationHandlerService.getPlayer.and.callFake(() => {
+            return { name: 'test', nbDifferences: 0 };
+        });
+        const spySnackBar = spyOn(component, 'openSnackBar').and.callFake(() => {});
+
+        component.onClickApprove();
+        socketHelper.peerSideEmit(SocketEvent.PlayerLeft);
+        expect(spySnackBar).toHaveBeenCalled();
+
+    })
+
     it('should open snackbar', () => {
         const spySnackBar = spyOn(component['snackBar'], 'openFromComponent').and.resolveTo();
 

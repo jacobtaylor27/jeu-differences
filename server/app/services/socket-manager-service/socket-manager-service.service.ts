@@ -83,10 +83,10 @@ export class SocketManagerService {
                     socket.emit(SocketEvent.Error);
                     return;
                 }
-                this.gameManager.leaveGame(socket.id, gameId);
-                if (this.gameManager.isGameMultiplayer(gameId)) {
+                if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
                 }
+                this.gameManager.leaveGame(socket.id, gameId);
                 socket.leave(gameId);
             });
 

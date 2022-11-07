@@ -47,7 +47,7 @@ describe('GamePageComponent', () => {
                 ExitGameButtonComponent,
                 PageHeaderComponent,
                 ChatBoxComponent,
-                TimerStopwatchComponent
+                TimerStopwatchComponent,
             ],
             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
             providers: [

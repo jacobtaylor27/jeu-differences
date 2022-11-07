@@ -47,11 +47,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     indexOfCommand: number = -1;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
-    constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
-        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
-            this.pencil = newPencil;
-        });
-    }
+    constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {}
 
     get width() {
         return SIZE.x;
@@ -124,6 +120,10 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
+            this.pencil = newPencil;
+        });
+
         this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
             (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
             this.updateImage();

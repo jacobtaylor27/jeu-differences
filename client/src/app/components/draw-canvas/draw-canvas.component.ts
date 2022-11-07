@@ -2,11 +2,11 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } 
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
+import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { Subject } from 'rxjs';
 
 interface Stroke {
     lines: Line[];
@@ -48,11 +48,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     indexOfCommand: number = -1;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
-    constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
-        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
-            this.pencil = newPencil;
-        });
-    }
+    constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {}
 
     get width() {
         return SIZE.x;
@@ -140,21 +136,25 @@ export class DrawCanvasComponent implements AfterViewInit {
             (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
             this.updateImage();
         });
-            this.updateImage();
-        });
-        });
-        this.toolBoxService.$reset.forEach((event: Subject<void>) => {
-            event.subscribe(() =>
+
+        this.toolBoxService.$reset
+            .get(this.canvasType)
+            ?.subscribe(() =>
                 this.resetCanvasAndImage(
                     this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
                     this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
                 ),
             );
+
+        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
+            this.pencil = newPencil;
         });
+
         this.resetCanvasAndImage(
             this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
         );
+        this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
     }
 
     resetCanvasAndImage(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
@@ -191,6 +191,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         ctx.globalCompositeOperation = 'source-over';
         ctx.drawImage(this.foreground.nativeElement, 0, 0);
         this.drawService.$drawingImage.get(this.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
+        this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
     }
 
     enterCanvas(event: MouseEvent) {

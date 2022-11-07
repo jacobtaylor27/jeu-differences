@@ -26,8 +26,8 @@ export class GamePageComponent implements OnDestroy {
         this.handleSocket();
     }
     handleSocket() {
-        this.socket.on(SocketEvent.Win, () => this.openGameOverDialog(true));
-        this.socket.on(SocketEvent.Lose, () => this.openGameOverDialog(false));
+        this.socket.once(SocketEvent.Win, () => this.openGameOverDialog(true));
+        this.socket.once(SocketEvent.Lose, () => this.openGameOverDialog(false));
     }
 
     openGameOverDialog(isWin: boolean) {

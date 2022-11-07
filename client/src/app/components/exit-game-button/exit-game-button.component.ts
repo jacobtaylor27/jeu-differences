@@ -16,6 +16,7 @@ export class ExitGameButtonComponent {
     private readonly exitDialogContentRef: TemplateRef<HTMLElement>;
 
     theme = Theme.ClassName;
+    // eslint-disable-next-line max-params
     constructor(
         readonly matDialog: MatDialog,
         readonly exitButtonService: ExitButtonHandlerService,

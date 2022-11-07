@@ -9,12 +9,14 @@ import { Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class DrawService {
-    $differenceImage: Subject<ImageData>;
-    $sourceImage: Subject<ImageData>;
+    $drawingImage: Map<CanvasType, Subject<ImageData>>;
 
     constructor(private toolService: ToolBoxService) {
-        this.$differenceImage = new Subject();
-        this.$sourceImage = new Subject();
+        this.$drawingImage = new Map();
+    }
+
+    addDrawingCanvas(canvasType: CanvasType) {
+        this.$drawingImage.set(canvasType, new Subject<ImageData>());
     }
 
     reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {

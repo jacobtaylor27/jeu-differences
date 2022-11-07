@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
+import { CanvasType } from '@app/enums/canvas-type';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 interface Stroke {
     lines: Line[];
@@ -32,9 +34,11 @@ interface Command {
     styleUrls: ['./draw-canvas.component.scss'],
 })
 export class DrawCanvasComponent implements AfterViewInit {
-    @ViewChild('imageDifference', { static: false }) img!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('background', { static: false }) background!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('foreground', { static: false }) foreground!: ElementRef<HTMLCanvasElement>;
     @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('paint', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+    @Input() canvasType: CanvasType;
+
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
@@ -45,7 +49,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {
-        this.toolBoxService.$pencil.subscribe((newPencil: Pencil) => {
+        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
         });
     }
@@ -92,7 +96,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     createStroke(line: Line, strokeStyle: StrokeStyle) {
-        const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const ctx: CanvasRenderingContext2D = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
         ctx.globalCompositeOperation = strokeStyle.destination;
         ctx.lineWidth = strokeStyle.width;
@@ -104,7 +108,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     executeCommands() {
-        this.clearForeground(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command = this.commands[i];
@@ -114,36 +118,30 @@ export class DrawCanvasComponent implements AfterViewInit {
                 });
             }
             if (command.name === 'resetForeground') {
-                this.clearForeground(this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+                this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
             }
         }
         this.updateImage();
     }
 
     ngAfterViewInit() {
-        this.toolBoxService.$uploadImageInDiff.subscribe(async (newImage: ImageBitmap) => {
-            (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
-            this.updateImage();
+        this.toolBoxService.$uploadImage.forEach((event: Subject<ImageBitmap>) => {
+            event.subscribe(async (newImage: ImageBitmap) => {
+                (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
+                this.updateImage();
+            });
         });
-        this.toolBoxService.$uploadImageInSource.subscribe(async (newImage: ImageBitmap) => {
-            (this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
-            this.updateImage();
+        this.toolBoxService.$reset.forEach((event: Subject<void>) => {
+            event.subscribe(() =>
+                this.resetCanvasAndImage(
+                    this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+                    this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+                ),
+            );
         });
-        this.toolBoxService.$resetDiff.subscribe(() =>
-            this.resetCanvasAndImage(
-                this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-                this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-            ),
-        );
-        this.toolBoxService.$resetSource.subscribe(() =>
-            this.resetCanvasAndImage(
-                this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-                this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-            ),
-        );
         this.resetCanvasAndImage(
-            this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-            this.img.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+            this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+            this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
         );
     }
 
@@ -177,10 +175,10 @@ export class DrawCanvasComponent implements AfterViewInit {
     updateImage() {
         const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
         const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
-        ctx.drawImage(this.img.nativeElement, 0, 0);
+        ctx.drawImage(this.background.nativeElement, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
-        ctx.drawImage(this.canvas.nativeElement, 0, 0);
-        this.drawService.$differenceImage.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
+        ctx.drawImage(this.foreground.nativeElement, 0, 0);
+        this.drawService.$drawingImage.get(this.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
     }
 
     enterCanvas(event: MouseEvent) {
@@ -191,7 +189,7 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     startDrawing(event: MouseEvent) {
         this.isClick = true;
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        this.coordDraw = this.drawService.reposition(this.foreground.nativeElement, event);
         this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
     }
 
@@ -234,7 +232,7 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     updateMouseCoordinates(event: MouseEvent): Line {
         const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.coordDraw = this.drawService.reposition(this.canvas.nativeElement, event);
+        this.coordDraw = this.drawService.reposition(this.foreground.nativeElement, event);
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         return { initCoord, finalCoord };
     }

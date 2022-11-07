@@ -6,12 +6,13 @@ import { DialogCreateGameComponent } from '@app/components/dialog-create-game/di
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { Canvas } from '@app/enums/canvas';
-import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { CanvasType } from '@app/enums/canvas-type';
 import { Theme } from '@app/enums/theme';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-create-game-page',
@@ -21,9 +22,8 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 export class CreateGamePageComponent implements AfterViewInit {
     form: FormGroup;
     theme: typeof Theme = Theme;
-    leftDifferenceImage: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
-    rightDifferenceImage: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
-    canvasPosition: typeof PropagateCanvasEvent = PropagateCanvasEvent;
+    drawingImage: Map<CanvasType, ImageData> = new Map();
+    canvasType: typeof CanvasType = CanvasType;
     // eslint-disable-next-line max-params
     constructor(
         private toolBoxService: ToolBoxService,
@@ -32,6 +32,9 @@ export class CreateGamePageComponent implements AfterViewInit {
         private communication: CommunicationService,
         exitButtonService: ExitButtonHandlerService,
     ) {
+        this.drawingImage.set(CanvasType.Left, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
+        this.drawingImage.set(CanvasType.Right, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
+
         exitButtonService.setCreateGamePage();
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
@@ -39,14 +42,15 @@ export class CreateGamePageComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.drawService.$differenceImage.subscribe((newImageDifference: ImageData) => {
-            this.leftDifferenceImage = newImageDifference;
+        this.drawService.$drawingImage.forEach((event: Subject<ImageData>, canvasType: CanvasType) => {
+            event.subscribe((newImage: ImageData) => {
+                this.drawingImage.set(canvasType, newImage);
+            });
         });
-        this.drawService.$sourceImage.subscribe((newImageDifference: ImageData) => {
-            this.rightDifferenceImage = newImageDifference;
+
+        this.toolBoxService.$reset.forEach((event: Subject<void>) => {
+            event.next();
         });
-        this.toolBoxService.$resetDiff.next();
-        this.toolBoxService.$resetSource.next();
     }
 
     manageErrorInForm(validationImageErrors: string) {
@@ -59,8 +63,8 @@ export class CreateGamePageComponent implements AfterViewInit {
         this.dialog.open(DialogCreateGameComponent, {
             data: {
                 expansionRadius: parseInt((this.form.get('expansionRadius') as FormControl).value, 10),
-                src: this.rightDifferenceImage,
-                difference: this.leftDifferenceImage,
+                src: this.drawingImage.get(CanvasType.Right),
+                difference: this.drawingImage.get(CanvasType.Left),
                 nbDifference,
                 differenceImage,
             },
@@ -70,7 +74,11 @@ export class CreateGamePageComponent implements AfterViewInit {
     isGameValid() {
         this.dialog.open(LoadingScreenComponent, { panelClass: 'custom-dialog-container' });
         return this.communication
-            .validateGame(this.rightDifferenceImage, this.leftDifferenceImage, parseInt((this.form.get('expansionRadius') as FormControl).value, 10))
+            .validateGame(
+                this.drawingImage.get(CanvasType.Right) as ImageData,
+                this.drawingImage.get(CanvasType.Left) as ImageData,
+                parseInt((this.form.get('expansionRadius') as FormControl).value, 10),
+            )
             .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {
                 this.dialog.closeAll();
                 if (!response || !response.body) {

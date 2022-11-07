@@ -15,11 +15,10 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./tool-box.component.scss'],
 })
 export class ToolBoxComponent {
-    @Input() canvas: CanvasType;
+    @Input() canvasType: CanvasType;
     pencil: Pencil = DEFAULT_PENCIL;
     tool: typeof Tool = Tool;
     colorButton: { pencil: string; eraser: string } = { pencil: 'background', eraser: 'primary' };
-    canvasPosition: typeof PropagateCanvasEvent = PropagateCanvasEvent;
 
     constructor(public dialog: MatDialog, public toolService: ToolBoxService, public drawService: DrawService) {
         this.changeButtonColor(Tool.Pencil);
@@ -28,7 +27,7 @@ export class ToolBoxComponent {
     changePencilState(tool: Tool): void {
         this.changeButtonColor(tool);
         this.pencil.state = tool;
-        this.toolService.$pencil.next(this.pencil);
+        this.toolService.$pencil.get(this.canvasType)?.next(this.pencil);
     }
 
     formatLabel(value: number | null) {
@@ -40,7 +39,7 @@ export class ToolBoxComponent {
 
     changePencilColor(color: string): void {
         this.pencil.color = color;
-        this.toolService.$pencil.next(this.pencil);
+        this.toolService.$pencil.get(this.canvasType)?.next(this.pencil);
     }
 
     changePencilWidth(event: MatSliderChange): void {
@@ -51,11 +50,11 @@ export class ToolBoxComponent {
             this.pencil.state === Tool.Pencil
                 ? { pencil: event.value, eraser: this.pencil.width.eraser }
                 : { pencil: this.pencil.width.pencil, eraser: event.value };
-        this.toolService.$pencil.next(this.pencil);
+        this.toolService.$pencil.get(this.canvasType)?.next(this.pencil);
     }
 
     openUploadDialog(): void {
-        this.dialog.open(DialogUploadFormComponent, { data: { canvas: this.canvas } });
+        this.dialog.open(DialogUploadFormComponent, { data: { canvas: this.canvasType } });
     }
 
     changeButtonColor(tool: Tool) {

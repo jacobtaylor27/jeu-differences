@@ -83,10 +83,10 @@ describe('DrawCanvasComponent', () => {
     });
     it('drawPoint should set the style of the pencil and create the point', () => {
         component.coordDraw = { x: 0, y: 0 };
-        component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        component.foreground = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
         component.pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
         drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
-        const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = component.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
         const moveToSpy = spyOn(ctx, 'moveTo');
         const lineToSpy = spyOn(ctx, 'lineTo');
@@ -113,11 +113,11 @@ describe('DrawCanvasComponent', () => {
 
     it('should erase a point', () => {
         component.coordDraw = { x: 0, y: 0 };
-        component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        component.foreground = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
         component.pencil = { width: { pencil: 5, eraser: 2 }, cap: 'round', color: '#000000', state: Tool.Pencil };
         drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
         const expectedWhite = '#ffffff';
-        const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = component.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
         const moveToSpy = spyOn(ctx, 'moveTo');
         const lineToSpy = spyOn(ctx, 'lineTo');
@@ -140,7 +140,7 @@ describe('DrawCanvasComponent', () => {
     });
 
     it('should subscribe to get the new image and draw it', async () => {
-        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = component.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const resetCanvasSpy = spyOn(component, 'resetCanvas').and.callFake(() => {});
         const drawImageSpy = spyOn(ctx, 'drawImage');
@@ -156,7 +156,7 @@ describe('DrawCanvasComponent', () => {
     });
 
     it('should subscribe to get the new image and draw it', async () => {
-        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = component.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const spyDrawImage = spyOn(ctx, 'drawImage');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
             expect(spyDrawImage).toHaveBeenCalled();

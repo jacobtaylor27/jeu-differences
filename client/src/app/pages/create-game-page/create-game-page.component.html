@@ -6,15 +6,15 @@
             <div class="drawImg">
                 <label for="imgDiff">Tableau à dessin #1 (diff)</label>
                 <app-draw-canvas id="imgDiff"></app-draw-canvas>
-                <app-tool-box [canvas]="canvasPosition.Difference" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
+                <app-tool-box [canvasType]="canvasType.Left" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>
 
-            <app-common-tool-box [canvas]="canvasPosition.Both"></app-common-tool-box>
+            <app-common-tool-box [canvas]="canvasType.Both"></app-common-tool-box>
 
             <div class="drawImg">
                 <label for="imgSource">Tableau à dessin #2 (source)</label>
                 <app-draw-canvas id="imgSource"></app-draw-canvas>
-                <app-tool-box [canvas]="canvasPosition.Source" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
+                <app-tool-box [canvasType]="canvasType.Right" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>
         </div>
         <div class="submission-container">

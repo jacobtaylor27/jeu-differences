@@ -6,16 +6,13 @@ import { Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class ToolBoxService {
-    $pencil: Subject<Pencil>;
-    $uploadImageInSource: Subject<ImageBitmap>;
-    $uploadImageInDiff: Subject<ImageBitmap>;
-    $resetSource: Subject<void>;
-    $resetDiff: Subject<void>;
+    $pencil: Map<string, Subject<Pencil>>;
+    $uploadImage: Map<string, Subject<ImageBitmap>>;
+    $reset: Map<string, Subject<void>>;
+
     constructor() {
-        this.$uploadImageInSource = new Subject();
-        this.$uploadImageInDiff = new Subject();
-        this.$pencil = new Subject();
-        this.$resetSource = new Subject();
-        this.$resetDiff = new Subject();
+        this.$pencil = new Map();
+        this.$uploadImage = new Map();
+        this.$reset = new Map();
     }
 }

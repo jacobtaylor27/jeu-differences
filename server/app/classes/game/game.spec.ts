@@ -284,4 +284,11 @@ describe('Game', () => {
         expect(game.isEven(3)).to.equal(false);
     });
 
+    it('should return the threshold to win a game', () => {
+        game.information.differences.length = 4;
+        expect(game.getNbDifferencesThreshold()).to.equal(2);
+
+        game.information.differences.length = 5;
+        expect(game.getNbDifferencesThreshold()).to.equal(3);
+    });
 });

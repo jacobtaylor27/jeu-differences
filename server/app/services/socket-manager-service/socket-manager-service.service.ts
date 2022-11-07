@@ -101,7 +101,7 @@ export class SocketManagerService {
                 }
                 const differences = this.gameManager.isDifference(gameId, socket.id, differenceCoord);
                 if (!differences) {
-                    socket.emit(SocketEvent.DifferenceNotFound, differenceCoord);
+                    socket.emit(SocketEvent.DifferenceNotFound);
                     return;
                 }
                 if (this.gameManager.isGameOver(gameId)) {

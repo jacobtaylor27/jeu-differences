@@ -40,6 +40,20 @@ export class MultiplayerGameManager {
         this.requestsOnHold.delete(roomId);
     }
 
+    deleteRequest(roomId: string, playerId: string) {
+        this.getRoomIdWaiting;
+        const requests = this.getRequest(roomId);
+        if (requests) {
+            for (let i = 0; i < requests.length; i++) {
+                if (requests[i].id === playerId) {
+                    requests.splice(i, 1);
+                }
+            }
+        }
+
+        if (requests) this.requestsOnHold.set(roomId, requests);
+    }
+
     getNewRequest(roomId: string) {
         return (this.requestsOnHold.get(roomId) as User[])[0];
     }

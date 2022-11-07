@@ -1,8 +1,9 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { Canvas } from '@app/enums/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -14,6 +15,7 @@ describe('DialogCreateGameComponent', () => {
     let component: DialogCreateGameComponent;
     let fixture: ComponentFixture<DialogCreateGameComponent>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyRouter: jasmine.SpyObj<Router>;
     const image = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
     const pixelLength = 4;
     const model = {
@@ -25,11 +27,13 @@ describe('DialogCreateGameComponent', () => {
     };
     beforeEach(async () => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['createGame']);
+        spyRouter = jasmine.createSpyObj('RouterService', ['navigate']);
         await TestBed.configureTestingModule({
             declarations: [DialogCreateGameComponent],
             providers: [
                 { provide: MAT_DIALOG_DATA, useValue: model },
                 { provide: CommunicationService, useValue: spyCommunicationService },
+                { provide: Router, useValue: spyRouter },
             ],
             imports: [AppMaterialModule, BrowserAnimationsModule, HttpClientModule, FormsModule, ReactiveFormsModule],
         }).compileComponents();
@@ -44,9 +48,10 @@ describe('DialogCreateGameComponent', () => {
 
     it('should post the game', () => {
         spyCommunicationService.createGame.and.callFake(() => {
-            return of();
+            return of({} as HttpResponse<Record<string, never>>);
         });
         component.createGame();
+        expect(spyRouter.navigate).toHaveBeenCalled();
         expect(spyCommunicationService.createGame).toHaveBeenCalled();
 
         spyCommunicationService.createGame.and.callFake(() => {

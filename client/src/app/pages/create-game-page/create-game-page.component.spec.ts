@@ -24,7 +24,7 @@ describe('CreateGamePageComponent', () => {
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
-        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
+        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
         communicationSpyObject = jasmine.createSpyObj('CommunicationService', ['validateGame']);
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
             $uploadImageInSource: new Subject(),

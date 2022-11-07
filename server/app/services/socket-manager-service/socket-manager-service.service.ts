@@ -50,14 +50,15 @@ export class SocketManagerService {
                 if (!request) {
                     return;
                 }
+                
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
+                socket.join(roomId);
                 for (const player of request) {
-                    if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, roomId)) {
-                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
+                    if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, opponentsRoomId)) {
+                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer, 'la partie a déjà commencé.');
                     }
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
-                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
-                socket.join(roomId);
                 this.gameManager.setTimer(roomId);
                 this.gameManager.sendTimer(this.sio, roomId);
             });
@@ -69,7 +70,7 @@ export class SocketManagerService {
                     this.sio.to(roomId).emit(SocketEvent.RequestToJoin, newPlayerRequest);
                 }
 
-                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
+                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer, 'le joueur a refusé votre demande.');
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {

@@ -48,7 +48,7 @@ export class CreateGamePageComponent implements AfterViewInit {
             });
         });
 
-        this.toolBoxService.$clearBackground.forEach((event: Subject<void>) => {
+        this.toolBoxService.$resetBackground.forEach((event: Subject<void>) => {
             event.next();
         });
     }

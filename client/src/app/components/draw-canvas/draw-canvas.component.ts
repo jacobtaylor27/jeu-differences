@@ -133,7 +133,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.updateImage();
         });
 
-        this.toolBoxService.$clearBackground.get(this.canvasType)?.subscribe(() => {
+        this.toolBoxService.$resetBackground.get(this.canvasType)?.subscribe(() => {
             this.clearBackground(background);
         });
 

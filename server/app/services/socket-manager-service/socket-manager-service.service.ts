@@ -115,7 +115,9 @@ export class SocketManagerService {
                     socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
                     return;
                 }
-                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
+                else{
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
+                }
             });
         });
     }

@@ -82,7 +82,7 @@ export class CreateGamePageComponent implements AfterViewInit {
 
     isGameValid() {
         const original: ImageData = this.createSourceImageFromCanvas();
-        this.dialog.open(LoadingScreenComponent, { panelClass: 'custom-dialog-container' });
+        this.dialog.open(LoadingScreenComponent, { disableClose: true, panelClass: 'custom-dialog-container' });
         return this.communication
             .validateGame(original, this.imageDifference, parseInt((this.form.get('expansionRadius') as FormControl).value, 10))
             .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {

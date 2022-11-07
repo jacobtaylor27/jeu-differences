@@ -39,7 +39,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
     }
 
     createGame() {
-        this.dialog.open(LoadingScreenComponent, { panelClass: 'custom-dialog-container' });
+        this.dialog.open(LoadingScreenComponent, { disableClose: true, panelClass: 'custom-dialog-container' });
         this.communication
             .createGame(
                 { original: this.data.src, modify: this.data.difference },

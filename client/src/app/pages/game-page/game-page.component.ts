@@ -40,5 +40,8 @@ export class GamePageComponent implements OnDestroy {
 
     ngOnDestroy(): void {
         this.socket.send(SocketEvent.LeaveGame, { gameId: this.gameInfoHandlerService.roomId });
+        this.socket.off(SocketEvent.Win);
+        this.socket.off(SocketEvent.Lose);
+       
     }
 }

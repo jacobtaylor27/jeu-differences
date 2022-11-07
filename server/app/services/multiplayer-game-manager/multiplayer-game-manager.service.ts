@@ -53,7 +53,6 @@ export class MultiplayerGameManager {
     }
 
     deleteRequest(roomId: string, playerId: string) {
-        this.getRoomIdWaiting;
         const requests = this.getRequest(roomId);
         if (requests) {
             for (let i = 0; i < requests.length; i++) {

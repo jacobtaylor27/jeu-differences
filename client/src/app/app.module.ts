@@ -33,7 +33,6 @@ import { GameConstantsSettingsComponent } from './components/game-constants-sett
 import { GameScoreComponent } from './components/game-score/game-score.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
-import { TimerCountdownComponent } from './components/timer-countdown/timer-countdown.component';
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
@@ -67,7 +66,6 @@ import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.componen
         PlayAreaComponent,
         ExitGameButtonComponent,
         CluesAreaComponent,
-        TimerCountdownComponent,
         TimerStopwatchComponent,
         DifferencesAreaComponent,
         DialogCreateGameComponent,

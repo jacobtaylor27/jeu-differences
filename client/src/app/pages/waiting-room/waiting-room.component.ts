@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApprovalDialogComponent } from '@app/components/approval-dialog/approval-dialog.component';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
@@ -12,7 +12,7 @@ import { User } from '@common/user';
     templateUrl: './waiting-room.component.html',
     styleUrls: ['./waiting-room.component.scss'],
 })
-export class WaitingRoomComponent implements OnInit {
+export class WaitingRoomComponent implements OnInit, OnDestroy {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     // eslint-disable-next-line max-params
@@ -36,11 +36,20 @@ export class WaitingRoomComponent implements OnInit {
             this.routerService.navigateTo('select');
         });
 
-        this.socketService.on(SocketEvent.JoinGame, (roomId: string) => {
-            this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayerName(), roomId });
-            this.gameInformationHandlerService.roomId = roomId;
+        this.socketService.on(SocketEvent.JoinGame, (data: { roomId: string; playerName: string }) => {
+            this.gameInformationHandlerService.setPlayerName(data.playerName);
+
+            this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
+            this.gameInformationHandlerService.roomId = data.roomId;
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            this.socketService.on(SocketEvent.Play, () => {});
+            this.socketService.on(SocketEvent.Play, (id: string) => {
+                this.gameInformationHandlerService.roomId = id;
+                this.routerService.navigateTo('game');
+            });
         });
+    }
+
+    ngOnDestroy() {
+        this.socketService.off(SocketEvent.RequestToJoin);
     }
 }

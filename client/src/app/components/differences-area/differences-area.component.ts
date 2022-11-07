@@ -10,25 +10,41 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 export class DifferencesAreaComponent implements OnInit {
     name: string;
     nbDifferences: string;
-
+    players: { name: string; nbDifference: string }[];
     constructor(
         private readonly gameInformationHandlerService: GameInformationHandlerService,
         private readonly differenceDetectionHandler: DifferencesDetectionHandlerService,
     ) {
-        this.name = this.gameInformationHandlerService.getPlayerName();
+        const mainPlayer = this.gameInformationHandlerService.getPlayer();
+        const opponentPlayer = this.gameInformationHandlerService.getOpponent();
+        this.players = !opponentPlayer
+            ? [{ name: mainPlayer.name, nbDifference: this.setNbDifferencesFound(mainPlayer.name) as string }]
+            : [
+                  { name: mainPlayer.name, nbDifference: this.setNbDifferencesFound(mainPlayer.name) as string },
+                  { name: opponentPlayer.name, nbDifference: this.setNbDifferencesFound(opponentPlayer.name) as string },
+              ];
+        this.gameInformationHandlerService.$differenceFound.subscribe((playerName: string) => {
+            const notFindIndex = -1;
+            if (this.getPlayerIndex(playerName) === notFindIndex) {
+                return;
+            }
+            this.players[this.getPlayerIndex(playerName)].nbDifference = this.setNbDifferencesFound(playerName);
+        });
     }
 
     ngOnInit(): void {
         this.differenceDetectionHandler.resetNumberDifferencesFound();
-        this.setNbDifferencesFound();
     }
 
-    setNbDifferencesFound() {
-        if (!this.differenceDetectionHandler.nbDifferencesFound) {
-            this.nbDifferences = '0 / ' + this.gameInformationHandlerService.getNbDifferences();
-        } else {
-            this.nbDifferences = this.differenceDetectionHandler.nbDifferencesFound + ' / ' + this.gameInformationHandlerService.getNbDifferences();
+    getPlayerIndex(playerName: string) {
+        return this.players.findIndex((player: { name: string; nbDifference: string }) => player.name === playerName);
+    }
+
+    setNbDifferencesFound(playerName: string): string {
+        const nbPlayerDifference = this.gameInformationHandlerService.getNbDifferences(playerName);
+        if (nbPlayerDifference === undefined) {
+            return '';
         }
-        return this.nbDifferences;
+        return nbPlayerDifference.toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
     }
 }

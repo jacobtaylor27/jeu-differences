@@ -7,6 +7,8 @@ import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-s
 import { AppMaterialModule } from '@app/modules/material.module';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { Subject } from 'rxjs';
+
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
@@ -14,14 +16,21 @@ describe('SidebarComponent', () => {
     let spyDifferencesDetection: jasmine.SpyObj<DifferencesDetectionHandlerService>;
 
     beforeEach(async () => {
-        spyGameInfosService = jasmine.createSpyObj('GameInformationHandlerService', [
-            'getGameName',
-            'setPlayerName',
-            'getGameMode',
-            'getPlayerName',
-            'getNbDifferences',
-        ]);
+        const expectedTotalDifference = 10;
+        spyGameInfosService = jasmine.createSpyObj(
+            'GameInformationHandlerService',
+            ['getGameName', 'getGameMode', 'getPlayer', 'getOpponent', 'getNbDifferences', 'getNbTotalDifferences'],
+            { $differenceFound: new Subject<string>() },
+        );
         spyDifferencesDetection = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['nbDifferencesFound', 'resetNumberDifferencesFound']);
+        spyGameInfosService.getPlayer.and.callFake(() => {
+            return { name: 'test', nbDifferences: 0 };
+        });
+        spyGameInfosService.getOpponent.and.callFake(() => {
+            return { name: 'test2', nbDifferences: 0 };
+        });
+        spyGameInfosService.getNbDifferences.and.callFake(() => 0);
+        spyGameInfosService.getNbTotalDifferences.and.callFake(() => expectedTotalDifference);
         await TestBed.configureTestingModule({
             declarations: [SidebarComponent, CluesAreaComponent, DifferencesAreaComponent, TimerStopwatchComponent],
             imports: [AppMaterialModule, HttpClientTestingModule],
@@ -67,6 +76,7 @@ describe('SidebarComponent', () => {
                 },
             ],
             nbDifferences: 10,
+            isMulti: false,
         };
     });
 

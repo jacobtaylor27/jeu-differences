@@ -1,12 +1,13 @@
+import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { GameCardService } from './game-card.service';
-import { HttpClientModule } from '@angular/common/http';
+import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { of } from 'rxjs';
+import { GameCardService } from './game-card.service';
 
 const GAME_CARD: GameCard = {
     gameInformation: {
@@ -36,6 +37,7 @@ const GAME_CARD: GameCard = {
             },
         ],
         nbDifferences: 1,
+        isMulti: true,
     },
     isAdminCard: true,
     isMulti: true,

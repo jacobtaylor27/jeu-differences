@@ -9,4 +9,5 @@ export interface PublicGameInformation {
     soloScore: Score[];
     multiplayerScore: Score[];
     nbDifferences: number;
+    isMulti : boolean;
 }

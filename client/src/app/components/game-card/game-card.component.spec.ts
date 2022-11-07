@@ -42,6 +42,7 @@ const GAME_CARD: GameCard = {
             },
         ],
         nbDifferences: 1,
+        isMulti: true,
     },
     isAdminCard: true,
     isMulti: true,

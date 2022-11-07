@@ -6,9 +6,9 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { Service } from 'typedi';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import LZString = require('lz-string');
-import { Service } from 'typedi';
 
 @Service()
 export class GameController {
@@ -302,7 +302,7 @@ export class GameController {
                 res.status(StatusCodes.BAD_REQUEST).send();
                 return;
             }
-            const difference = this.gameManager.isDifference(req.body.id as string, {
+            const difference = this.gameManager.isDifference(req.body.id as string, '', {
                 x: req.body.x,
                 y: req.body.y,
             });

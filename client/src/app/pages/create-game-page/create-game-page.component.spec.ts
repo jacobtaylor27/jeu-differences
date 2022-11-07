@@ -45,7 +45,14 @@ describe('CreateGamePageComponent', () => {
                 ExitGameButtonComponent,
                 LoadingScreenComponent,
             ],
-            imports: [AppMaterialModule, HttpClientTestingModule, BrowserAnimationsModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
+            imports: [
+                AppMaterialModule,
+                HttpClientTestingModule,
+                BrowserAnimationsModule,
+                ReactiveFormsModule,
+                RouterTestingModule,
+                HttpClientModule,
+            ],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: CommunicationService, useValue: communicationSpyObject },

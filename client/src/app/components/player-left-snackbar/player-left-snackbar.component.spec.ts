@@ -12,8 +12,11 @@ describe('PlayerLeftSnackbarComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PlayerLeftSnackbarComponent],
-            imports: [MatDialogModule, AppMaterialModule,],
-            providers: [{provide: MatSnackBarRef, useValue: {}},{provide: MAT_SNACK_BAR_DATA, useValue: {}}]
+            imports: [MatDialogModule, AppMaterialModule],
+            providers: [
+                { provide: MatSnackBarRef, useValue: {} },
+                { provide: MAT_SNACK_BAR_DATA, useValue: {} },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PlayerLeftSnackbarComponent);

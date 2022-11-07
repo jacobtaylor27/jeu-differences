@@ -28,7 +28,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.socketService.on(SocketEvent.RequestToJoin, (player: User) => {
-            this.dialog.open(ApprovalDialogComponent, { disableClose: true ,data: { opponentsName: player.name, opponentsRoomId: player.id }});
+            this.dialog.open(ApprovalDialogComponent, { disableClose: true, data: { opponentsName: player.name, opponentsRoomId: player.id } });
         });
 
         this.socketService.on(SocketEvent.RejectPlayer, () => {

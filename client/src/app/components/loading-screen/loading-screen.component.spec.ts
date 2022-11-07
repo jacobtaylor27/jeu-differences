@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { GameCarouselComponent } from '../game-carousel/game-carousel.component';
+import { GameCarouselComponent } from '@app/components/game-carousel/game-carousel.component';
 
 import { LoadingScreenComponent } from './loading-screen.component';
 

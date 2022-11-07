@@ -8,7 +8,7 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { PublicGameInformation } from '@common/game-information';
 import { of } from 'rxjs';
-import { LoadingScreenComponent } from '../loading-screen/loading-screen.component';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { GameCarouselComponent } from './game-carousel.component';
 
 describe('GameCarouselComponent', () => {

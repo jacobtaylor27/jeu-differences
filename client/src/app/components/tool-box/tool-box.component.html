@@ -34,7 +34,7 @@
         ></mat-slider>
         <p>{{ this.pencil.width.eraser }} px</p>
     </div>
-    <button mat-mini-fab color="primary" type="button">
+    <button mat-mini-fab color="primary" type="button"  (click)="this.drawService.resetForeground(this.canvasType)">
         <mat-icon matTooltip="Réinitialiser avant-plan">
             <img class="icon" src="assets/delete-foreground.png" />
         </mat-icon>

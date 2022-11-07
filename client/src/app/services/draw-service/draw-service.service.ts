@@ -33,6 +33,16 @@ export class DrawService {
         this.toolService.$resetBackground.get(canvasType)?.next();
     }
 
+    resetForeground(canvasType: CanvasType) {
+        if (canvasType === CanvasType.Both) {
+            this.toolService.$resetForeground.forEach((event: Subject<void>) => {
+                event.next();
+            });
+            return;
+        }
+        this.toolService.$resetForeground.get(canvasType)?.next();
+    }
+
     isEraser(pencilState: Tool) {
         return pencilState === Tool.Eraser;
     }

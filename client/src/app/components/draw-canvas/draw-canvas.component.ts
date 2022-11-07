@@ -120,6 +120,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        this.toolBoxService.addCanvasType(this.canvasType);
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
         });

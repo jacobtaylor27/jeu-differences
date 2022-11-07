@@ -2,7 +2,7 @@
     <button mat-mini-fab color="primary" type="button" (click)="openUploadDialog()">
         <mat-icon matTooltip="Ajouter tous les arrière-plans">image</mat-icon>
     </button>
-    <button mat-mini-fab color="primary" type="button" (click)="this.drawService.reset(this.canvasType)">
+    <button mat-mini-fab color="primary" type="button" (click)="this.drawService.clearBackground(this.canvasType)">
         <mat-icon matTooltip="Réinitialiser tous les arrière-plans">image_not_supported</mat-icon>
     </button>
     <button mat-mini-fab color="primary" type="button" (click)="swapForegrounds()">

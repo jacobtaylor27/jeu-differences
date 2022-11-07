@@ -23,14 +23,14 @@ export class DrawService {
         return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
     }
 
-    reset(canvasType: CanvasType) {
+    clearBackground(canvasType: CanvasType) {
         if (canvasType === CanvasType.Both) {
-            this.toolService.$reset.forEach((event: Subject<void>) => {
+            this.toolService.$clearBackground.forEach((event: Subject<void>) => {
                 event.next();
             });
             return;
         }
-        this.toolService.$reset.get(canvasType)?.next();
+        this.toolService.$clearBackground.get(canvasType)?.next();
     }
 
     isEraser(pencilState: Tool) {

@@ -9,17 +9,17 @@ import { Subject } from 'rxjs';
 export class ToolBoxService {
     $pencil: Map<CanvasType, Subject<Pencil>>;
     $uploadImage: Map<CanvasType, Subject<ImageBitmap>>;
-    $reset: Map<CanvasType, Subject<void>>;
+    $clearBackground: Map<CanvasType, Subject<void>>;
 
     constructor() {
         this.$pencil = new Map();
         this.$uploadImage = new Map();
-        this.$reset = new Map();
+        this.$clearBackground = new Map();
     }
 
     addCanvasType(canvasType: CanvasType) {
         this.$pencil.set(canvasType, new Subject<Pencil>());
         this.$uploadImage.set(canvasType, new Subject<ImageBitmap>());
-        this.$reset.set(canvasType, new Subject<void>());
+        this.$clearBackground.set(canvasType, new Subject<void>());
     }
 }

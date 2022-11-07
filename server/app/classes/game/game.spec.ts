@@ -148,6 +148,21 @@ describe('Game', () => {
         game['info'].differences = expectedDifference;
         game['getNbDifferencesFound'].set('', expectedDifferenceFound);
         expect(game.isAllDifferenceFound('')).to.equal(true);
+
+        game['isMulti'] = true;
+        expectedDifference = { length: 10 } as Coordinate[][];
+        expectedDifferenceFound = { size: 4 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        expect(game.isAllDifferenceFound('')).to.equal(false);
+
+        game['isMulti'] = true;
+        expectedDifference = { length: 10 } as Coordinate[][];
+        expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        stub(game, 'getNbDifferencesThreshold').callsFake(() => 5);
+        expect(game.isAllDifferenceFound('')).to.equal(true);
     });
 
     it('should add a difference founded', () => {

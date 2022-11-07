@@ -22,6 +22,7 @@ export class ToolBoxComponent {
 
     constructor(public dialog: MatDialog, public toolService: ToolBoxService, public drawService: DrawService) {
         this.changeButtonColor(Tool.Pencil);
+        this.toolService.addCanvasType(this.canvasType);
     }
 
     changePencilState(tool: Tool): void {

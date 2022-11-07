@@ -52,5 +52,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.socketService.off(SocketEvent.RequestToJoin);
+        this.socketService.off(SocketEvent.RejectPlayer);
+
     }
 }

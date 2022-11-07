@@ -9,11 +9,13 @@ import { PrivateGameInformation } from '@app/interface/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
+import { GameCarousel } from '@app/interface/game-carousel';
+// can't import this otherwise
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import LZString = require('lz-string');
-import { GameCarousel } from '@app/interface/game-carousel';
 
 const NB_TO_RETRIEVE = 4;
+
 @Service()
 export class GameInfoService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;

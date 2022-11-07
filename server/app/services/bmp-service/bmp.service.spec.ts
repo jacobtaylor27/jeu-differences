@@ -59,7 +59,7 @@ describe('Bmp service', async () => {
     });
 
     it('deleteBmpById(bmpId) should delete a file in a folder', async () => {
-        await bmpService.deleteBmpById('1', tmpdir());
+        await bmpService.deleteGameImages('1', tmpdir());
         expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(1);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toBmpImageData());
@@ -73,7 +73,7 @@ describe('Bmp service', async () => {
         const bmpObj = new Bmp({ width, height }, defaultRawData);
         await bmpService.addBmp(await bmpObj.toImageData(), tmpdir());
         await expect(bmpService.getBmpById('5', tmpdir())).to.eventually.deep.equal(bmpObj);
-        await bmpService.deleteBmpById('5', tmpdir());
+        await bmpService.deleteGameImages('5', tmpdir());
     });
 
     it('should create a dir if it does not already exist', async () => {
@@ -89,7 +89,7 @@ describe('Bmp service', async () => {
     });
 
     it('resetAllBmp(bmp) should delete all the bmp files in the directory', async () => {
-        await bmpService.resetAllBmp(tmpdir());
+        await bmpService.deleteAllSourceImages(tmpdir());
         expect((await bmpService.getAllBmps(tmpdir())).length).to.equal(0);
         const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
         const buffer = bmp.encode(await bmpObj.toBmpImageData());

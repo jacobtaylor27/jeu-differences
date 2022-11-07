@@ -6,7 +6,6 @@ import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { Subject } from 'rxjs';
 
 interface Stroke {
     lines: Line[];
@@ -125,20 +124,18 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.toolBoxService.$uploadImage.forEach((event: Subject<ImageBitmap>) => {
-            event.subscribe(async (newImage: ImageBitmap) => {
-                (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
-                this.updateImage();
-            });
+        this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
+            (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
+            this.updateImage();
         });
-        this.toolBoxService.$reset.forEach((event: Subject<void>) => {
-            event.subscribe(() =>
-                this.resetCanvasAndImage(
-                    this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-                    this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-                ),
+
+        this.toolBoxService.$reset.get(this.canvasType)?.subscribe(() => {
+            this.resetCanvasAndImage(
+                this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
+                this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             );
         });
+
         this.resetCanvasAndImage(
             this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
             this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,

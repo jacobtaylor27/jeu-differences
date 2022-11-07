@@ -16,16 +16,22 @@ export class ExitGameButtonComponent {
     private readonly exitDialogContentRef: TemplateRef<HTMLElement>;
 
     theme = Theme.ClassName;
-    constructor(readonly matDialog: MatDialog, readonly exitButtonService: ExitButtonHandlerService,
+    constructor(
+        readonly matDialog: MatDialog,
+        readonly exitButtonService: ExitButtonHandlerService,
         public gameInfoHandlerService: GameInformationHandlerService,
-        private socket: CommunicationSocketService,) {}
+        private socket: CommunicationSocketService,
+    ) {}
 
     onExit(): void {
         this.matDialog.open(this.exitDialogContentRef);
     }
 
-    onLeaveWaiting(){
-        this.socket.send(SocketEvent.LeaveWaiting, { gameId: this.gameInfoHandlerService.roomId });
-        console.log(this.gameInfoHandlerService.roomId)
+    onLeaveWaiting() {
+        if (this.gameInfoHandlerService.roomId) {
+            this.socket.send(SocketEvent.LeaveWaiting, { roomId: this.gameInfoHandlerService.roomId, gameCard: this.gameInfoHandlerService.getId() });
+        } else {
+            this.socket.send(SocketEvent.LeaveWaiting, { roomId: undefined, gameCard: this.gameInfoHandlerService.getId() });
+        }
     }
 }

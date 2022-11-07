@@ -32,4 +32,17 @@ describe('ExitGameButtonComponent', () => {
         component.onExit();
         expect(openDialogSpy).toHaveBeenCalled();
     });
+
+    it('should send that the player left the waiting room', () => {
+        const spySend = spyOn(component['socket'], 'send');
+        spyOn(component['gameInfoHandlerService'], 'getId').and.callFake(() => {return '1'})
+        component.onLeaveWaiting();
+        expect(spySend).toHaveBeenCalled();
+
+        component['gameInfoHandlerService'].roomId = '1';
+        component.onLeaveWaiting();
+        expect(spySend).toHaveBeenCalled();
+
+
+    })
 });

@@ -105,10 +105,12 @@ export class SocketManagerService {
                     return;
                 }
                 if (this.gameManager.isGameOver(gameId)) {
+                    this.gameManager.leaveGame(socket.id, gameId);
                     socket.emit(SocketEvent.Win);
                 }
                 if (this.gameManager.isGameMultiplayer(gameId)) {
                     if (this.gameManager.isGameOver(gameId)) {
+                        this.gameManager.leaveGame(socket.id, gameId);
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));

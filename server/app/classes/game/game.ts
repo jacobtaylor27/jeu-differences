@@ -103,7 +103,7 @@ export class Game {
     }
 
     isAllDifferenceFound(playerId: string): boolean {
-        const player = this.getNbDifferencesFound.get(playerId)!;
+        const player = this.getNbDifferencesFound.get(playerId);
 
         // if the game is already over all the differences are found and if the game is not initialize, 0 difference found
         if (this.isGameInitialize() || this.isGameOver() || !player) {

@@ -278,4 +278,10 @@ describe('Game', () => {
         game.players = new Map();
         expect(game.hasNoPlayer()).to.equal(true);
     });
+
+    it('should return true is the nb of differences is even', () => {
+        expect(game.isEven(2)).to.equal(true);
+        expect(game.isEven(3)).to.equal(false);
+    });
+
 });

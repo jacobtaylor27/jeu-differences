@@ -223,21 +223,12 @@ export class DrawCanvasComponent implements AfterViewInit {
         const line = this.updateMouseCoordinates(event);
         this.currentCommand.stroke.lines.push(line);
 
-        if (this.pencil.state === 'Pencil') {
-            this.currentCommand.style = {
-                color: this.pencil.color,
-                cap: this.pencil.cap,
-                width: this.pencil.width.pencil,
-                destination: 'source-over',
-            };
-        } else if (this.pencil.state === 'Eraser') {
-            this.currentCommand.style = {
-                color: this.pencil.color,
-                cap: this.pencil.cap,
-                width: this.pencil.width.eraser,
-                destination: 'destination-out',
-            };
-        }
+        this.currentCommand.style = {
+            color: this.pencil.color,
+            cap: this.pencil.cap,
+            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
+            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
+        };
         this.createStroke(line, this.currentCommand.style);
         this.updateImage();
     }

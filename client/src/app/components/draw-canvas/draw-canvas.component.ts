@@ -112,7 +112,7 @@ export class DrawCanvasComponent implements AfterViewInit {
                     this.createStroke(line, command.style);
                 });
             }
-            if (command.name === 'resetForeground') {
+            if (command.name === 'clearForeground') {
                 this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
             }
         }
@@ -142,14 +142,14 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     resetAllLayers(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
         this.resetForeground(ctxCanvas);
-        this.resetBackground(ctxImage);
+        this.clearBackground(ctxImage);
     }
 
     resetForeground(ctxCanvas: CanvasRenderingContext2D) {
         this.clearForeground(ctxCanvas);
         this.indexOfCommand++;
         this.currentCommand = {
-            name: 'resetForeground',
+            name: 'clearForeground',
             stroke: { lines: [] },
             style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
         };
@@ -161,7 +161,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.updateImage();
     }
 
-    resetBackground(ctxImage: CanvasRenderingContext2D) {
+    clearBackground(ctxImage: CanvasRenderingContext2D) {
         ctxImage.rect(0, 0, SIZE.x, SIZE.y);
         ctxImage.fillStyle = 'white';
         ctxImage.fill();

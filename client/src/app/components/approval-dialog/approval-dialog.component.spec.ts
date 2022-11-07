@@ -72,4 +72,10 @@ describe('ApprovalDialogComponent', () => {
         expect(routerSpyObj.navigateTo).toHaveBeenCalled();
         expect(gameInformationHandlerService.setPlayerName).toHaveBeenCalled();
     });
+    it('should open snackbar', () => {
+        const spySnackBar = spyOn(component['snackBar'], 'openFromComponent').and.resolveTo();
+
+        component.openSnackBar();
+        expect(spySnackBar).toHaveBeenCalled();
+    })
 });

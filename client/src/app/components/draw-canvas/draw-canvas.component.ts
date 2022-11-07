@@ -125,11 +125,23 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.toolBoxService.$uploadImage.forEach((event: Subject<ImageBitmap>) => {
-            event.subscribe(async (newImage: ImageBitmap) => {
-                (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
-                this.updateImage();
-            });
+        this.toolBoxService.addCanvasType(this.canvasType);
+        this.drawService.addDrawingCanvas(this.canvasType);
+        this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
+        this.toolBoxService.$switchForeground.get(this.canvasType)?.subscribe(() => {
+            const ctx = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            const newForeground = this.drawService.foregroundContext.get(
+                this.canvasType === CanvasType.Left ? CanvasType.Right : CanvasType.Left,
+            ) as HTMLCanvasElement;
+            ctx.drawImage(newForeground, 0, 0);
+        });
+
+        this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
+            (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
+            this.updateImage();
+        });
+            this.updateImage();
+        });
         });
         this.toolBoxService.$reset.forEach((event: Subject<void>) => {
             event.subscribe(() =>

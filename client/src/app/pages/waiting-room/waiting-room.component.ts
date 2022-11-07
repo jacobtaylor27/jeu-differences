@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApprovalDialogComponent } from '@app/components/approval-dialog/approval-dialog.component';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';

@@ -50,7 +50,7 @@ export class SocketManagerService {
                 if (!request) {
                     return;
                 }
-                
+
                 this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
                 socket.join(roomId);
                 for (const player of request) {

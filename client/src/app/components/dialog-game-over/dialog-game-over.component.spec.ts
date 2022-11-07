@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DialogGameOverComponent } from './dialog-game-over.component';
 
@@ -7,8 +8,10 @@ describe('DialogGameOverComponent', () => {
     let fixture: ComponentFixture<DialogGameOverComponent>;
 
     beforeEach(async () => {
+        const model = { isWin: false };
         await TestBed.configureTestingModule({
             declarations: [DialogGameOverComponent],
+            providers: [{ provide: MAT_DIALOG_DATA, useValue: model }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DialogGameOverComponent);

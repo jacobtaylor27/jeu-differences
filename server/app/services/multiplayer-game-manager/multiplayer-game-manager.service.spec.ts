@@ -101,4 +101,11 @@ describe('Multiplayer Game Manager', () => {
         multiplayerGameManager.removeGameWaiting('1');
         expect(multiplayerGameManager['gamesWaiting'].length).to.equal(1);
     });
+
+    it('should get request of a specific gameId', () => {
+        const expectedRequestsStack = [{ name: 'test', id: '' }];
+        multiplayerGameManager.requestsOnHold.set('testGame', expectedRequestsStack);
+        expect(multiplayerGameManager.getRequest('')).to.deep.equal([]);
+        expect(multiplayerGameManager.getRequest('testGame')).to.deep.equal(expectedRequestsStack);
+    });
 });

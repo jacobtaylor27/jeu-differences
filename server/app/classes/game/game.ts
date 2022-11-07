@@ -4,25 +4,28 @@ import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { User } from '@common/user';
 import { Coordinate } from '@common/coordinate';
+import { User } from '@common/user';
 import { v4 } from 'uuid';
 
 export class Game {
     players: Map<string, string>;
+    timerId: NodeJS.Timer;
     private id: string;
     private isMulti: boolean;
     private info: PrivateGameInformation;
-    private getNbDifferencesFound: Set<Coordinate[]>;
+    private getNbDifferencesFound: Map<string, Set<Coordinate[]>>;
+    private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
     private initialTime: Date;
 
     constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
         this.players = new Map();
-        this.players.set(playerInfo.player.id, playerInfo.player.name);
         this.isMulti = playerInfo.isMulti;
-        this.getNbDifferencesFound = new Set();
+        this.getNbDifferencesFound = new Map();
+        this.getNbDifferencesTotalFound = new Set();
+        this.addPlayer(playerInfo.player);
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
         this.id = v4();
         this.context.next();
@@ -66,27 +69,29 @@ export class Game {
         );
     }
 
-    isDifferenceFound(differenceCoords: Coordinate) {
+    isDifferenceFound(playerId: string, differenceCoords: Coordinate) {
         const differences = this.findDifference(differenceCoords);
         if (!differences || this.isDifferenceAlreadyFound(differences)) {
             return null;
         }
-        this.addCoordinatesOnDifferenceFound(differences);
+        this.addCoordinatesOnDifferenceFound(playerId, differences);
         return differences;
     }
 
-    addCoordinatesOnDifferenceFound(differenceCoords: Coordinate[]) {
-        if (this.isDifferenceAlreadyFound(differenceCoords)) {
+    addCoordinatesOnDifferenceFound(playerId: string, differenceCoords: Coordinate[]) {
+        const player = this.getNbDifferencesFound.get(playerId);
+        if (this.isDifferenceAlreadyFound(differenceCoords) || !player) {
             return;
         }
-        this.getNbDifferencesFound.add(differenceCoords);
-        if (this.isAllDifferenceFound() && !this.isGameOver()) {
-            this.context.next();
+        this.getNbDifferencesTotalFound.add(differenceCoords);
+        player.add(differenceCoords);
+        if (this.isAllDifferenceFound(playerId) && !this.isGameOver()) {
+            this.context.end();
         }
     }
 
     isDifferenceAlreadyFound(differenceCoords: Coordinate[]) {
-        return this.getNbDifferencesFound.has(differenceCoords);
+        return this.getNbDifferencesTotalFound.has(differenceCoords);
     }
 
     next() {
@@ -97,11 +102,27 @@ export class Game {
         return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }
 
-    isAllDifferenceFound(): boolean {
-        if (this.isGameInitialize() || this.isGameOver()) {
-            return this.isGameOver(); // if the game is already over all the difference are found and if the game is not initialize 0 difference found
+    isAllDifferenceFound(playerId: string): boolean {
+        const player = this.getNbDifferencesFound.get(playerId);
+
+        // if the game is already over all the differences are found and if the game is not initialize, 0 difference found
+        if (this.isGameInitialize() || this.isGameOver() || !player) {
+            return this.isGameOver();
         }
-        return this.info.differences.length === this.getNbDifferencesFound.size;
+
+        return this.isMulti ? player.size === this.getNbDifferencesThreshold() : player.size === this.info.differences.length;
+    }
+
+    getNbDifferencesThreshold() {
+        if (this.isEven(this.info.differences.length / 2)) {
+            return this.info.differences.length / 2;
+        } else {
+            return Math.trunc(this.info.differences.length / 2) + 1;
+        }
+    }
+
+    isEven(number: number) {
+        return number % 2 === 0;
     }
 
     isGameOver() {
@@ -109,7 +130,7 @@ export class Game {
     }
 
     nbDifferencesLeft(): number {
-        return this.info.differences.length - this.getNbDifferencesFound.size;
+        return this.info.differences.length - this.getNbDifferencesTotalFound.size;
     }
 
     isGameFull() {
@@ -117,10 +138,11 @@ export class Game {
     }
 
     addPlayer(player: User) {
-        if ((this.isMulti && this.isGameFull()) || !this.isMulti) {
+        if (this.isGameFull()) {
             return;
         }
         this.players.set(player.id, player.name);
+        this.getNbDifferencesFound.set(player.id, new Set());
     }
 
     findPlayer(playerId: string) {

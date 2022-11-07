@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApprovalDialogComponent } from '@app/components/approval-dialog/approval-dialog.component';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
@@ -12,7 +12,7 @@ import { User } from '@common/user';
     templateUrl: './waiting-room.component.html',
     styleUrls: ['./waiting-room.component.scss'],
 })
-export class WaitingRoomComponent implements OnInit {
+export class WaitingRoomComponent implements OnInit, OnDestroy {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
     // eslint-disable-next-line max-params
@@ -47,5 +47,9 @@ export class WaitingRoomComponent implements OnInit {
                 this.routerService.navigateTo('game');
             });
         });
+    }
+
+    ngOnDestroy() {
+        this.socketService.off(SocketEvent.RequestToJoin);
     }
 }

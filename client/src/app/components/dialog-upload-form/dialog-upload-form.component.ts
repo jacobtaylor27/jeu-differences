@@ -56,7 +56,6 @@ export class DialogUploadFormComponent {
     }
 
     onSubmit(): void {
-        console.log(this.toolService.$uploadImage);
         if (!this.isFormSubmitted || !this.data.canvas) {
             return;
         }

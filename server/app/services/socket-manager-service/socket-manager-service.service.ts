@@ -90,9 +90,13 @@ export class SocketManagerService {
                 socket.leave(gameId);
             });
 
-            socket.on(SocketEvent.LeaveWaiting, (roomId: string) => {
-                this.multiplayerGameManager.removeGameWaiting(roomId);
-                
+            socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {
+                if (roomId) {
+                    this.multiplayerGameManager.removeGameWaiting(roomId);
+                    return;
+                }
+
+                this.multiplayerGameManager.deleteRequest(this.multiplayerGameManager.getRoomIdWaiting(gameCard), socket.id);
             });
 
             socket.on(SocketEvent.GetGamesWaiting, () => {

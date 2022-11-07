@@ -32,8 +32,8 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: player.name, opponentsRoomId: player.id } });
         });
 
-        this.socketService.once(SocketEvent.RejectPlayer, (reason : string) => {
-            this.dialog.open(RejectedDialogComponent, {data: {reason : reason}});
+        this.socketService.once(SocketEvent.RejectPlayer, (reason: string) => {
+            this.dialog.open(RejectedDialogComponent, { data: { reason } });
             this.routerService.navigateTo('select');
         });
 
@@ -53,6 +53,5 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.socketService.off(SocketEvent.RequestToJoin);
         this.socketService.off(SocketEvent.RejectPlayer);
-
     }
 }

@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
@@ -42,7 +43,7 @@ describe('ApprovalDialogComponent', () => {
                 { provide: RouterService, useValue: routerSpyObj },
                 { provide: GameInformationHandlerService, useValue: gameInformationHandlerService },
             ],
-            imports: [RouterTestingModule, HttpClientModule],
+            imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ApprovalDialogComponent);

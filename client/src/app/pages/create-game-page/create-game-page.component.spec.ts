@@ -1,9 +1,10 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
@@ -44,7 +45,7 @@ describe('CreateGamePageComponent', () => {
                 ExitGameButtonComponent,
                 LoadingScreenComponent,
             ],
-            imports: [AppMaterialModule, HttpClientTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
+            imports: [AppMaterialModule, HttpClientTestingModule, BrowserAnimationsModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: CommunicationService, useValue: communicationSpyObject },

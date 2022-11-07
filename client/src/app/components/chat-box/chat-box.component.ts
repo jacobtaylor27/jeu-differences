@@ -35,7 +35,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
             this.addingMessage(message, 'opponent');
         });
 
-        // this.communicationSocket.on(SocketEvent.DifferenceFound, ({username,ismulti,heure}) => {});
+        this.communicationSocket.on(SocketEvent.DifferenceFound, () => {
+            this.differenceFoundMessage(this.gameInformation.getOpponent().name);
+        });
         // this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
         // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
     }
@@ -69,10 +71,10 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
         this.scrollDown();
     }
 
-    // private differenceFoundMessage(userName: string, isMulti: boolean, heure: string) {
-    //     const eventMessage: string = isMulti ? `Difference trouvée par ${userName}` : 'Difference trouvée ';
-    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    // }
+    private differenceFoundMessage(userName: string) {
+        const eventMessage: string = this.gameInformation.isMulti ? `Difference trouvée par ${userName}` : 'Difference trouvée ';
+        this.addingMessage(eventMessage, 'gameMaster');
+    }
 
     // private differenceNotFoundMessage(userName: string, isMulti: boolean) {
     //     const eventMessage: string = isMulti ? `Erreur par ${userName}` : 'Erreur';

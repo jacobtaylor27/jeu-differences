@@ -86,6 +86,8 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should delete a request', () => {
+        multiplayerGameManager.deleteRequest('room', '4');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(0);
         multiplayerGameManager.requestsOnHold = new Map();
         multiplayerGameManager.deleteRequest('room', '4');
         expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(0);
@@ -98,6 +100,10 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(2);
         multiplayerGameManager.deleteRequest('room', '2');
         expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(1);
+        multiplayerGameManager.deleteRequest('room', '6');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(1);
+        multiplayerGameManager.deleteRequest('room1', '2');
+        expect(multiplayerGameManager.requestsOnHold.get('room1')?.length).to.equal(0);
     })
 
     it('should add a game id', () => {

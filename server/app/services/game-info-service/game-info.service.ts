@@ -69,10 +69,18 @@ export class GameInfoService {
 
     async deleteGameInfoById(gameId: string): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
-        return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;
+        const deletedGame = (await this.collection.findOneAndDelete(filter)).value;
+
+        if (deletedGame) {
+            const imageIds = [deletedGame.idOriginalBmp, deletedGame.idEditedBmp, deletedGame.idDifferenceBmp];
+            await this.bmpService.deleteGameImages(imageIds, DEFAULT_BMP_ASSET_PATH);
+        }
+
+        return deletedGame !== null;
     }
 
     async deleteAllGamesInfo(): Promise<void> {
+        await this.bmpService.deleteAllSourceImages(DEFAULT_BMP_ASSET_PATH);
         await this.collection.deleteMany({});
     }
 }

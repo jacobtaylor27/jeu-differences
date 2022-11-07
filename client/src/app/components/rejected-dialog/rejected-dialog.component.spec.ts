@@ -15,8 +15,7 @@ describe('RejectedDialogComponent', () => {
         };
         await TestBed.configureTestingModule({
             declarations: [RejectedDialogComponent],
-            providers: [{ provide: MAT_DIALOG_DATA, useValue: model },]
-            
+            providers: [{ provide: MAT_DIALOG_DATA, useValue: model }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(RejectedDialogComponent);

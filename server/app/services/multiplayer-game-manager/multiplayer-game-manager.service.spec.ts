@@ -62,6 +62,21 @@ describe('Multiplayer Game Manager', () => {
         expect(result.id).to.equal('1');
     });
 
+    it('should return if the request exists', () => {
+        multiplayerGameManager.requestsOnHold = new Map();
+        let response = multiplayerGameManager.playersRequestExists('room', '1');
+        expect(response).to.equal(false);
+
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        response = multiplayerGameManager.playersRequestExists('room', '1');
+        expect(response).to.equal(true);
+        response = multiplayerGameManager.playersRequestExists('room', '2');
+        expect(response).to.equal(false);
+        response = multiplayerGameManager.playersRequestExists('room1', '1');
+        expect(response).to.equal(false);
+        
+    })
+
     it('should delete all requests of a room', () => {
         multiplayerGameManager.requestsOnHold = new Map();
         multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });

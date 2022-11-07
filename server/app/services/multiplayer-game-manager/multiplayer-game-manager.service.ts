@@ -15,6 +15,18 @@ export class MultiplayerGameManager {
         return length ? length > 0 : false;
     }
 
+    playersRequestExists(roomId: string, playerId: string) {
+        const requests = this.getRequest(roomId);
+        if (requests) {
+            for (const request of requests) {
+                if (request.id === playerId) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     getRequest(gameId: string) {
         return this.requestsOnHold.has(gameId) ? this.requestsOnHold.get(gameId) : [];
     }

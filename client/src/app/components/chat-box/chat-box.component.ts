@@ -38,9 +38,11 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
         this.communicationSocket.on(SocketEvent.DifferenceFound, () => {
             this.differenceFoundMessage(this.gameInformation.getOpponent().name);
         });
+
         this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {
             this.differenceNotFoundMessage(this.gameInformation.getOpponent().name);
         });
+
         // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
     }
 

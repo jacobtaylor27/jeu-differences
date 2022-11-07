@@ -11,7 +11,7 @@ import { SocketEvent } from '@common/socket-event';
 export class ChatBoxComponent implements OnInit, AfterViewInit {
     @ViewChild('scroll', { static: true }) scroll: ElementRef;
     messages: ChatMessage[] = [];
-    isOpponentConnected: boolean = true;
+    isOpponentConnected: boolean;
     currentMessage: string;
 
     constructor(public communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
@@ -30,6 +30,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.isOpponentConnected = this.gameInformation.isMulti;
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
             this.addingMessage(message, 'opponent');
         });

@@ -32,12 +32,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: player.name, opponentsRoomId: player.id } });
         });
 
-        this.socketService.on(SocketEvent.RejectPlayer, () => {
-            this.dialog.open(RejectedDialogComponent);
+        this.socketService.once(SocketEvent.RejectPlayer, (reason : string) => {
+            this.dialog.open(RejectedDialogComponent, {data: {reason : reason}});
             this.routerService.navigateTo('select');
         });
 
-        this.socketService.on(SocketEvent.JoinGame, (data: { roomId: string; playerName: string }) => {
+        this.socketService.once(SocketEvent.JoinGame, (data: { roomId: string; playerName: string }) => {
             this.gameInformationHandlerService.setPlayerName(data.playerName);
 
             this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });

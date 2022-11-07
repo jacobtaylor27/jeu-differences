@@ -38,7 +38,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
         this.communicationSocket.on(SocketEvent.DifferenceFound, () => {
             this.differenceFoundMessage(this.gameInformation.getOpponent().name);
         });
-        // this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
+        this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {
+            this.differenceNotFoundMessage(this.gameInformation.getOpponent().name);
+        });
         // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
     }
 
@@ -76,10 +78,10 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
         this.addingMessage(eventMessage, 'gameMaster');
     }
 
-    // private differenceNotFoundMessage(userName: string, isMulti: boolean) {
-    //     const eventMessage: string = isMulti ? `Erreur par ${userName}` : 'Erreur';
-    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    // }
+    private differenceNotFoundMessage(userName: string) {
+        const eventMessage: string = this.gameInformation.isMulti ? `Erreur par ${userName}` : 'Erreur';
+        this.addingMessage(eventMessage, 'gameMaster');
+    }
 
     // private leavingGameMessage(userName: string) {
     //     const eventMessage = `${userName} a abandonné la partie`;

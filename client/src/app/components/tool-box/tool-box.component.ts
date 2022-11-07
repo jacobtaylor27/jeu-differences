@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
 import { DEFAULT_PENCIL } from '@app/constants/canvas';
-import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -15,7 +15,7 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./tool-box.component.scss'],
 })
 export class ToolBoxComponent {
-    @Input() canvas: PropagateCanvasEvent;
+    @Input() canvas: CanvasType;
     pencil: Pencil = DEFAULT_PENCIL;
     tool: typeof Tool = Tool;
     colorButton: { pencil: string; eraser: string } = { pencil: 'background', eraser: 'primary' };

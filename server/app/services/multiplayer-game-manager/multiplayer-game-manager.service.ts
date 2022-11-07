@@ -62,7 +62,6 @@ export class MultiplayerGameManager {
             }
             this.requestsOnHold.set(roomId, requests);
         }
-
     }
 
     getNewRequest(roomId: string) {

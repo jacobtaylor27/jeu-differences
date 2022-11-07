@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BMP_HEADER_OFFSET, FORMAT_IMAGE, IMAGE_TYPE, SIZE } from '@app/constants/canvas';
-import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { CanvasType } from '@app/enums/canvas-type';
 import { ImageCorrect } from '@app/interfaces/image-correct';
-import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-dialog-upload-form',
@@ -15,13 +15,9 @@ export class DialogUploadFormComponent {
     isPropertiesImageCorrect: ImageCorrect = { size: true, type: true, format: true };
     img: ImageBitmap;
     isFormSubmitted: boolean = false;
-    typePropagateCanvasEvent: typeof PropagateCanvasEvent = PropagateCanvasEvent;
+    canvasType: typeof CanvasType = CanvasType;
 
-    constructor(
-        @Inject(MAT_DIALOG_DATA) public data: { canvas: PropagateCanvasEvent },
-        private toolService: ToolBoxService,
-        private drawService: DrawService,
-    ) {}
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { canvas: CanvasType }, private toolService: ToolBoxService) {}
 
     async uploadImage(event: Event) {
         const files: FileList = (event.target as HTMLInputElement).files as FileList;
@@ -63,11 +59,13 @@ export class DialogUploadFormComponent {
         if (!this.isFormSubmitted || !this.data.canvas) {
             return;
         }
-        if (this.drawService.isCanvasSelected(this.data.canvas, PropagateCanvasEvent.Difference)) {
-            this.toolService.$uploadImageInDiff.next(this.img);
+
+        if (this.data.canvas === CanvasType.Both) {
+            this.toolService.$uploadImage.forEach((event: Subject<ImageBitmap>) => {
+                event.next(this.img);
+            });
+            return;
         }
-        if (this.drawService.isCanvasSelected(this.data.canvas, PropagateCanvasEvent.Source)) {
-            this.toolService.$uploadImageInSource.next(this.img);
-        }
+        this.toolService.$uploadImage.get(this.data.canvas)?.next(this.img);
     }
 }

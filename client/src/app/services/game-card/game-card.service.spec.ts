@@ -5,7 +5,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { of } from 'rxjs';
 import { GameCardService } from './game-card.service';
 

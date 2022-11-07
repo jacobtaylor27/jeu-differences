@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
@@ -14,7 +14,7 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     templateUrl: './tool-box.component.html',
     styleUrls: ['./tool-box.component.scss'],
 })
-export class ToolBoxComponent {
+export class ToolBoxComponent implements OnInit {
     @Input() canvasType: CanvasType;
     pencil: Pencil = DEFAULT_PENCIL;
     tool: typeof Tool = Tool;
@@ -22,6 +22,9 @@ export class ToolBoxComponent {
 
     constructor(public dialog: MatDialog, public toolService: ToolBoxService, public drawService: DrawService) {
         this.changeButtonColor(Tool.Pencil);
+    }
+
+    ngOnInit(): void {
         this.toolService.addCanvasType(this.canvasType);
     }
 

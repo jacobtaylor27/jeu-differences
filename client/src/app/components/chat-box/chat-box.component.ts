@@ -62,7 +62,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     }
 
     addingMessage(message: string, senderType: string) {
-        this.messages.push({ content: message, type: senderType });
+        if (message.trim().length !== 0) {
+            this.messages.push({ content: message, type: senderType });
+        }
         this.scrollDown();
     }
 

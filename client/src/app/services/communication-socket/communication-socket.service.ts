@@ -33,6 +33,7 @@ export class CommunicationSocketService {
     off(event: SocketEvent) {
         this.socket.off(event);
     }
+
     once<T>(event: SocketEvent, action: (data: T) => void): void {
         this.socket.once(event, action);
     }

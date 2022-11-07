@@ -13,6 +13,7 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 import { GamePageComponent } from './game-page.component';
 import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
+import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 
 describe('GamePageComponent', () => {
     let component: GamePageComponent;
@@ -46,6 +47,7 @@ describe('GamePageComponent', () => {
                 ExitGameButtonComponent,
                 PageHeaderComponent,
                 ChatBoxComponent,
+                TimerStopwatchComponent,
             ],
             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
             providers: [

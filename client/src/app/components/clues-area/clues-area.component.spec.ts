@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 
 import { CluesAreaComponent } from './clues-area.component';
@@ -10,7 +9,7 @@ describe('CluesAreaComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CluesAreaComponent, TimerCountdownComponent],
+            declarations: [CluesAreaComponent],
             imports: [AppMaterialModule],
         }).compileComponents();
 

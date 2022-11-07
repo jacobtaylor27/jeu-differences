@@ -8,6 +8,7 @@ import { DialogCreateGameComponent } from '@app/components/dialog-create-game/di
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
 import { ExitGameButtonComponent } from '@app/components/exit-game-button/exit-game-button.component';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
 import { AppMaterialModule } from '@app/modules/material.module';
@@ -41,8 +42,9 @@ describe('CreateGamePageComponent', () => {
                 DialogCreateGameComponent,
                 PageHeaderComponent,
                 ExitGameButtonComponent,
+                LoadingScreenComponent,
             ],
-            imports: [HttpClientTestingModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
+            imports: [AppMaterialModule, HttpClientTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: CommunicationService, useValue: communicationSpyObject },

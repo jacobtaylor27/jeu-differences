@@ -134,6 +134,15 @@ export class Game {
         return this.players.get(playerId);
     }
 
+    findOpponent(playerId: string) {
+        for( const player of this.players.keys()){
+            if (player !== playerId){
+                return player;
+            }
+        }
+        return;
+    }
+
     leaveGame(playerId: string) {
         const player = this.findPlayer(playerId);
         if (!player) {

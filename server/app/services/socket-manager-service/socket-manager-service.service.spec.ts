@@ -203,6 +203,7 @@ describe('SocketManager', () => {
             },
         } as io.Server;
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => true);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyLeaveGame = stub(service['gameManager'], 'leaveGame').callsFake(() => {});

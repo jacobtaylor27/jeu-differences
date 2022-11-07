@@ -60,9 +60,9 @@ export class MultiplayerGameManager {
                     requests.splice(i, 1);
                 }
             }
+            this.requestsOnHold.set(roomId, requests);
         }
 
-        if (requests) this.requestsOnHold.set(roomId, requests);
     }
 
     getNewRequest(roomId: string) {

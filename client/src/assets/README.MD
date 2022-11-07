@@ -14,3 +14,6 @@ et
 
 https://www.flaticon.com/free-icon/background_6046087?term=foreground&page=1&position=6&page=1&position=6&related_id=6046087
 
+L'image copie-foreground.png a été inspiré par l'icône:
+https://icons8.com/icons/set/foregrounds
+

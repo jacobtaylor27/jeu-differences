@@ -90,6 +90,11 @@ export class SocketManagerService {
                 socket.leave(gameId);
             });
 
+            socket.on(SocketEvent.LeaveWaiting, (roomId: string) => {
+                this.multiplayerGameManager.removeGameWaiting(roomId);
+                
+            });
+
             socket.on(SocketEvent.GetGamesWaiting, () => {
                 socket.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
             });

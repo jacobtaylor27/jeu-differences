@@ -1,5 +1,5 @@
-import { Service } from 'typedi';
 import { User } from '@common/user';
+import { Service } from 'typedi';
 
 @Service()
 export class MultiplayerGameManager {
@@ -13,6 +13,10 @@ export class MultiplayerGameManager {
     theresARequest(roomId: string) {
         const length = this.requestsOnHold.get(roomId)?.length;
         return length ? length > 0 : false;
+    }
+
+    getRequest(gameId: string) {
+        return this.requestsOnHold.has(gameId) ? this.requestsOnHold.get(gameId) : [];
     }
 
     isNotAPlayersRequest(playersRoom: string, opponentsRoomId: string) {

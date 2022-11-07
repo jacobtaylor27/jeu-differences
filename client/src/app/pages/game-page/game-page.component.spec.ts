@@ -18,6 +18,9 @@ import { SocketEvent } from '@common/socket-event';
 import { Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
+import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
+import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
+import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 
 class SocketClientServiceMock extends CommunicationSocketService {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -74,6 +77,7 @@ describe('GamePageComponent', () => {
                 ExitGameButtonComponent,
                 PageHeaderComponent,
                 ChatBoxComponent,
+                TimerStopwatchComponent,
             ],
             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
             providers: [

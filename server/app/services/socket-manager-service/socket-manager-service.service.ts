@@ -83,10 +83,10 @@ export class SocketManagerService {
                     socket.emit(SocketEvent.Error);
                     return;
                 }
-                this.gameManager.leaveGame(socket.id, gameId);
-                if (this.gameManager.isGameMultiplayer(gameId)) {
+                if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
                 }
+                this.gameManager.leaveGame(socket.id, gameId);
                 socket.leave(gameId);
             });
 
@@ -101,21 +101,24 @@ export class SocketManagerService {
                 }
                 const differences = this.gameManager.isDifference(gameId, socket.id, differenceCoord);
                 if (!differences) {
-                    socket.emit(SocketEvent.DifferenceNotFound, differenceCoord);
+                    socket.emit(SocketEvent.DifferenceNotFound);
                     return;
                 }
                 if (this.gameManager.isGameOver(gameId)) {
+                    this.gameManager.leaveGame(socket.id, gameId);
                     socket.emit(SocketEvent.Win);
                 }
                 if (this.gameManager.isGameMultiplayer(gameId)) {
                     if (this.gameManager.isGameOver(gameId)) {
+                        this.gameManager.leaveGame(socket.id, gameId);
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
                     socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
                     return;
+                } else {
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
                 }
-                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
             });
         });
     }

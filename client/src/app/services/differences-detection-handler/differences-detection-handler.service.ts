@@ -79,6 +79,7 @@ export class DifferencesDetectionHandlerService {
         this.playCorrectSound();
         this.displayDifferenceTemp(ctx, coords);
         this.clearDifference(ctxModified, coords);
+        this.socketService.off(SocketEvent.DifferenceNotFound);
     }
 
     private displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {

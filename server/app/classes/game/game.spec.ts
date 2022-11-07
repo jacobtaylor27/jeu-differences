@@ -148,6 +148,21 @@ describe('Game', () => {
         game['info'].differences = expectedDifference;
         game['getNbDifferencesFound'].set('', expectedDifferenceFound);
         expect(game.isAllDifferenceFound('')).to.equal(true);
+
+        game['isMulti'] = true;
+        expectedDifference = { length: 10 } as Coordinate[][];
+        expectedDifferenceFound = { size: 4 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        expect(game.isAllDifferenceFound('')).to.equal(false);
+
+        game['isMulti'] = true;
+        expectedDifference = { length: 10 } as Coordinate[][];
+        expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        stub(game, 'getNbDifferencesThreshold').callsFake(() => 5);
+        expect(game.isAllDifferenceFound('')).to.equal(true);
     });
 
     it('should add a difference founded', () => {
@@ -277,5 +292,18 @@ describe('Game', () => {
         expect(game.hasNoPlayer()).to.equal(false);
         game.players = new Map();
         expect(game.hasNoPlayer()).to.equal(true);
+    });
+
+    it('should return true is the nb of differences is even', () => {
+        expect(game.isEven(2)).to.equal(true);
+        expect(game.isEven(3)).to.equal(false);
+    });
+
+    it('should return the threshold to win a game', () => {
+        game.information.differences.length = 4;
+        expect(game.getNbDifferencesThreshold()).to.equal(2);
+
+        game.information.differences.length = 5;
+        expect(game.getNbDifferencesThreshold()).to.equal(3);
     });
 });

@@ -104,10 +104,25 @@ export class Game {
 
     isAllDifferenceFound(playerId: string): boolean {
         const player = this.getNbDifferencesFound.get(playerId);
+
+        // if the game is already over all the differences are found and if the game is not initialize, 0 difference found
         if (this.isGameInitialize() || this.isGameOver() || !player) {
-            return this.isGameOver(); // if the game is already over all the difference are found and if the game is not initialize 0 difference found
+            return this.isGameOver();
         }
-        return this.isMulti ? player.size === Math.trunc(this.info.differences.length / 2) + 1 : player.size === this.info.differences.length;
+
+        return this.isMulti ? player.size === this.getNbDifferencesThreshold() : player.size === this.info.differences.length;
+    }
+
+    getNbDifferencesThreshold() {
+        if (this.isEven(this.info.differences.length / 2)) {
+            return this.info.differences.length / 2;
+        } else {
+            return Math.trunc(this.info.differences.length / 2) + 1;
+        }
+    }
+
+    isEven(number: number) {
+        return number % 2 === 0;
     }
 
     isGameOver() {

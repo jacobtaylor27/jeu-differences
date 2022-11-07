@@ -45,6 +45,7 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {
                 if (!this.multiplayerGameManager.playersRequestExists(roomId, opponentsRoomId)) {
+                    socket.emit(SocketEvent.PlayerLeft);
                     return;
                 }
 

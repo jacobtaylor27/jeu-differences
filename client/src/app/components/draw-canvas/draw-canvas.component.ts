@@ -38,13 +38,13 @@ export class DrawCanvasComponent implements AfterViewInit {
     @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() canvasType: CanvasType;
 
-    coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
-    isClick: boolean = DEFAULT_DRAW_CLIENT;
-    pencil: Pencil = DEFAULT_PENCIL;
-    commands: Command[] = [];
     // Having an index of -1 makes way more sens, because the default index is out of bound.
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfCommand: number = -1;
+    commands: Command[] = [];
+    coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
+    isClick: boolean = DEFAULT_DRAW_CLIENT;
+    pencil: Pencil = DEFAULT_PENCIL;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {}
@@ -125,30 +125,27 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.pencil = newPencil;
         });
 
+        const foreground = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+
         this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
-            (this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D).drawImage(newImage, 0, 0);
+            background.drawImage(newImage, 0, 0);
             this.updateImage();
         });
 
         this.toolBoxService.$reset.get(this.canvasType)?.subscribe(() => {
-            this.resetCanvasAndImage(
-                this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-                this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-            );
+            this.resetAllLayers(foreground, background);
         });
 
-        this.resetCanvasAndImage(
-            this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-            this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D,
-        );
+        this.resetAllLayers(foreground, background);
     }
 
-    resetCanvasAndImage(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
-        this.resetCanvas(ctxCanvas);
-        this.resetImage(ctxImage);
+    resetAllLayers(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
+        this.resetForeground(ctxCanvas);
+        this.resetBackground(ctxImage);
     }
 
-    resetCanvas(ctxCanvas: CanvasRenderingContext2D) {
+    resetForeground(ctxCanvas: CanvasRenderingContext2D) {
         this.clearForeground(ctxCanvas);
         this.indexOfCommand++;
         this.currentCommand = {
@@ -164,7 +161,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.updateImage();
     }
 
-    resetImage(ctxImage: CanvasRenderingContext2D) {
+    resetBackground(ctxImage: CanvasRenderingContext2D) {
         ctxImage.rect(0, 0, SIZE.x, SIZE.y);
         ctxImage.fillStyle = 'white';
         ctxImage.fill();

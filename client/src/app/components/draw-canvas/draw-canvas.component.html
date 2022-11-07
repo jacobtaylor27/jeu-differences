@@ -4,6 +4,8 @@
     <canvas
         id="canvas"
         #paint
+        (mouseout)="stop()"
+        (mouseenter)="initializeState($event)"
         (mousedown)="start($event)"
         (mousemove)="draw($event)"
         (mouseup)="stop()"

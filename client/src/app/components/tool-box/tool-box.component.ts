@@ -18,11 +18,15 @@ export class ToolBoxComponent {
     @Input() canvas: PropagateCanvasEvent;
     pencil: Pencil = DEFAULT_PENCIL;
     tool: typeof Tool = Tool;
+    colorButton: { pencil: string; eraser: string } = { pencil: 'background', eraser: 'primary' };
     canvasPosition: typeof PropagateCanvasEvent = PropagateCanvasEvent;
 
-    constructor(public dialog: MatDialog, public toolService: ToolBoxService, public drawService: DrawService) {}
+    constructor(public dialog: MatDialog, public toolService: ToolBoxService, public drawService: DrawService) {
+        this.changeButtonColor(Tool.Pencil);
+    }
 
     changePencilState(tool: Tool): void {
+        this.changeButtonColor(tool);
         this.pencil.state = tool;
         this.toolService.$pencil.next(this.pencil);
     }
@@ -39,12 +43,22 @@ export class ToolBoxComponent {
         this.toolService.$pencil.next(this.pencil);
     }
 
-    changePencilWith(event: MatSliderChange): void {
-        this.pencil.width = event.value !== null ? event.value : 0;
+    changePencilWidth(event: MatSliderChange): void {
+        if (!event.value) {
+            return;
+        }
+        this.pencil.width =
+            this.pencil.state === Tool.Pencil
+                ? { pencil: event.value, eraser: this.pencil.width.eraser }
+                : { pencil: this.pencil.width.pencil, eraser: event.value };
         this.toolService.$pencil.next(this.pencil);
     }
 
     openUploadDialog(): void {
         this.dialog.open(DialogUploadFormComponent, { data: { canvas: this.canvas } });
+    }
+
+    changeButtonColor(tool: Tool) {
+        this.colorButton = tool === Tool.Eraser ? { pencil: 'primary', eraser: 'background' } : { pencil: 'background', eraser: 'primary' };
     }
 }

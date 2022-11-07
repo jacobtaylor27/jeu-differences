@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { Canvas } from '@app/enums/canvas';
 import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
 import { Theme } from '@app/enums/theme';
@@ -81,9 +82,11 @@ export class CreateGamePageComponent implements AfterViewInit {
 
     isGameValid() {
         const original: ImageData = this.createSourceImageFromCanvas();
+        this.dialog.open(LoadingScreenComponent, { disableClose: true, panelClass: 'custom-dialog-container' });
         return this.communication
             .validateGame(original, this.imageDifference, parseInt((this.form.get('expansionRadius') as FormControl).value, 10))
             .subscribe((response: HttpResponse<{ numberDifference: number; width: number; height: number; data: number[] }> | null) => {
+                this.dialog.closeAll();
                 if (!response || !response.body) {
                     this.manageErrorInForm('Il faut entre 3 et 9 differences');
                     return;

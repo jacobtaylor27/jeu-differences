@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { GameSelectionPageComponent } from './game-selection-page.component';
@@ -12,7 +13,7 @@ describe('GameSelectionPageComponent', () => {
     beforeEach(async () => {
         spyGameCarouselService = jasmine.createSpyObj('GameCarouselService', ['setCardMode', 'getCards', 'getCarouselLength', 'hasCards']);
         await TestBed.configureTestingModule({
-            declarations: [GameSelectionPageComponent],
+            declarations: [GameSelectionPageComponent, LoadingScreenComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             imports: [AppMaterialModule],
             providers: [

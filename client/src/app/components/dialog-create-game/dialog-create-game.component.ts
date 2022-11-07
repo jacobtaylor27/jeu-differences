@@ -2,7 +2,9 @@
 import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { Canvas } from '@app/enums/canvas';
 import { Theme } from '@app/enums/theme';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -16,6 +18,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
     @ViewChild('imageDifference', { static: false }) differentImage!: ElementRef<HTMLCanvasElement>;
     theme: typeof Theme = Theme;
     form: FormGroup = new FormGroup({ name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required]) });
+    // eslint-disable-next-line max-params
     constructor(
         @Inject(MAT_DIALOG_DATA)
         public data: {
@@ -25,7 +28,9 @@ export class DialogCreateGameComponent implements AfterViewInit {
             nbDifference: number;
             differenceImage: number[];
         },
+        public dialog: MatDialog,
         private communication: CommunicationService,
+        private router: Router,
     ) {}
 
     ngAfterViewInit() {
@@ -34,6 +39,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
     }
 
     createGame() {
+        this.dialog.open(LoadingScreenComponent, { disableClose: true, panelClass: 'custom-dialog-container' });
         this.communication
             .createGame(
                 { original: this.data.src, modify: this.data.difference },
@@ -41,9 +47,11 @@ export class DialogCreateGameComponent implements AfterViewInit {
                 (this.form.get('name') as FormControl).value,
             )
             .subscribe((response: HttpResponse<Record<string, never>> | null) => {
+                this.dialog.closeAll();
                 if (!response) {
                     return;
                 }
+                this.router.navigate(['/admin']);
             });
     }
 }

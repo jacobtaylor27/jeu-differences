@@ -36,7 +36,7 @@ describe('GameInfo Service', async () => {
             return '5';
         });
         gameInfoService = new GameInfoService(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- need any to test databaseService
             databaseService as any,
             bmpService,
             bmpSubtractorService,

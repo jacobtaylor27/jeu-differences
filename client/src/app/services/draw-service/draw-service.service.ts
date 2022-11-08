@@ -52,7 +52,7 @@ export class DrawService {
             return;
         }
         const line = this.updateMouseCoordinates(event);
-        this.currentCommand.strokes[this.strokeIndex].lines.push(line);
+        this.currentCommand.strokes[0].lines.push(line);
 
         this.currentCommand.style = {
             color: this.pencil.color,
@@ -66,13 +66,12 @@ export class DrawService {
 
     stopDrawing() {
         this.isClick = false;
-        this.indexOfCommand++;
         if (this.pencil.state === 'Pencil') {
             this.currentCommand.name = 'draw';
         } else {
             this.currentCommand.name = 'erase';
         }
-        this.commands[this.indexOfCommand] = this.currentCommand;
+        this.addCurrentCommand();
         this.removeCommandsPastIndex();
     }
 
@@ -128,9 +127,7 @@ export class DrawService {
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            this.indexOfCommand++;
             this.clearForeground(foreground);
-            this.commands[this.indexOfCommand] = this.currentCommand;
         }
     }
 
@@ -183,8 +180,7 @@ export class DrawService {
 
         if (leftCanvas && rightCanvas) {
             this.switchForegroundImageData(leftCanvas, rightCanvas);
-            this.indexOfCommand++;
-            this.commands[this.indexOfCommand] = this.currentCommand;
+            this.addCurrentCommand();
         }
     }
 
@@ -201,8 +197,7 @@ export class DrawService {
             if (canvasType === CanvasType.Right) {
                 this.pasteImageDataOn(rightCanvas, leftCanvas);
             }
-            this.indexOfCommand++;
-            this.commands[this.indexOfCommand] = this.currentCommand;
+            this.addCurrentCommand();
         }
     }
 
@@ -236,7 +231,7 @@ export class DrawService {
         this.executeAllCommand();
     }
 
-    executeAllCommand() {
+    private executeAllCommand() {
         this.clearAllForegrounds();
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
@@ -285,6 +280,11 @@ export class DrawService {
         }
     }
 
+    private addCurrentCommand() {
+        this.indexOfCommand++;
+        this.commands[this.indexOfCommand] = this.currentCommand;
+    }
+
     private setcurrentCommand(name: string, canvasType: CanvasType) {
         this.currentCommand = {
             canvasType,
@@ -320,8 +320,10 @@ export class DrawService {
     }
 
     private redraw(command: Command) {
-        command.strokes[this.strokeIndex].lines.forEach((line) => {
-            this.createStroke(line, command.style, command.canvasType);
+        command.strokes.forEach((stroke) => {
+            stroke.lines.forEach((line) => {
+                this.createStroke(line, command.style, command.canvasType);
+            });
         });
     }
 }

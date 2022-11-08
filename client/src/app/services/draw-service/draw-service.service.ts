@@ -9,6 +9,7 @@ import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
+import { CommandService } from '@app/services/command-service/command.service';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -20,13 +21,12 @@ export class DrawService {
     // Having an index of -1 makes way more sens, because the default index is out of bound.
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfCommand: number = -1;
-    commands: Command[] = [];
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
-    constructor(private canvasStateService: CanvasStateService) {
+    constructor(private canvasStateService: CanvasStateService, private commandService: CommandService) {
         this.$drawingImage = new Map();
     }
 
@@ -64,7 +64,7 @@ export class DrawService {
         } else {
             this.currentCommand.name = 'erase';
         }
-        this.commands[this.indexOfCommand] = this.currentCommand;
+        this.commandService.commands[this.indexOfCommand] = this.currentCommand;
     }
 
     leaveCanvas(event: MouseEvent) {}

@@ -242,7 +242,6 @@ export class DrawService {
                     console.log('command indéterminée');
                     break;
                 }
-                // No default
             }
         }
     }

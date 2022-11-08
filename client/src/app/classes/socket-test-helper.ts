@@ -17,7 +17,7 @@ export class SocketTestHelper {
 
         this.callbacks.get(event)!.push(callback);
     }
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars -- event is not used but needed to test
     off(event?: string) {
         return;
     }

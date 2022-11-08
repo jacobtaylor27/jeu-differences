@@ -18,14 +18,8 @@ describe('ToolBoxService', () => {
     it('should add CanvasType', () => {
         const spyPencil = spyOn(service.$pencil, 'set');
         const spyUploadImage = spyOn(service.$uploadImage, 'set');
-        const spyResetBackground = spyOn(service.$resetBackground, 'set');
-        const spyResetForeground = spyOn(service.$resetForeground, 'set');
-        const spySwitchForeground = spyOn(service.$switchForeground, 'set');
         service.addCanvasType(CanvasType.Left);
         expect(spyPencil).toHaveBeenCalled();
-        expect(spyResetBackground).toHaveBeenCalled();
-        expect(spyResetForeground).toHaveBeenCalled();
         expect(spyUploadImage).toHaveBeenCalled();
-        expect(spySwitchForeground).toHaveBeenCalled();
     });
 });

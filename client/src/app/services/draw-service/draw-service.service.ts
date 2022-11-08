@@ -266,7 +266,6 @@ export class DrawService {
                 case 'switchForegrounds': {
                     const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
                     const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
-                    console.log('here');
 
                     if (leftCanvas && rightCanvas) {
                         this.switchForegroundImageData(leftCanvas, rightCanvas);

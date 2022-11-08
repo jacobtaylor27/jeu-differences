@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Theme } from '@app/enums/theme';
 import { MainPageService } from '@app/services/main-page/main-page.service';
 import { GameMode } from '@common/game-mode';
 
@@ -9,7 +10,7 @@ import { GameMode } from '@common/game-mode';
 })
 export class MainPageComponent {
     readonly title: string = 'Jeu de différences';
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
     constructor(private readonly mainPageService: MainPageService) {}
 

@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
+import { Theme } from '@app/enums/theme';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -12,7 +13,7 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./game-page.component.scss'],
 })
 export class GamePageComponent implements OnDestroy {
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
     clock: string;
 
     // eslint-disable-next-line max-params -- absolutely need all the imported services

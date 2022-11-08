@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Theme } from '@app/enums/theme';
 
 @Component({
     selector: 'app-admin-page',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
     styleUrls: ['./admin-page.component.scss'],
 })
 export class AdminPageComponent {
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 }

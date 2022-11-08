@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
+import { Theme } from '@app/enums/theme';
 import { GameCard } from '@app/interfaces/game-card';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { Score } from '@common/score';
@@ -12,7 +13,7 @@ import { SocketEvent } from '@common/socket-event';
 })
 export class GameCardComponent implements OnInit {
     @Input() gameCard: GameCard;
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
     imageSrc: string;
 
     constructor(private readonly communicationSocket: CommunicationSocketService) {}

@@ -102,6 +102,15 @@ export class SocketManagerService {
                 const differences = this.gameManager.isDifference(gameId, socket.id, differenceCoord);
                 if (!differences) {
                     socket.emit(SocketEvent.DifferenceNotFound);
+                    this.sio
+                        .to(gameId)
+                        .emit(
+                            SocketEvent.EventMessage,
+                            this.eventMessageService.differenceNotFoundMessage(
+                                this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
+                                this.gameManager.isGameMultiplayer(gameId),
+                            ),
+                        );
                     return;
                 }
                 if (this.gameManager.isGameOver(gameId)) {

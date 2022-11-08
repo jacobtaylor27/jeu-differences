@@ -123,19 +123,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.clearForeground(ctxCanvas);
     }
 
-    /*
-    resetForeground(ctxCanvas: CanvasRenderingContext2D) {
-        this.clearForeground(ctxCanvas);
-        this.indexOfCommand++;
-        this.currentCommand = {
-            name: 'clearForeground',
-            stroke: { lines: [] },
-            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
-        };
-        this.commands[this.indexOfCommand] = this.currentCommand;
-    }
-    */
-
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         this.drawService.updateImage();

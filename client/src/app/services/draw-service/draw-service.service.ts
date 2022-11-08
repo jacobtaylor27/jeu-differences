@@ -149,6 +149,9 @@ export class DrawService {
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
+            const temp = leftCanvas.foreground.nativeElement;
+            leftCanvas.foreground.nativeElement = rightCanvas.foreground.nativeElement;
+            rightCanvas.foreground.nativeElement = temp;
         }
     }
 }

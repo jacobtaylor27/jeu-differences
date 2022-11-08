@@ -13,8 +13,8 @@ import LZString = require('lz-string');
 @Service()
 export class GameController {
     router: Router;
-    // justification: nous avons encapsule la logique dans different service. Le controller s occupe d appeler ces service
-    // eslint-disable-next-line max-params
+
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private gameManager: GameManagerService,
         private gameInfo: GameInfoService,

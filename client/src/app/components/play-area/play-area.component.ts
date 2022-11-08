@@ -24,7 +24,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
 
     buttonPressed = '';
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,

@@ -164,7 +164,7 @@ export class SocketManagerService {
         });
     }
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the params
     async createGameSolo(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
         const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
         socket.join(id);
@@ -173,7 +173,7 @@ export class SocketManagerService {
         this.gameManager.sendTimer(this.sio, id);
     }
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the params
     async createGameMulti(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
         let roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
         socket.emit(SocketEvent.WaitPlayer);

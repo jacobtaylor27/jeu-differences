@@ -15,7 +15,7 @@ export class GamePageComponent implements OnDestroy {
     favoriteTheme: string = 'deeppurple-amber-theme';
     clock: string;
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private dialog: MatDialog,
         public gameInfoHandlerService: GameInformationHandlerService,

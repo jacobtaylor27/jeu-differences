@@ -16,7 +16,7 @@ import { User } from '@common/user';
 export class WaitingRoomComponent implements OnInit, OnDestroy {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private exitButton: ExitButtonHandlerService,
         public socketService: CommunicationSocketService,

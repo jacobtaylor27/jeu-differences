@@ -1,4 +1,3 @@
-// import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -18,7 +17,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
     @ViewChild('imageDifference', { static: false }) differentImage!: ElementRef<HTMLCanvasElement>;
     theme: typeof Theme = Theme;
     form: FormGroup = new FormGroup({ name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required]) });
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         @Inject(MAT_DIALOG_DATA)
         public data: {

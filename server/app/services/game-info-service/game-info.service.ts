@@ -20,7 +20,7 @@ const NB_TO_RETRIEVE = 4;
 export class GameInfoService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly databaseService: DatabaseService,
         private readonly bmpService: BmpService,

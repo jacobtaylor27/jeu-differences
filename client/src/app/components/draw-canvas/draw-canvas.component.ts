@@ -87,7 +87,7 @@ export class DrawCanvasComponent implements AfterViewInit {
                 this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
             }
         }
-        this.updateImage();
+        this.drawService.updateImage();
     }
 
     ngAfterViewInit() {
@@ -110,7 +110,7 @@ export class DrawCanvasComponent implements AfterViewInit {
 
         this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
             background.drawImage(newImage, 0, 0);
-            this.updateImage();
+            this.drawService.updateImage();
         });
 
         this.toolBoxService.$resetBackground.get(this.canvasType)?.subscribe(() => {
@@ -154,23 +154,13 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        this.updateImage();
+        this.drawService.updateImage();
     }
 
     resetBackground(ctxImage: CanvasRenderingContext2D) {
         ctxImage.rect(0, 0, SIZE.x, SIZE.y);
         ctxImage.fillStyle = 'white';
         ctxImage.fill();
-    }
-
-    updateImage() {
-        const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
-        const ctx: CanvasRenderingContext2D = this.noContentCanvas.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
-        ctx.drawImage(this.background.nativeElement, 0, 0);
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.drawImage(this.foreground.nativeElement, 0, 0);
-        this.drawService.$drawingImage.get(this.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
-        this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
     }
 
     enterCanvas(event: MouseEvent) {

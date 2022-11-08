@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Theme } from '@app/enums/theme';
 
 @Component({
@@ -7,5 +8,9 @@ import { Theme } from '@app/enums/theme';
     styleUrls: ['./dialog-game-over.component.scss'],
 })
 export class DialogGameOverComponent {
+    isWin: boolean;
     theme = Theme.ClassName;
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { isWin: boolean }) {
+        this.isWin = data.isWin;
+    }
 }

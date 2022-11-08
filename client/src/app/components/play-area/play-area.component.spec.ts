@@ -4,15 +4,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { SIZE } from '@app/constants/canvas';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 import { GameMode } from '@common/game-mode';
-import { of } from 'rxjs';
 
+import { of } from 'rxjs';
+import { Socket } from 'socket.io-client';
+
+class SocketClientServiceMock extends CommunicationSocketService {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    override connect() {}
+}
 describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
@@ -20,11 +28,20 @@ describe('PlayAreaComponent', () => {
     let spyMouseHandlerService: jasmine.SpyObj<MouseHandlerService>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     let differenceService: jasmine.SpyObj<DifferencesDetectionHandlerService>;
+    let socketHelper: SocketTestHelper;
+    let socketServiceMock: SocketClientServiceMock;
 
     beforeEach(async () => {
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new SocketClientServiceMock();
+        socketServiceMock.socket = socketHelper as unknown as Socket;
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getImgData']);
         spyMouseHandlerService = jasmine.createSpyObj('MouseHandlerService', ['mouseHitDetect']);
-        differenceService = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['setContextImgModified']);
+        differenceService = jasmine.createSpyObj('DifferencesDetectionHandlerService', [
+            'setContextImgModified',
+            'setNumberDifferencesFound',
+            'differenceDetected',
+        ]);
         gameInformationHandlerServiceSpy = jasmine.createSpyObj('GameInformationHandlerService', [
             'getGameMode',
             'getGameName',
@@ -56,6 +73,7 @@ describe('PlayAreaComponent', () => {
                     provide: DifferencesDetectionHandlerService,
                     useValue: differenceService,
                 },
+                { provide: CommunicationSocketService, usValue: socketServiceMock },
             ],
         }).compileComponents();
     });
@@ -72,9 +90,10 @@ describe('PlayAreaComponent', () => {
             soloScore: [],
             multiplayerScore: [],
             nbDifferences: 1,
+            isMulti: false,
         };
         gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
-        gameInformationHandlerServiceSpy.playerName = 'test';
+        gameInformationHandlerServiceSpy.players = [{ name: 'test', nbDifferences: 0 }];
     });
 
     it('should create', () => {

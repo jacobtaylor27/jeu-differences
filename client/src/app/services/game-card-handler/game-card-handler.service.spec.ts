@@ -38,6 +38,7 @@ describe('GameCardHandlerService', () => {
                         },
                     ],
                     nbDifferences: 1,
+                    isMulti: true,
                 },
                 isShown: true,
                 isAdminCard: true,

@@ -4,9 +4,7 @@ import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Service } from 'typedi';
-import { User } from '@common/user';
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -30,57 +28,38 @@ export class SocketManagerService {
                 console.log(`Deconnexion de l'utilisateur avec id : ${socket.id}`);
             });
 
-            socket.on(SocketEvent.CreateGame, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
-                const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
-                socket.join(id);
-                this.gameManager.setTimer(id);
-                socket.emit(SocketEvent.Play, id);
-                /* eslint-disable @typescript-eslint/no-magic-numbers -- send every one second */
-                setInterval(() => {
-                    if (!this.gameManager.isGameOver(id)) {
-                        this.sio.sockets.to(id).emit('clock', this.gameManager.getTime(id));
-                    }
-                }, 1000);
-            });
+            socket.on(
+                SocketEvent.CreateGame,
+                async (player: string, mode: string, game: { card: string; isMulti: boolean }) =>
+                    await this.createGameSolo(player, mode, game, socket),
+            );
 
-            socket.on(SocketEvent.CreateGameMulti, async (player: string, mode: string, game: { card: string; isMulti: boolean }) => {
-                if (this.multiplayerGameManager.isGameWaiting(game.card)) {
-                    const roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
-                    this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
-
-                    socket.emit(SocketEvent.WaitPlayer);
-
-                    if (this.multiplayerGameManager.theresOneRequest(roomId)) {
-                        this.sio
-                            .to(this.multiplayerGameManager.getRoomIdWaiting(game.card))
-                            .emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
-                    }
-                } else {
-                    const roomId = await this.gameManager.createGame(
-                        { player: { name: player, id: socket.id }, isMulti: game.isMulti },
-                        mode,
-                        game.card,
-                    );
-                    this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
-                    socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
-                    socket.emit(SocketEvent.WaitPlayer, roomId);
-                    socket.join(roomId);
-                }
-            });
+            socket.on(
+                SocketEvent.CreateGameMulti,
+                async (player: string, mode: string, game: { card: string; isMulti: boolean }) =>
+                    await this.createGameMulti(player, mode, game, socket),
+            );
             socket.on(SocketEvent.Message, (message: string, roomId: string) => {
                 socket.broadcast.to(roomId).emit(SocketEvent.Message, message);
             });
 
-            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string) => {
+            socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {
                 this.multiplayerGameManager.removeGameWaiting(roomId);
                 this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
-                for (const player of this.multiplayerGameManager.requestsOnHold.get(roomId) as User[]) {
+                const request = this.multiplayerGameManager.getRequest(roomId);
+                if (!request) {
+                    return;
+                }
+                for (const player of request) {
                     if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, roomId)) {
                         this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
                     }
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
-                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, roomId);
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
+                socket.join(roomId);
+                this.gameManager.setTimer(roomId);
+                this.gameManager.sendTimer(this.sio, roomId);
             });
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {
@@ -96,7 +75,7 @@ export class SocketManagerService {
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
-                this.sio.to(gameId).emit(SocketEvent.Play);
+                this.sio.to(gameId).emit(SocketEvent.Play, gameId);
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {
@@ -104,11 +83,10 @@ export class SocketManagerService {
                     socket.emit(SocketEvent.Error);
                     return;
                 }
-                this.gameManager.leaveGame(socket.id, gameId);
-                if (this.gameManager.isGameMultiplayer(gameId)) {
-                    socket.to(gameId).emit(SocketEvent.Win);
+                if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
+                    socket.broadcast.to(gameId).emit(SocketEvent.Win);
                 }
-                socket.emit(SocketEvent.LeaveGame);
+                this.gameManager.leaveGame(socket.id, gameId);
                 socket.leave(gameId);
             });
 
@@ -121,31 +99,56 @@ export class SocketManagerService {
                     socket.emit(SocketEvent.Error);
                     return;
                 }
-                if (!this.gameManager.isDifference(gameId, differenceCoord)) {
-                    socket.to(gameId).emit(SocketEvent.DifferenceNotFound);
+                const differences = this.gameManager.isDifference(gameId, socket.id, differenceCoord);
+                if (!differences) {
+                    socket.emit(SocketEvent.DifferenceNotFound);
                     return;
                 }
-                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, true, gameId));
+                if (this.gameManager.isGameOver(gameId)) {
+                    this.gameManager.leaveGame(socket.id, gameId);
+                    socket.emit(SocketEvent.Win);
+                }
                 if (this.gameManager.isGameMultiplayer(gameId)) {
-                    socket.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differenceCoord, false, gameId));
+                    if (this.gameManager.isGameOver(gameId)) {
+                        this.gameManager.leaveGame(socket.id, gameId);
+                        socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+                    }
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
+                    return;
+                } else {
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
                 }
             });
         });
     }
 
-    async send<T>(gameId: string, event: { name: SocketEvent; data?: T }) {
-        this.sio
-            .in(gameId)
-            .fetchSockets()
-            .then((socketsClient) => {
-                socketsClient.forEach((socketClient) => {
-                    const socket = this.sio.sockets.sockets.get(socketClient.id) as Socket<DefaultEventsMap, DefaultEventsMap>;
-                    if (!event.data) {
-                        socket.emit(event.name);
-                        return;
-                    }
-                    socket.emit(event.name, event.data);
-                });
-            });
+    // eslint-disable-next-line max-params
+    async createGameSolo(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
+        const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+        socket.join(id);
+        this.gameManager.setTimer(id);
+        socket.emit(SocketEvent.Play, id);
+        this.gameManager.sendTimer(this.sio, id);
+    }
+
+    // eslint-disable-next-line max-params
+    async createGameMulti(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
+        if (this.multiplayerGameManager.isGameWaiting(game.card)) {
+            const roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
+            this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
+
+            socket.emit(SocketEvent.WaitPlayer);
+
+            if (this.multiplayerGameManager.theresOneRequest(roomId)) {
+                this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
+            }
+        } else {
+            const roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+            this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
+            socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+            socket.emit(SocketEvent.WaitPlayer, roomId);
+            socket.join(roomId);
+        }
     }
 }

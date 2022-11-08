@@ -1,15 +1,15 @@
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
+import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
 import { GameMode } from '@app/enum/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { User } from '@common/user';
 import { Coordinate } from '@common/coordinate';
 import { Score } from '@common/score';
+import { User } from '@common/user';
 import { expect } from 'chai';
 import { SinonFakeTimers, spy, stub, useFakeTimers } from 'sinon';
-import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
 
 describe('Game', () => {
     let game: Game;
@@ -43,7 +43,6 @@ describe('Game', () => {
         expect(newGame.information).to.deep.equal(expectedGameInfo);
         expect(newGame['players'].has(expectedPlayer.player.id)).to.equal(true);
         expect(newGame['isMulti']).to.deep.equal(expectedPlayer.isMulti);
-        expect(newGame['getNbDifferencesFound']).to.deep.equal(new Set<Coordinate[]>());
         expect(newGame['context'].gameMode).to.equal(expectedMode as GameMode);
         expect(newGame['context'].gameState()).to.equal(expectedGameState.status());
     });
@@ -111,24 +110,28 @@ describe('Game', () => {
         const expectedDifference = { length: 10 } as Coordinate[][];
         const expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
         game['info'].differences = expectedDifference;
-        game['getNbDifferencesFound'] = expectedDifferenceFound;
+        game['getNbDifferencesTotalFound'] = expectedDifferenceFound;
         expect(game.nbDifferencesLeft()).to.equal(expectedDifference.length - expectedDifferenceFound.size);
     });
 
     it('before check if all difference found check if the game is on init or over', () => {
+        game['getNbDifferencesFound'].set('', new Set());
         const initSpy = stub(game, 'isGameInitialize').callsFake(() => false);
         const overSpy = stub(game, 'isGameOver').callsFake(() => false);
-        expect(game.isAllDifferenceFound()).to.equal(false);
+        expect(game.isAllDifferenceFound('')).to.equal(false);
         expect(initSpy.called).to.equal(true);
         expect(overSpy.called).to.equal(true);
 
         initSpy.callsFake(() => true);
         overSpy.callsFake(() => false);
-        expect(game.isAllDifferenceFound()).to.equal(false);
+        expect(game.isAllDifferenceFound('')).to.equal(false);
 
         initSpy.callsFake(() => false);
         overSpy.callsFake(() => true);
-        expect(game.isAllDifferenceFound()).to.equal(true);
+        expect(game.isAllDifferenceFound('')).to.equal(true);
+
+        game['isMulti'] = true;
+        expect(game.isAllDifferenceFound('')).to.equal(true);
     });
 
     it('should check if all difference is found', () => {
@@ -137,22 +140,38 @@ describe('Game', () => {
         let expectedDifference = { length: 10 } as Coordinate[][];
         let expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
         game['info'].differences = expectedDifference;
-        game['getNbDifferencesFound'] = expectedDifferenceFound;
-        expect(game.isAllDifferenceFound()).to.equal(false);
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        expect(game.isAllDifferenceFound('')).to.equal(false);
 
         expectedDifference = { length: 10 } as Coordinate[][];
         expectedDifferenceFound = { size: 10 } as Set<Coordinate[]>;
         game['info'].differences = expectedDifference;
-        game['getNbDifferencesFound'] = expectedDifferenceFound;
-        expect(game.isAllDifferenceFound()).to.equal(true);
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        expect(game.isAllDifferenceFound('')).to.equal(true);
+
+        game['isMulti'] = true;
+        expectedDifference = { length: 10 } as Coordinate[][];
+        expectedDifferenceFound = { size: 4 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        expect(game.isAllDifferenceFound('')).to.equal(false);
+
+        game['isMulti'] = true;
+        expectedDifference = { length: 10 } as Coordinate[][];
+        expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
+        game['info'].differences = expectedDifference;
+        game['getNbDifferencesFound'].set('', expectedDifferenceFound);
+        stub(game, 'getNbDifferencesThreshold').callsFake(() => 5);
+        expect(game.isAllDifferenceFound('')).to.equal(true);
     });
 
     it('should add a difference founded', () => {
+        game['getNbDifferencesFound'].set('', new Set());
         const isAlreadyDifferenceFoundSpy = stub(game, 'isDifferenceAlreadyFound').callsFake(() => true);
         const isAllDifferenceFoundSpy = stub(game, 'isAllDifferenceFound').callsFake(() => false);
         const isGameOverSpy = stub(game, 'isGameOver').callsFake(() => true);
-        const getNbDifferencesFoundSpy = stub(game['getNbDifferencesFound'], 'add');
-        game.addCoordinatesOnDifferenceFound([{} as Coordinate]);
+        const getNbDifferencesFoundSpy = stub(game['getNbDifferencesFound'].get('') as Set<Coordinate[]>, 'add');
+        game.addCoordinatesOnDifferenceFound('', [{} as Coordinate]);
         expect(isAlreadyDifferenceFoundSpy.called).to.equal(true);
         expect(isAllDifferenceFoundSpy.called).to.equal(false);
         expect(isGameOverSpy.called).to.equal(false);
@@ -160,23 +179,22 @@ describe('Game', () => {
 
         isAlreadyDifferenceFoundSpy.callsFake(() => false);
         const expectedCoordinates = [{ x: 0, y: 0 }];
-        game.addCoordinatesOnDifferenceFound(expectedCoordinates);
+        game.addCoordinatesOnDifferenceFound('', expectedCoordinates);
         expect(isAlreadyDifferenceFoundSpy.calledTwice).to.equal(true);
         expect(isAllDifferenceFoundSpy.called).to.equal(true);
-        expect(isGameOverSpy.called).to.equal(false);
         expect(getNbDifferencesFoundSpy.called).to.equal(true);
 
         isAlreadyDifferenceFoundSpy.callsFake(() => false);
         isAllDifferenceFoundSpy.callsFake(() => true);
-        const nextStateSpy = spy(game['context'], 'next');
+        const nextStateSpy = spy(game['context'], 'end');
         isGameOverSpy.callsFake(() => false);
-        game.addCoordinatesOnDifferenceFound([{} as Coordinate]);
+        game.addCoordinatesOnDifferenceFound('', [{} as Coordinate]);
         expect(getNbDifferencesFoundSpy.called).to.equal(true);
         expect(nextStateSpy.called).to.equal(true);
     });
 
     it('should verify if the difference is already found', () => {
-        const getNbDifferencesFoundSpy = stub(game['getNbDifferencesFound'], 'has').callsFake(() => false);
+        const getNbDifferencesFoundSpy = stub(game['getNbDifferencesTotalFound'], 'has').callsFake(() => false);
         expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(false);
         getNbDifferencesFoundSpy.callsFake(() => true);
         expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(true);
@@ -200,17 +218,17 @@ describe('Game', () => {
 
     it('should return null if no difference is found or already found', () => {
         const findDifferenceSpy = stub(game, 'findDifference').callsFake(() => undefined);
-        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);
         expect(findDifferenceSpy.called).to.equal(true);
         const expectedDifferences = [] as Coordinate[];
         findDifferenceSpy.callsFake(() => expectedDifferences);
         const isDifferenceAlreadyFoundSpy = stub(game, 'isDifferenceAlreadyFound').callsFake(() => true);
-        expect(game.isDifferenceFound({} as Coordinate)).to.equal(null);
+        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);
         expect(isDifferenceAlreadyFoundSpy.called).to.equal(true);
         isDifferenceAlreadyFoundSpy.callsFake(() => false);
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const addCoordinatesOnDifferenceFoundSpy = stub(game, 'addCoordinatesOnDifferenceFound').callsFake(() => {});
-        expect(game.isDifferenceFound({} as Coordinate)).to.equal(expectedDifferences);
+        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(expectedDifferences);
         expect(addCoordinatesOnDifferenceFoundSpy.called).to.equal(true);
     });
 
@@ -274,5 +292,18 @@ describe('Game', () => {
         expect(game.hasNoPlayer()).to.equal(false);
         game.players = new Map();
         expect(game.hasNoPlayer()).to.equal(true);
+    });
+
+    it('should return true is the nb of differences is even', () => {
+        expect(game.isEven(2)).to.equal(true);
+        expect(game.isEven(3)).to.equal(false);
+    });
+
+    it('should return the threshold to win a game', () => {
+        game.information.differences.length = 4;
+        expect(game.getNbDifferencesThreshold()).to.equal(2);
+
+        game.information.differences.length = 5;
+        expect(game.getNbDifferencesThreshold()).to.equal(3);
     });
 });

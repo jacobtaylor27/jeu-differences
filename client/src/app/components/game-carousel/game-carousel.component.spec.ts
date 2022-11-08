@@ -1,11 +1,14 @@
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 import { GameCardComponent } from '@app/components/game-card/game-card.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { PublicGameInformation } from '@common/game-information';
 import { of } from 'rxjs';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { GameCarouselComponent } from './game-carousel.component';
 
 describe('GameCarouselComponent', () => {
@@ -29,8 +32,8 @@ describe('GameCarouselComponent', () => {
         ]);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos']);
         await TestBed.configureTestingModule({
-            imports: [AppMaterialModule, HttpClientModule],
-            declarations: [GameCarouselComponent, GameCardComponent],
+            imports: [AppMaterialModule, HttpClientModule, BrowserModule, ReactiveFormsModule],
+            declarations: [GameCarouselComponent, GameCardComponent, LoadingScreenComponent],
             providers: [
                 {
                     provide: GameCarouselService,

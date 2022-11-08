@@ -34,6 +34,7 @@ export class GameCardButtonsComponent {
 
     onClickCreateJoinGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
+        this.gameInfoHandlerService.isMulti = true;
         this.gameCardService.openNameDialog(true);
     }
 }

@@ -8,6 +8,7 @@ export enum SocketEvent {
     CreateGameMulti = 'createGameMutli',
     GameCreated = 'gameCreated',
     GameDeleted = 'gameDeleted',
+    GamesDeleted = 'gamesDeleted',
     RequestToJoin = 'requestToJoin',
     Clock = 'clock',
     Error = 'error',

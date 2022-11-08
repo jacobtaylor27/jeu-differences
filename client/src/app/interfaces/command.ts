@@ -1,5 +1,5 @@
-import { Stroke } from './stroke';
-import { StrokeStyle } from './stroke-style';
+import { Stroke } from '@app/interfaces/stroke';
+import { StrokeStyle } from '@app/interfaces/stroke-style';
 
 export interface Command {
     name: string;

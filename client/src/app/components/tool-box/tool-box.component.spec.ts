@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { AppMaterialModule } from '@app/modules/material.module';
@@ -17,7 +18,7 @@ describe('ToolBoxComponent', () => {
     let dialogSpyObj: jasmine.SpyObj<MatDialog>;
     beforeEach(async () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $pencil: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', ['addCanvasType'], { $pencil: new Map() });
         await TestBed.configureTestingModule({
             declarations: [ToolBoxComponent],
             providers: [
@@ -30,6 +31,8 @@ describe('ToolBoxComponent', () => {
         fixture = TestBed.createComponent(ToolBoxComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        component.canvasType = CanvasType.Left;
+        toolBoxServiceSpyObj.$pencil.set(component.canvasType, new Subject());
     });
 
     it('should create', () => {
@@ -38,7 +41,7 @@ describe('ToolBoxComponent', () => {
 
     it('should change the state of pencil', async () => {
         const expectedTool: Tool = Tool.Pencil;
-        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+        toolBoxServiceSpyObj.$pencil.get(component.canvasType)?.subscribe((newPencil: Pencil) => {
             expect(newPencil).toEqual(component.pencil);
         });
         component.changePencilState(expectedTool);
@@ -47,7 +50,7 @@ describe('ToolBoxComponent', () => {
 
     it('should change the color of the pencil', async () => {
         const expectedColor = 'test';
-        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+        toolBoxServiceSpyObj.$pencil.get(component.canvasType)?.subscribe((newPencil: Pencil) => {
             expect(newPencil).toEqual(component.pencil);
         });
         component.changePencilColor(expectedColor);
@@ -57,7 +60,7 @@ describe('ToolBoxComponent', () => {
     it('should change the width of the pencil', async () => {
         const expectedWidth = 3;
         component.pencil.state = Tool.Pencil;
-        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+        toolBoxServiceSpyObj.$pencil.get(component.canvasType)?.subscribe((newPencil: Pencil) => {
             expect(newPencil).toEqual(component.pencil);
         });
         component.changePencilWidth({ value: expectedWidth } as MatSliderChange);
@@ -67,7 +70,7 @@ describe('ToolBoxComponent', () => {
     it('should change the width of the eraser', async () => {
         const expectedWidth = 3;
         component.pencil.state = Tool.Eraser;
-        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+        toolBoxServiceSpyObj.$pencil.get(component.canvasType)?.subscribe((newPencil: Pencil) => {
             expect(newPencil).toEqual(component.pencil);
         });
         component.changePencilWidth({ value: expectedWidth } as MatSliderChange);
@@ -75,10 +78,10 @@ describe('ToolBoxComponent', () => {
     });
 
     it('should do nothing if the value is null', () => {
-        toolBoxServiceSpyObj.$pencil.subscribe((newPencil: Pencil) => {
+        toolBoxServiceSpyObj.$pencil.get(component.canvasType)?.subscribe((newPencil: Pencil) => {
             expect(newPencil).toEqual(component.pencil);
         });
-        const spyPencilNext = spyOn(toolBoxServiceSpyObj.$pencil, 'next');
+        const spyPencilNext = spyOn(toolBoxServiceSpyObj.$pencil.get(component.canvasType) as Subject<Pencil>, 'next');
         component.changePencilWidth({ value: null } as MatSliderChange);
         expect(spyPencilNext).not.toHaveBeenCalled();
     });
@@ -100,8 +103,8 @@ describe('ToolBoxComponent', () => {
 
     it('should switch the background-color of the pencil and eraser button', () => {
         component.changeButtonColor(Tool.Eraser);
-        expect(component.colorButton).toEqual({ pencil: 'primary', eraser: 'background' });
+        expect(component.colorButton).toEqual({ pencil: 'primary', eraser: 'accent' });
         component.changeButtonColor(Tool.Pencil);
-        expect(component.colorButton).toEqual({ pencil: 'background', eraser: 'primary' });
+        expect(component.colorButton).toEqual({ pencil: 'accent', eraser: 'primary' });
     });
 });

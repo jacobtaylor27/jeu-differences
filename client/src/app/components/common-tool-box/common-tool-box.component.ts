@@ -21,7 +21,6 @@ export class CommonToolBoxComponent {
     }
 
     swapForegrounds(): void {
-        console.log('should swap', this.toolBoxService.$switchForeground);
         this.toolBoxService.$switchForeground.forEach((event: Subject<void>) => event.next());
     }
 }

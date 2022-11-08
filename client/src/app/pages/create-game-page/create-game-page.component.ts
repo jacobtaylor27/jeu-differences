@@ -12,7 +12,6 @@ import { CanvasEventHandlerService } from '@app/services/canvas-event-handler/ca
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
-import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -27,7 +26,6 @@ export class CreateGamePageComponent implements AfterViewInit {
     canvasType: typeof CanvasType = CanvasType;
     // eslint-disable-next-line max-params
     constructor(
-        private toolBoxService: ToolBoxService,
         public dialog: MatDialog,
         private drawService: DrawService,
         private communication: CommunicationService,
@@ -63,10 +61,6 @@ export class CreateGamePageComponent implements AfterViewInit {
             event.subscribe((newImage: ImageData) => {
                 this.drawingImage.set(canvasType, newImage);
             });
-        });
-
-        this.toolBoxService.$resetBackground.forEach((event: Subject<void>) => {
-            event.next();
         });
     }
 

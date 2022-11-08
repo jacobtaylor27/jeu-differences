@@ -113,10 +113,6 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.drawService.updateImage();
         });
 
-        this.toolBoxService.$resetBackground.get(this.canvasType)?.subscribe(() => {
-            this.resetBackground(background);
-        });
-
         this.toolBoxService.$resetForeground.get(this.canvasType)?.subscribe(() => {
             this.resetForeground(foreground);
         });
@@ -133,12 +129,11 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.pencil = newPencil;
         });
 
-        this.resetAllLayers(foreground, background);
+        this.resetAllLayers(foreground);
     }
 
-    resetAllLayers(ctxCanvas: CanvasRenderingContext2D, ctxImage: CanvasRenderingContext2D) {
+    resetAllLayers(ctxCanvas: CanvasRenderingContext2D) {
         this.clearForeground(ctxCanvas);
-        this.resetBackground(ctxImage);
     }
 
     resetForeground(ctxCanvas: CanvasRenderingContext2D) {
@@ -155,12 +150,6 @@ export class DrawCanvasComponent implements AfterViewInit {
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         this.drawService.updateImage();
-    }
-
-    resetBackground(ctxImage: CanvasRenderingContext2D) {
-        ctxImage.rect(0, 0, SIZE.x, SIZE.y);
-        ctxImage.fillStyle = 'white';
-        ctxImage.fill();
     }
 
     enterCanvas(event: MouseEvent) {

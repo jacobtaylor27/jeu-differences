@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT } from '@app/constants/canvas';
+import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { Command } from '@app/interfaces/command';
@@ -78,13 +78,17 @@ export class DrawService {
     }
 
     resetBackground(canvasType: CanvasType) {
-        if (canvasType === CanvasType.Both) {
-            this.toolService.$resetBackground.forEach((event: Subject<void>) => {
-                event.next();
-            });
-            return;
+        const canvasState = this.canvasStateService.getCanvasState(canvasType);
+        if (canvasState) {
+            const background = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.clearBackground(background);
         }
-        this.toolService.$resetBackground.get(canvasType)?.next();
+    }
+
+    clearBackground(ctxImage: CanvasRenderingContext2D) {
+        ctxImage.rect(0, 0, SIZE.x, SIZE.y);
+        ctxImage.fillStyle = 'white';
+        ctxImage.fill();
     }
 
     resetForeground(canvasType: CanvasType) {

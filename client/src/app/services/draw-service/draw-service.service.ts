@@ -76,6 +76,7 @@ export class DrawService {
             this.currentCommand.name = 'erase';
         }
         this.commands[this.indexOfCommand] = this.currentCommand;
+        this.removeCommandsPastIndex();
     }
 
     leaveCanvas(event: MouseEvent) {}
@@ -225,6 +226,15 @@ export class DrawService {
                 this.redraw(command);
             } else {
                 console.log('command indéterminée');
+            }
+        }
+    }
+
+    private removeCommandsPastIndex() {
+        const commandsToDelete: number = this.commands.length - 1 - this.indexOfCommand;
+        if (commandsToDelete > 0) {
+            for (let i = 0; i < commandsToDelete; i++) {
+                this.commands.pop();
             }
         }
     }

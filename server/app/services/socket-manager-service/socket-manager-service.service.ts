@@ -113,8 +113,8 @@ export class SocketManagerService {
                         this.gameManager.leaveGame(socket.id, gameId);
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
-                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
-                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
+                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
                     return;
                 } else {
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));

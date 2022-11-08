@@ -113,6 +113,13 @@ export class DrawService {
         });
     }
 
+    resetAllForegrounds() {
+        this.canvasStateService.states.forEach((state) => {
+            const foreground = state.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.clearForeground(foreground);
+        });
+    }
+
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         this.updateImage();
@@ -141,8 +148,8 @@ export class DrawService {
         }
     }
 
-    createStroke(line: Line, strokeStyle: StrokeStyle) {
-        const focusedCanvas = this.canvasStateService.getFocusedCanvas();
+    createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
+        const focusedCanvas = canvasType ? this.canvasStateService.getCanvasState(canvasType) : this.canvasStateService.getFocusedCanvas();
         const ctx: CanvasRenderingContext2D = focusedCanvas?.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
         ctx.globalCompositeOperation = strokeStyle.destination;
@@ -208,19 +215,23 @@ export class DrawService {
     }
 
     executeAllCommand() {
+        this.resetAllForegrounds();
+
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command: Command = this.commands[i];
             if (command.name === 'draw') {
-                this.executeDraw(command);
+                this.redraw(command);
             } else if (command.name === 'erase') {
-                this.executeErase(command);
+                this.redraw(command);
+            } else {
+                console.log('command indéterminée');
             }
         }
     }
 
-    private executeDraw(command: Command) {
-        this.resetForeground(command.canvasType);
+    private redraw(command: Command) {
+        command.stroke.lines.forEach((line) => {
+            this.createStroke(line, command.style, command.canvasType);
+        });
     }
-
-    private executeErase(command: Command) {}
 }

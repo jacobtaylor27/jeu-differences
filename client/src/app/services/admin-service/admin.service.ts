@@ -25,9 +25,7 @@ export class AdminService {
     }
 
     deleteAllGames(): void {
-        for (const game of this.gameCardHandlerService.getGameCards()) {
-            this.socketService.send(SocketEvent.GameDeleted, { gameId: game.gameInformation.id });
-        }
+        this.socketService.send(SocketEvent.GamesDeleted);
         this.communicationService.deleteAllGameCards().subscribe();
     }
 

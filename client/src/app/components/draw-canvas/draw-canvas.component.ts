@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } 
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
-import { Tool } from '@app/enums/tool';
+import { CanvasState } from '@app/interfaces/canvas-state';
 import { Command } from '@app/interfaces/command';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
@@ -105,6 +105,13 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        const currentState: CanvasState = {
+            canvasType: this.canvasType,
+            foreground: this.foreground,
+            background: this.background,
+            temporary: this.noContentCanvas,
+        };
+        this.canvasStateService.states.push(currentState);
         this.toolBoxService.addCanvasType(this.canvasType);
         this.drawService.addDrawingCanvas(this.canvasType);
         this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
@@ -181,6 +188,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     enterCanvas(event: MouseEvent) {
+        this.drawService.enterCanvas(event);
         // return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event, true);
     }
 
@@ -189,37 +197,14 @@ export class DrawCanvasComponent implements AfterViewInit {
     startDrawing(event: MouseEvent) {
         this.canvasStateService.setFocusedCanvas(this.canvasType);
         this.drawService.startDrawing(event);
-        this.isClick = true;
-        this.coordDraw = this.drawService.reposition(this.foreground.nativeElement, event);
-        this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
     }
 
     stopDrawing() {
-        this.isClick = false;
-        this.indexOfCommand++;
-        if (this.pencil.state === 'Pencil') {
-            this.currentCommand.name = 'draw';
-        } else {
-            this.currentCommand.name = 'erase';
-        }
-        this.commands[this.indexOfCommand] = this.currentCommand;
+        this.drawService.stopDrawing();
     }
 
     draw(event: MouseEvent) {
-        if (!this.isClick || !this.pencil) {
-            return;
-        }
-        const line = this.updateMouseCoordinates(event);
-        this.currentCommand.stroke.lines.push(line);
-
-        this.currentCommand.style = {
-            color: this.pencil.color,
-            cap: this.pencil.cap,
-            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
-            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
-        };
-        this.createStroke(line, this.currentCommand.style);
-        this.updateImage();
+        this.drawService.draw(event);
     }
 
     updateMouseCoordinates(event: MouseEvent): Line {

@@ -5,4 +5,5 @@ export interface CanvasState {
     canvasType: CanvasType;
     foreground: ElementRef<HTMLCanvasElement>;
     background: ElementRef<HTMLCanvasElement>;
+    temporary: ElementRef<HTMLCanvasElement>;
 }

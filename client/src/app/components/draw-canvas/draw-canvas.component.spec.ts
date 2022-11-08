@@ -252,10 +252,8 @@ describe('DrawCanvasComponent', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyClearForeground = spyOn(component, 'clearForeground').and.callFake(() => {});
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const spyUpdateImage = spyOn(component, 'updateImage').and.callFake(() => {});
         component.executeCommands();
         expect(spyClearForeground).toHaveBeenCalled();
-        expect(spyUpdateImage).toHaveBeenCalled();
     });
 
     it('should redo commands to the reference of commands', () => {

@@ -1,13 +1,13 @@
 import { HttpException } from '@app/classes/http/http.exception';
 import { GameController } from '@app/controllers/game-controller/game.controller';
+import { StatusCodes } from 'http-status-codes';
+import { Service } from 'typedi';
+import { BmpController } from './controllers/bmp-controller/bmp.controller';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
-import { StatusCodes } from 'http-status-codes';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
-import { Service } from 'typedi';
-import { BmpController } from './controllers/bmp-controller/bmp.controller';
 import * as compression from 'compression';
 
 @Service()

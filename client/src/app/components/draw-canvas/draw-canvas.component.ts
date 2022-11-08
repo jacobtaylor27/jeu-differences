@@ -84,6 +84,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         ctx.moveTo(line.initCoord.x, line.initCoord.y);
         ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
         ctx.stroke();
+        this.updateImage();
     }
 
     executeCommands() {
@@ -100,12 +101,10 @@ export class DrawCanvasComponent implements AfterViewInit {
                 this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
             }
         }
-        this.updateImage();
     }
 
     ngAfterViewInit() {
         this.toolBoxService.addCanvasType(this.canvasType);
-        this.drawService.addDrawingCanvas(this.canvasType);
         this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
@@ -132,6 +131,7 @@ export class DrawCanvasComponent implements AfterViewInit {
                 this.canvasType === CanvasType.Left ? CanvasType.Right : CanvasType.Left,
             ) as HTMLCanvasElement;
             ctx.drawImage(newForeground, 0, 0);
+            this.updateImage();
         });
 
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
@@ -166,6 +166,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         ctxImage.rect(0, 0, SIZE.x, SIZE.y);
         ctxImage.fillStyle = 'white';
         ctxImage.fill();
+        this.updateImage();
     }
 
     updateImage() {
@@ -211,7 +212,6 @@ export class DrawCanvasComponent implements AfterViewInit {
             destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
         this.createStroke(line, this.currentCommand.style);
-        this.updateImage();
     }
 
     updateMouseCoordinates(event: MouseEvent): Line {

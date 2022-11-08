@@ -11,7 +11,6 @@ import { DrawService } from '@app/services/draw-service/draw-service.service';
 })
 export class ToolBoxComponent {
     @Input() canvasType: CanvasType;
-
     constructor(public dialog: MatDialog, public drawService: DrawService) {}
 
     openUploadDialog(): void {

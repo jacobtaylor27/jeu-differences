@@ -1,18 +1,26 @@
+import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Line } from '@app/interfaces/line';
+import { StrokeStyle } from '@app/interfaces/stroke-style';
+import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { Subject } from 'rxjs';
 
 import { DrawService } from './draw-service.service';
 
 describe('DrawServiceService', () => {
     let service: DrawService;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
+    let canvasStateServiceSpyObj: jasmine.SpyObj<CanvasStateService>;
     beforeEach(() => {
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $resetDiff: new Subject(), $resetSource: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $resetBackground: new Map(), $resetForeground: new Map() });
+        canvasStateServiceSpyObj = jasmine.createSpyObj('CanvasStateService', ['getCanvasState', 'getFocusedCanvas']);
         TestBed.configureTestingModule({
-            providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],
+            providers: [
+                { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
+                { provide: CanvasStateService, useValue: canvasStateServiceSpyObj },
+            ],
         });
         service = TestBed.inject(DrawService);
     });
@@ -28,47 +36,138 @@ describe('DrawServiceService', () => {
         );
     });
 
-    it('should submit a form because the type is both', async () => {
-        const spyDiff = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
-        const spySource = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        service.reset(PropagateCanvasEvent.Both);
-        expect(spyDiff).toHaveBeenCalled();
-        expect(spySource).toHaveBeenCalled();
+    it('should reset background for both canvas', async () => {
+        const spyResetAllBackground = spyOn(service, 'resetAllBackground');
+        const spyClearBackground = spyOn(service, 'clearBackground');
+        service.resetBackground(CanvasType.Both);
+        expect(spyResetAllBackground).toHaveBeenCalled();
+        expect(spyClearBackground).not.toHaveBeenCalled();
     });
 
-    it('should submit a form because the type is difference', async () => {
-        const spyDiff = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
-        const spySource = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        service.reset(PropagateCanvasEvent.Difference);
-        expect(spyDiff).toHaveBeenCalled();
-        expect(spySource).not.toHaveBeenCalled();
+    it('should reset background for Left background', async () => {
+        const spyResetAllBackground = spyOn(service, 'resetAllBackground');
+        const spyClearBackground = spyOn(service, 'clearBackground');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return {
+                canvasType: CanvasType.Left,
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                background: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+                temporary: {} as ElementRef<HTMLCanvasElement>,
+            };
+        });
+        service.resetBackground(CanvasType.Left);
+        expect(spyResetAllBackground).not.toHaveBeenCalled();
+        expect(spyClearBackground).toHaveBeenCalled();
     });
 
-    it('should submit a form because the type is source', async () => {
-        const spyDiff = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
-        const spySource = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        service.reset(PropagateCanvasEvent.Source);
-        expect(spyDiff).not.toHaveBeenCalled();
-        expect(spySource).toHaveBeenCalled();
-    });
-
-    it('should verify if a both canvas is selected', () => {
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Both, PropagateCanvasEvent.Source)).toBeTrue();
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Both, PropagateCanvasEvent.Difference)).toBeTrue();
-    });
-
-    it('should verify if a draw canvas is selected', () => {
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Difference, PropagateCanvasEvent.Difference)).toBeTrue();
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Difference, PropagateCanvasEvent.Source)).toBeFalse();
-    });
-
-    it('should verify if a draw canvas is selected', () => {
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Source, PropagateCanvasEvent.Source)).toBeTrue();
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Source, PropagateCanvasEvent.Difference)).toBeFalse();
+    it('should reset background for Right background', async () => {
+        const spyResetAllBackground = spyOn(service, 'resetAllBackground');
+        const spyClearBackground = spyOn(service, 'clearBackground');
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return {
+                canvasType: CanvasType.Right,
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                background: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+                temporary: {} as ElementRef<HTMLCanvasElement>,
+            };
+        });
+        service.resetBackground(CanvasType.Right);
+        expect(spyResetAllBackground).not.toHaveBeenCalled();
+        expect(spyClearBackground).toHaveBeenCalled();
     });
 
     it('should check if the pencil is in mode eraser', () => {
         expect(service.isEraser(Tool.Eraser)).toBeTrue();
         expect(service.isEraser(Tool.Pencil)).toBeFalse();
+    });
+
+    it('should add drawing canvas', () => {
+        const spyDrawImage = spyOn(service.$drawingImage, 'set');
+        service.addDrawingCanvas(CanvasType.Left);
+        expect(spyDrawImage).toHaveBeenCalled();
+    });
+
+    it('should reset foreground for left canvas', () => {
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return {
+                canvasType: CanvasType.Left,
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+                background: {} as ElementRef<HTMLCanvasElement>,
+                temporary: {} as ElementRef<HTMLCanvasElement>,
+            };
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearForeground = spyOn(service, 'clearForeground').and.callFake(() => {});
+        service.resetForeground(CanvasType.Left);
+        expect(spyClearForeground).toHaveBeenCalled();
+    });
+
+    it('should reset foreground for right canvas', () => {
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return {
+                canvasType: CanvasType.Right,
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+                background: {} as ElementRef<HTMLCanvasElement>,
+                temporary: {} as ElementRef<HTMLCanvasElement>,
+            };
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearForeground = spyOn(service, 'clearForeground').and.callFake(() => {});
+        service.resetForeground(CanvasType.Right);
+        expect(spyClearForeground).toHaveBeenCalled();
+    });
+
+    it('should update mouse coordinate', () => {
+        const expectedFinalCoord = { x: 1, y: 1 };
+        const expectedInitCoord = { x: 0, y: 0 };
+        service.coordDraw = expectedInitCoord;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return {
+                canvasType: CanvasType.Right,
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+                background: {} as ElementRef<HTMLCanvasElement>,
+                temporary: {} as ElementRef<HTMLCanvasElement>,
+            };
+        });
+        spyOn(service, 'reposition').and.callFake(() => expectedFinalCoord);
+        expect(service.updateMouseCoordinates({} as MouseEvent)).toEqual({ initCoord: expectedInitCoord, finalCoord: expectedFinalCoord });
+    });
+
+    it('drawPoint should set the style of the pencil and create the point', () => {
+        service.coordDraw = { x: 0, y: 0 };
+        const expectedCanvasState = {
+            canvasType: CanvasType.Left,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: {} as ElementRef<HTMLCanvasElement>,
+            temporary: {} as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => expectedCanvasState);
+        service.pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
+        spyOn(service, 'reposition').and.returnValue({ x: 0, y: 0 });
+        const ctx = expectedCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const beginPathSpy = spyOn(ctx, 'beginPath');
+        const moveToSpy = spyOn(ctx, 'moveTo');
+        const lineToSpy = spyOn(ctx, 'lineTo');
+        const stokeSpy = spyOn(ctx, 'stroke');
+        service.createStroke(
+            { initCoord: { x: 0, y: 0 }, finalCoord: { x: 0, y: 0 } } as Line,
+            { width: service.pencil.width.pencil, cap: service.pencil.cap, color: service.pencil.color } as StrokeStyle,
+        );
+        expect(beginPathSpy).toHaveBeenCalled();
+        expect(moveToSpy).toHaveBeenCalled();
+        expect(lineToSpy).toHaveBeenCalled();
+        expect(stokeSpy).toHaveBeenCalled();
+        expect(ctx.lineWidth).toEqual(service.pencil.width.pencil);
+        expect(ctx.lineCap).toEqual(service.pencil.cap);
+        expect(ctx.strokeStyle).toEqual(service.pencil.color);
     });
 });

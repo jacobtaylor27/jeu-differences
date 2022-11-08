@@ -65,6 +65,6 @@ export class DialogUploadFormComponent {
             });
             return;
         }
-        this.toolService.$uploadImage.get(this.data.canvas)?.next(this.img);
+        (this.toolService.$uploadImage.get(this.data.canvas) as Subject<ImageBitmap>).next(this.img);
     }
 }

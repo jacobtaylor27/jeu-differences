@@ -34,13 +34,14 @@ export class CreateGamePageComponent implements AfterViewInit {
     ) {
         this.drawingImage.set(CanvasType.Left, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
         this.drawingImage.set(CanvasType.Right, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
+        this.drawService.addDrawingCanvas(CanvasType.Left);
+        this.drawService.addDrawingCanvas(CanvasType.Right);
 
         exitButtonService.setCreateGamePage();
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
         });
     }
-
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
         if (!event.ctrlKey) {

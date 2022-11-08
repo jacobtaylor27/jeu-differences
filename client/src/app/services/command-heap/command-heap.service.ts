@@ -9,5 +9,4 @@ export class CommandHeapService {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfCommand: number = -1;
     commands: Command[] = [];
-    
 }

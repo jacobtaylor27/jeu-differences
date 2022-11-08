@@ -97,7 +97,7 @@ export class DrawService {
 
     resetBackground(canvasType: CanvasType) {
         if (canvasType === CanvasType.Both) {
-            this.resetAllBackground();
+            this.clearAllBackground();
             return;
         }
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
@@ -107,14 +107,14 @@ export class DrawService {
         }
     }
 
-    resetAllBackground() {
+    clearAllBackground() {
         this.canvasStateService.states.forEach((state) => {
             const background = state.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearBackground(background);
         });
     }
 
-    resetAllForegrounds() {
+    clearAllForegrounds() {
         this.canvasStateService.states.forEach((state) => {
             const foreground = state.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearForeground(foreground);
@@ -177,6 +177,7 @@ export class DrawService {
     }
 
     switchForegrounds() {
+        /*
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
@@ -190,6 +191,7 @@ export class DrawService {
             leftForegroundContext.drawImage(rightCanvas.foreground.nativeElement, 0, 0);
             rightForegroundContext.drawImage(temp.nativeElement, 0, 0);
         }
+        */
     }
 
     clearAllLayers(canvasType: CanvasType) {
@@ -223,7 +225,7 @@ export class DrawService {
     }
 
     executeAllCommand() {
-        this.resetAllForegrounds();
+        this.clearAllForegrounds();
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command: Command = this.commands[i];

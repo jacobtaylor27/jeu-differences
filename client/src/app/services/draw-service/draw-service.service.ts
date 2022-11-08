@@ -192,9 +192,16 @@ export class DrawService {
         }
     }
 
-    resetAllLayers(canvasType: CanvasType) {
-        this.resetBackground(canvasType);
-        this.resetForeground(canvasType);
+    clearAllLayers(canvasType: CanvasType) {
+        if (canvasType === CanvasType.None || canvasType === CanvasType.Both) return;
+        const canvasState = this.canvasStateService.getCanvasState(canvasType);
+
+        if (canvasState) {
+            const background = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            const foreground = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.clearBackground(background);
+            this.clearForeground(foreground);
+        }
     }
 
     redo() {

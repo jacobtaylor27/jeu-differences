@@ -13,6 +13,7 @@ import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Pencil } from '@app/interfaces/pencil';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CanvasEventHandlerService } from '@app/services/canvas-event-handler/canvas-event-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
@@ -26,6 +27,7 @@ describe('CreateGamePageComponent', () => {
     let communicationSpyObject: jasmine.SpyObj<CommunicationService>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
     let drawServiceSpyObj: jasmine.SpyObj<DrawService>;
+    let canvasEventHandlerSpyObj: jasmine.SpyObj<CanvasEventHandlerService>;
 
     beforeEach(async () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
@@ -37,7 +39,11 @@ describe('CreateGamePageComponent', () => {
             $switchForeground: new Map<CanvasType, Subject<void>>(),
             $resetForeground: new Map<CanvasType, Subject<void>>(),
         });
-        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['addDrawingCanvas'], { $drawingImage: new Map(), foregroundContext: new Map() });
+        canvasEventHandlerSpyObj = jasmine.createSpyObj('CanvasEventHandlerService', ['handleCtrlShiftZ', 'handleCtrlZ']);
+        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['addDrawingCanvas', 'resetAllLayers'], {
+            $drawingImage: new Map(),
+            foregroundContext: new Map(),
+        });
         await TestBed.configureTestingModule({
             declarations: [
                 CreateGamePageComponent,
@@ -53,6 +59,7 @@ describe('CreateGamePageComponent', () => {
                 { provide: CommunicationService, useValue: communicationSpyObject },
                 { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
                 { provide: DrawService, useValue: drawServiceSpyObj },
+                { provide: CanvasEventHandlerService, useValue: canvasEventHandlerSpyObj },
             ],
         }).compileComponents();
 
@@ -150,4 +157,39 @@ describe('CreateGamePageComponent', () => {
     //     drawServiceSpyObj.$drawingImage.get(CanvasType.Left)?.next({} as ImageData);
     //     expect(spySetDrawingImage).toHaveBeenCalled();
     // });
+    it('should handleCtrlShiftZ if key down', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlShiftZ.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlZ.and.callFake(() => {});
+        component.keyEvent({ ctrlKey: true, key: 'Z', shiftKey: true } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
+    });
+
+    it('should handleCtrlZ if key down', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlShiftZ.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlZ.and.callFake(() => {});
+        component.keyEvent({ ctrlKey: true, key: 'z', shiftKey: false } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).toHaveBeenCalled();
+    });
+
+    it('should not handle control if it s not shiftKey or control z', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlShiftZ.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlZ.and.callFake(() => {});
+        component.keyEvent({} as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
+        component.keyEvent({ ctrlKey: true, key: 'a' } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
+        component.keyEvent({ ctrlKey: true, key: 'A' } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
+    });
 });

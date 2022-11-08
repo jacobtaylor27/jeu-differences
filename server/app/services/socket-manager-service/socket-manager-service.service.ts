@@ -44,6 +44,11 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {
+                if (!this.multiplayerGameManager.playersRequestExists(roomId, opponentsRoomId)) {
+                    socket.emit(SocketEvent.PlayerLeft);
+                    return;
+                }
+
                 this.multiplayerGameManager.removeGameWaiting(roomId);
                 this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
                 const request = this.multiplayerGameManager.getRequest(roomId);
@@ -89,6 +94,15 @@ export class SocketManagerService {
                 }
                 this.gameManager.leaveGame(socket.id, gameId);
                 socket.leave(gameId);
+            });
+
+            socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {
+                if (roomId) {
+                    this.multiplayerGameManager.removeGameWaiting(roomId);
+                    return;
+                }
+
+                this.multiplayerGameManager.deleteRequest(this.multiplayerGameManager.getRoomIdWaiting(gameCard), socket.id);
             });
 
             socket.on(SocketEvent.GetGamesWaiting, () => {

@@ -37,6 +37,7 @@ import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stop
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
+import { PlayerLeftSnackbarComponent } from './components/player-left-snackbar/player-left-snackbar.component';
 import { RejectedDialogComponent } from './components/rejected-dialog/rejected-dialog.component';
 /**
  * Main module that is used in main.ts.
@@ -79,6 +80,7 @@ import { RejectedDialogComponent } from './components/rejected-dialog/rejected-d
         WaitingRoomComponent,
         ChatBoxComponent,
         ApprovalDialogComponent,
+        PlayerLeftSnackbarComponent,
         RejectedDialogComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],

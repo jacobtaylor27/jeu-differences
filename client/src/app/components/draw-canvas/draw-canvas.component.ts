@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
-import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { CanvasState } from '@app/interfaces/canvas-state';
 import { Command } from '@app/interfaces/command';
@@ -74,7 +73,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     executeCommands() {
-        this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        this.drawService.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command = this.commands[i];
@@ -84,7 +83,7 @@ export class DrawCanvasComponent implements AfterViewInit {
                 });
             }
             if (command.name === 'clearForeground') {
-                this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+                this.drawService.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
             }
         }
         this.drawService.updateImage();
@@ -117,11 +116,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         });
 
         this.drawService.resetAllLayers(this.canvasType);
-    }
-
-    clearForeground(ctxCanvas: CanvasRenderingContext2D) {
-        ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        this.drawService.updateImage();
     }
 
     enterCanvas(event: MouseEvent) {

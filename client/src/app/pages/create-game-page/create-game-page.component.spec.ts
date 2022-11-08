@@ -106,7 +106,7 @@ describe('CreateGamePageComponent', () => {
 
     it('should open the validate dialog if the form is valid', async () => {
         spyOnProperty(component.form, 'valid').and.returnValue(true);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => {
             return of({ body: { numberDifference: 0, data: [0], height: 1, width: 1 } } as HttpResponse<{
@@ -121,9 +121,9 @@ describe('CreateGamePageComponent', () => {
     });
 
     it('should not open the validate dialog if the form is not valid and body is null', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => {
             return of({ body: null } as HttpResponse<{
@@ -139,9 +139,9 @@ describe('CreateGamePageComponent', () => {
     });
 
     it('should not open the validate dialog if the form is not valid and response is null', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => of(null));
         component.isGameValid();

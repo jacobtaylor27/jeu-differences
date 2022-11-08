@@ -8,7 +8,7 @@ import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
 import { GameInformationHandlerService } from './game-information-handler.service';
 
-/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function  -- connect needs to be empty (Nikolay's example)*/
 class SocketClientServiceMock extends CommunicationSocketService {
     override connect() {}
 }

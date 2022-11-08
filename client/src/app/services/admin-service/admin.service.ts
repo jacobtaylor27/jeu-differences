@@ -13,7 +13,7 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
 export class AdminService {
     gameConstants: GameConstants;
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly matDialog: MatDialog,
         private readonly gameCarouselService: GameCarouselService,

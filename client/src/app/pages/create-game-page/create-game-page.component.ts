@@ -25,7 +25,7 @@ export class CreateGamePageComponent implements AfterViewInit {
     theme: typeof Theme = Theme;
     imageDifference: ImageData = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
     canvasPosition: typeof PropagateCanvasEvent = PropagateCanvasEvent;
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private toolBoxService: ToolBoxService,
         public dialog: MatDialog,

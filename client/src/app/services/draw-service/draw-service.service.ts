@@ -82,11 +82,22 @@ export class DrawService {
     }
 
     resetBackground(canvasType: CanvasType) {
+        if (canvasType === CanvasType.Both) {
+            this.resetAllBackground();
+            return;
+        }
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const background = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearBackground(background);
         }
+    }
+
+    resetAllBackground() {
+        this.canvasStateService.states.forEach((state) => {
+            const background = state.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.clearBackground(background);
+        });
     }
 
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {

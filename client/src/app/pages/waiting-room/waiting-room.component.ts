@@ -33,6 +33,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         });
 
         this.socketService.once(SocketEvent.RejectPlayer, (reason: string) => {
+            this.dialog.closeAll();
             this.dialog.open(RejectedDialogComponent, { data: { reason } });
             this.routerService.navigateTo('select');
         });

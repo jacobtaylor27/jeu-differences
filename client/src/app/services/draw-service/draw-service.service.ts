@@ -239,7 +239,11 @@ export class DrawService {
                     break;
                 }
                 case 'clearForeground': {
-                    console.log('command indéterminée');
+                    const canvasState = this.canvasStateService.getCanvasState(command.canvasType);
+                    if (canvasState) {
+                        const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+                        this.clearForeground(foreground);
+                    }
                     break;
                 }
             }

@@ -32,47 +32,68 @@ describe('DrawServiceService', () => {
         );
     });
 
-    it('should submit a form because the type is both', async () => {
-        const spyDiff = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
-        const spySource = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        service.reset(PropagateCanvasEvent.Both);
-        expect(spyDiff).toHaveBeenCalled();
-        expect(spySource).toHaveBeenCalled();
+    it('should reset background for both canvas', async () => {
+        const spyResetBackgroundLeft = spyOn(toolBoxServiceSpyObj.$resetBackground.get(CanvasType.Left) as Subject<void>, 'next');
+        const spyResetBackgroundRight = spyOn(toolBoxServiceSpyObj.$resetBackground.get(CanvasType.Right) as Subject<void>, 'next');
+        service.resetBackground(CanvasType.Both);
+        expect(spyResetBackgroundLeft).toHaveBeenCalled();
+        expect(spyResetBackgroundRight).toHaveBeenCalled();
     });
 
-    it('should submit a form because the type is difference', async () => {
-        const spyDiff = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
-        const spySource = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        service.reset(PropagateCanvasEvent.Difference);
-        expect(spyDiff).toHaveBeenCalled();
-        expect(spySource).not.toHaveBeenCalled();
+    it('should reset background for Left background', async () => {
+        const spyResetBackgroundLeft = spyOn(toolBoxServiceSpyObj.$resetBackground.get(CanvasType.Left) as Subject<void>, 'next');
+        const spyResetBackgroundRight = spyOn(toolBoxServiceSpyObj.$resetBackground.get(CanvasType.Right) as Subject<void>, 'next');
+        service.resetBackground(CanvasType.Left);
+        expect(spyResetBackgroundLeft).toHaveBeenCalled();
+        expect(spyResetBackgroundRight).not.toHaveBeenCalled();
     });
 
-    it('should submit a form because the type is source', async () => {
-        const spyDiff = spyOn(toolBoxServiceSpyObj.$resetDiff, 'next');
-        const spySource = spyOn(toolBoxServiceSpyObj.$resetSource, 'next');
-        service.reset(PropagateCanvasEvent.Source);
-        expect(spyDiff).not.toHaveBeenCalled();
-        expect(spySource).toHaveBeenCalled();
-    });
-
-    it('should verify if a both canvas is selected', () => {
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Both, PropagateCanvasEvent.Source)).toBeTrue();
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Both, PropagateCanvasEvent.Difference)).toBeTrue();
-    });
-
-    it('should verify if a draw canvas is selected', () => {
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Difference, PropagateCanvasEvent.Difference)).toBeTrue();
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Difference, PropagateCanvasEvent.Source)).toBeFalse();
-    });
-
-    it('should verify if a draw canvas is selected', () => {
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Source, PropagateCanvasEvent.Source)).toBeTrue();
-        expect(service.isCanvasSelected(PropagateCanvasEvent.Source, PropagateCanvasEvent.Difference)).toBeFalse();
+    it('should reset background for Right background', async () => {
+        const spyResetBackgroundLeft = spyOn(toolBoxServiceSpyObj.$resetBackground.get(CanvasType.Left) as Subject<void>, 'next');
+        const spyResetBackgroundRight = spyOn(toolBoxServiceSpyObj.$resetBackground.get(CanvasType.Right) as Subject<void>, 'next');
+        service.resetBackground(CanvasType.Right);
+        expect(spyResetBackgroundLeft).not.toHaveBeenCalled();
+        expect(spyResetBackgroundRight).toHaveBeenCalled();
     });
 
     it('should check if the pencil is in mode eraser', () => {
         expect(service.isEraser(Tool.Eraser)).toBeTrue();
         expect(service.isEraser(Tool.Pencil)).toBeFalse();
+    });
+
+    it('should add drawing canvas', () => {
+        const spyDrawImage = spyOn(service.$drawingImage, 'set');
+        service.addDrawingCanvas(CanvasType.Left);
+        expect(spyDrawImage).toHaveBeenCalled();
+    });
+
+    it('should reset foreground for both canvas', () => {
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Left, new Subject());
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Right, new Subject());
+        const spyResetForegroundLeft = spyOn(toolBoxServiceSpyObj.$resetForeground.get(CanvasType.Left) as Subject<void>, 'next');
+        const spyResetForegroundRight = spyOn(toolBoxServiceSpyObj.$resetForeground.get(CanvasType.Right) as Subject<void>, 'next');
+        service.resetForeground(CanvasType.Both);
+        expect(spyResetForegroundLeft).toHaveBeenCalled();
+        expect(spyResetForegroundRight).toHaveBeenCalled();
+    });
+
+    it('should reset foreground for left canvas', () => {
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Left, new Subject());
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Right, new Subject());
+        const spyResetForegroundLeft = spyOn(toolBoxServiceSpyObj.$resetForeground.get(CanvasType.Left) as Subject<void>, 'next');
+        const spyResetForegroundRight = spyOn(toolBoxServiceSpyObj.$resetForeground.get(CanvasType.Right) as Subject<void>, 'next');
+        service.resetForeground(CanvasType.Left);
+        expect(spyResetForegroundLeft).toHaveBeenCalled();
+        expect(spyResetForegroundRight).not.toHaveBeenCalled();
+    });
+
+    it('should reset foreground for right canvas', () => {
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Left, new Subject());
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Right, new Subject());
+        const spyResetForegroundLeft = spyOn(toolBoxServiceSpyObj.$resetForeground.get(CanvasType.Left) as Subject<void>, 'next');
+        const spyResetForegroundRight = spyOn(toolBoxServiceSpyObj.$resetForeground.get(CanvasType.Right) as Subject<void>, 'next');
+        service.resetForeground(CanvasType.Right);
+        expect(spyResetForegroundLeft).not.toHaveBeenCalled();
+        expect(spyResetForegroundRight).toHaveBeenCalled();
     });
 });

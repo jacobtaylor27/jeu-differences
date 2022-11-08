@@ -101,6 +101,11 @@ describe('GamePageComponent', () => {
     it('should open the game over dialog', () => {
         component.openGameOverDialog(false);
         expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getOpponent).toHaveBeenCalled();
+
+        component.openGameOverDialog(true);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getPlayer).toHaveBeenCalled();
     });
 
     it('should open the game over dialog with when you win the game', () => {

@@ -16,6 +16,4 @@ export class GameCardService {
     deleteGame(id: string) {
         this.communicationService.deleteGame(id).subscribe();
     }
-
-    // resetHighScores(id: string) {}
 }

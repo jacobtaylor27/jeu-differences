@@ -37,7 +37,6 @@ describe('GameSelectionPageComponent', () => {
         expect(component.formatScoreTime(1)).toEqual('00 : 01');
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     it('getNumberOfGames should call get number of cards from gameCarouselService', () => {
         component.getNumberOfGames();
         expect(spyGameCarouselService.getNumberOfCards).toHaveBeenCalled();

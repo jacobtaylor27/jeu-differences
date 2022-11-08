@@ -17,7 +17,6 @@ describe('CommunicationSocketService', () => {
 
     it('should connect to server by socket', () => {
         const spySocketAlive = spyOnProperty(Object.getPrototypeOf(service), 'isSocketAlive').and.callFake(() => false);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyConnect = spyOn(service['socket'], 'connect');
         service['connect']();
         expect(spySocketAlive).toHaveBeenCalled();
@@ -26,7 +25,6 @@ describe('CommunicationSocketService', () => {
 
     it('should not connect if the socket is a live', () => {
         const spySocketAlive = spyOnProperty(Object.getPrototypeOf(service), 'isSocketAlive').and.callFake(() => true);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyConnect = spyOn(service['socket'], 'connect');
         service['connect']();
         expect(spySocketAlive).toHaveBeenCalled();
@@ -35,7 +33,6 @@ describe('CommunicationSocketService', () => {
 
     it('should not disconnect if the socket is not init', () => {
         const spySocketAlive = spyOnProperty(Object.getPrototypeOf(service), 'isSocketAlive').and.callFake(() => false);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyDisconnect = spyOn(service['socket'], 'disconnect');
         service['disconnect']();
         expect(spySocketAlive).toHaveBeenCalled();

@@ -208,11 +208,4 @@ export class DrawCanvasComponent implements AfterViewInit {
     draw(event: MouseEvent) {
         this.drawService.draw(event);
     }
-
-    updateMouseCoordinates(event: MouseEvent): Line {
-        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        this.coordDraw = this.drawService.reposition(this.foreground.nativeElement, event);
-        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        return { initCoord, finalCoord };
-    }
 }

@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
-import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { DifferencesAreaComponent } from '@app/components/differences-area/differences-area.component';
 import { ExitGameButtonComponent } from '@app/components/exit-game-button/exit-game-button.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
@@ -71,7 +70,6 @@ describe('GamePageComponent', () => {
                 GamePageComponent,
                 SidebarComponent,
                 PlayAreaComponent,
-                CluesAreaComponent,
                 DifferencesAreaComponent,
                 ExitGameButtonComponent,
                 PageHeaderComponent,

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { SocketEvent } from '@common/socket-event';
@@ -9,8 +9,6 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./timer-stopwatch.component.scss'],
 })
 export class TimerStopwatchComponent implements OnInit {
-    @Input() clueAskedCounter: number;
-
     timerDisplay: string;
 
     constructor(private readonly socketService: CommunicationSocketService) {}

@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
-import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { DifferencesAreaComponent } from '@app/components/differences-area/differences-area.component';
 import { ExitGameButtonComponent } from '@app/components/exit-game-button/exit-game-button.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
@@ -22,7 +21,7 @@ import { GamePageComponent } from './game-page.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 
 class SocketClientServiceMock extends CommunicationSocketService {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
 }
 
@@ -71,7 +70,6 @@ describe('GamePageComponent', () => {
                 GamePageComponent,
                 SidebarComponent,
                 PlayAreaComponent,
-                CluesAreaComponent,
                 DifferencesAreaComponent,
                 ExitGameButtonComponent,
                 PageHeaderComponent,
@@ -101,6 +99,11 @@ describe('GamePageComponent', () => {
     it('should open the game over dialog', () => {
         component.openGameOverDialog(false);
         expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getOpponent).toHaveBeenCalled();
+
+        component.openGameOverDialog(true);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getPlayer).toHaveBeenCalled();
     });
 
     it('should open the game over dialog with when you win the game', () => {

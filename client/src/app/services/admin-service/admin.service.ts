@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameConstantsSettingsComponent } from '@app/components/game-constants-settings/game-constants-settings.component';
 import { GameConstants } from '@app/interfaces/game-constants';
-import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { SocketEvent } from '@common/socket-event';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,25 +13,24 @@ import { CommunicationService } from '@app/services/communication/communication.
 export class AdminService {
     gameConstants: GameConstants;
 
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
-        private readonly gameCardHandlerService: GameCardHandlerService,
         private readonly matDialog: MatDialog,
+        private readonly gameCarouselService: GameCarouselService,
         private readonly communicationService: CommunicationService,
+        private readonly socketService: CommunicationSocketService,
     ) {}
 
-    hasGameCards(): boolean {
-        return this.gameCardHandlerService.hasCards();
+    hasCards(): boolean {
+        return this.gameCarouselService.hasCards();
     }
 
     deleteAllGames(): void {
+        this.socketService.send(SocketEvent.GamesDeleted);
         this.communicationService.deleteAllGameCards().subscribe();
     }
 
     openSettings(): void {
         this.matDialog.open(GameConstantsSettingsComponent);
-    }
-
-    resetAllHighScores(): void {
-        this.gameCardHandlerService.resetAllHighScores();
     }
 }

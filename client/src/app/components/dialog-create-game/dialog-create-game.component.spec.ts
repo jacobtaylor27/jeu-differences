@@ -1,9 +1,11 @@
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { Canvas } from '@app/enums/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -28,7 +30,8 @@ describe('DialogCreateGameComponent', () => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['createGame']);
         spyRouter = jasmine.createSpyObj('RouterService', ['navigate']);
         await TestBed.configureTestingModule({
-            declarations: [DialogCreateGameComponent],
+            declarations: [DialogCreateGameComponent, LoadingScreenComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: MAT_DIALOG_DATA, useValue: model },
                 { provide: CommunicationService, useValue: spyCommunicationService },

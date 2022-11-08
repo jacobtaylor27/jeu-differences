@@ -1,9 +1,10 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
@@ -44,7 +45,14 @@ describe('CreateGamePageComponent', () => {
                 ExitGameButtonComponent,
                 LoadingScreenComponent,
             ],
-            imports: [AppMaterialModule, HttpClientTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
+            imports: [
+                AppMaterialModule,
+                HttpClientTestingModule,
+                BrowserAnimationsModule,
+                ReactiveFormsModule,
+                RouterTestingModule,
+                HttpClientModule,
+            ],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: CommunicationService, useValue: communicationSpyObject },
@@ -98,7 +106,7 @@ describe('CreateGamePageComponent', () => {
 
     it('should open the validate dialog if the form is valid', async () => {
         spyOnProperty(component.form, 'valid').and.returnValue(true);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => {
             return of({ body: { numberDifference: 0, data: [0], height: 1, width: 1 } } as HttpResponse<{
@@ -113,9 +121,9 @@ describe('CreateGamePageComponent', () => {
     });
 
     it('should not open the validate dialog if the form is not valid and body is null', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => {
             return of({ body: null } as HttpResponse<{
@@ -131,9 +139,9 @@ describe('CreateGamePageComponent', () => {
     });
 
     it('should not open the validate dialog if the form is not valid and response is null', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => of(null));
         component.isGameValid();

@@ -167,6 +167,21 @@ describe('GameManagerService', () => {
         expect(spyAddPlayer.called).to.equal(true);
     });
 
+    it('should check if player has the same name', () => {
+        const stubFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame');
+        stubFindGame.callsFake(() => undefined);
+        expect(gameManager.hasSameName('room', 'name')).to.equal(false);
+
+        const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        stubFindGame.callsFake(() => game);
+        expect(gameManager.hasSameName('room', 'name')).to.equal(false);
+
+        game.players = new Map();
+        game.players.set('id', 'name');
+        expect(gameManager.hasSameName('room', 'name')).to.equal(true);
+        expect(gameManager.hasSameName('room', 'test')).to.equal(false);
+    });
+
     it('should check if the game is in multiplayer', () => {
         const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
@@ -180,7 +195,7 @@ describe('GameManagerService', () => {
     it('should leave game', () => {
         const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyLeaveGame = stub(game, 'leaveGame').callsFake(() => {});
         gameManager.leaveGame('', '');
         expect(spyLeaveGame.called).to.equal(false);
@@ -213,7 +228,7 @@ describe('GameManagerService', () => {
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         const expectedGame = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         const expectedTimer = {} as NodeJS.Timer;
-        // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars -- callback
         const spyInterval = stub(global, 'setInterval').callsFake((callback: (args: void) => void, ms?: number | undefined) => {
             return expectedTimer;
         });
@@ -224,7 +239,7 @@ describe('GameManagerService', () => {
             {
                 sockets: {
                     to: () => {
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake Emit and return {}
                         return { emit: () => {} };
                     },
                 },
@@ -238,7 +253,7 @@ describe('GameManagerService', () => {
     it('should clear a timer of a game', () => {
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         const expectedGame = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyClearInterval = stub(global, 'clearInterval').callsFake(() => {});
         gameManager.deleteTimer('');
         expect(spyClearInterval.called).to.equal(false);

@@ -31,7 +31,7 @@ export class GameManagerService {
         }
         game.timerId = setInterval(() => {
             sio.sockets.to(gameId).emit('clock', this.getTime(gameId));
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- one second is 1000 ms
         }, 1000);
     }
 
@@ -73,6 +73,18 @@ export class GameManagerService {
         const game = this.findGame(gameId);
 
         game?.addPlayer(player);
+    }
+
+    hasSameName(roomId: string, playersName: string) {
+        const game = this.findGame(roomId);
+        if (game) {
+            for (const [, value] of game.players.entries()) {
+                if (value === playersName) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     isGameMultiplayer(gameId: string) {

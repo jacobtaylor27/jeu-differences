@@ -19,7 +19,7 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
 import { ChatBoxComponent } from './components/chat-box/chat-box.component';
-import { CluesAreaComponent } from './components/clues-area/clues-area.component';
+import { CommonToolBoxComponent } from './components/common-tool-box/common-tool-box.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
 import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
@@ -33,11 +33,12 @@ import { GameConstantsSettingsComponent } from './components/game-constants-sett
 import { GameScoreComponent } from './components/game-score/game-score.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { PlayerLeftSnackbarComponent } from './components/player-left-snackbar/player-left-snackbar.component';
+import { RejectedDialogComponent } from './components/rejected-dialog/rejected-dialog.component';
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
-import { CommonToolBoxComponent } from './components/common-tool-box/common-tool-box.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -66,7 +67,6 @@ import { CommonToolBoxComponent } from './components/common-tool-box/common-tool
         AdminCommandsComponent,
         PlayAreaComponent,
         ExitGameButtonComponent,
-        CluesAreaComponent,
         TimerStopwatchComponent,
         DifferencesAreaComponent,
         DialogCreateGameComponent,
@@ -80,6 +80,8 @@ import { CommonToolBoxComponent } from './components/common-tool-box/common-tool
         ChatBoxComponent,
         ApprovalDialogComponent,
         CommonToolBoxComponent,
+        PlayerLeftSnackbarComponent,
+        RejectedDialogComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

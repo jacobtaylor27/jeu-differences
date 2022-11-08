@@ -36,7 +36,7 @@ describe('GameInfo Service', async () => {
             return '5';
         });
         gameInfoService = new GameInfoService(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- need any to test databaseService
             databaseService as any,
             bmpService,
             bmpSubtractorService,
@@ -83,25 +83,16 @@ describe('GameInfo Service', async () => {
     });
 
     it('deleteGameInfoById(id) should delete a gameInfo', async () => {
-        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
-        await gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
-        await gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
-        await gameInfoService.deleteGameInfoById('0');
-        const expectedGames = await gameInfoService.getAllGameInfos();
-        expect(expectedGames.length).to.equal(DEFAULT_GAMES.length - 1);
-        expect(expectedGames[0]).to.deep.equal(DEFAULT_GAMES[1]);
-        expect(expectedGames[1]).to.deep.equal(DEFAULT_GAMES[2]);
-    });
-
-    it('deleteGameinfoBy(id) should return true when deleting a game', async () => {
-        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
-        await expect(gameInfoService.deleteGameInfoById('0')).to.eventually.equal(true);
-    });
-
-    it('deleteGameinfoBy(id) should return false when deleting a game twice', async () => {
+        const spyBmpService = stub(bmpService, 'deleteGameImages');
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         await gameInfoService.deleteGameInfoById('0');
-        await expect(gameInfoService.deleteGameInfoById('0')).to.eventually.equal(false);
+        expect(spyBmpService.calledOnce).to.equal(true);
+    });
+
+    it('deleteGameinfoBy(id) should return false when deleting a game that doesnt exist', async () => {
+        await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        const result = await gameInfoService.deleteGameInfoById('1');
+        expect(result).to.equal(false);
     });
 
     it('addGameInfo(gameInfo) should add a game to the game collection, getAllGames() should return them', async () => {
@@ -137,11 +128,23 @@ describe('GameInfo Service', async () => {
         const addGameSpy = stub(gameInfoService, 'addGameInfo').resolves();
         const bmpEncoderSpy = stub(bmpEncoderService, 'base64Encode').resolves();
         await gameInfoService
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake toImageData and return {}
             .addGameInfoWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0)
             .then(() => {
                 expect(bmpEncoderSpy.called).to.equal(true);
                 expect(addGameSpy.called).to.equal(true);
             });
+    });
+
+    it('should validate that a page number is valid', () => {
+        expect(gameInfoService.validatePageNumber(0, 3)).to.equal(1);
+        expect(gameInfoService.validatePageNumber(1, 3)).to.equal(1);
+        expect(gameInfoService.validatePageNumber(2, 3)).to.equal(2);
+        expect(gameInfoService.validatePageNumber(2, 1)).to.equal(1);
+    });
+
+    it('should get the games information based on a page number', async () => {
+        const value = await gameInfoService.getGamesInfo(1);
+        expect(value.games).to.deep.equal([]);
     });
 });

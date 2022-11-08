@@ -14,7 +14,7 @@ export class UserNameInputComponent {
     playerName: string;
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly dialogRef: MatDialogRef<UserNameInputComponent>,
         private readonly gameInformationHandlerService: GameInformationHandlerService,

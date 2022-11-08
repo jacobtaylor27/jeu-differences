@@ -1,4 +1,5 @@
 import { Application } from '@app/app';
+import { GameCarousel } from '@app/interface/game-carousel';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
@@ -22,7 +23,6 @@ describe('GameController', () => {
         gameInfo = createStubInstance(GameInfoService);
         gameValidation = createStubInstance(GameValidation);
         const app = Container.get(Application);
-        // eslint-disable-next-line dot-notation
         Object.defineProperty(app['gameController'], 'gameManager', { value: gameManager });
         Object.defineProperty(app['gameController'], 'gameInfo', { value: gameInfo });
         Object.defineProperty(app['gameController'], 'gameValidation', { value: gameValidation });
@@ -81,18 +81,35 @@ describe('GameController', () => {
     });
 
     it('should fetch all games cards of the database', async () => {
-        const expectedGameCards = [{} as PrivateGameInformation, {} as PrivateGameInformation];
-        gameInfo.getAllGameInfos.resolves(expectedGameCards);
+        const expected = {
+            games: [{} as PrivateGameInformation],
+            information: {
+                currentPage: 1,
+                gamesOnPage: 1,
+                nbOfGames: 1,
+                nbOfPages: 1,
+                hasNext: false,
+                hasPrevious: false,
+            },
+        } as GameCarousel;
+
+        gameInfo.getGamesInfo.resolves(expected);
         return supertest(expressApp)
-            .get('/api/game/cards')
+            .get('/api/game/cards/?page=1')
             .then((response) => {
                 expect(response.body).to.deep.equal({});
+                expect(response.body.games).to.equal(undefined);
             });
     });
 
+    it('should return bad request when page is undefined', async () => {
+        gameInfo.getGamesInfo.rejects();
+        return supertest(expressApp).get('/api/game/cards/?page=').expect(StatusCodes.BAD_REQUEST);
+    });
+
     it('should return nothing if the games cards is empty', async () => {
-        gameInfo.getAllGameInfos.rejects();
-        return supertest(expressApp).get('/api/game/cards').expect(StatusCodes.NOT_FOUND);
+        gameInfo.getGamesInfo.rejects();
+        return supertest(expressApp).get('/api/game/cards/?page=1').expect(StatusCodes.BAD_REQUEST);
     });
 
     it('should fetch a games card of the database', async () => {

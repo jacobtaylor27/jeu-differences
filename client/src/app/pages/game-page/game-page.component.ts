@@ -15,7 +15,7 @@ export class GamePageComponent implements OnDestroy {
     favoriteTheme: string = 'deeppurple-amber-theme';
     clock: string;
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private dialog: MatDialog,
         public gameInfoHandlerService: GameInformationHandlerService,
@@ -34,7 +34,10 @@ export class GamePageComponent implements OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.minWidth = '50%';
-        dialogConfig.data = { isWin };
+        dialogConfig.data = {
+            win: isWin,
+            winner: isWin ? this.gameInfoHandlerService.getPlayer().name : this.gameInfoHandlerService.getOpponent().name,
+        };
         this.dialog.open(DialogGameOverComponent, dialogConfig);
     }
 

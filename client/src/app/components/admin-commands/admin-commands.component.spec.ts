@@ -11,7 +11,7 @@ describe('AdminCommandsComponent', () => {
     let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(async () => {
-        spyAdminService = jasmine.createSpyObj('AdminService', ['openSettings', 'deleteAllGames', 'resetAllHighScores', 'hasGameCards']);
+        spyAdminService = jasmine.createSpyObj('AdminService', ['openSettings', 'deleteAllGames', 'resetAllHighScores', 'hasCards']);
         spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
@@ -37,9 +37,9 @@ describe('AdminCommandsComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('hasCards should call hasGameCards from adminService', () => {
+    it('hasCards should call hasCards from adminService', () => {
         component.hasCards();
-        expect(spyAdminService.hasGameCards).toHaveBeenCalled();
+        expect(spyAdminService.hasCards).toHaveBeenCalled();
     });
 
     it('onClickModifySettings should call openSettings from adminService', () => {
@@ -50,15 +50,6 @@ describe('AdminCommandsComponent', () => {
     it('onClickDeleteGames should call deleteAllGames from admin service', () => {
         component.onClickDeleteGames();
         expect(spyAdminService.deleteAllGames).toHaveBeenCalled();
-    });
-
-    it('onClickResetHighScores should call resetAllHighScores from admin service', () => {
-        component.onClickResetHighScores();
-        expect(spyAdminService.resetAllHighScores).toHaveBeenCalled();
-    });
-
-    it('should reload component', () => {
-        component.reloadComponent();
         expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
     });
 });

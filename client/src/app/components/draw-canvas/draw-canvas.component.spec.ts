@@ -70,9 +70,9 @@ describe('DrawCanvasComponent', () => {
         component.pencil = DEFAULT_PENCIL;
         component.pencil.state = Tool.Pencil;
         component.coordDraw = DEFAULT_POSITION_MOUSE_CLIENT;
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- new promise and return {}
             return new Promise<void>(() => {});
         });
         component.draw({} as MouseEvent);
@@ -140,8 +140,8 @@ describe('DrawCanvasComponent', () => {
     });
 
     it('should subscribe to get the new image and draw it', async () => {
-        const ctx = component.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const resetCanvasSpy = spyOn(component, 'resetCanvas').and.callFake(() => {});
         const drawImageSpy = spyOn(ctx, 'drawImage');
         toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {

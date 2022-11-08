@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers -- tests with nb of differences */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
@@ -62,7 +62,7 @@ describe('DifferencesAreaComponent', () => {
     it('should set the nb of differences found during the game', () => {
         component.players = [{ name: 'test', nbDifference: '0/10' }];
         spyOn(Object.getPrototypeOf(component), 'getPlayerIndex').and.callFake(() => 0);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyNbDifferenceFound = spyOn(Object.getPrototypeOf(component), 'setNbDifferencesFound').and.callFake(() => '1/10');
         spyGameInfosService.$differenceFound.subscribe(() => {
             expect(spyNbDifferenceFound).toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe('DifferencesAreaComponent', () => {
     it('should not set the nb of differences found during the game if the player is not find', () => {
         component.players = [{ name: 'test', nbDifference: '0/10' }];
         spyOn(Object.getPrototypeOf(component), 'getPlayerIndex').and.callFake(() => -1);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyNbDifferenceFound = spyOn(Object.getPrototypeOf(component), 'setNbDifferencesFound').and.callFake(() => '1/10');
         spyGameInfosService.$differenceFound.subscribe(() => {
             expect(spyNbDifferenceFound).not.toHaveBeenCalled();

@@ -9,13 +9,18 @@ import { PrivateGameInformation } from '@app/interface/game-info';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
+import { GameCarousel } from '@app/interface/game-carousel';
+// can't import this otherwise
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import LZString = require('lz-string');
+
+const NB_TO_RETRIEVE = 4;
+
 @Service()
 export class GameInfoService {
     private srcPath: string = DEFAULT_BMP_ASSET_PATH;
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly databaseService: DatabaseService,
         private readonly bmpService: BmpService,
@@ -26,6 +31,31 @@ export class GameInfoService {
 
     get collection(): Collection<PrivateGameInformation> {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
+    }
+
+    async getGamesInfo(pageNb: number): Promise<GameCarousel> {
+        const nbOfGames = await this.collection.countDocuments();
+        const nbOfPages = Math.ceil(nbOfGames / NB_TO_RETRIEVE);
+        const currentPage = this.validatePageNumber(pageNb, nbOfPages);
+
+        // skip pages to only retrieve the one we want
+        const games = await this.collection.find({}, { skip: (currentPage - 1) * NB_TO_RETRIEVE, limit: NB_TO_RETRIEVE }).toArray();
+
+        return {
+            games,
+            information: {
+                currentPage,
+                gamesOnPage: games.length,
+                nbOfGames,
+                nbOfPages,
+                hasNext: currentPage < nbOfPages,
+                hasPrevious: currentPage > 1,
+            },
+        };
+    }
+
+    validatePageNumber(pageNb: number, total: number): number {
+        return pageNb < 1 ? 1 : pageNb > total ? 1 : pageNb;
     }
 
     async getAllGameInfos(): Promise<PrivateGameInformation[]> {
@@ -69,10 +99,18 @@ export class GameInfoService {
 
     async deleteGameInfoById(gameId: string): Promise<boolean> {
         const filter = { id: { $eq: gameId } };
-        return (await this.collection.findOneAndDelete(filter)).value !== null ? true : false;
+        const deletedGame = (await this.collection.findOneAndDelete(filter)).value;
+
+        if (deletedGame) {
+            const imageIds = [deletedGame.idOriginalBmp, deletedGame.idEditedBmp, deletedGame.idDifferenceBmp];
+            await this.bmpService.deleteGameImages(imageIds, this.srcPath);
+        }
+
+        return deletedGame !== null;
     }
 
     async deleteAllGamesInfo(): Promise<void> {
+        await this.bmpService.deleteAllSourceImages(this.srcPath);
         await this.collection.deleteMany({});
     }
 }

@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { SocketEvent } from '@common/socket-event';
@@ -20,7 +19,7 @@ describe('TimerStopwatchComponent', () => {
         socketServiceMock['socket'] = socketHelper as unknown as Socket;
 
         await TestBed.configureTestingModule({
-            declarations: [TimerStopwatchComponent, CluesAreaComponent],
+            declarations: [TimerStopwatchComponent],
             imports: [AppMaterialModule],
             providers: [{ provide: CommunicationSocketService, useValue: socketServiceMock }],
         }).compileComponents();

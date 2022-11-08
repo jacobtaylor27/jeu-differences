@@ -1,6 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { DifferencesAreaComponent } from '@app/components/differences-area/differences-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
@@ -32,7 +31,7 @@ describe('SidebarComponent', () => {
         spyGameInfosService.getNbDifferences.and.callFake(() => 0);
         spyGameInfosService.getNbTotalDifferences.and.callFake(() => expectedTotalDifference);
         await TestBed.configureTestingModule({
-            declarations: [SidebarComponent, CluesAreaComponent, DifferencesAreaComponent, TimerStopwatchComponent],
+            declarations: [SidebarComponent, DifferencesAreaComponent, TimerStopwatchComponent],
             imports: [AppMaterialModule, HttpClientTestingModule],
             providers: [
                 {
@@ -82,11 +81,5 @@ describe('SidebarComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('should set askedClue variable', () => {
-        const expectedClueValue = 3;
-        component.onClueAsked(3);
-        expect(component.askedClue).toEqual(expectedClueValue);
     });
 });

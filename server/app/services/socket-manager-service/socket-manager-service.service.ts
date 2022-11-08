@@ -98,6 +98,12 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {
                 if (roomId) {
+                    const request = this.multiplayerGameManager.getRequest(roomId);
+                    if (request) {
+                        for (const player of request) {
+                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, 'le joueur a quitte.');
+                        }
+                    }
                     this.multiplayerGameManager.removeGameWaiting(roomId);
                     return;
                 }

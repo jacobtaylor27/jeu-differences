@@ -32,7 +32,7 @@ export class DrawService {
             });
             return;
         }
-        this.toolService.$resetBackground.get(canvasType)?.next();
+        (this.toolService.$resetBackground.get(canvasType) as Subject<void>).next();
     }
 
     resetForeground(canvasType: CanvasType) {
@@ -42,7 +42,7 @@ export class DrawService {
             });
             return;
         }
-        this.toolService.$resetForeground.get(canvasType)?.next();
+        (this.toolService.$resetForeground.get(canvasType) as Subject<void>).next();
     }
 
     isEraser(pencilState: Tool) {

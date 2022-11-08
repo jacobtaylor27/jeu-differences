@@ -113,10 +113,6 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.drawService.updateImage();
         });
 
-        this.toolBoxService.$resetForeground.get(this.canvasType)?.subscribe(() => {
-            this.resetForeground(foreground);
-        });
-
         this.toolBoxService.$switchForeground.get(this.canvasType)?.subscribe(() => {
             const ctx = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             const newForeground = this.drawService.foregroundContext.get(
@@ -136,6 +132,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.clearForeground(ctxCanvas);
     }
 
+    /*
     resetForeground(ctxCanvas: CanvasRenderingContext2D) {
         this.clearForeground(ctxCanvas);
         this.indexOfCommand++;
@@ -146,6 +143,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         };
         this.commands[this.indexOfCommand] = this.currentCommand;
     }
+    */
 
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);

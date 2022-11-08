@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
+import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { Command } from '@app/interfaces/command';
@@ -8,7 +9,6 @@ import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
-import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -27,7 +27,7 @@ export class DrawService {
     pencil: Pencil = DEFAULT_PENCIL;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
-    constructor(private toolService: ToolBoxService, private canvasStateService: CanvasStateService) {
+    constructor(private canvasStateService: CanvasStateService) {
         this.$drawingImage = new Map();
         this.foregroundContext = new Map();
     }
@@ -77,6 +77,12 @@ export class DrawService {
         this.$drawingImage.set(canvasType, new Subject<ImageData>());
     }
 
+    clearBackground(ctxImage: CanvasRenderingContext2D) {
+        ctxImage.rect(0, 0, SIZE.x, SIZE.y);
+        ctxImage.fillStyle = 'white';
+        ctxImage.fill();
+    }
+
     resetBackground(canvasType: CanvasType) {
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
@@ -85,20 +91,17 @@ export class DrawService {
         }
     }
 
-    clearBackground(ctxImage: CanvasRenderingContext2D) {
-        ctxImage.rect(0, 0, SIZE.x, SIZE.y);
-        ctxImage.fillStyle = 'white';
-        ctxImage.fill();
+    clearForeground(ctxCanvas: CanvasRenderingContext2D) {
+        ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        this.updateImage();
     }
 
     resetForeground(canvasType: CanvasType) {
-        if (canvasType === CanvasType.Both) {
-            this.toolService.$resetForeground.forEach((event: Subject<void>) => {
-                event.next();
-            });
-            return;
+        const canvasState = this.canvasStateService.getCanvasState(canvasType);
+        if (canvasState) {
+            const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.clearForeground(foreground);
         }
-        this.toolService.$resetForeground.get(canvasType)?.next();
     }
 
     isEraser(pencilState: Tool) {

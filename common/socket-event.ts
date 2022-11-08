@@ -1,6 +1,7 @@
 export enum SocketEvent {
     AcceptPlayer = 'acceptPlayer',
     RejectPlayer = 'rejectPlayer',
+    PlayerLeft = 'playerLeft',
     Connection = 'connection',
     Disconnect = 'disconnect',
     CreateGame = 'createGame',
@@ -13,6 +14,7 @@ export enum SocketEvent {
     WaitPlayer = 'waitPlayer',
     Play = 'play',
     LeaveGame = 'leaveGame',
+    LeaveWaiting = 'leaveWaiting',
     Win = 'win',
     Lose = 'lose',
     DifferenceNotFound = 'differenceNotFound',

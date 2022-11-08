@@ -44,20 +44,26 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {
+                if (!this.multiplayerGameManager.playersRequestExists(roomId, opponentsRoomId)) {
+                    socket.emit(SocketEvent.PlayerLeft);
+                    return;
+                }
+
                 this.multiplayerGameManager.removeGameWaiting(roomId);
                 this.sio.sockets.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
                 const request = this.multiplayerGameManager.getRequest(roomId);
                 if (!request) {
                     return;
                 }
+
+                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
+                socket.join(roomId);
                 for (const player of request) {
-                    if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, roomId)) {
-                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer);
+                    if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, opponentsRoomId)) {
+                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer, 'la partie a déjà commencé.');
                     }
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
-                this.sio.to(opponentsRoomId).emit(SocketEvent.JoinGame, { roomId, playerName });
-                socket.join(roomId);
                 this.gameManager.setTimer(roomId);
                 this.gameManager.sendTimer(this.sio, roomId);
             });
@@ -69,7 +75,7 @@ export class SocketManagerService {
                     this.sio.to(roomId).emit(SocketEvent.RequestToJoin, newPlayerRequest);
                 }
 
-                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer);
+                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer, 'le joueur a refusé votre demande.');
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
@@ -88,6 +94,15 @@ export class SocketManagerService {
                 }
                 this.gameManager.leaveGame(socket.id, gameId);
                 socket.leave(gameId);
+            });
+
+            socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {
+                if (roomId) {
+                    this.multiplayerGameManager.removeGameWaiting(roomId);
+                    return;
+                }
+
+                this.multiplayerGameManager.deleteRequest(this.multiplayerGameManager.getRoomIdWaiting(gameCard), socket.id);
             });
 
             socket.on(SocketEvent.GetGamesWaiting, () => {
@@ -113,8 +128,8 @@ export class SocketManagerService {
                         this.gameManager.leaveGame(socket.id, gameId);
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
-                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
-                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
+                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
+                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
                     return;
                 } else {
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
@@ -134,17 +149,22 @@ export class SocketManagerService {
 
     // eslint-disable-next-line max-params
     async createGameMulti(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
+        let roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
+        socket.emit(SocketEvent.WaitPlayer);
         if (this.multiplayerGameManager.isGameWaiting(game.card)) {
-            const roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
-            this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
+            this.gameManager.hasSameName(roomId, player);
+            if (this.gameManager.hasSameName(roomId, player)) {
+                socket.emit(SocketEvent.RejectPlayer, 'vous devez choisir un autre nom de joueur');
+                return;
+            }
 
-            socket.emit(SocketEvent.WaitPlayer);
+            this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
 
             if (this.multiplayerGameManager.theresOneRequest(roomId)) {
                 this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
             }
         } else {
-            const roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+            roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
             this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
             socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
             socket.emit(SocketEvent.WaitPlayer, roomId);

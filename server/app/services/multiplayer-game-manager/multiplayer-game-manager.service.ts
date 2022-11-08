@@ -15,6 +15,18 @@ export class MultiplayerGameManager {
         return length ? length > 0 : false;
     }
 
+    playersRequestExists(roomId: string, playerId: string) {
+        const requests = this.getRequest(roomId);
+        if (requests) {
+            for (const request of requests) {
+                if (request.id === playerId) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     getRequest(gameId: string) {
         return this.requestsOnHold.has(gameId) ? this.requestsOnHold.get(gameId) : [];
     }
@@ -38,6 +50,18 @@ export class MultiplayerGameManager {
 
     deleteAllRequests(roomId: string) {
         this.requestsOnHold.delete(roomId);
+    }
+
+    deleteRequest(roomId: string, playerId: string) {
+        const requests = this.getRequest(roomId);
+        if (requests) {
+            for (let i = 0; i < requests.length; i++) {
+                if (requests[i].id === playerId) {
+                    requests.splice(i, 1);
+                }
+            }
+            this.requestsOnHold.set(roomId, requests);
+        }
     }
 
     getNewRequest(roomId: string) {

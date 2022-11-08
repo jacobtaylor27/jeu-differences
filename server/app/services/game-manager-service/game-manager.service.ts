@@ -75,10 +75,13 @@ export class GameManagerService {
         game?.addPlayer(player);
     }
 
-    hasSameName(roomId : string, playersName : string){
-        for(let [, value] of this.findGame(roomId)!.players.entries()){
-            if(value === playersName){
-                return true;
+    hasSameName(roomId: string, playersName: string) {
+        const game = this.findGame(roomId);
+        if (game) {
+            for (const [, value] of game.players.entries()) {
+                if (value === playersName) {
+                    return true;
+                }
             }
         }
         return false;

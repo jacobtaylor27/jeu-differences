@@ -82,6 +82,7 @@ describe('ChatBoxComponent', () => {
         const spySend = spyOn(component.communicationSocket, 'send');
         component.onClickSend();
         socketHelper.peerSideEmit(SocketEvent.Message, 'message');
+        socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
         expect(spySend).toHaveBeenCalled();
         expect(spyAddingMessage).toHaveBeenCalled();
         expect(component.currentMessage).toEqual('');

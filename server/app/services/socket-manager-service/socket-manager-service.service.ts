@@ -90,9 +90,8 @@ export class SocketManagerService {
                 }
                 if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
-                    this.gameManager.leaveGame(socket.id, gameId);
-                    socket.leave(gameId);
-                }
+                this.gameManager.leaveGame(socket.id, gameId);
+                socket.leave(gameId);
             });
 
             socket.on(SocketEvent.GetGamesWaiting, () => {
@@ -141,16 +140,7 @@ export class SocketManagerService {
                     return;
                 } else {
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
-                    if (!this.gameManager.isGameOver(gameId)) {
-                        socket.emit(SocketEvent.EventMessage, this.eventMessageService.differenceFoundMessage());
-                    } else {
-                        this.sio
-                            .to(gameId)
-                            .emit(
-                                SocketEvent.EventMessage,
-                                this.eventMessageService.leavingGameMessage(this.gameManager['findGame'](gameId)?.findPlayer(socket.id)),
-                            );
-                    }
+                    socket.emit(SocketEvent.EventMessage, this.eventMessageService.differenceFoundMessage());
                 }
             });
         });

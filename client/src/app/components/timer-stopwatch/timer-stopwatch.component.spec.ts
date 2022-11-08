@@ -38,6 +38,6 @@ describe('TimerStopwatchComponent', () => {
     it('should set the display time', () => {
         socketHelper.peerSideEmit(SocketEvent.Clock, '2');
         component.ngOnInit();
-        expect(component.timerDisplay).toBe('00 : 02');
+        expect(component.timerDisplay).toBe('00:02');
     });
 });

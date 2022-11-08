@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCard } from '@app/interfaces/game-card';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { Score } from '@common/score';
 import { SocketEvent } from '@common/socket-event';
 
@@ -15,7 +15,7 @@ export class GameCardComponent implements OnInit {
     favoriteTheme: string = 'deeppurple-amber-theme';
     imageSrc: string;
 
-    constructor(private readonly communicationSocket: CommunicationSocketService) {}
+    constructor(private readonly communicationSocket: CommunicationSocketService, private readonly timeFormatter: TimeFormatterService) {}
 
     ngOnInit() {
         this.setImagesSrc();
@@ -39,7 +39,7 @@ export class GameCardComponent implements OnInit {
     }
 
     formatScoreTime(scoreTime: number): string {
-        return TimeFormatter.getMMSSFormat(scoreTime);
+        return this.timeFormatter.formatTime(scoreTime);
     }
 
     getGameName(): string {

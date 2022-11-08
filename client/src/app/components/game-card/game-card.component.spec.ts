@@ -2,13 +2,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game-card-buttons.component';
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
 import { GameCard } from '@app/interfaces/game-card';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { SocketEvent } from '@common/socket-event';
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
@@ -51,7 +51,7 @@ const GAME_CARD: GameCard = {
 describe('GameCardComponent', () => {
     let component: GameCardComponent;
     let fixture: ComponentFixture<GameCardComponent>;
-    let spyTimeFormatter: jasmine.SpyObj<TimeFormatter>;
+    let spyTimeFormatter: jasmine.SpyObj<TimeFormatterService>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
     let socketServiceMock: CommunicationSocketService;
@@ -60,6 +60,7 @@ describe('GameCardComponent', () => {
     beforeEach(async () => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getImgData']);
         spyCommunicationService.getImgData.and.returnValue(of());
+        spyTimeFormatter = jasmine.createSpyObj('TimeFormatterService', ['formatTime']);
         socketHelper = new SocketTestHelper();
         socketServiceMock = new CommunicationSocketService();
         socketServiceMock['socket'] = socketHelper as unknown as Socket;
@@ -69,16 +70,16 @@ describe('GameCardComponent', () => {
             declarations: [GameCardComponent, GameScoreComponent, GameCardButtonsComponent],
             providers: [
                 {
-                    provide: TimeFormatter,
-                    useValue: spyTimeFormatter,
-                },
-                {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
                 },
                 {
                     provide: CommunicationSocketService,
                     useValue: socketServiceMock,
+                },
+                {
+                    provide: TimeFormatterService,
+                    useValue: spyTimeFormatter,
                 },
             ],
         }).compileComponents();
@@ -98,9 +99,8 @@ describe('GameCardComponent', () => {
     });
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
-        spyTimeFormatter = spyOn(TimeFormatter, 'getMMSSFormat');
         component.formatScoreTime(1);
-        expect(spyTimeFormatter).toHaveBeenCalled();
+        expect(spyTimeFormatter.formatTime).toHaveBeenCalled();
     });
 
     it('getGameName should return the name of the game', () => {

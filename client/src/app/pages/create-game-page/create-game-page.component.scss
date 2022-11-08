@@ -33,7 +33,6 @@ label {
     display: flex;
     justify-content: flex-end;
     padding-right: 3vw;
-    padding-top: 2vh;
 }
 
 .submission-box {
@@ -53,4 +52,13 @@ label {
     justify-self: center;
     align-self: center;
     min-width: 500px;
+}
+
+.common-toolbox-container {
+    display: flex;
+    justify-content: center;
+}
+
+.space-between-canvas-and-tools {
+    height: 2vh;
 }

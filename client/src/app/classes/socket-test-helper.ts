@@ -6,7 +6,7 @@ type CallbackSignature = (params: any) => unknown;
 @Injectable({
     providedIn: 'root',
 })
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+/* eslint-disable  @typescript-eslint/no-non-null-assertion -- using callbacks to test sockets */
 export class SocketTestHelper {
     private callbacks = new Map<string, CallbackSignature[]>();
 

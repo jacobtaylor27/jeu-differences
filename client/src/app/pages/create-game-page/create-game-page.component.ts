@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
@@ -8,6 +8,7 @@ import { LoadingScreenComponent } from '@app/components/loading-screen/loading-s
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Theme } from '@app/enums/theme';
+import { CanvasEventHandlerService } from '@app/services/canvas-event-handler/canvas-event-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
@@ -30,6 +31,7 @@ export class CreateGamePageComponent implements AfterViewInit {
         public dialog: MatDialog,
         private drawService: DrawService,
         private communication: CommunicationService,
+        private canvasEventHandler: CanvasEventHandlerService,
         exitButtonService: ExitButtonHandlerService,
     ) {
         this.drawingImage.set(CanvasType.Left, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
@@ -39,6 +41,21 @@ export class CreateGamePageComponent implements AfterViewInit {
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
         });
+    }
+
+    @HostListener('window:keyup', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        if (!event.ctrlKey) {
+            return;
+        }
+        if (event.key !== 'z' && event.key !== 'Z') {
+            return;
+        }
+        if (event.shiftKey) {
+            this.canvasEventHandler.handleCtrlShiftZ();
+        } else {
+            this.canvasEventHandler.handleCtrlZ();
+        }
     }
 
     ngAfterViewInit(): void {

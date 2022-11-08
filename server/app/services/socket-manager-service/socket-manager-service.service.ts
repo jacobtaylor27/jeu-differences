@@ -118,6 +118,15 @@ export class SocketManagerService {
                         );
                     return;
                 }
+                this.sio
+                    .to(gameId)
+                    .emit(
+                        SocketEvent.EventMessage,
+                        this.eventMessageService.differenceFoundMessage(
+                            this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
+                            this.gameManager.isGameMultiplayer(gameId),
+                        ),
+                    );
                 if (this.gameManager.isGameOver(gameId)) {
                     this.gameManager.leaveGame(socket.id, gameId);
                     socket.emit(SocketEvent.Win);
@@ -128,29 +137,10 @@ export class SocketManagerService {
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
-                    this.sio
-                        .to(gameId)
-                        .emit(
-                            SocketEvent.EventMessage,
-                            this.eventMessageService.differenceFoundMessage(
-                                this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
-                                this.gameManager.isGameMultiplayer(gameId),
-                            ),
-                        );
                     socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
                     return;
                 } else {
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
-                    if (!this.gameManager.isGameOver(gameId)) {
-                        socket.emit(SocketEvent.EventMessage, this.eventMessageService.differenceFoundMessage());
-                    } else {
-                        this.sio
-                            .to(gameId)
-                            .emit(
-                                SocketEvent.EventMessage,
-                                this.eventMessageService.leavingGameMessage(this.gameManager['findGame'](gameId)?.findPlayer(socket.id)),
-                            );
-                    }
                 }
             });
         });

@@ -1,32 +1,15 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Command } from '@app/interfaces/command';
+import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
+import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-
-interface Stroke {
-    lines: Line[];
-}
-interface StrokeStyle {
-    color: string;
-    width: number;
-    cap: CanvasLineCap;
-    destination: GlobalCompositeOperation;
-}
-interface Line {
-    initCoord: Vec2;
-    finalCoord: Vec2;
-}
-
-interface Command {
-    name: string;
-    stroke: Stroke;
-    style: StrokeStyle;
-}
 
 @Component({
     selector: 'app-draw-canvas',
@@ -39,10 +22,6 @@ export class DrawCanvasComponent implements AfterViewInit {
     @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() canvasType: CanvasType;
 
-    // Having an index of -1 makes way more sens, because the default index is out of bound.
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    indexOfCommand: number = -1;
-    commands: Command[] = [];
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
@@ -56,21 +35,6 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     get height() {
         return SIZE.y;
-    }
-
-    @HostListener('window:keyup', ['$event'])
-    keyEvent(event: KeyboardEvent) {
-        if (!event.ctrlKey) {
-            return;
-        }
-        if (event.key !== 'z' && event.key !== 'Z') {
-            return;
-        }
-        if (event.shiftKey) {
-            this.handleCtrlShiftZ();
-        } else {
-            this.handleCtrlZ();
-        }
     }
 
     handleCtrlShiftZ() {

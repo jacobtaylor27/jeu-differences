@@ -39,6 +39,7 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { PlayerLeftSnackbarComponent } from './components/player-left-snackbar/player-left-snackbar.component';
 import { RejectedDialogComponent } from './components/rejected-dialog/rejected-dialog.component';
+
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.

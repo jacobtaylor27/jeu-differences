@@ -3,30 +3,13 @@ import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZ
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Command } from '@app/interfaces/command';
+import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
+import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-
-interface Stroke {
-    lines: Line[];
-}
-interface StrokeStyle {
-    color: string;
-    width: number;
-    cap: CanvasLineCap;
-    destination: GlobalCompositeOperation;
-}
-interface Line {
-    initCoord: Vec2;
-    finalCoord: Vec2;
-}
-
-interface Command {
-    name: string;
-    stroke: Stroke;
-    style: StrokeStyle;
-}
 
 @Component({
     selector: 'app-draw-canvas',
@@ -109,7 +92,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command = this.commands[i];
             if (command.name === 'draw' || command.name === 'erase') {
-                command.stroke.lines.forEach((line) => {
+                command.stroke.lines.forEach((line: Line) => {
                     this.createStroke(line, command.style);
                 });
             }
@@ -135,7 +118,6 @@ export class DrawCanvasComponent implements AfterViewInit {
             background.drawImage(newImage, 0, 0);
             this.updateImage();
         });
-
         this.toolBoxService.$resetBackground.get(this.canvasType)?.subscribe(() => {
             this.resetBackground(background);
         });
@@ -211,11 +193,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     stopDrawing() {
         this.isClick = false;
         this.indexOfCommand++;
-        if (this.pencil.state === 'Pencil') {
-            this.currentCommand.name = 'draw';
-        } else {
-            this.currentCommand.name = 'erase';
-        }
+        this.currentCommand.name = this.pencil.state === Tool.Pencil ? 'draw' : 'erase';
         this.commands[this.indexOfCommand] = this.currentCommand;
     }
 

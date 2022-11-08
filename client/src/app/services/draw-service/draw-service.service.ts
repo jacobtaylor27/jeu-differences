@@ -170,4 +170,6 @@ export class DrawService {
             rightForegroundContext.drawImage(temp.nativeElement, 0, 0);
         }
     }
+
+    copyForeground(canvasType: CanvasType) {}
 }

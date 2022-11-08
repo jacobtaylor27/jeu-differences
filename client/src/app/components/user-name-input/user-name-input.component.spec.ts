@@ -17,7 +17,7 @@ describe('UserNameInputComponent', () => {
     let spyGameInformationService: jasmine.SpyObj<GameInformationHandlerService>;
     const model = { isMulti: false };
     const dialogMock = {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- close for test empty function
         close: () => {},
     };
 

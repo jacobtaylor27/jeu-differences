@@ -47,7 +47,7 @@ describe('SocketManager', () => {
         };
 
         const fakeSocket = {
-            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function -- calls fake callback and return {}
             on: (_eventName: string, callback: () => void) => {},
             // eslint-disable-next-line no-unused-vars
             emit: (_eventName: string, _message: string) => {

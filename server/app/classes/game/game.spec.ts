@@ -80,7 +80,7 @@ describe('Game', () => {
     });
 
     it('should go to the next state of the game', () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const stateSpyObj = stub(game['context'], 'next').callsFake(() => {});
         game.next();
         expect(stateSpyObj.called).to.equal(true);
@@ -226,7 +226,7 @@ describe('Game', () => {
         expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);
         expect(isDifferenceAlreadyFoundSpy.called).to.equal(true);
         isDifferenceAlreadyFoundSpy.callsFake(() => false);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const addCoordinatesOnDifferenceFoundSpy = stub(game, 'addCoordinatesOnDifferenceFound').callsFake(() => {});
         expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(expectedDifferences);
         expect(addCoordinatesOnDifferenceFoundSpy.called).to.equal(true);

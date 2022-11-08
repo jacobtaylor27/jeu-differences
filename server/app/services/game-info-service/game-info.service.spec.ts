@@ -128,7 +128,7 @@ describe('GameInfo Service', async () => {
         const addGameSpy = stub(gameInfoService, 'addGameInfo').resolves();
         const bmpEncoderSpy = stub(bmpEncoderService, 'base64Encode').resolves();
         await gameInfoService
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake toImageData and return {}
             .addGameInfoWrapper({ original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp }, '', 0)
             .then(() => {
                 expect(bmpEncoderSpy.called).to.equal(true);

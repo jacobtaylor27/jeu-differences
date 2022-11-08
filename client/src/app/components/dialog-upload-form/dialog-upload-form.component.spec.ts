@@ -41,7 +41,7 @@ describe('DialogUploadFormComponent', () => {
     it('should create a image from a file stream', async () => {
         const expectedImage = {} as ImageBitmap;
         const createImageSpy = spyOn(window, 'createImageBitmap').and.resolveTo(expectedImage);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const image = await component.createImage({ slice: () => {} } as File);
         expect(createImageSpy).toHaveBeenCalled();
         expect(image).toEqual(expectedImage);

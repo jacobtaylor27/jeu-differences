@@ -18,9 +18,6 @@ import { Subject } from 'rxjs';
 export class DrawService {
     $drawingImage: Map<CanvasType, Subject<ImageData>>;
 
-    // Having an index of -1 makes way more sens, because the default index is out of bound.
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    indexOfCommand: number = -1;
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
@@ -58,13 +55,13 @@ export class DrawService {
 
     stopDrawing() {
         this.isClick = false;
-        this.indexOfCommand++;
+        this.commandService.indexOfCommand++;
         if (this.pencil.state === 'Pencil') {
             this.currentCommand.name = 'draw';
         } else {
             this.currentCommand.name = 'erase';
         }
-        this.commandService.commands[this.indexOfCommand] = this.currentCommand;
+        this.commandService.commands[this.commandService.indexOfCommand] = this.currentCommand;
     }
 
     leaveCanvas(event: MouseEvent) {}

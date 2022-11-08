@@ -202,13 +202,27 @@ export class DrawService {
         }
     }
 
-    switchForegroundImageData(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
-        const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        primaryForeground.putImageData(rightImageData, 0, 0);
-        secondForeground.putImageData(leftImageData, 0, 0);
+    pasteExternalForegroundOn(canvasType: CanvasType) {
+        this.currentCommand = {
+            canvasType,
+            name: 'pasteExternalForegroundOn',
+            stroke: { lines: [] },
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
+
+        const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
+        const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
+
+        if (leftCanvas && rightCanvas) {
+            if (canvasType === CanvasType.Left) {
+                this.pasteImageDataOn(leftCanvas, rightCanvas);
+            }
+            if (canvasType === CanvasType.Right) {
+                this.pasteImageDataOn(rightCanvas, leftCanvas);
+            }
+            this.indexOfCommand++;
+            this.commands[this.indexOfCommand] = this.currentCommand;
+        }
     }
 
     clearAllLayers(canvasType: CanvasType) {
@@ -272,8 +286,38 @@ export class DrawService {
                     }
                     break;
                 }
+                case 'pasteExternalForegroundOn': {
+                    const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
+                    const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
+
+                    if (leftCanvas && rightCanvas) {
+                        if (command.canvasType === CanvasType.Left) {
+                            this.pasteImageDataOn(leftCanvas, rightCanvas);
+                        }
+                        if (command.canvasType === CanvasType.Right) {
+                            this.pasteImageDataOn(rightCanvas, leftCanvas);
+                        }
+                    }
+                    break;
+                }
             }
         }
+    }
+
+    private pasteImageDataOn(targetedForeground: CanvasState, selectedForeground: CanvasState) {
+        const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        targetForeground.putImageData(selectedImageData, 0, 0);
+    }
+
+    private switchForegroundImageData(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
+        const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        primaryForeground.putImageData(rightImageData, 0, 0);
+        secondForeground.putImageData(leftImageData, 0, 0);
     }
 
     private removeCommandsPastIndex() {

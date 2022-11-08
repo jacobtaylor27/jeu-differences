@@ -95,10 +95,16 @@ export class SocketManagerService {
                     return;
                 }
                 if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
+                    socket.broadcast
+                        .to(gameId)
+                        .emit(
+                            SocketEvent.EventMessage,
+                            this.eventMessageService.leavingGameMessage(this.gameManager['findGame'](gameId)?.findPlayer(socket.id)),
+                        );
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
-                    this.gameManager.leaveGame(socket.id, gameId);
-                    socket.leave(gameId);
                 }
+                this.gameManager.leaveGame(socket.id, gameId);
+                socket.leave(gameId);
             });
 
             socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {

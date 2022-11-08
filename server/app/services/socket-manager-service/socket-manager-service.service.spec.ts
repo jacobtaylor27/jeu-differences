@@ -700,6 +700,7 @@ describe('SocketManager', () => {
             emit: () => {},
         } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
         const spyEmit = stub(fakeSocket, 'emit');
+        stub(service['gameManager'], 'hasSameName').callsFake(() => false);
         stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
         const spyRoomWaiting = stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => '');
         // eslint-disable-next-line @typescript-eslint/no-empty-function

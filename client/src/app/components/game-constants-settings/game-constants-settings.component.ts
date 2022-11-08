@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Theme } from '@app/enums/theme';
 // import { AdminService } from '@app/services/admin.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./game-constants-settings.component.scss'],
 })
 export class GameConstantsSettingsComponent {
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
     hintPenaltyTime: number;
     successfulGuessBonusTime: number;
     timerTime: number;

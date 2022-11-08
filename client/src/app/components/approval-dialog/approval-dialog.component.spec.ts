@@ -11,7 +11,7 @@ import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
 import { ApprovalDialogComponent } from './approval-dialog.component';
 
-/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)*/
 class SocketClientServiceMock extends CommunicationSocketService {
     override connect() {}
 }

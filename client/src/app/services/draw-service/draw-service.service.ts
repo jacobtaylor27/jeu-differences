@@ -229,12 +229,20 @@ export class DrawService {
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
             const command: Command = this.commands[i];
-            if (command.name === 'draw') {
-                this.redraw(command);
-            } else if (command.name === 'erase') {
-                this.redraw(command);
-            } else {
-                console.log('command indéterminée');
+            switch (command.name) {
+                case 'draw': {
+                    this.redraw(command);
+                    break;
+                }
+                case 'erase': {
+                    this.redraw(command);
+                    break;
+                }
+                case 'clearForeground': {
+                    console.log('command indéterminée');
+                    break;
+                }
+                // No default
             }
         }
     }

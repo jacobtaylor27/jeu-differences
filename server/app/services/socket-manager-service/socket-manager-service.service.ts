@@ -114,9 +114,6 @@ export class SocketManagerService {
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
-                    const message = 'difference trouvée par ' + this.gameManager['findGame'](gameId)?.findPlayer(socket.id);
-                    socket.to(gameId).emit(SocketEvent.Message, message);
-                    // console.log(this.gameManager['findGame'](gameId)?.findPlayer(socket.id));
                     socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
                     return;
                 } else {

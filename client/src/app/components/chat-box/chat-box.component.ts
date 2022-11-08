@@ -34,16 +34,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
             this.addingMessage(message, 'opponent');
         });
-
-        this.communicationSocket.on(SocketEvent.DifferenceFound, () => {
-            this.differenceFoundMessage(this.gameInformation.getOpponent().name);
-        });
-
-        this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {
-            this.differenceNotFoundMessage(this.gameInformation.getOpponent().name);
-        });
-
-        // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
     }
 
     ngAfterViewInit() {
@@ -85,8 +75,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
         this.addingMessage(eventMessage, 'gameMaster');
     }
 
-    // private leavingGameMessage(userName: string) {
-    //     const eventMessage = `${userName} a abandonné la partie`;
-    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    // }
+    private leavingGameMessage(userName: string) {
+        const eventMessage = `${userName} a abandonné la partie`;
+        this.messages.push({ content: eventMessage, type: 'gameMaster' });
+    }
 }

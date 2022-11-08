@@ -20,7 +20,7 @@ describe('Bmp difference interpreter service', async () => {
     });
 
     it("A white image shouldn't have any difference", async () => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line -- no magic number
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255];
         const width = 2;
         const height = 2;
@@ -31,7 +31,7 @@ describe('Bmp difference interpreter service', async () => {
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('A black image should have one difference', async () => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line -- no magic number
         const rawData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         const width = 2;
         const height = 2;
@@ -42,7 +42,7 @@ describe('Bmp difference interpreter service', async () => {
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels side by side should be considered as one difference', async () => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line -- no magic number
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0];
         const width = 2;
         const height = 2;
@@ -53,7 +53,7 @@ describe('Bmp difference interpreter service', async () => {
         expect(coordinates.length).to.equal(nbOfDifference);
     });
     it('Black pixels in diagonal should be considered as one difference', async () => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line -- no magic number
         const rawData = [0, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0];
         const width = 2;
         const height = 2;
@@ -68,9 +68,9 @@ describe('Bmp difference interpreter service', async () => {
         const filepath = './assets/test-bmp/two_difference_appart.bmp';
         const decodedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);
         const interpretedBmp: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(decodedBmp);
-        // eslint-disable-next-line
+        // eslint-disable-next-line -- no magic number
         const firstDifference: BmpCoordinate[] = [new BmpCoordinate(0, 0), new BmpCoordinate(1, 0), new BmpCoordinate(0, 1)];
-        // eslint-disable-next-line
+        // eslint-disable-next-line -- no magic number
         const secondDifference: BmpCoordinate[] = [new BmpCoordinate(5, 0), new BmpCoordinate(4, 1), new BmpCoordinate(5, 1)];
         const expectedCoordinates: BmpCoordinate[][] = [firstDifference, secondDifference];
         expect(interpretedBmp).to.eql(expectedCoordinates);

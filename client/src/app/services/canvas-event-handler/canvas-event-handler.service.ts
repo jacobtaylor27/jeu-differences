@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { CommandService } from '@app/services/command-service/command.service';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class CanvasEventHandlerService {
-    constructor(private commandService: CommandService) {}
+    constructor(private drawService: DrawService) {}
 
     handleCtrlShiftZ() {
-        this.commandService.redo();
+        this.drawService.redo();
     }
 
     handleCtrlZ() {
-        this.commandService.undo();
+        this.drawService.undo();
     }
 }

@@ -3,12 +3,12 @@ import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZ
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Command } from '@app/interfaces/command';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
-import { CommandService } from '@app/services/command-service/command.service';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -17,21 +17,33 @@ import { Subject } from 'rxjs';
 export class DrawService {
     $drawingImage: Map<CanvasType, Subject<ImageData>>;
 
+    // Having an index of -1 makes way more sens, because the default index is out of bound.
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    indexOfCommand: number = -1;
+    commands: Command[] = [];
+    currentCommand: Command = {
+        canvasType: CanvasType.None,
+        name: '',
+        stroke: { lines: [] },
+        style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+    };
+
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
 
-    constructor(private canvasStateService: CanvasStateService, private commandService: CommandService) {
+    constructor(private canvasStateService: CanvasStateService) {
         this.$drawingImage = new Map();
     }
 
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         const focusedCanvas = this.canvasStateService.getFocusedCanvas();
-        if (focusedCanvas) {
-            this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
-        }
-        this.commandService.currentCommand = {
+        if (focusedCanvas === undefined) return;
+
+        this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
+        this.currentCommand = {
+            canvasType: focusedCanvas.canvasType,
             name: '',
             stroke: { lines: [] },
             style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
@@ -43,27 +55,27 @@ export class DrawService {
             return;
         }
         const line = this.updateMouseCoordinates(event);
-        this.commandService.currentCommand.stroke.lines.push(line);
+        this.currentCommand.stroke.lines.push(line);
 
-        this.commandService.currentCommand.style = {
+        this.currentCommand.style = {
             color: this.pencil.color,
             cap: this.pencil.cap,
             width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
             destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
-        this.createStroke(line, this.commandService.currentCommand.style);
+        this.createStroke(line, this.currentCommand.style);
         this.updateImage();
     }
 
     stopDrawing() {
         this.isClick = false;
-        this.commandService.indexOfCommand++;
+        this.indexOfCommand++;
         if (this.pencil.state === 'Pencil') {
-            this.commandService.currentCommand.name = 'draw';
+            this.currentCommand.name = 'draw';
         } else {
-            this.commandService.currentCommand.name = 'erase';
+            this.currentCommand.name = 'erase';
         }
-        this.commandService.commands[this.commandService.indexOfCommand] = this.commandService.currentCommand;
+        this.commands[this.indexOfCommand] = this.currentCommand;
     }
 
     leaveCanvas(event: MouseEvent) {}
@@ -177,5 +189,38 @@ export class DrawService {
         this.resetForeground(canvasType);
     }
 
-    copyForeground(canvasType: CanvasType) {}
+    redo() {
+        if (this.indexOfCommand >= this.commands.length - 1) {
+            return;
+        }
+        this.indexOfCommand++;
+        this.executeAllCommand();
+    }
+
+    undo() {
+        // same justification as before
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        if (this.indexOfCommand <= -1) {
+            return;
+        }
+        this.indexOfCommand--;
+        this.executeAllCommand();
+    }
+
+    executeAllCommand() {
+        for (let i = 0; i < this.indexOfCommand + 1; i++) {
+            const command: Command = this.commands[i];
+            if (command.name === 'draw') {
+                this.executeDraw(command);
+            } else if (command.name === 'erase') {
+                this.executeErase(command);
+            }
+        }
+    }
+
+    private executeDraw(command: Command) {
+        this.resetForeground(command.canvasType);
+    }
+
+    private executeErase(command: Command) {}
 }

@@ -1,3 +1,10 @@
+import { CanvasType } from '@app/enums/canvas-type';
+import { Stroke } from './stroke';
+import { StrokeStyle } from './stroke-style';
+
 export interface Command {
-    execute(): void;
+    canvasType: CanvasType;
+    name: string;
+    stroke: Stroke;
+    style: StrokeStyle;
 }

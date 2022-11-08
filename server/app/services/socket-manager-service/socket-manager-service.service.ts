@@ -122,6 +122,19 @@ export class SocketManagerService {
                 }
             });
 
+            socket.on(SocketEvent.GamesDeleted, () => {
+                for (const gameId of this.multiplayerGameManager.getGamesWaiting()) {
+                    const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
+                    this.sio.to(roomId).emit(SocketEvent.RejectPlayer, 'le jeu a été supprimé.');
+                    const request = this.multiplayerGameManager.getRequest(roomId);
+                    if (request) {
+                        for (const player of request) {
+                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, 'le jeu a été supprimé.');
+                        }
+                    }
+                }
+            });
+
             socket.on(SocketEvent.Difference, (differenceCoord: Coordinate, gameId: string) => {
                 if (!this.gameManager.isGameFound(gameId)) {
                     socket.emit(SocketEvent.Error);

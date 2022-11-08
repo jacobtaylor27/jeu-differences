@@ -21,11 +21,12 @@ export class DrawService {
     // Having an index of -1 makes way more sens, because the default index is out of bound.
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfCommand: number = -1;
+    strokeIndex: number = 0;
     commands: Command[] = [];
     currentCommand: Command = {
         canvasType: CanvasType.None,
         name: '',
-        stroke: { lines: [] },
+        strokes: [{ lines: [] }],
         style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
     };
 
@@ -43,12 +44,7 @@ export class DrawService {
         if (focusedCanvas === undefined) return;
 
         this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
-        this.currentCommand = {
-            canvasType: focusedCanvas.canvasType,
-            name: '',
-            stroke: { lines: [] },
-            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
-        };
+        this.setcurrentCommand('', focusedCanvas.canvasType);
     }
 
     draw(event: MouseEvent) {
@@ -56,7 +52,7 @@ export class DrawService {
             return;
         }
         const line = this.updateMouseCoordinates(event);
-        this.currentCommand.stroke.lines.push(line);
+        this.currentCommand.strokes[this.strokeIndex].lines.push(line);
 
         this.currentCommand.style = {
             color: this.pencil.color,
@@ -128,12 +124,7 @@ export class DrawService {
     }
 
     resetForeground(canvasType: CanvasType) {
-        this.currentCommand = {
-            canvasType,
-            name: 'clearForeground',
-            stroke: { lines: [] },
-            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
-        };
+        this.setcurrentCommand('clearForeground', canvasType);
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -186,12 +177,7 @@ export class DrawService {
     }
 
     switchForegrounds() {
-        this.currentCommand = {
-            canvasType: CanvasType.Both,
-            name: 'switchForegrounds',
-            stroke: { lines: [] },
-            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
-        };
+        this.setcurrentCommand('switchForegrounds', CanvasType.Both);
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
@@ -203,12 +189,7 @@ export class DrawService {
     }
 
     pasteExternalForegroundOn(canvasType: CanvasType) {
-        this.currentCommand = {
-            canvasType,
-            name: 'pasteExternalForegroundOn',
-            stroke: { lines: [] },
-            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
-        };
+        this.setcurrentCommand('pasteExternalForegroundOn', canvasType);
 
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
@@ -304,6 +285,15 @@ export class DrawService {
         }
     }
 
+    private setcurrentCommand(name: string, canvasType: CanvasType) {
+        this.currentCommand = {
+            canvasType,
+            name,
+            strokes: [{ lines: [] }],
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
+    }
+
     private pasteImageDataOn(targetedForeground: CanvasState, selectedForeground: CanvasState) {
         const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -330,7 +320,7 @@ export class DrawService {
     }
 
     private redraw(command: Command) {
-        command.stroke.lines.forEach((line) => {
+        command.strokes[this.strokeIndex].lines.forEach((line) => {
             this.createStroke(line, command.style, command.canvasType);
         });
     }

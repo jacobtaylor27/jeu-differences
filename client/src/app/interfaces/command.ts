@@ -5,6 +5,6 @@ import { StrokeStyle } from './stroke-style';
 export interface Command {
     canvasType: CanvasType;
     name: string;
-    stroke: Stroke;
+    strokes: Stroke[];
     style: StrokeStyle;
 }

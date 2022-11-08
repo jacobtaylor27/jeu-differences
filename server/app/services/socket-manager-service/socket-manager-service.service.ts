@@ -135,24 +135,22 @@ export class SocketManagerService {
 
     // eslint-disable-next-line max-params
     async createGameMulti(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
-        const roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
+        let roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
         socket.emit(SocketEvent.WaitPlayer);
         if (this.multiplayerGameManager.isGameWaiting(game.card)) {
-            this.gameManager.hasSameName(roomId, player)
-            if( this.gameManager.hasSameName(roomId, player)){
+            this.gameManager.hasSameName(roomId, player);
+            if (this.gameManager.hasSameName(roomId, player)) {
                 socket.emit(SocketEvent.RejectPlayer, 'vous devez choisir un autre nom de joueur');
                 return;
             }
 
             this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
 
-            
-
             if (this.multiplayerGameManager.theresOneRequest(roomId)) {
                 this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
             }
         } else {
-            const roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
+            roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
             this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
             socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
             socket.emit(SocketEvent.WaitPlayer, roomId);

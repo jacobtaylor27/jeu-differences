@@ -4,9 +4,7 @@ import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { CanvasState } from '@app/interfaces/canvas-state';
 import { Command } from '@app/interfaces/command';
-import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
-import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -75,18 +73,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.executeCommands();
     }
 
-    createStroke(line: Line, strokeStyle: StrokeStyle) {
-        const ctx: CanvasRenderingContext2D = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        ctx.beginPath();
-        ctx.globalCompositeOperation = strokeStyle.destination;
-        ctx.lineWidth = strokeStyle.width;
-        ctx.lineCap = strokeStyle.cap;
-        ctx.strokeStyle = strokeStyle.color;
-        ctx.moveTo(line.initCoord.x, line.initCoord.y);
-        ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
-        ctx.stroke();
-    }
-
     executeCommands() {
         this.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
 
@@ -94,7 +80,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             const command = this.commands[i];
             if (command.name === 'draw' || command.name === 'erase') {
                 command.stroke.lines.forEach((line) => {
-                    this.createStroke(line, command.style);
+                    this.drawService.createStroke(line, command.style);
                 });
             }
             if (command.name === 'clearForeground') {

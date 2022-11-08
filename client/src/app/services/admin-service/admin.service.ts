@@ -4,6 +4,8 @@ import { GameConstantsSettingsComponent } from '@app/components/game-constants-s
 import { GameConstants } from '@app/interfaces/game-constants';
 import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { SocketEvent } from '@common/socket-event';
 
 @Injectable({
     providedIn: 'root',
@@ -11,10 +13,12 @@ import { CommunicationService } from '@app/services/communication/communication.
 export class AdminService {
     gameConstants: GameConstants;
 
+    // eslint-disable-next-line max-params
     constructor(
         private readonly gameCardHandlerService: GameCardHandlerService,
         private readonly matDialog: MatDialog,
         private readonly communicationService: CommunicationService,
+        private readonly socketService: CommunicationSocketService,
     ) {}
 
     hasGameCards(): boolean {
@@ -22,6 +26,7 @@ export class AdminService {
     }
 
     deleteAllGames(): void {
+        this.socketService.send(SocketEvent.GamesDeleted);
         this.communicationService.deleteAllGameCards().subscribe();
     }
 

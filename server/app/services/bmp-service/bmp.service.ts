@@ -41,18 +41,23 @@ export class BmpService {
         await fs.promises.writeFile(fullpath, rawData.data);
         return bmpId;
     }
-    async deleteBmpById(bmpId: string, filepath: string): Promise<boolean> {
-        await fs.promises.unlink(path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION));
-        return false;
+
+    async deleteGameImages(imageIds: string[], filepath: string): Promise<void> {
+        for (const imageId of imageIds) {
+            await fs.promises.unlink(path.join(filepath, ID_PREFIX + imageId + BMP_EXTENSION));
+        }
     }
 
-    async resetAllBmp(filepath: string): Promise<void> {
+    async deleteAllSourceImages(filepath: string): Promise<void> {
         const files: string[] = await fs.promises.readdir(filepath);
+        const filesToDelete: string[] = [];
+
         for (const file of files) {
             if (file.includes(ID_PREFIX)) {
-                const fileToAdd = file.slice(0, -BMP_EXTENSION.length).slice(ID_PREFIX.length);
-                await this.deleteBmpById(fileToAdd, filepath);
+                filesToDelete.push(file.slice(0, -BMP_EXTENSION.length).slice(ID_PREFIX.length));
             }
         }
+
+        await this.deleteGameImages(filesToDelete, filepath);
     }
 }

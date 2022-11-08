@@ -30,7 +30,7 @@ describe('WaitingRoomComponent', () => {
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
-        spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
+        spyMatDialog = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
 
         await TestBed.configureTestingModule({
             declarations: [WaitingRoomComponent, PageHeaderComponent, ExitGameButtonComponent],

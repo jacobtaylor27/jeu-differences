@@ -167,6 +167,21 @@ describe('GameManagerService', () => {
         expect(spyAddPlayer.called).to.equal(true);
     });
 
+    it('should check if player has the same name', () => {
+        const stubFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame');
+        stubFindGame.callsFake(() => undefined);
+        expect(gameManager.hasSameName('room', 'name')).to.equal(false);
+
+        const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        stubFindGame.callsFake(() => game);
+        expect(gameManager.hasSameName('room', 'name')).to.equal(false);
+
+        game.players = new Map();
+        game.players.set('id', 'name');
+        expect(gameManager.hasSameName('room', 'name')).to.equal(true);
+        expect(gameManager.hasSameName('room', 'test')).to.equal(false);
+    });
+
     it('should check if the game is in multiplayer', () => {
         const game = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);

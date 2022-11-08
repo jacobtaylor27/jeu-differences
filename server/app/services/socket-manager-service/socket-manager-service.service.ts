@@ -1,3 +1,4 @@
+import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
@@ -89,7 +90,6 @@ export class SocketManagerService {
                 }
                 if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
-                }
                 this.gameManager.leaveGame(socket.id, gameId);
                 socket.leave(gameId);
             });
@@ -127,10 +127,20 @@ export class SocketManagerService {
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+                    this.sio
+                        .to(gameId)
+                        .emit(
+                            SocketEvent.EventMessage,
+                            this.eventMessageService.differenceFoundMessage(
+                                this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
+                                this.gameManager.isGameMultiplayer(gameId),
+                            ),
+                        );
                     socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
                     return;
                 } else {
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
+                    socket.emit(SocketEvent.EventMessage, this.eventMessageService.differenceFoundMessage());
                 }
             });
         });

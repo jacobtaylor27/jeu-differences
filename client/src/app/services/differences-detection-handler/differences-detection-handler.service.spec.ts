@@ -16,7 +16,7 @@ import { Socket } from 'socket.io-client';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 class SocketClientServiceMock extends CommunicationSocketService {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
 }
 

@@ -16,7 +16,6 @@ import { Subject } from 'rxjs';
 })
 export class DrawService {
     $drawingImage: Map<CanvasType, Subject<ImageData>>;
-    foregroundContext: Map<CanvasType, HTMLCanvasElement>;
 
     // Having an index of -1 makes way more sens, because the default index is out of bound.
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -29,7 +28,6 @@ export class DrawService {
 
     constructor(private canvasStateService: CanvasStateService) {
         this.$drawingImage = new Map();
-        this.foregroundContext = new Map();
     }
 
     startDrawing(event: MouseEvent) {
@@ -144,5 +142,13 @@ export class DrawService {
         }
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         return { initCoord, finalCoord };
+    }
+
+    switchForegrounds() {
+        const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
+        const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
+
+        if (leftCanvas && rightCanvas) {
+        }
     }
 }

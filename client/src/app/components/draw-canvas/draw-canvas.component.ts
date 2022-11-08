@@ -100,7 +100,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.canvasStateService.states.push(currentState);
         this.toolBoxService.addCanvasType(this.canvasType);
         this.drawService.addDrawingCanvas(this.canvasType);
-        this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
         });
@@ -111,14 +110,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
             background.drawImage(newImage, 0, 0);
             this.drawService.updateImage();
-        });
-
-        this.toolBoxService.$switchForeground.get(this.canvasType)?.subscribe(() => {
-            const ctx = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            const newForeground = this.drawService.foregroundContext.get(
-                this.canvasType === CanvasType.Left ? CanvasType.Right : CanvasType.Left,
-            ) as HTMLCanvasElement;
-            ctx.drawImage(newForeground, 0, 0);
         });
 
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {

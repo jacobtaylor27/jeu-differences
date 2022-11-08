@@ -5,7 +5,7 @@
     <button mat-mini-fab color="primary" type="button" (click)="this.drawService.resetBackground(this.canvasType)">
         <mat-icon matTooltip="Réinitialiser tous les arrière-plans">image_not_supported</mat-icon>
     </button>
-    <button mat-mini-fab color="primary" type="button" (click)="swapForegrounds()">
+    <button mat-mini-fab color="primary" type="button" (click)="this.drawService.switchForegrounds()">
         <mat-icon matTooltip="Échanger les avant-plans">
             <img class="icon" src="assets/swap-pictures-white.png" />
         </mat-icon>

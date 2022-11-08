@@ -3,8 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
 import { CanvasType } from '@app/enums/canvas-type';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
-import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-common-tool-box',
@@ -14,14 +12,9 @@ import { Subject } from 'rxjs';
 export class CommonToolBoxComponent {
     @Input() canvasType: CanvasType;
 
-    constructor(public dialog: MatDialog, public drawService: DrawService, private toolBoxService: ToolBoxService) {}
+    constructor(public dialog: MatDialog, public drawService: DrawService) {}
 
     openUploadDialog(): void {
         this.dialog.open(DialogUploadFormComponent, { data: { canvas: this.canvasType } });
-    }
-
-    swapForegrounds(): void {
-        console.log('should swap', this.toolBoxService.$switchForeground);
-        this.toolBoxService.$switchForeground.forEach((event: Subject<void>) => event.next());
     }
 }

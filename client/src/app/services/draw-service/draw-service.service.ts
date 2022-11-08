@@ -75,10 +75,14 @@ export class DrawService {
         this.removeCommandsPastIndex();
     }
 
-    leaveCanvas(event: MouseEvent) {}
+    leaveCanvas(event: MouseEvent) {
+        if (event.buttons === 1) this.stopDrawing();
+    }
 
     enterCanvas(event: MouseEvent) {
-        // return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event, true);
+        if (event.buttons === 1) {
+            this.startDrawing(event);
+        }
     }
 
     addDrawingCanvas(canvasType: CanvasType) {

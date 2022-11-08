@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
     templateUrl: './create-game-page.component.html',
     styleUrls: ['./create-game-page.component.scss'],
 })
-export class CreateGamePageComponent implements AfterViewInit {
+export class CreateGamePageComponent {
     form: FormGroup;
     theme: typeof Theme = Theme;
     drawingImage: Map<CanvasType, ImageData> = new Map();
@@ -32,14 +32,14 @@ export class CreateGamePageComponent implements AfterViewInit {
     ) {
         this.drawingImage.set(CanvasType.Left, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
         this.drawingImage.set(CanvasType.Right, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
+        this.drawService.addDrawingCanvas(CanvasType.Left);
+        this.drawService.addDrawingCanvas(CanvasType.Right);
 
         exitButtonService.setCreateGamePage();
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
         });
-    }
 
-    ngAfterViewInit(): void {
         this.drawService.$drawingImage.forEach((event: Subject<ImageData>, canvasType: CanvasType) => {
             event.subscribe((newImage: ImageData) => {
                 this.drawingImage.set(canvasType, newImage);

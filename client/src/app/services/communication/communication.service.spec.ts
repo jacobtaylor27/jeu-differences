@@ -76,7 +76,7 @@ describe('CommunicationService', () => {
         const sentMessage: Message = { body: 'Hello', title: 'World' };
         // subscribe to the mocked call
         service.basicPost(sentMessage).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -107,7 +107,7 @@ describe('CommunicationService', () => {
                 0,
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -128,7 +128,7 @@ describe('CommunicationService', () => {
                 0,
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -148,7 +148,7 @@ describe('CommunicationService', () => {
                 '',
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -173,7 +173,7 @@ describe('CommunicationService', () => {
                 '',
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: (response) => {
                     expect(response).toBeNull();
                 },
@@ -185,7 +185,7 @@ describe('CommunicationService', () => {
 
     it('should send a request to create a game room', () => {
         service.createGameRoom('playername', GameMode.Classic).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -206,7 +206,7 @@ describe('CommunicationService', () => {
 
     it('should send a request to validate coordinates', () => {
         service.validateCoordinates('gameid', { x: 0, y: 0 }).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -229,7 +229,7 @@ describe('CommunicationService', () => {
 
     it('should handle delete all game cards', () => {
         service.deleteAllGameCards().subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -239,7 +239,7 @@ describe('CommunicationService', () => {
 
     it('should delete a game by id', () => {
         service.deleteGame('gameid').subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });

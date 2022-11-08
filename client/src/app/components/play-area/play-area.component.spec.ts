@@ -210,9 +210,9 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should return context', () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'displayImage').and.callFake(() => {});
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 

@@ -7,17 +7,17 @@ import { CanvasState } from '@app/interfaces/canvas-state';
 })
 export class CanvasStateService {
     states: CanvasState[] = [];
-    private focusedCanvas: CanvasType;
+    private focusedCanvas: CanvasType = CanvasType.None;
 
-    getCanvasState(canvasType: CanvasType) {
+    getCanvasState(canvasType: CanvasType): CanvasState | undefined {
         return this.states.find((state) => state.canvasType === canvasType);
     }
 
-    getFocusedCanvas() {
+    getFocusedCanvas(): CanvasState | undefined {
         return this.getCanvasState(this.focusedCanvas);
     }
 
-    setFocusedCanvas(canvasState: CanvasType) {
+    setFocusedCanvas(canvasState: CanvasType): void {
         this.focusedCanvas = canvasState;
     }
 }

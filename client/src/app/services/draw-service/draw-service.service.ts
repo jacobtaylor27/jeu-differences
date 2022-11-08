@@ -185,21 +185,17 @@ export class DrawService {
     }
 
     switchForegrounds() {
-        /*
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
             const leftForegroundContext = leftCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             const rightForegroundContext = rightCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            const temp = leftCanvas.foreground;
-            this.resetForeground(CanvasType.Right);
-            this.resetForeground(CanvasType.Left);
-
-            leftForegroundContext.drawImage(rightCanvas.foreground.nativeElement, 0, 0);
-            rightForegroundContext.drawImage(temp.nativeElement, 0, 0);
+            const leftImageData = leftForegroundContext.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+            const rightImageData = rightForegroundContext.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+            leftForegroundContext.putImageData(rightImageData, 0, 0);
+            rightForegroundContext.putImageData(leftImageData, 0, 0);
         }
-        */
     }
 
     clearAllLayers(canvasType: CanvasType) {

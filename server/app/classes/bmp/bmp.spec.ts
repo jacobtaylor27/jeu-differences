@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers -- bmp data numbers range of 1 - 255 */
 import { Bmp } from '@app/classes/bmp/bmp';
 import { EQUIVALENT_DATA, PIXEL_BUFFER_ARGB, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
 import { Pixel } from '@app/classes/pixel/pixel';
@@ -59,21 +59,18 @@ describe('Bmp', () => {
             [new Pixel(5, 6, 7), new Pixel(6, 7, 8)],
         ];
         expect(() => {
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
             new Bmp({ width: 3, height: 2 }, [], pixels);
         }).to.throw(Error);
     });
 
     it('An exception should be thrown if the width is less or equal to 0', () => {
         expect(() => {
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
             new Bmp({ width: -1, height: 1 }, [255, 1, 2, 3]);
         }).to.throw(Error);
     });
 
     it('An exception should be throw if the height is less or equal to 0', () => {
         expect(() => {
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
             new Bmp({ width: 1, height: -1 }, [0, 1, 2, 3]);
         }).to.throw(Error);
     });

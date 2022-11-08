@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers -- bmp data numbers range of 1 - 255 */
 
 export const TEST_BMP_DATA = [
     {

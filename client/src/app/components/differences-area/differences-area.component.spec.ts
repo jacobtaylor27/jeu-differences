@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers -- tests with nb of differences */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';

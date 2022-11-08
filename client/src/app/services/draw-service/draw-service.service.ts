@@ -171,5 +171,10 @@ export class DrawService {
         }
     }
 
+    resetAllLayers(canvasType: CanvasType) {
+        this.resetBackground(canvasType);
+        this.resetForeground(canvasType);
+    }
+
     copyForeground(canvasType: CanvasType) {}
 }

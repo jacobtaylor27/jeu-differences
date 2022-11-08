@@ -105,7 +105,6 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.pencil = newPencil;
         });
 
-        const foreground = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
 
         this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
@@ -117,11 +116,7 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.pencil = newPencil;
         });
 
-        this.resetAllLayers(foreground);
-    }
-
-    resetAllLayers(ctxCanvas: CanvasRenderingContext2D) {
-        this.clearForeground(ctxCanvas);
+        this.drawService.resetAllLayers(this.canvasType);
     }
 
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {

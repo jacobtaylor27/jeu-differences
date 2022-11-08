@@ -188,6 +188,7 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     startDrawing(event: MouseEvent) {
         this.canvasStateService.setFocusedCanvas(this.canvasType);
+        this.drawService.startDrawing(event);
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.foreground.nativeElement, event);
         this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };

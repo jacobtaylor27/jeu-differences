@@ -7,6 +7,7 @@ import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
+import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 
 @Injectable({
     providedIn: 'root',
@@ -24,9 +25,18 @@ export class DrawService {
     pencil: Pencil = DEFAULT_PENCIL;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
-    constructor(private toolService: ToolBoxService) {
+    constructor(private toolService: ToolBoxService, private canvasStateService: CanvasStateService) {
         this.$drawingImage = new Map();
         this.foregroundContext = new Map();
+    }
+
+    startDrawing(event: MouseEvent) {
+        this.isClick = true;
+        const focusedCanvas = this.canvasStateService.getFocusedCanvas();
+        if (focusedCanvas) {
+            this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
+        }
+        this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
     }
 
     addDrawingCanvas(canvasType: CanvasType) {

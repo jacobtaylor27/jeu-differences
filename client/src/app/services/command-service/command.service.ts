@@ -9,9 +9,14 @@ export class CommandService {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfCommand: number = -1;
     commands: Command[] = [];
-    currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     redo() {}
 
     undo() {}
+
+    executeAllCommand() {
+        for (let i = 0; i < this.indexOfCommand + 1; i++) {
+            this.commands[i].execute();
+        }
+    }
 }

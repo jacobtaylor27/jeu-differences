@@ -9,16 +9,11 @@ import { GameMode } from '@common/game-mode';
 })
 export class SidebarComponent {
     @Input() timer = '';
-    @Input() askedClue: number = 0;
     gameMode: GameMode;
     gameName: string;
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
         this.getGameInformation();
-    }
-
-    onClueAsked(eventData: number) {
-        this.askedClue = eventData;
     }
 
     getGameInformation(): void {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { SocketEvent } from '@common/socket-event';

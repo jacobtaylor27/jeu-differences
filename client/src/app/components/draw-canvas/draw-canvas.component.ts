@@ -120,7 +120,6 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     enterCanvas(event: MouseEvent) {
         this.drawService.enterCanvas(event);
-        // return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event, true);
     }
 
     leaveCanvas(event: MouseEvent) {

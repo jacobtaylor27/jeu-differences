@@ -69,7 +69,9 @@ export class DrawService {
 
     leaveCanvas(event: MouseEvent) {}
 
-    enterCanvas(event: MouseEvent) {}
+    enterCanvas(event: MouseEvent) {
+        // return event.buttons === 0 ? this.stopDrawing() : this.startDrawing(event, true);
+    }
 
     addDrawingCanvas(canvasType: CanvasType) {
         this.$drawingImage.set(canvasType, new Subject<ImageData>());

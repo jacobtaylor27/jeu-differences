@@ -135,4 +135,16 @@ describe('GameInfo Service', async () => {
                 expect(addGameSpy.called).to.equal(true);
             });
     });
+
+    it('should validate that a page number is valid', () => {
+        expect(gameInfoService.validatePageNumber(0, 3)).to.equal(1);
+        expect(gameInfoService.validatePageNumber(1, 3)).to.equal(1);
+        expect(gameInfoService.validatePageNumber(2, 3)).to.equal(2);
+        expect(gameInfoService.validatePageNumber(2, 1)).to.equal(1);
+    });
+
+    it('should get the games information based on a page number', async () => {
+        const value = await gameInfoService.getGamesInfo(1);
+        expect(value.games).to.deep.equal([]);
+    });
 });

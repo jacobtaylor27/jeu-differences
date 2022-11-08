@@ -3,6 +3,7 @@ import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZ
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { CanvasState } from '@app/interfaces/canvas-state';
 import { Command } from '@app/interfaces/command';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
@@ -185,17 +186,29 @@ export class DrawService {
     }
 
     switchForegrounds() {
+        this.currentCommand = {
+            canvasType: CanvasType.Both,
+            name: 'switchForeground',
+            stroke: { lines: [] },
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
-            const leftForegroundContext = leftCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            const rightForegroundContext = rightCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            const leftImageData = leftForegroundContext.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-            const rightImageData = rightForegroundContext.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-            leftForegroundContext.putImageData(rightImageData, 0, 0);
-            rightForegroundContext.putImageData(leftImageData, 0, 0);
+            this.switchForegroundImageDatas(leftCanvas, rightCanvas);
+            this.indexOfCommand++;
+            this.commands[this.indexOfCommand] = this.currentCommand;
         }
+    }
+
+    switchForegroundImageDatas(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
+        const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        primaryForeground.putImageData(rightImageData, 0, 0);
+        secondForeground.putImageData(leftImageData, 0, 0);
     }
 
     clearAllLayers(canvasType: CanvasType) {
@@ -248,6 +261,9 @@ export class DrawService {
                         const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
                         this.clearForeground(foreground);
                     }
+                    break;
+                }
+                case 'switchForegrounds': {
                     break;
                 }
             }

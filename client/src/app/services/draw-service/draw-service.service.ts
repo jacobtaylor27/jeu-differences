@@ -188,7 +188,7 @@ export class DrawService {
     switchForegrounds() {
         this.currentCommand = {
             canvasType: CanvasType.Both,
-            name: 'switchForeground',
+            name: 'switchForegrounds',
             stroke: { lines: [] },
             style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
         };
@@ -196,13 +196,13 @@ export class DrawService {
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
-            this.switchForegroundImageDatas(leftCanvas, rightCanvas);
+            this.switchForegroundImageData(leftCanvas, rightCanvas);
             this.indexOfCommand++;
             this.commands[this.indexOfCommand] = this.currentCommand;
         }
     }
 
-    switchForegroundImageDatas(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
+    switchForegroundImageData(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
         const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
@@ -264,6 +264,13 @@ export class DrawService {
                     break;
                 }
                 case 'switchForegrounds': {
+                    const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
+                    const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
+                    console.log('here');
+
+                    if (leftCanvas && rightCanvas) {
+                        this.switchForegroundImageData(leftCanvas, rightCanvas);
+                    }
                     break;
                 }
             }

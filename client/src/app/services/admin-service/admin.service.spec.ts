@@ -5,20 +5,24 @@ import { AdminService } from './admin.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 describe('AdminService', () => {
     let service: AdminService;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyCarouselService: jasmine.SpyObj<GameCarouselService>;
 
     beforeEach(() => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards']);
+        spyCarouselService = jasmine.createSpyObj('GameCarouselService', ['hasCards']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule],
             providers: [
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: CommunicationService, useValue: spyCommunicationService },
+                { provide: GameCarouselService, useValue: spyCarouselService },
             ],
         });
         service = TestBed.inject(AdminService);
@@ -34,8 +38,10 @@ describe('AdminService', () => {
         expect(spyCommunicationService.deleteAllGameCards).toHaveBeenCalled();
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    it('hasGameCards should call hasCards from game card handler service', () => {});
+    it('hasGameCards should call hasCards from game carousel service', () => {
+        service.hasCards();
+        expect(spyCarouselService.hasCards).toHaveBeenCalled();
+    });
 
     it('openSettings should call call matDialog s method open', () => {
         service.openSettings();

@@ -9,7 +9,11 @@ import { Service } from 'typedi';
 export class SocketManagerService {
     private sio: Server;
 
-    constructor(private gameManager: GameManagerService, private readonly multiplayerGameManager: MultiplayerGameManager) {}
+    constructor(
+        private gameManager: GameManagerService,
+        private readonly multiplayerGameManager: MultiplayerGameManager,
+        private eventMessageService: EventMessageService,
+    ) {}
 
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });

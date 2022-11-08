@@ -11,6 +11,7 @@ import { Socket } from 'socket.io-client';
 import { SocketEvent } from '@common/socket-event';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
 /* eslint-disable @typescript-eslint/no-empty-function */
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -24,6 +25,7 @@ describe('WaitingRoomComponent', () => {
     let socketHelper: SocketTestHelper;
     let spyRouter: jasmine.SpyObj<Router>;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
+    let spyGameInfoService : jasmine.SpyObj<GameInformationHandlerService>
 
     beforeEach(async () => {
         socketHelper = new SocketTestHelper();
@@ -31,6 +33,7 @@ describe('WaitingRoomComponent', () => {
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
+        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['roomId', 'getId', 'setPlayerName', 'getPlayer'])
 
         await TestBed.configureTestingModule({
             declarations: [WaitingRoomComponent, PageHeaderComponent, ExitGameButtonComponent],
@@ -39,6 +42,7 @@ describe('WaitingRoomComponent', () => {
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
                 { provide: Router, useValue: spyRouter },
                 { provide: MatDialog, useValue: spyMatDialog },
+                { provide: GameInformationHandlerService, useValue: spyGameInfoService },
             ],
         }).compileComponents();
 
@@ -57,6 +61,7 @@ describe('WaitingRoomComponent', () => {
     });
 
     it('should send JoinGame when accepted', () => {
+        spyGameInfoService.getPlayer.and.returnValue({name : '', nbDifferences : 7})
         const spySend = spyOn(component.socketService, 'send');
         socketHelper.peerSideEmit(SocketEvent.JoinGame, 'id');
         expect(spySend).toHaveBeenCalled();

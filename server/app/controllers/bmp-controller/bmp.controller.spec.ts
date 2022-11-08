@@ -22,18 +22,15 @@ describe('Bmp Controller', () => {
 
     it('should get image with id', async () => {
         const expectedData = new Uint8ClampedArray();
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        bmpServiceSpyObj.getBmpById
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            .callsFake(async () =>
-                Promise.resolve({
-                    getWidth: () => 0,
-                    getHeight: () => 0,
-                    toImageData: () => {
-                        return { data: expectedData } as ImageData;
-                    },
-                } as unknown as Bmp),
-            );
+        bmpServiceSpyObj.getBmpById.callsFake(async () =>
+            Promise.resolve({
+                getWidth: () => 0,
+                getHeight: () => 0,
+                toImageData: () => {
+                    return { data: expectedData } as ImageData;
+                },
+            } as unknown as Bmp),
+        );
         return supertest(expressApp)
             .get('/api/bmp/original')
             .expect(StatusCodes.CREATED)

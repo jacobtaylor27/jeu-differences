@@ -16,7 +16,6 @@ export class DifferencesDetectionHandlerService {
     isGameOver: boolean = false;
     contextImgModified: CanvasRenderingContext2D;
 
-    // eslint-disable-next-line max-params
     constructor(
         public matDialog: MatDialog,
         private readonly socketService: CommunicationSocketService,

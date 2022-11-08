@@ -88,28 +88,6 @@ export class GameController {
                     .catch(() => {
                         res.status(StatusCodes.BAD_REQUEST).send();
                     });
-            } else {
-                this.gameInfo
-                    .getAllGameInfos()
-                    .then((games: PrivateGameInformation[]) => {
-                        res.status(StatusCodes.OK).send({
-                            games: games.map((game: PrivateGameInformation) => {
-                                return {
-                                    id: game.id,
-                                    name: game.name,
-                                    thumbnail: game.thumbnail,
-                                    nbDifferences: game.differences.length,
-                                    idEditedBmp: game.idEditedBmp,
-                                    idOriginalBmp: game.idOriginalBmp,
-                                    multiplayerScore: game.multiplayerScore,
-                                    soloScore: game.soloScore,
-                                };
-                            }),
-                        });
-                    })
-                    .catch(() => {
-                        res.status(StatusCodes.NOT_FOUND).send();
-                    });
             }
         });
 

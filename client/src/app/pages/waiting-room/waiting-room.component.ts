@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApprovalDialogComponent } from '@app/components/approval-dialog/approval-dialog.component';
+import { RejectedDialogComponent } from '@app/components/rejected-dialog/rejected-dialog.component';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -31,12 +32,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             this.dialog.open(ApprovalDialogComponent, { data: { opponentsName: player.name, opponentsRoomId: player.id } });
         });
 
-        this.socketService.on(SocketEvent.RejectPlayer, () => {
-            // add a error message;
+        this.socketService.once(SocketEvent.RejectPlayer, (reason: string) => {
+            this.dialog.open(RejectedDialogComponent, { data: { reason } });
             this.routerService.navigateTo('select');
         });
 
-        this.socketService.on(SocketEvent.JoinGame, (data: { roomId: string; playerName: string }) => {
+        this.socketService.once(SocketEvent.JoinGame, (data: { roomId: string; playerName: string }) => {
             this.gameInformationHandlerService.setPlayerName(data.playerName);
 
             this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
@@ -51,5 +52,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.socketService.off(SocketEvent.RequestToJoin);
+        this.socketService.off(SocketEvent.RejectPlayer);
     }
 }

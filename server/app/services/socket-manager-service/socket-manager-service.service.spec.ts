@@ -797,6 +797,30 @@ describe('SocketManager', () => {
         expect(spyDeleteRequest.called).to.equal(false);
         expect(spyRemoveGameWaiting.called).to.equal(true);
     });
+
+    it('should delete request of game waiting if the roomId is not found', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.LeaveWaiting) callback();
+            },
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as unknown as io.Server;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyRemoveGameWaiting = stub(service['multiplayerGameManager'], 'removeGameWaiting').callsFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDeleteRequest = stub(service['multiplayerGameManager'], 'deleteRequest').callsFake(() => {});
+        service.handleSockets();
+        expect(spyDeleteRequest.called).to.equal(true);
+        expect(spyRemoveGameWaiting.called).to.equal(false);
     });
 
 });

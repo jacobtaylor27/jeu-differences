@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -13,8 +14,8 @@ export class GameCardService {
         this.matDialog.open(UserNameInputComponent, { data: { isMulti } });
     }
 
-    deleteGame(id: string) {
-        this.communicationService.deleteGame(id).subscribe();
+    deleteGame(id: string): Observable<void> {
+        return this.communicationService.deleteGame(id);
     }
 
     // resetHighScores(id: string) {}

@@ -1,5 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
 import { PublicGameInformation } from '@common/game-information';
@@ -102,6 +103,10 @@ export class CommunicationService {
 
     getAllGameInfos(): Observable<HttpResponse<{ games: PublicGameInformation[] }>> {
         return this.http.get<{ games: PublicGameInformation[] }>(`${this.baseUrl}/game/cards`, { observe: 'response' }).pipe();
+    }
+
+    getGamesInfoByPage(page: number = 1): Observable<HttpResponse<CarouselResponse>> {
+        return this.http.get<CarouselResponse>(`${this.baseUrl}/game/cards/?page=${page}`, { observe: 'response' }).pipe();
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

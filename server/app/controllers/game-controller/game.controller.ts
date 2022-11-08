@@ -26,106 +26,7 @@ export class GameController {
 
     private configureRouter(): void {
         this.router = Router();
-        /**
-         * @swagger
-         *
-         * definitions:
-         *   Message:
-         *     type: object
-         *     properties:
-         *       title:
-         *         type: string
-         *       body:
-         *         type: string
-         */
 
-        /**
-         * @swagger
-         * tags:
-         *   - name: GameController
-         *     description: Responsable for sending the bmp.
-         */
-
-        /**
-         * @swagger
-         *
-         * /api/game/cards:
-         *   get:
-         *     tags:
-         *       - GameController
-         *     description: get all of the cards
-         *     responses:
-         *       200:
-         *         description: the cards were send correctly
-         *       404:
-         *         description: no cards were found
-         */
-        /* Non nécessaire au sprint 1
-        this.router.get('cards', (req: Request, res: Response) => {
-            const gameCards: GameCard[] = this.gameService.getAllGameCards();
-            if (gameCards?.length !== 0) {
-                res.status(HTTP_STATUS.ok).json(gameCards);
-            } else {
-                res.sendStatus(HTTP_STATUS.notFound);
-            }
-        });
-        */
-
-        /**
-         * @swagger
-         *
-         * /api/game/card/{id}:
-         *   get:
-         *     tags:
-         *       - GameController
-         *     description: get the game card of a game based on a game id
-         *     parameters:
-         *       - in: path
-         *         name: id
-         *         required: true
-         *         schema:
-         *           type: integer
-         *           minimum: 1
-         *         description: The id of a bmp.
-         *     responses:
-         *       200:
-         *         description: The game card was found and send
-         *       404:
-         *         description: The id asked for was not found in the file present on the server.
-         */
-        /* Non nécessaire au sprint 1
-        this.router.get('card/:id', (req: Request, res: Response) => {
-            const gameCard = this.gameService.getGameCardById(parseInt(req.params.id, 10));
-            if (gameCard) {
-                res.status(HTTP_STATUS.ok).json(gameCard);
-            } else {
-                res.sendStatus(HTTP_STATUS.notFound);
-            }
-        });
-        */
-
-        /**
-         * @swagger
-         *
-         * /api/game/{id}:
-         *   delete:
-         *     tags:
-         *       - GameController
-         *     description: deletes a game based on its gameId
-         *     parameters:
-         *       - in: path
-         *         name: id
-         *         required: true
-         *         schema:
-         *           type: integer
-         *           minimum: 1
-         *         description: The id of the game.
-         *     responses:
-         *       202:
-         *         description: The game was deleted
-         *       404:
-         *         description: The id of the game was not found
-         */
         this.router.delete('/cards/:id', (req: Request, res: Response) => {
             const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
             isGameDeleted
@@ -150,27 +51,46 @@ export class GameController {
         });
 
         this.router.get('/cards', (req: Request, res: Response) => {
-            this.gameInfo
-                .getAllGameInfos()
-                .then((games: PrivateGameInformation[]) => {
-                    res.status(StatusCodes.OK).send({
-                        games: games.map((game: PrivateGameInformation) => {
-                            return {
-                                id: game.id,
-                                name: game.name,
-                                thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(game.thumbnail),
-                                nbDifferences: game.differences.length,
-                                idEditedBmp: game.idEditedBmp,
-                                idOriginalBmp: game.idOriginalBmp,
-                                multiplayerScore: game.multiplayerScore,
-                                soloScore: game.soloScore,
+            const page = req.query.page;
+            if (page) {
+                const pageNb = parseInt(page.toString(), 10);
+                this.gameInfo
+                    .getGamesInfo(pageNb)
+                    .then(
+                        (gameCarousel: {
+                            games: PrivateGameInformation[];
+                            information: {
+                                currentPage: number;
+                                gamesOnPage: number;
+                                nbOfGames: number;
+                                nbOfPages: number;
+                                hasNext: boolean;
+                                hasPrevious: boolean;
                             };
-                        }),
+                        }) => {
+                            res.status(StatusCodes.OK).send({
+                                carouselInfo: gameCarousel.information,
+                                games: gameCarousel.games.map((game: PrivateGameInformation) => {
+                                    return {
+                                        id: game.id,
+                                        name: game.name,
+                                        thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(game.thumbnail),
+                                        nbDifferences: game.differences.length,
+                                        idEditedBmp: game.idEditedBmp,
+                                        idOriginalBmp: game.idOriginalBmp,
+                                        multiplayerScore: game.multiplayerScore,
+                                        soloScore: game.soloScore,
+                                    };
+                                }),
+                            });
+                        },
+                    )
+                    .catch(() => {
+                        res.status(StatusCodes.BAD_REQUEST).send();
                     });
-                })
-                .catch(() => {
-                    res.status(StatusCodes.NOT_FOUND).send();
-                });
+            } else {
+                res.status(StatusCodes.BAD_REQUEST).send();
+            }
         });
 
         this.router.get('/cards/:id', (req: Request, res: Response) => {

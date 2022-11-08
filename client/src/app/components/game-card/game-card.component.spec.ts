@@ -44,7 +44,6 @@ const GAME_CARD: GameCard = {
         nbDifferences: 1,
         isMulti: true,
     },
-    isShown: true,
     isAdminCard: true,
     isMulti: true,
 };

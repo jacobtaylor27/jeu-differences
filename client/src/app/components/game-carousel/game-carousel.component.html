@@ -1,16 +1,16 @@
 <section class="carousel" [ngClass]="favoriteTheme">
-    <div class="page-content" *ngIf="isInformationLoaded; else loadingScreen">
+    <div class="page-content"  *ngIf="this.isInformationLoaded(); else loadingScreen">
         <div class="game-number-container" *ngIf="!isAdmin">
             <span class="game-number">{{ getCardsCount() }} jeu<span *ngIf="hasMoreThanOneCard()">x</span></span>
         </div>
 
         <div class="game-cards-container">
-            <div class="game-card-container" *ngFor="let gameCard of gameCards">
-                <app-game-card [gameCard]="gameCard" *ngIf="gameCard.isShown"></app-game-card>
+            <div class="game-card-container" *ngFor="let gameCard of games">
+                <app-game-card [gameCard]="gameCard"></app-game-card>
             </div>
         </div>
-
-        <div class="carousel-actions-container" *ngIf="hasCards() && isInformationLoaded">
+    
+        <div class="carousel-actions-container" *ngIf="hasCards() && this.isInformationLoaded()">
             <button mat-fab color="primary" [disabled]="!hasCardsBefore()" (click)="onClickPrevious()">
                 <mat-icon><b>chevron_left</b></mat-icon>
             </button>

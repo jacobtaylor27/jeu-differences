@@ -2,27 +2,27 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { AdminService } from './admin.service';
-import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 describe('AdminService', () => {
     let service: AdminService;
-    let spyGameCardHandlerService: jasmine.SpyObj<GameCardHandlerService>;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyCarouselService: jasmine.SpyObj<GameCarouselService>;
 
     beforeEach(() => {
-        spyGameCardHandlerService = jasmine.createSpyObj('GameCardHandlerService', ['getGameCards', 'hasCards', 'deleteGames', 'resetAllHighScores']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards']);
+        spyCarouselService = jasmine.createSpyObj('GameCarouselService', ['hasCards']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule],
             providers: [
-                { provide: GameCardHandlerService, useValue: spyGameCardHandlerService },
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: CommunicationService, useValue: spyCommunicationService },
+                { provide: GameCarouselService, useValue: spyCarouselService },
             ],
         });
         service = TestBed.inject(AdminService);
@@ -38,18 +38,13 @@ describe('AdminService', () => {
         expect(spyCommunicationService.deleteAllGameCards).toHaveBeenCalled();
     });
 
-    it('hasGameCards should call hasCards from game card handler service', () => {
-        service.hasGameCards();
-        expect(spyGameCardHandlerService.hasCards).toHaveBeenCalled();
+    it('hasGameCards should call hasCards from game carousel service', () => {
+        service.hasCards();
+        expect(spyCarouselService.hasCards).toHaveBeenCalled();
     });
 
     it('openSettings should call call matDialog s method open', () => {
         service.openSettings();
         expect(spyMatDialog.open).toHaveBeenCalled();
-    });
-
-    it('resetAllHighScores should call resetAllHighScores from game card handler service', () => {
-        service.resetAllHighScores();
-        expect(spyGameCardHandlerService.resetAllHighScores).toHaveBeenCalled();
     });
 });

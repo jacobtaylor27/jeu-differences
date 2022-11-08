@@ -13,7 +13,7 @@ export class GameSelectionPageComponent {
     constructor(readonly gameCarouselService: GameCarouselService) {}
 
     getNumberOfGames(): number {
-        return this.gameCarouselService.getCarouselLength();
+        return this.gameCarouselService.getNumberOfCards();
     }
 
     hasGames(): boolean {

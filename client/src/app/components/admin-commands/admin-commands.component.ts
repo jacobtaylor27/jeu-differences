@@ -13,7 +13,7 @@ export class AdminCommandsComponent {
     constructor(private readonly adminService: AdminService, private readonly router: RouterService) {}
 
     hasCards(): boolean {
-        return this.adminService.hasGameCards();
+        return this.adminService.hasCards();
     }
 
     onClickModifySettings(): void {
@@ -22,14 +22,6 @@ export class AdminCommandsComponent {
 
     onClickDeleteGames(): void {
         this.adminService.deleteAllGames();
-        this.reloadComponent();
-    }
-
-    onClickResetHighScores(): void {
-        this.adminService.resetAllHighScores();
-    }
-
-    reloadComponent(): void {
         this.router.reloadPage('admin');
     }
 }

@@ -16,7 +16,7 @@ import { User } from '@common/user';
 export class WaitingRoomComponent implements OnInit, OnDestroy {
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private exitButton: ExitButtonHandlerService,
         public socketService: CommunicationSocketService,
@@ -43,7 +43,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
             this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
             this.gameInformationHandlerService.roomId = data.roomId;
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+
             this.socketService.on(SocketEvent.Play, (id: string) => {
                 this.gameInformationHandlerService.roomId = id;
                 this.routerService.navigateTo('game');

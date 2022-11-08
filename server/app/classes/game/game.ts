@@ -114,7 +114,7 @@ export class Game {
     }
 
     getNbDifferencesThreshold() {
-        if (this.isEven(this.info.differences.length / 2)) {
+        if (this.isEven(this.info.differences.length)) {
             return this.info.differences.length / 2;
         } else {
             return Math.trunc(this.info.differences.length / 2) + 1;

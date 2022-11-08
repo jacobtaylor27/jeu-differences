@@ -3,7 +3,7 @@ import { PlayerOneTurnState } from '@app/classes/player-one-tour-state/player-on
 import { GameStatus } from '@app/enum/game-status';
 
 export class PlayerTwoTurnState extends GameState {
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars -- need multi elsewhere
     next(isMulti: boolean): void {
         this.context.transitionTo(new PlayerOneTurnState());
     }

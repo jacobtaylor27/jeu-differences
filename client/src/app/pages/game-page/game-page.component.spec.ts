@@ -21,7 +21,7 @@ import { GamePageComponent } from './game-page.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 
 class SocketClientServiceMock extends CommunicationSocketService {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
 }
 

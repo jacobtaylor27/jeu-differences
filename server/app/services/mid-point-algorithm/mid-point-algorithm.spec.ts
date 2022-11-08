@@ -5,7 +5,7 @@ import { describe } from 'mocha';
 import { Container } from 'typedi';
 import { MidpointAlgorithm } from './mid-point-algorithm';
 
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers -- test with random numbers */
 describe('Midpoint Algorithn', async () => {
     let midpointAlgorithm: MidpointAlgorithm;
 

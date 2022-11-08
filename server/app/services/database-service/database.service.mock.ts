@@ -10,7 +10,7 @@ export class DatabaseServiceMock {
         return this.db;
     }
 
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars -- test for database
     async start(url?: string): Promise<void> {
         if (!this.client) {
             this.mongoServer = await MongoMemoryServer.create();

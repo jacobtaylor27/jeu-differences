@@ -73,14 +73,14 @@ export class GameInfoService {
 
         if (deletedGame) {
             const imageIds = [deletedGame.idOriginalBmp, deletedGame.idEditedBmp, deletedGame.idDifferenceBmp];
-            await this.bmpService.deleteGameImages(imageIds, DEFAULT_BMP_ASSET_PATH);
+            await this.bmpService.deleteGameImages(imageIds, this.srcPath);
         }
 
         return deletedGame !== null;
     }
 
     async deleteAllGamesInfo(): Promise<void> {
-        await this.bmpService.deleteAllSourceImages(DEFAULT_BMP_ASSET_PATH);
+        await this.bmpService.deleteAllSourceImages(this.srcPath);
         await this.collection.deleteMany({});
     }
 }

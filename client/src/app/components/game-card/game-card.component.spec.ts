@@ -5,7 +5,7 @@ import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { TimeFormatter } from '@app/classes/time-formatter';
 import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game-card-buttons.component';
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
-import { GameCard } from '@app/interfaces/game-card';
+import { gameCard1 } from '@app/constants/game-card-constant.spec';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -13,40 +13,6 @@ import { SocketEvent } from '@common/socket-event';
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GameCardComponent } from './game-card.component';
-
-const GAME_CARD: GameCard = {
-    gameInformation: {
-        id: '1',
-        name: 'test',
-        idOriginalBmp: 'imageName',
-        idEditedBmp: '1',
-        thumbnail: 'image',
-        soloScore: [
-            {
-                playerName: 'test2',
-                time: 10,
-            },
-            {
-                playerName: 'test',
-                time: 10,
-            },
-        ],
-        multiplayerScore: [
-            {
-                playerName: 'test2',
-                time: 10,
-            },
-            {
-                playerName: 'test',
-                time: 10,
-            },
-        ],
-        nbDifferences: 1,
-        isMulti: true,
-    },
-    isAdminCard: true,
-    isMulti: true,
-};
 
 describe('GameCardComponent', () => {
     let component: GameCardComponent;
@@ -85,7 +51,7 @@ describe('GameCardComponent', () => {
 
         fixture = TestBed.createComponent(GameCardComponent);
         component = fixture.componentInstance;
-        component.gameCard = GAME_CARD;
+        component.gameCard = gameCard1;
         fixture.detectChanges();
     });
 
@@ -94,7 +60,7 @@ describe('GameCardComponent', () => {
     });
 
     it('should get the base64 image name', () => {
-        expect(component.imageSrc).toEqual(GAME_CARD.gameInformation.thumbnail);
+        expect(component.imageSrc).toEqual(gameCard1.gameInformation.thumbnail);
     });
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
@@ -134,6 +100,6 @@ describe('GameCardComponent', () => {
     it('should get all the games waiting for opponent', () => {
         socketHelper.peerSideEmit(SocketEvent.GetGamesWaiting, ['1', '2']);
         component.ngOnInit();
-        expect(GAME_CARD.isMulti).toEqual(true);
+        expect(gameCard1.isMulti).toEqual(true);
     });
 });

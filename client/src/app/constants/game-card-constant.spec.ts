@@ -1,51 +1,35 @@
 import { GameCard } from '@app/interfaces/game-card';
 
-export const multiGameCard: GameCard = {
+export const gameCard1: GameCard = {
     gameInformation: {
-        id: '',
-        name: '',
-        thumbnail: '',
-        idOriginalBmp: '',
-        idEditedBmp: '',
-        soloScore: [],
-        multiplayerScore: [],
-        nbDifferences: 3,
+        id: '1',
+        name: 'test',
+        idOriginalBmp: 'imageName',
+        idEditedBmp: '1',
+        thumbnail: 'image',
+        soloScore: [
+            {
+                playerName: 'test2',
+                time: 10,
+            },
+            {
+                playerName: 'test',
+                time: 10,
+            },
+        ],
+        multiplayerScore: [
+            {
+                playerName: 'test2',
+                time: 10,
+            },
+            {
+                playerName: 'test',
+                time: 10,
+            },
+        ],
+        nbDifferences: 1,
         isMulti: true,
     },
-    isAdminCard: false,
+    isAdminCard: true,
     isMulti: true,
 };
-
-export const soloGameCard: GameCard = {
-    gameInformation: {
-        id: '',
-        name: '',
-        thumbnail: '',
-        idOriginalBmp: '',
-        idEditedBmp: '',
-        soloScore: [],
-        multiplayerScore: [],
-        nbDifferences: 3,
-        isMulti: false,
-    },
-    isAdminCard: false,
-    isMulti: false,
-};
-
-export const adminGameCard: GameCard = {
-    gameInformation: {
-        id: '',
-        name: '',
-        thumbnail: '',
-        idOriginalBmp: '',
-        idEditedBmp: '',
-        soloScore: [],
-        multiplayerScore: [],
-        nbDifferences: 3,
-        isMulti: false,
-    },
-    isAdminCard: true,
-    isMulti: false,
-};
-
-export const games: GameCard[] = [multiGameCard, soloGameCard, adminGameCard];

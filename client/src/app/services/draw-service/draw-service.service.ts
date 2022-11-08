@@ -127,10 +127,18 @@ export class DrawService {
     }
 
     resetForeground(canvasType: CanvasType) {
+        this.currentCommand = {
+            canvasType,
+            name: 'clearForeground',
+            stroke: { lines: [] },
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.indexOfCommand++;
             this.clearForeground(foreground);
+            this.commands[this.indexOfCommand] = this.currentCommand;
         }
     }
 

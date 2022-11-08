@@ -3,7 +3,6 @@ import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZ
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
-import { Command } from '@app/interfaces/command';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
@@ -21,7 +20,6 @@ export class DrawService {
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
-    currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     constructor(private canvasStateService: CanvasStateService, private commandService: CommandService) {
         this.$drawingImage = new Map();
@@ -33,7 +31,11 @@ export class DrawService {
         if (focusedCanvas) {
             this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
         }
-        this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
+        this.commandService.currentCommand = {
+            name: '',
+            stroke: { lines: [] },
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
     }
 
     draw(event: MouseEvent) {
@@ -41,15 +43,15 @@ export class DrawService {
             return;
         }
         const line = this.updateMouseCoordinates(event);
-        this.currentCommand.stroke.lines.push(line);
+        this.commandService.currentCommand.stroke.lines.push(line);
 
-        this.currentCommand.style = {
+        this.commandService.currentCommand.style = {
             color: this.pencil.color,
             cap: this.pencil.cap,
             width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
             destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
-        this.createStroke(line, this.currentCommand.style);
+        this.createStroke(line, this.commandService.currentCommand.style);
         this.updateImage();
     }
 
@@ -57,11 +59,11 @@ export class DrawService {
         this.isClick = false;
         this.commandService.indexOfCommand++;
         if (this.pencil.state === 'Pencil') {
-            this.currentCommand.name = 'draw';
+            this.commandService.currentCommand.name = 'draw';
         } else {
-            this.currentCommand.name = 'erase';
+            this.commandService.currentCommand.name = 'erase';
         }
-        this.commandService.commands[this.commandService.indexOfCommand] = this.currentCommand;
+        this.commandService.commands[this.commandService.indexOfCommand] = this.commandService.currentCommand;
     }
 
     leaveCanvas(event: MouseEvent) {}

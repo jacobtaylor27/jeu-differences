@@ -69,7 +69,7 @@ export class DrawService {
         this.commands[this.indexOfCommand] = this.currentCommand;
     }
 
-    leaveCanvas() {}
+    leaveCanvas(event: MouseEvent) {}
 
     enterCanvas(event: MouseEvent) {}
 

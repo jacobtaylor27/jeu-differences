@@ -88,8 +88,9 @@ export class GameController {
                     .catch(() => {
                         res.status(StatusCodes.BAD_REQUEST).send();
                     });
+            } else {
+                res.status(StatusCodes.BAD_REQUEST).send();
             }
-            res.status(StatusCodes.BAD_REQUEST).send();
         });
 
         this.router.get('/cards/:id', (req: Request, res: Response) => {

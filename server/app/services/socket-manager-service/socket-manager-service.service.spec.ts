@@ -848,5 +848,32 @@ describe('SocketManager', () => {
         stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ id: 'playerTest' } as User]);
         service.handleSockets();
     });
+
+    it('should all delete games', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.GamesDeleted) callback();
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {
+                expect(eventName === SocketEvent.RejectPlayer).to.equal(true);
+            },
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ id: 'playerTest' } as User]);
+        stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => ['gameTestRequest']);
+        stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => 'gameTest');
+        service.handleSockets();
     });
 });

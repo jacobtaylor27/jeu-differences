@@ -575,7 +575,7 @@ describe('SocketManager', () => {
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
             emit: (eventName: string, message: any) => {
-                expect(eventName).to.equal(SocketEvent.GetGamesWaiting);
+                expect(eventName).to.equal(SocketEvent.PlayerLeft);
             },
             // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
             join: (id: string) => {},
@@ -608,7 +608,7 @@ describe('SocketManager', () => {
             emit: (eventName: string, message: any) => {
                 expect(
                     eventName === SocketEvent.JoinGame || eventName === SocketEvent.GetGamesWaiting || eventName === SocketEvent.RejectPlayer,
-                ).to.equal(true);
+                ).to.equal(false);
             },
             // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
             join: (id: string) => {},
@@ -700,6 +700,7 @@ describe('SocketManager', () => {
             emit: () => {},
         } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
         const spyEmit = stub(fakeSocket, 'emit');
+        stub(service['gameManager'], 'hasSameName').callsFake(() => false);
         stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
         const spyRoomWaiting = stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => '');
         // eslint-disable-next-line @typescript-eslint/no-empty-function

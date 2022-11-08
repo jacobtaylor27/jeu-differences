@@ -132,6 +132,7 @@ export class DrawService {
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearForeground(foreground);
+            this.addCurrentCommand();
         }
     }
 

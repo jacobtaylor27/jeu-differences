@@ -7,7 +7,11 @@ import { CommandService } from '@app/services/command-service/command.service';
 export class CanvasEventHandlerService {
     constructor(private commandService: CommandService) {}
 
-    handleCtrlShiftZ() {}
+    handleCtrlShiftZ() {
+        this.commandService.redo();
+    }
 
-    handleCtrlZ() {}
+    handleCtrlZ() {
+        this.commandService.undo();
+    }
 }

@@ -10,9 +10,23 @@ export class CommandService {
     indexOfCommand: number = -1;
     commands: Command[] = [];
 
-    redo() {}
+    redo() {
+        if (this.indexOfCommand >= this.commands.length - 1) {
+            return;
+        }
+        this.indexOfCommand++;
+        this.executeAllCommand();
+    }
 
-    undo() {}
+    undo() {
+        // same justification as before
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        if (this.indexOfCommand <= -1) {
+            return;
+        }
+        this.indexOfCommand--;
+        this.executeAllCommand();
+    }
 
     executeAllCommand() {
         for (let i = 0; i < this.indexOfCommand + 1; i++) {

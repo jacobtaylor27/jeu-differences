@@ -18,14 +18,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() canvasType: CanvasType;
 
-    // Having an index of -1 makes way more sens, because the default index is out of bound.
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    // indexOfCommand: number = -1;
-    // commands: Command[] = [];
-    // coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
-    // isClick: boolean = DEFAULT_DRAW_CLIENT;
     pencil: Pencil = DEFAULT_PENCIL;
-    // currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService, private canvasStateService: CanvasStateService) {}
 
@@ -36,42 +29,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     get height() {
         return SIZE.y;
     }
-    /*
-    handleCtrlShiftZ() {
-        if (this.indexOfCommand >= this.commands.length - 1) {
-            return;
-        }
-        this.indexOfCommand++;
-        this.executeCommands();
-    }
 
-    handleCtrlZ() {
-        // same justification as before
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        if (this.indexOfCommand <= -1) {
-            return;
-        }
-        this.indexOfCommand--;
-        this.executeCommands();
-    }
-
-    executeCommands() {
-        this.drawService.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-
-        for (let i = 0; i < this.indexOfCommand + 1; i++) {
-            const command = this.commands[i];
-            if (command.name === 'draw' || command.name === 'erase') {
-                command.stroke.lines.forEach((line) => {
-                    this.drawService.createStroke(line, command.style);
-                });
-            }
-            if (command.name === 'clearForeground') {
-                this.drawService.clearForeground(this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
-            }
-        }
-        this.drawService.updateImage();
-    }
-*/
     ngAfterViewInit() {
         const currentState: CanvasState = {
             canvasType: this.canvasType,

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
@@ -10,11 +10,15 @@ describe('DrawServiceService', () => {
     let service: DrawService;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
     beforeEach(() => {
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $resetDiff: new Subject(), $resetSource: new Subject() });
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $resetBackground: new Map(), $resetForeground: new Map() });
         TestBed.configureTestingModule({
             providers: [{ provide: ToolBoxService, useValue: toolBoxServiceSpyObj }],
         });
         service = TestBed.inject(DrawService);
+        toolBoxServiceSpyObj.$resetBackground.set(CanvasType.Left, new Subject());
+        toolBoxServiceSpyObj.$resetBackground.set(CanvasType.Right, new Subject());
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Left, new Subject());
+        toolBoxServiceSpyObj.$resetForeground.set(CanvasType.Right, new Subject());
     });
 
     it('should be created', () => {

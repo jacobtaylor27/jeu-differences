@@ -228,7 +228,7 @@ describe('GameManagerService', () => {
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         const expectedGame = new Game('', { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         const expectedTimer = {} as NodeJS.Timer;
-        // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars -- callback
         const spyInterval = stub(global, 'setInterval').callsFake((callback: (args: void) => void, ms?: number | undefined) => {
             return expectedTimer;
         });

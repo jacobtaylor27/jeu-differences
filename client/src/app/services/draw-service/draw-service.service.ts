@@ -149,9 +149,14 @@ export class DrawService {
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
-            const temp = leftCanvas.foreground.nativeElement;
-            leftCanvas.foreground.nativeElement = rightCanvas.foreground.nativeElement;
-            rightCanvas.foreground.nativeElement = temp;
+            const leftForegroundContext = leftCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            const rightForegroundContext = rightCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            const temp = leftCanvas.foreground;
+            this.resetForeground(CanvasType.Right);
+            this.resetForeground(CanvasType.Left);
+
+            leftForegroundContext.drawImage(rightCanvas.foreground.nativeElement, 0, 0);
+            rightForegroundContext.drawImage(temp.nativeElement, 0, 0);
         }
     }
 }

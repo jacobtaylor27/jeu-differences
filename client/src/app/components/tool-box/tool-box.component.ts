@@ -8,6 +8,7 @@ import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-tool-box',
@@ -31,7 +32,7 @@ export class ToolBoxComponent implements OnInit {
     changePencilState(tool: Tool): void {
         this.changeButtonColor(tool);
         this.pencil.state = tool;
-        this.toolService.$pencil.get(this.canvasType)?.next(this.pencil);
+        (this.toolService.$pencil.get(this.canvasType) as Subject<Pencil>).next(this.pencil);
     }
 
     formatLabel(value: number | null) {
@@ -43,7 +44,7 @@ export class ToolBoxComponent implements OnInit {
 
     changePencilColor(color: string): void {
         this.pencil.color = color;
-        this.toolService.$pencil.get(this.canvasType)?.next(this.pencil);
+        (this.toolService.$pencil.get(this.canvasType) as Subject<Pencil>).next(this.pencil);
     }
 
     changePencilWidth(event: MatSliderChange): void {
@@ -54,7 +55,7 @@ export class ToolBoxComponent implements OnInit {
             this.pencil.state === Tool.Pencil
                 ? { pencil: event.value, eraser: this.pencil.width.eraser }
                 : { pencil: this.pencil.width.pencil, eraser: event.value };
-        this.toolService.$pencil.get(this.canvasType)?.next(this.pencil);
+        (this.toolService.$pencil.get(this.canvasType) as Subject<Pencil>).next(this.pencil);
     }
 
     openUploadDialog(): void {

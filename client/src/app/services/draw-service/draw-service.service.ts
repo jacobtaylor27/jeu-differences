@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT } from '@app/constants/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Command } from '@app/interfaces/command';
+import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
@@ -11,6 +14,15 @@ import { Subject } from 'rxjs';
 export class DrawService {
     $drawingImage: Map<CanvasType, Subject<ImageData>>;
     foregroundContext: Map<CanvasType, HTMLCanvasElement>;
+
+    // Having an index of -1 makes way more sens, because the default index is out of bound.
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    indexOfCommand: number = -1;
+    commands: Command[] = [];
+    coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
+    isClick: boolean = DEFAULT_DRAW_CLIENT;
+    pencil: Pencil = DEFAULT_PENCIL;
+    currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
     constructor(private toolService: ToolBoxService) {
         this.$drawingImage = new Map();

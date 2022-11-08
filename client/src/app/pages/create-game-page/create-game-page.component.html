@@ -4,7 +4,7 @@
     <form [formGroup]="this.form" (ngSubmit)="isGameValid()">
         <div class="img-container">
             <div class="drawImg">
-                <label for="imgDiff">Tableau à dessin #1</label>
+                <label for="imgDiff">Tableau à dessin #1 (diff)</label>
                 <app-draw-canvas [canvasType]="canvasType.Left" id="imgDiff"></app-draw-canvas>
                 <app-tool-box [canvasType]="canvasType.Left" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>
@@ -12,7 +12,7 @@
             <app-common-tool-box [canvasType]="canvasType.Both"></app-common-tool-box>
 
             <div class="drawImg">
-                <label for="imgSource">Tableau à dessin #2</label>
+                <label for="imgSource">Tableau à dessin #2 (source)</label>
                 <app-draw-canvas [canvasType]="canvasType.Right" id="imgSource"></app-draw-canvas>
                 <app-tool-box [canvasType]="canvasType.Right" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>

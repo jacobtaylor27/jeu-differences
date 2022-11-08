@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } 
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
+import { Tool } from '@app/enums/tool';
 import { Pencil } from '@app/interfaces/pencil';
 import { Vec2 } from '@app/interfaces/vec2';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -121,6 +122,8 @@ export class DrawCanvasComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.toolBoxService.addCanvasType(this.canvasType);
+        this.drawService.addDrawingCanvas(this.canvasType);
+        this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
         });
@@ -139,6 +142,18 @@ export class DrawCanvasComponent implements AfterViewInit {
 
         this.toolBoxService.$resetForeground.get(this.canvasType)?.subscribe(() => {
             this.resetForeground(foreground);
+        });
+
+        this.toolBoxService.$switchForeground.get(this.canvasType)?.subscribe(() => {
+            const ctx = this.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            const newForeground = this.drawService.foregroundContext.get(
+                this.canvasType === CanvasType.Left ? CanvasType.Right : CanvasType.Left,
+            ) as HTMLCanvasElement;
+            ctx.drawImage(newForeground, 0, 0);
+        });
+
+        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
+            this.pencil = newPencil;
         });
 
         this.resetAllLayers(foreground, background);
@@ -178,6 +193,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         ctx.globalCompositeOperation = 'source-over';
         ctx.drawImage(this.foreground.nativeElement, 0, 0);
         this.drawService.$drawingImage.get(this.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
+        this.drawService.foregroundContext.set(this.canvasType, this.foreground.nativeElement);
     }
 
     enterCanvas(event: MouseEvent) {
@@ -210,21 +226,12 @@ export class DrawCanvasComponent implements AfterViewInit {
         const line = this.updateMouseCoordinates(event);
         this.currentCommand.stroke.lines.push(line);
 
-        if (this.pencil.state === 'Pencil') {
-            this.currentCommand.style = {
-                color: this.pencil.color,
-                cap: this.pencil.cap,
-                width: this.pencil.width.pencil,
-                destination: 'source-over',
-            };
-        } else if (this.pencil.state === 'Eraser') {
-            this.currentCommand.style = {
-                color: this.pencil.color,
-                cap: this.pencil.cap,
-                width: this.pencil.width.eraser,
-                destination: 'destination-out',
-            };
-        }
+        this.currentCommand.style = {
+            color: this.pencil.color,
+            cap: this.pencil.cap,
+            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
+            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
+        };
         this.createStroke(line, this.currentCommand.style);
         this.updateImage();
     }

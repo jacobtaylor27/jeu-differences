@@ -10,9 +10,11 @@ import { Subject } from 'rxjs';
 })
 export class DrawService {
     $drawingImage: Map<CanvasType, Subject<ImageData>>;
+    foregroundContext: Map<CanvasType, HTMLCanvasElement>;
 
     constructor(private toolService: ToolBoxService) {
         this.$drawingImage = new Map();
+        this.foregroundContext = new Map();
     }
 
     addDrawingCanvas(canvasType: CanvasType) {

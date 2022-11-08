@@ -59,7 +59,6 @@ export class DialogUploadFormComponent {
         if (!this.isFormSubmitted || !this.data.canvas) {
             return;
         }
-
         if (this.data.canvas === CanvasType.Both) {
             this.toolService.$uploadImage.forEach((event: Subject<ImageBitmap>) => {
                 event.next(this.img);

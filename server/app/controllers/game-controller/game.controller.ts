@@ -6,9 +6,7 @@ import { GameValidation } from '@app/services/game-validation-service/game-valid
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
-// this import can't be imported without require
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import LZString = require('lz-string');
+import * as LZString from 'lz-string';
 
 @Service()
 export class GameController {

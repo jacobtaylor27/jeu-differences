@@ -14,6 +14,7 @@ import { SocketEvent } from '@common/socket-event';
 export class GameCardButtonsComponent {
     @Input() gameCard: GameCard;
 
+    // eslint-disable-next-line max-params
     constructor(
         private readonly gameCardService: GameCardService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,

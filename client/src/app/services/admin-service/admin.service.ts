@@ -13,6 +13,7 @@ import { SocketEvent } from '@common/socket-event';
 export class AdminService {
     gameConstants: GameConstants;
 
+    // eslint-disable-next-line max-params
     constructor(
         private readonly gameCardHandlerService: GameCardHandlerService,
         private readonly matDialog: MatDialog,

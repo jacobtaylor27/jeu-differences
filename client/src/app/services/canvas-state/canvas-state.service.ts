@@ -17,7 +17,7 @@ export class CanvasStateService {
         return this.getCanvasState(this.focusedCanvas);
     }
 
-    setFocusCanvas(canvasState: CanvasType) {
+    setFocusedCanvas(canvasState: CanvasType) {
         this.focusedCanvas = canvasState;
     }
 }

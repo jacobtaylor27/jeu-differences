@@ -8,6 +8,7 @@ import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
+import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
@@ -31,7 +32,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     pencil: Pencil = DEFAULT_PENCIL;
     currentCommand: Command = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };
 
-    constructor(private toolBoxService: ToolBoxService, private drawService: DrawService) {}
+    constructor(private toolBoxService: ToolBoxService, private drawService: DrawService, private canvasStateService: CanvasStateService) {}
 
     get width() {
         return SIZE.x;
@@ -186,6 +187,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     leaveCanvas(event: MouseEvent) {}
 
     startDrawing(event: MouseEvent) {
+        this.canvasStateService.setFocusedCanvas(this.canvasType);
         this.isClick = true;
         this.coordDraw = this.drawService.reposition(this.foreground.nativeElement, event);
         this.currentCommand = { name: '', stroke: { lines: [] }, style: { color: '', width: 0, cap: 'round', destination: 'source-over' } };

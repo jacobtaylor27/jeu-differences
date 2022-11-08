@@ -16,7 +16,7 @@ import { Socket } from 'socket.io-client';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
 class SocketClientServiceMock extends CommunicationSocketService {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
 }
 
@@ -87,7 +87,7 @@ describe('DifferencesDetectionHandlerService', () => {
     });
 
     it('should play sound', () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- play mocked and return {}
         const expectedAudio = { play: () => {} } as HTMLAudioElement;
         const spy = spyOn(expectedAudio, 'play');
 
@@ -96,14 +96,14 @@ describe('DifferencesDetectionHandlerService', () => {
     });
 
     it('should play wrong sound', () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyPlaySound = spyOn(service, 'playSound').and.callFake(() => {});
         service.playWrongSound();
         expect(spyPlaySound).toHaveBeenCalled();
     });
 
     it('should play correct sound', () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyPlaySound = spyOn(service, 'playSound').and.callFake(() => {});
         service.playCorrectSound();
         expect(spyPlaySound).toHaveBeenCalled();
@@ -113,7 +113,7 @@ describe('DifferencesDetectionHandlerService', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spy = spyOn(service, 'playWrongSound').and.callFake(() => {});
         service.differenceNotDetected({ x: 0, y: 0 }, ctx);
         expect(spy).toHaveBeenCalledTimes(1);
@@ -124,7 +124,7 @@ describe('DifferencesDetectionHandlerService', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         const mousePosition = { x: 0, y: 0 };
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyWrongPlaySound = spyOn(service, 'playWrongSound').and.callFake(() => {});
         const spyFillText = spyOn(ctx, 'fillText');
         expect(service.mouseIsDisabled).toBeFalsy();
@@ -140,7 +140,7 @@ describe('DifferencesDetectionHandlerService', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spy = spyOn(service, 'playCorrectSound').and.callFake(() => {});
         service.differenceDetected(ctx, ctx, []);
         expect(spy).toHaveBeenCalledTimes(1);
@@ -198,7 +198,7 @@ describe('DifferencesDetectionHandlerService', () => {
             return of({} as HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>);
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected').and.callFake(() => {});
         service.getDifferenceValidation('1', { x: 0, y: 0 }, ctx);
         socketHelper.peerSideEmit(SocketEvent.DifferenceNotFound);

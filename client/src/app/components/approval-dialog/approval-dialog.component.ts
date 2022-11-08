@@ -16,7 +16,7 @@ export class ApprovalDialogComponent {
     @Input() opponentsName: string;
     favoriteTheme: string = 'deeppurple-amber-theme';
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         @Inject(MAT_DIALOG_DATA)
         public data: {

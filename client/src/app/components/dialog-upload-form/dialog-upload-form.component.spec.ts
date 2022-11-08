@@ -41,7 +41,7 @@ describe('DialogUploadFormComponent', () => {
     it('should create a image from a file stream', async () => {
         const expectedImage = {} as ImageBitmap;
         const createImageSpy = spyOn(window, 'createImageBitmap').and.resolveTo(expectedImage);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const image = await component.createImage({ slice: () => {} } as File);
         expect(createImageSpy).toHaveBeenCalled();
         expect(image).toEqual(expectedImage);
@@ -68,7 +68,6 @@ describe('DialogUploadFormComponent', () => {
         const spySize = spyOn(component, 'isSizeCorrect').and.resolveTo(true);
         const spyType = spyOn(component, 'isImageTypeCorrect').and.returnValue(true);
         const spyFormat = spyOn(component, 'isImageFormatCorrect').and.returnValue(true);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         expect(await component.isImageCorrect(mockFile)).toBeTrue();
         expect(spySize).toHaveBeenCalled();
         expect(spyType).toHaveBeenCalled();
@@ -76,7 +75,6 @@ describe('DialogUploadFormComponent', () => {
         spySize.and.resolveTo(false);
         spyType.and.returnValue(true);
         spyFormat.and.returnValue(false);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         expect(await component.isImageCorrect(mockFile)).toBeFalse();
         spySize.and.resolveTo(true);
         spyType.and.returnValue(false);

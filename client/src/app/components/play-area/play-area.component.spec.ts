@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -18,7 +17,7 @@ import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 
 class SocketClientServiceMock extends CommunicationSocketService {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
 }
 describe('PlayAreaComponent', () => {
@@ -101,12 +100,14 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should display image afterViewInit', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyDisplayImage = spyOn(component, 'displayImage').and.callFake(() => {});
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         spyOn(component, 'getContextImgModified').and.callFake(() => ctx);
         spyOn(component, 'getContextImgOriginal').and.callFake(() => ctx);
         spyOn(component, 'getContextDifferences').and.callFake(() => ctx);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         differenceService.setContextImgModified.and.callFake(() => {});
         component.ngAfterViewInit();
 
@@ -198,7 +199,9 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should return context', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'displayImage').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
@@ -207,7 +210,9 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should return context', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'displayImage').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
@@ -216,7 +221,9 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should return context', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'displayImage').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
@@ -225,7 +232,9 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should return context', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'displayImage').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
@@ -234,7 +243,9 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should return context', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'displayImage').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 

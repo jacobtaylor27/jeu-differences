@@ -11,7 +11,7 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
 class SocketClientServiceMock extends CommunicationSocketService {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
 }
 

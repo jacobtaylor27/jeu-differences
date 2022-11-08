@@ -3,8 +3,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselComponent } from '@app/components/game-carousel/game-carousel.component';
-
 import { LoadingScreenComponent } from './loading-screen.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('LoadingScreenComponent', () => {
     let component: LoadingScreenComponent;
@@ -13,6 +13,7 @@ describe('LoadingScreenComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [LoadingScreenComponent, GameCarouselComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             imports: [AppMaterialModule, BrowserModule, ReactiveFormsModule],
         }).compileComponents();
 

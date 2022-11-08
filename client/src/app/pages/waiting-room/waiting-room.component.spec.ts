@@ -12,7 +12,7 @@ import { SocketEvent } from '@common/socket-event';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example) */
 class SocketClientServiceMock extends CommunicationSocketService {
     override connect() {}
 }

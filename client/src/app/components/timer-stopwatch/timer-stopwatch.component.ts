@@ -9,8 +9,6 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./timer-stopwatch.component.scss'],
 })
 export class TimerStopwatchComponent implements OnInit {
-    @Input() clueAskedCounter: number;
-
     timerDisplay: string;
 
     constructor(private readonly socketService: CommunicationSocketService, private readonly timeFormatter: TimeFormatterService) {}

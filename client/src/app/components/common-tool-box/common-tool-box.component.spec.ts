@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { Tool } from '@app/enums/tool';
+import { AppMaterialModule } from '@app/modules/material.module';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 
 import { CommonToolBoxComponent } from './common-tool-box.component';
@@ -16,7 +17,7 @@ describe('CommonToolBoxComponent', () => {
         spyDialog = jasmine.createSpyObj('MatDialog', ['open']);
         spyDrawService = jasmine.createSpyObj('DrawService', ['resetBackground']);
         await TestBed.configureTestingModule({
-            imports: [MatDialogModule],
+            imports: [MatDialogModule, AppMaterialModule],
             providers: [
                 { provide: MatDialog, useValue: spyDialog },
                 { provide: DrawService, useValue: spyDrawService },

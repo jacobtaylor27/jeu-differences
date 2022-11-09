@@ -37,7 +37,7 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset background for both canvas', async () => {
-        const spyResetAllBackground = spyOn(service, 'resetAllBackground');
+        const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
         service.resetBackground(CanvasType.Both);
         expect(spyResetAllBackground).toHaveBeenCalled();
@@ -45,7 +45,7 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset background for Left background', async () => {
-        const spyResetAllBackground = spyOn(service, 'resetAllBackground');
+        const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
@@ -64,7 +64,7 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset background for Right background', async () => {
-        const spyResetAllBackground = spyOn(service, 'resetAllBackground');
+        const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
             return {

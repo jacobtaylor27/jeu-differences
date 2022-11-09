@@ -33,10 +33,7 @@ describe('GameSelectionPageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
-        expect(component.formatScoreTime(1)).toEqual('00 : 01');
-    });
-
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     it('getNumberOfGames should call get number of cards from gameCarouselService', () => {
         component.getNumberOfGames();
         expect(spyGameCarouselService.getNumberOfCards).toHaveBeenCalled();

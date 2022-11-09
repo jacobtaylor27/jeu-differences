@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TimeFormatter } from '@app/classes/time-formatter';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -11,11 +11,11 @@ import { SocketEvent } from '@common/socket-event';
 export class TimerStopwatchComponent implements OnInit {
     timerDisplay: string;
 
-    constructor(private readonly socketService: CommunicationSocketService) {}
+    constructor(private readonly socketService: CommunicationSocketService, private readonly timeFormatter: TimeFormatterService) {}
 
     ngOnInit(): void {
         this.socketService.on(SocketEvent.Clock, (time: number) => {
-            this.timerDisplay = TimeFormatter.getMMSSFormat(time);
+            this.timerDisplay = this.timeFormatter.formatTime(time);
         });
     }
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TimeFormatter } from '@app/classes/time-formatter';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { Score } from '@common/score';
 
 @Component({
@@ -12,8 +12,10 @@ export class GameScoreComponent {
     @Input() title: string;
     @Input() isMultiplayer: boolean;
 
+    constructor(private readonly timeFormatter: TimeFormatterService) {}
+
     formatScoreTime(scoreTime: number): string {
-        return TimeFormatter.getMMSSFormat(scoreTime);
+        return this.timeFormatter.formatTime(scoreTime);
     }
 
     hasScores(): boolean {

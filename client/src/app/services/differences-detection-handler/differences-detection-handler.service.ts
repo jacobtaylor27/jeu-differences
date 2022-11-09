@@ -15,6 +15,8 @@ export class DifferencesDetectionHandlerService {
     nbTotalDifferences: number;
     isGameOver: boolean = false;
     contextImgModified: CanvasRenderingContext2D;
+    correctSound = new Audio('assets/correctanswer.wav');
+    wrongSound = new Audio('assets/wronganswer.wav');
 
     constructor(
         public matDialog: MatDialog,
@@ -35,11 +37,11 @@ export class DifferencesDetectionHandlerService {
     }
 
     playWrongSound() {
-        this.playSound(new Audio('assets/wronganswer.wav'));
+        this.playSound(this.wrongSound);
     }
 
     playCorrectSound() {
-        this.playSound(new Audio('assets/correctanswer.wav'));
+        this.playSound(this.correctSound);
     }
 
     playSound(sound: HTMLAudioElement) {

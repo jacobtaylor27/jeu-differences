@@ -12,7 +12,7 @@ import { SocketEvent } from '@common/socket-event';
 })
 export class GameCardComponent implements OnInit {
     @Input() gameCard: GameCard;
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
     imageSrc: string;
 
     constructor(private readonly communicationSocket: CommunicationSocketService, private readonly timeFormatter: TimeFormatterService) {}

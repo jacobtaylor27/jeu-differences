@@ -117,6 +117,17 @@ describe('GameInformationHandlerService', () => {
         expect(service.getId()).toEqual(service.gameInformation.id);
     });
 
+    it('should return player one', () => {
+        const spyHandleNotDefined = spyOn(service, 'handleNotDefined');
+        service.players = [
+            { name: 'player1', nbDifferences: 3 },
+            { name: 'player2', nbDifferences: 1 },
+        ];
+        const response = service.getPlayer();
+        expect(spyHandleNotDefined).toHaveBeenCalled();
+        expect(response).toEqual({ name: 'player1', nbDifferences: 3 });
+    });
+
     it('should return original bmp id', () => {
         service.gameInformation = {
             id: '1',

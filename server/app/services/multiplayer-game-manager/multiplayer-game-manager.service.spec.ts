@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
 import { Container } from 'typedi';
 import { MultiplayerGameManager } from './multiplayer-game-manager.service';
 
@@ -123,5 +122,4 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.getRequest('')).to.deep.equal([]);
         expect(multiplayerGameManager.getRequest('testGame')).to.deep.equal(expectedRequestsStack);
     });
-
 });

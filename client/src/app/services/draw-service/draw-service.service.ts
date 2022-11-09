@@ -113,6 +113,7 @@ export class DrawService {
             const background = state.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearBackground(background);
         });
+        this.updateImages();
     }
 
     clearAllForegrounds() {
@@ -120,6 +121,7 @@ export class DrawService {
             const foreground = state.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearForeground(foreground);
         });
+        this.updateImages();
     }
 
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
@@ -135,6 +137,7 @@ export class DrawService {
             this.clearForeground(foreground);
             this.addCurrentCommand();
         }
+        this.updateImages();
     }
 
     isEraser(pencilState: Tool) {
@@ -217,6 +220,7 @@ export class DrawService {
             this.clearBackground(background);
             this.clearForeground(foreground);
         }
+        this.updateImages();
     }
 
     redo() {

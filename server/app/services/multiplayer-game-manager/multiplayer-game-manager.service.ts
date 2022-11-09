@@ -1,10 +1,16 @@
 import { User } from '@common/user';
 import { Service } from 'typedi';
+import { RejectMessages } from '@app/interface/reject-messages';
 
 @Service()
 export class MultiplayerGameManager {
     requestsOnHold: Map<string, User[]> = new Map();
+    rejectMessages = {} as RejectMessages;
     private gamesWaiting: { gameId: string; roomId: string }[] = [];
+
+    constructor() {
+        this.initializeRejectMessages();
+    }
 
     theresOneRequest(roomId: string) {
         return this.requestsOnHold.get(roomId)?.length === 1;
@@ -91,5 +97,13 @@ export class MultiplayerGameManager {
 
     removeGameWaiting(roomId: string) {
         this.gamesWaiting = this.gamesWaiting.filter((game: { gameId: string; roomId: string }) => game.roomId !== roomId);
+    }
+
+    initializeRejectMessages() {
+        this.rejectMessages.deletedGame = 'le jeu a été supprimé';
+        this.rejectMessages.wrongName = 'vous devez choisir un autre nom de joueur';
+        this.rejectMessages.playerQuit = 'le joueur a quitté.';
+        this.rejectMessages.rejected = 'le joueur a refusé votre demande.';
+        this.rejectMessages.gameStarted = 'la partie a déjà commencé.';
     }
 }

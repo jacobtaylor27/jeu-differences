@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { stub } from 'sinon';
 import { Container } from 'typedi';
 import { MultiplayerGameManager } from './multiplayer-game-manager.service';
 
@@ -121,5 +122,46 @@ describe('Multiplayer Game Manager', () => {
         multiplayerGameManager.requestsOnHold.set('testGame', expectedRequestsStack);
         expect(multiplayerGameManager.getRequest('')).to.deep.equal([]);
         expect(multiplayerGameManager.getRequest('testGame')).to.deep.equal(expectedRequestsStack);
+    });
+
+    it('should initialize the messages', () => {
+        multiplayerGameManager.initializeRejectMessages();
+
+        expect(multiplayerGameManager.rejectMessages.deletedGame).to.equal('le jeu a été supprimé');
+        expect(multiplayerGameManager.rejectMessages.wrongName).to.equal('vous devez choisir un autre nom de joueur');
+        expect(multiplayerGameManager.rejectMessages.playerQuit).to.equal('le joueur a quitté.');
+        expect(multiplayerGameManager.rejectMessages.rejected).to.equal('le joueur a refusé votre demande.');
+        expect(multiplayerGameManager.rejectMessages.gameStarted).to.equal('la partie a déjà commencé.');
+    });
+
+    it('should delete a request', () => {
+        multiplayerGameManager.deleteRequest('room', '4');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(0);
+
+        multiplayerGameManager.requestsOnHold = new Map();
+        multiplayerGameManager.deleteRequest('room', '4');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(0);
+
+        multiplayerGameManager.requestsOnHold = new Map();
+        multiplayerGameManager.addNewRequest('room', { name: 'name', id: '1' });
+        multiplayerGameManager.addNewRequest('room', { name: 'name2', id: '2' });
+        multiplayerGameManager.addNewRequest('room', { name: 'name3', id: '3' });
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(3);
+
+        multiplayerGameManager.deleteRequest('room', '3');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(2);
+
+        multiplayerGameManager.deleteRequest('room', '2');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(1);
+
+        multiplayerGameManager.deleteRequest('room', '6');
+        expect(multiplayerGameManager.requestsOnHold.get('room')?.length).to.equal(1);
+
+        multiplayerGameManager.deleteRequest('room1', '2');
+        expect(multiplayerGameManager.requestsOnHold.get('room1')?.length).to.equal(0);
+
+        stub(multiplayerGameManager, 'getRequest').callsFake(() => undefined);
+        multiplayerGameManager.deleteRequest('room1', '2');
+        expect(multiplayerGameManager.requestsOnHold.get('room1')?.length).to.equal(0);
     });
 });

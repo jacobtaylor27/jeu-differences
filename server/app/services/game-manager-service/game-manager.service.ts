@@ -4,6 +4,7 @@ import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpret
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
+import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';
@@ -30,7 +31,7 @@ export class GameManagerService {
             return;
         }
         game.timerId = setInterval(() => {
-            sio.sockets.to(gameId).emit('clock', this.getTime(gameId));
+            sio.sockets.to(gameId).emit(SocketEvent.Clock, this.getTime(gameId));
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- one second is 1000 ms
         }, 1000);
     }

@@ -19,12 +19,14 @@ describe('CanvasEventHandlerService', () => {
     });
 
     it('should handle ctrl shift z', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         drawServiceSpyObj.redo.and.callFake(() => {});
         service.handleCtrlShiftZ();
         expect(drawServiceSpyObj.redo).toHaveBeenCalled();
     });
 
     it('should handle ctrl shift z', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         drawServiceSpyObj.undo.and.callFake(() => {});
         service.handleCtrlZ();
         expect(drawServiceSpyObj.undo).toHaveBeenCalled();

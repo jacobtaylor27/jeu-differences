@@ -1,14 +1,14 @@
 <div class="canvas-container">
     <canvas id="noContentCanvas" #noContentCanvas hidden [width]="this.width" [height]="this.height"></canvas>
-    <canvas id="img" #imageDifference [width]="this.width" [height]="this.height"></canvas>
+    <canvas id="img" #background [width]="this.width" [height]="this.height"></canvas>
     <canvas
         id="canvas"
-        #paint
-        (mouseout)="stop()"
-        (mouseenter)="initializeState($event)"
-        (mousedown)="start($event)"
+        #foreground
+        (mouseout)="leaveCanvas($event)"
+        (mouseenter)="enterCanvas($event)"
+        (mousedown)="startDrawing($event)"
         (mousemove)="draw($event)"
-        (mouseup)="stop()"
+        (mouseup)="stopDrawing()"
         [width]="this.width"
         [height]="this.height"
     ></canvas>

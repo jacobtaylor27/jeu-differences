@@ -5,12 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { Canvas } from '@app/enums/canvas';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { of } from 'rxjs';
-import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
-
 import { DialogCreateGameComponent } from './dialog-create-game.component';
 
 describe('DialogCreateGameComponent', () => {

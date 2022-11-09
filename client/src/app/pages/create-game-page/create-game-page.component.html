@@ -4,20 +4,19 @@
     <form [formGroup]="this.form" (ngSubmit)="isGameValid()">
         <div class="img-container">
             <div class="drawImg">
-                <label for="imgDiff">Tableau à dessin </label>
-                <app-draw-canvas id="imgDiff"></app-draw-canvas>
-                <app-tool-box [canvas]="canvasPosition.Difference" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
+                <label for="imgDiff">Tableau à dessin #1</label>
+                <app-draw-canvas [canvasType]="canvasType.Left" id="imgDiff"></app-draw-canvas>
+                <app-tool-box [canvasType]="canvasType.Left" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>
-
-            <div class="toolbox-container">
-                <app-tool-box [canvas]="canvasPosition.Both"></app-tool-box>
-            </div>
-
             <div class="drawImg">
-                <label for="sourceImg">Tableau comparatif</label>
-                <canvas id="sourceImg" class="img" width="640px" height="480px" alt="Image Source" #sourceImg></canvas>
-                <app-tool-box [canvas]="canvasPosition.Source" class="toolbox-specific" [ngStyle]="{ 'width.vw': 10 }"></app-tool-box>
+                <label for="imgSource">Tableau à dessin #2</label>
+                <app-draw-canvas [canvasType]="canvasType.Right" id="imgSource"></app-draw-canvas>
+                <app-tool-box [canvasType]="canvasType.Right" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>
+        </div>
+        <div class="space-between-canvas-and-tools"></div>
+        <div class="common-toolbox-container">
+            <app-common-tool-box [canvasType]="canvasType.Both"></app-common-tool-box>
         </div>
         <div class="submission-container">
             <div class="submission-box">

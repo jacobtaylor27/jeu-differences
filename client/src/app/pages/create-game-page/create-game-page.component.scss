@@ -51,4 +51,14 @@ label {
     margin-top: 0.5em;
     justify-self: center;
     align-self: center;
+    min-width: 500px;
+}
+
+.common-toolbox-container {
+    display: flex;
+    justify-content: center;
+}
+
+.space-between-canvas-and-tools {
+    height: 2vh;
 }

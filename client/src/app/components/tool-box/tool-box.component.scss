@@ -2,48 +2,9 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding: 10px;
 }
 
-.tool {
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px, rgba(0, 0, 0, 0.45) 0px 1px 3px;
-}
-
-.tool:hover {
-    transform: scale(1.1);
-}
-
-.tool:active {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-input[type='color'] {
-    margin: 0px;
-    padding: 0px;
-    border-width: 0px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 3px, rgba(0, 0, 0, 0.4) 0px 1px 2px;
-}
-
-input[type='color']:hover {
-    transform: scale(1.1);
-}
-
-.drawTool {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 20vw;
-}
-
-.commonTool {
-    width: 5vw;
-    display: flex;
-    justify-content: space-between;
-}
-
-.width-container {
-    display: flex;
-}
-
-.width-container > p {
-    margin: 10px 0 0 0;
+.icon {
+    width: 24px;
 }

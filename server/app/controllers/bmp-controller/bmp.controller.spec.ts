@@ -2,21 +2,19 @@ import { Application } from '@app/app';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { expect } from 'chai';
-// import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
 import * as supertest from 'supertest';
 import { Container } from 'typedi';
 
 describe('Bmp Controller', () => {
-    // const expectedGameId = 'test';
     let expressApp: Express.Application;
     let bmpServiceSpyObj: SinonStubbedInstance<BmpService>;
+
     beforeEach(async () => {
         bmpServiceSpyObj = createStubInstance(BmpService);
         const app = Container.get(Application);
         Object.defineProperty(app['bmpController'], 'bmpService', { value: bmpServiceSpyObj });
-        // eslint-disable-next-line dot-notation
         expressApp = app.app;
     });
 

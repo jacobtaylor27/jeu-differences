@@ -6,6 +6,7 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 import { RouterService } from '@app/services/router-service/router.service';
 import { SocketEvent } from '@common/socket-event';
 import { PlayerLeftSnackbarComponent } from '@app/components/player-left-snackbar/player-left-snackbar.component';
+import { Theme } from '@app/enums/theme';
 
 @Component({
     selector: 'app-approval-dialog',
@@ -14,7 +15,7 @@ import { PlayerLeftSnackbarComponent } from '@app/components/player-left-snackba
 })
 export class ApprovalDialogComponent {
     @Input() opponentsName: string;
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(

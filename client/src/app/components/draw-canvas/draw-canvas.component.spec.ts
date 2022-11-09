@@ -17,7 +17,17 @@ describe('DrawCanvasComponent', () => {
     beforeEach(async () => {
         drawServiceSpyObj = jasmine.createSpyObj(
             'DrawService',
-            ['reposition', 'addDrawingCanvas', 'draw', 'updateImage', 'createStroke', 'resetAllLayers', 'startDrawing', 'stopDrawing'],
+            [
+                'reposition',
+                'addDrawingCanvas',
+                'draw',
+                'updateImage',
+                'createStroke',
+                'resetAllLayers',
+                'startDrawing',
+                'stopDrawing',
+                'clearAllLayers',
+            ],
             {
                 $drawingImage: new Map<CanvasType, Subject<ImageData>>(),
                 foregroundContext: new Map<CanvasType, HTMLCanvasElement>(),

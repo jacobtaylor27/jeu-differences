@@ -37,6 +37,8 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset background for both canvas', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(service, 'updateImages').and.callFake(() => {});
         const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
         service.resetBackground(CanvasType.Both);
@@ -45,6 +47,8 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset background for Left background', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(service, 'updateImages').and.callFake(() => {});
         const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
         // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -64,6 +68,8 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset background for Right background', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(service, 'updateImages').and.callFake(() => {});
         const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
@@ -93,6 +99,8 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset foreground for left canvas', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(service, 'updateImages').and.callFake(() => {});
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
             return {
                 canvasType: CanvasType.Left,
@@ -109,6 +117,8 @@ describe('DrawServiceService', () => {
     });
 
     it('should reset foreground for right canvas', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(service, 'updateImages').and.callFake(() => {});
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
             return {
                 canvasType: CanvasType.Right,

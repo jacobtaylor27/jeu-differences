@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DrawService } from '../draw-service/draw-service.service';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 
 import { CanvasEventHandlerService } from './canvas-event-handler.service';
 

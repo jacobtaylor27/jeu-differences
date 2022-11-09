@@ -163,7 +163,7 @@ describe('SocketManager', () => {
     it('should leave a game if the game is found', () => {
         const fakeSockets = {
             emit: (eventName: string, _message: string) => {
-                expect(eventName).to.equal(SocketEvent.Win);
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.EventMessage).to.equal(true);
             },
         };
 

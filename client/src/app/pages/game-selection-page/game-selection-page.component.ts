@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TimeFormatter } from '@app/classes/time-formatter';
 import { Theme } from '@app/enums/theme';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
@@ -19,9 +18,5 @@ export class GameSelectionPageComponent {
 
     hasGames(): boolean {
         return this.gameCarouselService.hasCards();
-    }
-
-    formatScoreTime(scoreTime: number): string {
-        return TimeFormatter.getMMSSFormat(scoreTime);
     }
 }

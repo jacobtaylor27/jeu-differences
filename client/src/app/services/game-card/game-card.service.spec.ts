@@ -2,45 +2,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameCard } from '@app/interfaces/game-card';
+import { gameCard1 } from '@app/constants/game-card-constant.spec';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { of } from 'rxjs';
 import { GameCardService } from './game-card.service';
-
-const GAME_CARD: GameCard = {
-    gameInformation: {
-        id: '1',
-        name: 'test',
-        thumbnail: 'image',
-        idOriginalBmp: '1',
-        idEditedBmp: '1',
-        soloScore: [
-            {
-                playerName: 'test2',
-                time: 10,
-            },
-            {
-                playerName: 'test',
-                time: 10,
-            },
-        ],
-        multiplayerScore: [
-            {
-                playerName: 'test2',
-                time: 10,
-            },
-            {
-                playerName: 'test',
-                time: 10,
-            },
-        ],
-        nbDifferences: 1,
-        isMulti: true,
-    },
-    isAdminCard: true,
-    isMulti: true,
-};
 
 describe('GameCardService', () => {
     let service: GameCardService;
@@ -71,9 +37,7 @@ describe('GameCardService', () => {
     });
 
     it('deleteGame should call deleteGame from gameCardHandlerService', () => {
-        service.deleteGame(GAME_CARD.gameInformation.id);
+        service.deleteGame(gameCard1.gameInformation.id);
         expect(spyCommunicationService.deleteGame).toHaveBeenCalled();
     });
-
-    // it('resetHighScores should call restHighScores from gameCardHandlerService', () => {});
 });

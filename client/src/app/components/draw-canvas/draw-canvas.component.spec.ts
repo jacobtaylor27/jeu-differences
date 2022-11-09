@@ -27,6 +27,7 @@ describe('DrawCanvasComponent', () => {
                 'startDrawing',
                 'stopDrawing',
                 'clearAllLayers',
+                'clearAllBackground',
             ],
             {
                 $drawingImage: new Map<CanvasType, Subject<ImageData>>(),

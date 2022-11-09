@@ -13,6 +13,6 @@ export class EventMessageService {
     }
 
     leavingGameMessage(userName: string | undefined) {
-        return `${userName} a abandonné la partie a ${new Date().toLocaleTimeString()}`;
+        return userName ? `${userName} a abandonné la partie a ${new Date().toLocaleTimeString()}` : null;
     }
 }

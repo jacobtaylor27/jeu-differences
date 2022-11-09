@@ -220,7 +220,7 @@ describe('SocketManager', () => {
                 if (eventName === SocketEvent.Difference) callback();
             },
             emit: (eventName: string, message: string) => {
-                expect(eventName).to.equal(SocketEvent.DifferenceNotFound);
+                expect(eventName === SocketEvent.DifferenceNotFound || eventName === SocketEvent.EventMessage).to.equal(true);
             },
             join: (id: string) => {
                 return;
@@ -233,7 +233,8 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-        } as io.Server;
+            to: () => fakeSocket,
+        } as unknown as io.Server;
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'isDifference').callsFake(() => null);
         service.handleSockets();

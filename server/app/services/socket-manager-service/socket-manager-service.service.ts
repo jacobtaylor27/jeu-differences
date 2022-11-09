@@ -57,7 +57,7 @@ export class SocketManagerService {
                 socket.join(roomId);
                 for (const player of request) {
                     if (this.multiplayerGameManager.isNotAPlayersRequest(player.id, opponentsRoomId)) {
-                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer, 'la partie a déjà commencé.');
+                        this.sio.to(player.id).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.gameStarted);
                     }
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
@@ -72,7 +72,7 @@ export class SocketManagerService {
                     this.sio.to(roomId).emit(SocketEvent.RequestToJoin, newPlayerRequest);
                 }
 
-                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer, 'le joueur a refusé votre demande.');
+                this.sio.to(opponentsRoomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.rejected);
             });
 
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
@@ -95,6 +95,12 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {
                 if (roomId) {
+                    const request = this.multiplayerGameManager.getRequest(roomId);
+                    if (request) {
+                        for (const player of request) {
+                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.playerQuit);
+                        }
+                    }
                     this.multiplayerGameManager.removeGameWaiting(roomId);
                     return;
                 }
@@ -109,11 +115,11 @@ export class SocketManagerService {
             socket.on(SocketEvent.GameDeleted, (gameId: string) => {
                 if (this.multiplayerGameManager.isGameWaiting(gameId)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
-                    this.sio.to(roomId).emit(SocketEvent.RejectPlayer, 'le jeu a été supprimé.');
+                    this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
                     const request = this.multiplayerGameManager.getRequest(roomId);
                     if (request) {
                         for (const player of request) {
-                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, 'le jeu a été supprimé.');
+                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
                         }
                     }
                 }
@@ -122,11 +128,11 @@ export class SocketManagerService {
             socket.on(SocketEvent.GamesDeleted, () => {
                 for (const gameId of this.multiplayerGameManager.getGamesWaiting()) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
-                    this.sio.to(roomId).emit(SocketEvent.RejectPlayer, 'le jeu a été supprimé.');
+                    this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
                     const request = this.multiplayerGameManager.getRequest(roomId);
                     if (request) {
                         for (const player of request) {
-                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, 'le jeu a été supprimé.');
+                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
                         }
                     }
                 }
@@ -176,7 +182,7 @@ export class SocketManagerService {
         socket.emit(SocketEvent.WaitPlayer);
         if (this.multiplayerGameManager.isGameWaiting(game.card)) {
             if (this.gameManager.hasSameName(roomId, player)) {
-                socket.emit(SocketEvent.RejectPlayer, 'vous devez choisir un autre nom de joueur');
+                socket.emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.wrongName);
                 return;
             }
 

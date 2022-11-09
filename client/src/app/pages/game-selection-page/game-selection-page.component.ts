@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TimeFormatter } from '@app/classes/time-formatter';
+import { Theme } from '@app/enums/theme';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
     styleUrls: ['./game-selection-page.component.scss'],
 })
 export class GameSelectionPageComponent {
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
     constructor(readonly gameCarouselService: GameCarouselService) {}
 
@@ -18,9 +18,5 @@ export class GameSelectionPageComponent {
 
     hasGames(): boolean {
         return this.gameCarouselService.hasCards();
-    }
-
-    formatScoreTime(scoreTime: number): string {
-        return TimeFormatter.getMMSSFormat(scoreTime);
     }
 }

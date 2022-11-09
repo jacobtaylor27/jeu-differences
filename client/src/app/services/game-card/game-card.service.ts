@@ -17,6 +17,4 @@ export class GameCardService {
     deleteGame(id: string): Observable<void> {
         return this.communicationService.deleteGame(id);
     }
-
-    // resetHighScores(id: string) {}
 }

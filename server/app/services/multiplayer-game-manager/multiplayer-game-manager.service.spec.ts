@@ -143,4 +143,14 @@ describe('Multiplayer Game Manager', () => {
         expect(multiplayerGameManager.getRequest('')).to.deep.equal([]);
         expect(multiplayerGameManager.getRequest('testGame')).to.deep.equal(expectedRequestsStack);
     });
+
+    it('should initialize the messages', () => {
+        multiplayerGameManager.initializeRejectMessages();
+
+        expect(multiplayerGameManager.rejectMessages.deletedGame).to.equal('le jeu a été supprimé');
+        expect(multiplayerGameManager.rejectMessages.wrongName).to.equal('vous devez choisir un autre nom de joueur');
+        expect(multiplayerGameManager.rejectMessages.playerQuit).to.equal('le joueur a quitté.');
+        expect(multiplayerGameManager.rejectMessages.rejected).to.equal('le joueur a refusé votre demande.');
+        expect(multiplayerGameManager.rejectMessages.gameStarted).to.equal('la partie a déjà commencé.');
+    });
 });

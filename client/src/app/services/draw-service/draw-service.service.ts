@@ -61,7 +61,7 @@ export class DrawService {
             destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
         this.createStroke(line, this.currentCommand.style);
-        this.updateImage();
+        this.updateImages();
     }
 
     stopDrawing() {
@@ -105,6 +105,7 @@ export class DrawService {
             const background = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearBackground(background);
         }
+        this.updateImages();
     }
 
     clearAllBackground() {
@@ -123,7 +124,7 @@ export class DrawService {
 
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
         ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        this.updateImage();
+        this.updateImages();
     }
 
     resetForeground(canvasType: CanvasType) {
@@ -140,16 +141,15 @@ export class DrawService {
         return pencilState === Tool.Eraser;
     }
 
-    updateImage() {
+    updateImages() {
         const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
-        const focusedCanvas = this.canvasStateService.getFocusedCanvas();
-        const ctx: CanvasRenderingContext2D = focusedCanvas?.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
-        if (focusedCanvas) {
-            ctx.drawImage(focusedCanvas.background.nativeElement, 0, 0);
+        this.canvasStateService.states.forEach((state) => {
+            const ctx: CanvasRenderingContext2D = state?.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
+            ctx.drawImage(state.background.nativeElement, 0, 0);
             ctx.globalCompositeOperation = 'source-over';
-            ctx.drawImage(focusedCanvas.foreground.nativeElement, 0, 0);
-            this.$drawingImage.get(focusedCanvas.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
-        }
+            ctx.drawImage(state.foreground.nativeElement, 0, 0);
+            this.$drawingImage.get(state.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
+        });
     }
 
     createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {

@@ -272,7 +272,7 @@ describe('DrawCanvasComponent', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyClearForeground = spyOn(component, 'clearForeground').and.callFake(() => {});
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        drawServiceSpyObj.updateImage.and.callFake(() => {});
+        drawServiceSpyObj.updateImages.and.callFake(() => {});
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         drawServiceSpyObj.createStroke.and.callFake(() => {});
         // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -48,7 +48,7 @@ export class DrawCanvasComponent implements AfterViewInit {
 
         this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
             background.drawImage(newImage, 0, 0);
-            this.drawService.updateImage();
+            this.drawService.updateImages();
         });
 
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {

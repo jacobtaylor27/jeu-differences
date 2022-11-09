@@ -147,6 +147,7 @@ export class DrawService {
             ctx.drawImage(focusedCanvas.background.nativeElement, 0, 0);
             ctx.globalCompositeOperation = 'source-over';
             ctx.drawImage(focusedCanvas.foreground.nativeElement, 0, 0);
+            this.$drawingImage.get(focusedCanvas.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
         }
     }
 

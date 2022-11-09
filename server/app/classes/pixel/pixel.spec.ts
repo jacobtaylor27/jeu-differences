@@ -11,17 +11,17 @@ describe('Pixel', () => {
 
     it('Pixel constructor should not allow a pixel at its construction to be negative', () => {
         expect(() => {
-            // eslint-disable-next-line
+            // eslint-disable-next-line -- no magic number
             new Pixel(-1, 0, 0);
         }).to.throw(Error);
 
         expect(() => {
-            // eslint-disable-next-line
+            // eslint-disable-next-line -- no magic number
             new Pixel(0, -1, 0);
         }).to.throw(Error);
 
         expect(() => {
-            // eslint-disable-next-line
+            // eslint-disable-next-line -- no magic number
             new Pixel(0, 0, -1);
         }).to.throw(Error);
     });
@@ -53,7 +53,7 @@ describe('Pixel', () => {
 
     it('arePixelValid(...) should return false when a pixel is less then 0', () => {
         const whitePixel: Pixel = new Pixel(PIXEL_COLOR.black, PIXEL_COLOR.white, PIXEL_COLOR.black);
-        // eslint-disable-next-line
+        // eslint-disable-next-line -- no magic number
         expect(whitePixel['arePixelsValid'](0, -1, 0)).to.equal(false);
     });
 

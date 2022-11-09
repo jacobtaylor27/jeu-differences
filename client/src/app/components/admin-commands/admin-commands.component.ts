@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Theme } from '@app/enums/theme';
 import { AdminService } from '@app/services/admin-service/admin.service';
 import { RouterService } from '@app/services/router-service/router.service';
 
@@ -8,12 +9,12 @@ import { RouterService } from '@app/services/router-service/router.service';
     styleUrls: ['./admin-commands.component.scss'],
 })
 export class AdminCommandsComponent {
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
     constructor(private readonly adminService: AdminService, private readonly router: RouterService) {}
 
     hasCards(): boolean {
-        return this.adminService.hasGameCards();
+        return this.adminService.hasCards();
     }
 
     onClickModifySettings(): void {
@@ -22,14 +23,6 @@ export class AdminCommandsComponent {
 
     onClickDeleteGames(): void {
         this.adminService.deleteAllGames();
-        this.reloadComponent();
-    }
-
-    onClickResetHighScores(): void {
-        this.adminService.resetAllHighScores();
-    }
-
-    reloadComponent(): void {
         this.router.reloadPage('admin');
     }
 }

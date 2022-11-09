@@ -2,6 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CREATE_GAME, CREATE_GAME_ROOM, DELETE_GAMES, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
+import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
@@ -18,7 +19,6 @@ describe('CommunicationService', () => {
         });
         service = TestBed.inject(CommunicationService);
         httpMock = TestBed.inject(HttpTestingController);
-        // eslint-disable-next-line dot-notation -- baseUrl is private and we need access for the test
         baseUrl = service['baseUrl'];
     });
 
@@ -76,7 +76,7 @@ describe('CommunicationService', () => {
         const sentMessage: Message = { body: 'Hello', title: 'World' };
         // subscribe to the mocked call
         service.basicPost(sentMessage).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -107,7 +107,7 @@ describe('CommunicationService', () => {
                 0,
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -128,7 +128,7 @@ describe('CommunicationService', () => {
                 0,
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -148,7 +148,7 @@ describe('CommunicationService', () => {
                 '',
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -173,7 +173,7 @@ describe('CommunicationService', () => {
                 '',
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: (response) => {
                     expect(response).toBeNull();
                 },
@@ -185,7 +185,7 @@ describe('CommunicationService', () => {
 
     it('should send a request to create a game room', () => {
         service.createGameRoom('playername', GameMode.Classic).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -206,7 +206,7 @@ describe('CommunicationService', () => {
 
     it('should send a request to validate coordinates', () => {
         service.validateCoordinates('gameid', { x: 0, y: 0 }).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -229,7 +229,7 @@ describe('CommunicationService', () => {
 
     it('should handle delete all game cards', () => {
         service.deleteAllGameCards().subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -239,7 +239,7 @@ describe('CommunicationService', () => {
 
     it('should delete a game by id', () => {
         service.deleteGame('gameid').subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
             next: () => {},
             error: fail,
         });
@@ -247,18 +247,15 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('DELETE');
     });
 
-    // it('should return expected message (timer) when game page is loaded', () => {
-    //     const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
-    //     service.getTimeValue().subscribe({
-    //         next: (response: Message) => {
-    //             expect(response.title).toEqual(expectedMessage.title);
-    //             expect(response.body).toEqual(expectedMessage.body);
-    //         },
-    //         error: fail,
-    //     });
+    it('should get cards by page number', () => {
+        service.getGamesInfoByPage().subscribe({
+            next: (response: HttpResponse<CarouselResponse>) => {
+                expect(response.body).toEqual({} as CarouselResponse);
+            },
+            error: fail,
+        });
 
-    //     const req = httpMock.expectOne(`${baseUrl}/game`);
-    //     expect(req.request.method).toBe('GET');
-    //     req.flush(expectedMessage);
-    // });
+        const req = httpMock.expectOne(`${baseUrl}/game/cards/?page=1`);
+        expect(req.request.method).toBe('GET');
+    });
 });

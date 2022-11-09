@@ -1,9 +1,11 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Theme } from '@app/enums/theme';
+import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { CarouselInformation } from '@common/carousel-information';
 import { PublicGameInformation } from '@common/game-information';
 
 @Component({
@@ -14,36 +16,55 @@ import { PublicGameInformation } from '@common/game-information';
 export class GameCarouselComponent implements OnInit {
     @Input() isAdmin: boolean = false;
     isLoaded: boolean;
-    gameCards: GameCard[] = [];
+    games: GameCard[] = [];
     favoriteTheme: string = Theme.ClassName;
 
     constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
 
-    get isInformationLoaded(): boolean {
+    ngOnInit(): void {
+        this.getFirstPage();
+    }
+
+    getFirstPage(): void {
+        this.getPage(1);
+    }
+
+    getNextPage(): void {
+        this.getPage(this.gameCarouselService.carouselInformation.currentPage + 1);
+    }
+
+    getPreviousPage(): void {
+        this.getPage(this.gameCarouselService.carouselInformation.currentPage - 1);
+    }
+
+    getPage(pageNb: number): void {
+        this.isLoaded = false;
+        this.communicationService.getGamesInfoByPage(pageNb).subscribe((response: HttpResponse<CarouselResponse>) => {
+            if (response && response.body) {
+                this.setCarouselInformation(response.body.carouselInfo);
+                this.setGameCards(response.body.games);
+                this.isLoaded = true;
+            }
+        });
+    }
+
+    isInformationLoaded(): boolean {
         return this.isLoaded;
     }
 
-    ngOnInit(): void {
-        this.fetchGameInformation();
+    setCarouselInformation(carouselInfo: CarouselInformation): void {
+        this.gameCarouselService.setCarouselInformation(carouselInfo);
     }
 
-    fetchGameInformation(): void {
-        this.communicationService.getAllGameInfos().subscribe((response: HttpResponse<{ games: PublicGameInformation[] }>) => {
-            if (response && response.body) {
-                for (const gameInfo of response.body.games) {
-                    const newCard: GameCard = {
-                        gameInformation: gameInfo,
-                        isAdminCard: this.isAdmin,
-                        isShown: false,
-                        isMulti: false,
-                    };
-                    this.gameCards.push(newCard);
-                }
-                this.gameCarouselService.setCards(this.gameCards);
-                this.isLoaded = true;
-                this.resetStartingRange();
-            }
-        });
+    setGameCards(games: PublicGameInformation[]): void {
+        this.games = [];
+        for (const card of games) {
+            this.games.push({
+                gameInformation: card,
+                isAdminCard: this.isAdmin,
+                isMulti: false,
+            });
+        }
     }
 
     getCardsCount(): number {
@@ -58,16 +79,12 @@ export class GameCarouselComponent implements OnInit {
         return this.gameCarouselService.hasCards();
     }
 
-    resetStartingRange(): void {
-        this.gameCarouselService.resetRange();
-    }
-
     onClickPrevious(): void {
-        this.gameCarouselService.showPreviousFour();
+        this.getPreviousPage();
     }
 
     onClickNext(): void {
-        this.gameCarouselService.showNextFour();
+        this.getNextPage();
     }
 
     hasCardsBefore(): boolean {

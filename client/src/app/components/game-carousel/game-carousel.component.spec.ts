@@ -3,9 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { GameCardComponent } from '@app/components/game-card/game-card.component';
+import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { CarouselInformation } from '@common/carousel-information';
 import { PublicGameInformation } from '@common/game-information';
 import { of } from 'rxjs';
 import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
@@ -29,8 +31,9 @@ describe('GameCarouselComponent', () => {
             'setCards',
             'hasMoreThanOneCard',
             'getNumberOfCards',
+            'setCarouselInformation',
         ]);
-        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule, BrowserModule, ReactiveFormsModule],
             declarations: [GameCarouselComponent, GameCardComponent, LoadingScreenComponent],
@@ -48,18 +51,42 @@ describe('GameCarouselComponent', () => {
 
         fixture = TestBed.createComponent(GameCarouselComponent);
         component = fixture.componentInstance;
+
+        spyGameCarouselService.carouselInformation = {
+            currentPage: 1,
+            gamesOnPage: 1,
+            nbOfPages: 1,
+            nbOfGames: 1,
+            hasNext: true,
+            hasPrevious: false,
+        };
+        spyCommunicationService.getGamesInfoByPage.and.callFake(() => {
+            return of({ body: { carouselInfo: {}, games: [{}] } } as HttpResponse<CarouselResponse>);
+        });
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should fetch game information on init', () => {
-        const spyFetch = spyOn(component, 'fetchGameInformation');
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        spyFetch.and.callFake(() => {});
+    it('should get the first page', () => {
+        component.getFirstPage();
+        expect(spyCommunicationService.getGamesInfoByPage).toHaveBeenCalled();
+    });
+
+    it('should get first page on init', () => {
         component.ngOnInit();
-        expect(spyFetch).toHaveBeenCalled();
+        expect(spyCommunicationService.getGamesInfoByPage).toHaveBeenCalled();
+    });
+
+    it('should get the next page', () => {
+        component.getNextPage();
+        expect(spyCommunicationService.getGamesInfoByPage).toHaveBeenCalled();
+    });
+
+    it('should get the previous page', () => {
+        component.getPreviousPage();
+        expect(spyCommunicationService.getGamesInfoByPage).toHaveBeenCalled();
     });
 
     it('should return if the carousel has cards', () => {
@@ -67,30 +94,38 @@ describe('GameCarouselComponent', () => {
         expect(spyGameCarouselService.hasCards).toHaveBeenCalled();
     });
 
-    it('fetchGameInformation should fetch the games properly', () => {
-        spyCommunicationService.getAllGameInfos.and.callFake(() => {
-            return of({ body: { games: [{}] } } as HttpResponse<{ games: PublicGameInformation[] }>);
-        });
-        component.fetchGameInformation();
-        expect(spyCommunicationService.getAllGameInfos).toHaveBeenCalled();
-
-        spyCommunicationService.getAllGameInfos.and.rejectWith(undefined);
-        expect(spyCommunicationService.getAllGameInfos).toHaveBeenCalled();
+    it('should set the game cards array', () => {
+        component.setGameCards([]);
+        expect(component.games.length).toEqual(0);
+        component.setGameCards([{} as PublicGameInformation]);
+        expect(component.games.length).toEqual(1);
     });
 
-    it('resetStartingRange should call resetRange from the gameCarouselService', () => {
-        component.resetStartingRange();
-        expect(spyGameCarouselService.resetRange).toHaveBeenCalled();
+    it('should set the carousel information attribute', () => {
+        component.setCarouselInformation({} as CarouselInformation);
+        expect(spyGameCarouselService.setCarouselInformation).toHaveBeenCalled();
     });
 
-    it('onClickPrevious should call method showPreviousFour from gameCarouselService', () => {
+    it('should return if the information is loaded', () => {
+        component.isInformationLoaded();
+        expect(component.isLoaded).toBeFalsy();
+        component.isLoaded = true;
+        expect(component.isLoaded).toBeTruthy();
+    });
+
+    it('getPage should fetch the games properly', () => {
+        component.getPage(1);
+        expect(spyCommunicationService.getGamesInfoByPage).toHaveBeenCalled();
+    });
+
+    it('onClickPrevious should call method get previous page', () => {
         component.onClickPrevious();
-        expect(spyGameCarouselService.showPreviousFour).toHaveBeenCalled();
+        expect(spyCommunicationService.getGamesInfoByPage).toHaveBeenCalled();
     });
 
-    it('onClickNext should call method showNextFour from gameCarouselService', () => {
+    it('onClickNext should call method getNextPage', () => {
         component.onClickNext();
-        expect(spyGameCarouselService.showNextFour).toHaveBeenCalled();
+        expect(spyCommunicationService.getGamesInfoByPage).toHaveBeenCalled();
     });
 
     it('hasCardsBefore should call method hasPreviousCards from gameCarouselService', () => {

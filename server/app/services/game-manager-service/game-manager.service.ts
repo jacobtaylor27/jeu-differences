@@ -31,7 +31,7 @@ export class GameManagerService {
         }
         game.timerId = setInterval(() => {
             sio.sockets.to(gameId).emit('clock', this.getTime(gameId));
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- one second is 1000 ms
         }, 1000);
     }
 

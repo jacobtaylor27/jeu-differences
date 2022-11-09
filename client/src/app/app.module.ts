@@ -15,11 +15,9 @@ import { AppComponent } from '@app/pages/app/app.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
-import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
 import { ChatBoxComponent } from './components/chat-box/chat-box.component';
-import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
 import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
@@ -51,7 +49,6 @@ import { RejectedDialogComponent } from './components/rejected-dialog/rejected-d
         AppComponent,
         GamePageComponent,
         MainPageComponent,
-        MaterialPageComponent,
         PlayAreaComponent,
         SidebarComponent,
         CreateGamePageComponent,
@@ -68,7 +65,6 @@ import { RejectedDialogComponent } from './components/rejected-dialog/rejected-d
         AdminCommandsComponent,
         PlayAreaComponent,
         ExitGameButtonComponent,
-        CluesAreaComponent,
         TimerStopwatchComponent,
         DifferencesAreaComponent,
         DialogCreateGameComponent,

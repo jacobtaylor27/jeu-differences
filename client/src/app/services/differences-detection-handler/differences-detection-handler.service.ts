@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers -- tests for differences detection with random numbers*/
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/interfaces/vec2';
@@ -16,7 +16,6 @@ export class DifferencesDetectionHandlerService {
     isGameOver: boolean = false;
     contextImgModified: CanvasRenderingContext2D;
 
-    // eslint-disable-next-line max-params
     constructor(
         public matDialog: MatDialog,
         private readonly socketService: CommunicationSocketService,

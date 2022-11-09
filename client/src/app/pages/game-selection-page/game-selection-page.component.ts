@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TimeFormatter } from '@app/classes/time-formatter';
+import { Theme } from '@app/enums/theme';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 
 @Component({
@@ -8,12 +9,12 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
     styleUrls: ['./game-selection-page.component.scss'],
 })
 export class GameSelectionPageComponent {
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
     constructor(readonly gameCarouselService: GameCarouselService) {}
 
     getNumberOfGames(): number {
-        return this.gameCarouselService.getCarouselLength();
+        return this.gameCarouselService.getNumberOfCards();
     }
 
     hasGames(): boolean {

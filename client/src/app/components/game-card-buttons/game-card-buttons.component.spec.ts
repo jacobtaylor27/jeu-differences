@@ -38,7 +38,6 @@ const GAME_CARD: GameCard = {
         isMulti: true,
     },
     isMulti: true,
-    isShown: true,
     isAdminCard: true,
 };
 

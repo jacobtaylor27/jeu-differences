@@ -1,5 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Theme } from '@app/enums/theme';
 
 @Component({
     selector: 'app-rejected-dialog',
@@ -8,7 +9,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class RejectedDialogComponent {
     @Input() reason: string;
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

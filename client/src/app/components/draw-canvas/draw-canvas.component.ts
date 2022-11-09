@@ -56,6 +56,7 @@ export class DrawCanvasComponent implements AfterViewInit {
         });
 
         this.drawService.clearAllLayers(this.canvasType);
+        this.drawService.clearAllBackground();
     }
 
     enterCanvas(event: MouseEvent) {

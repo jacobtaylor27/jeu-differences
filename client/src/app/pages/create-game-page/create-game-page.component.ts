@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, HostListener } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
     templateUrl: './create-game-page.component.html',
     styleUrls: ['./create-game-page.component.scss'],
 })
-export class CreateGamePageComponent implements AfterViewInit {
+export class CreateGamePageComponent {
     form: FormGroup;
     theme: typeof Theme = Theme;
     drawingImage: Map<CanvasType, ImageData> = new Map();
@@ -41,6 +41,11 @@ export class CreateGamePageComponent implements AfterViewInit {
         this.form = new FormGroup({
             expansionRadius: new FormControl(3, Validators.required),
         });
+        this.drawService.$drawingImage.forEach((event: Subject<ImageData>, canvasType: CanvasType) => {
+            event.subscribe((newImage: ImageData) => {
+                this.drawingImage.set(canvasType, newImage);
+            });
+        });
     }
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
@@ -55,14 +60,6 @@ export class CreateGamePageComponent implements AfterViewInit {
         } else {
             this.canvasEventHandler.handleCtrlZ();
         }
-    }
-
-    ngAfterViewInit(): void {
-        this.drawService.$drawingImage.forEach((event: Subject<ImageData>, canvasType: CanvasType) => {
-            event.subscribe((newImage: ImageData) => {
-                this.drawingImage.set(canvasType, newImage);
-            });
-        });
     }
 
     manageErrorInForm(validationImageErrors: string) {

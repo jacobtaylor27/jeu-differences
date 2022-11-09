@@ -38,7 +38,7 @@ describe('GameScoreComponent', () => {
     });
 
     it('should format score time', () => {
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- test for time format
-        expect(component.formatScoreTime(70)).toEqual('01 : 10');
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(component.formatScoreTime(70)).toEqual('01:10');
     });
 });

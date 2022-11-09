@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Theme } from '@app/enums/theme';
 import { GameCard } from '@app/interfaces/game-card';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';

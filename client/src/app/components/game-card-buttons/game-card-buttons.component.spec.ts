@@ -48,16 +48,6 @@ describe('GameCardButtonsComponent', () => {
         expect(spyGameCardService.openNameDialog).toHaveBeenCalled();
     });
 
-    it('onClickDeleteGame should call the deleteGame method from gameCardService', () => {
-        component.onClickDeleteGame(component.gameCard);
-        expect(spyGameCardService.deleteGame).toHaveBeenCalled();
-    });
-
-    it('should call the reload page method', () => {
-        component.onClickDeleteGame(gameCard1);
-        expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
-    });
-
     it('should return is multi attribute', () => {
         expect(component.isMultiplayer()).toBeTrue();
     });

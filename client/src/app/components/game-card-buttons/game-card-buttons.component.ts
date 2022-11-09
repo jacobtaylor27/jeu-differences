@@ -27,9 +27,10 @@ export class GameCardButtonsComponent {
     }
 
     onClickDeleteGame(game: GameCard): void {
-        this.gameCardService.deleteGame(game.gameInformation.id);
-        this.socketService.send(SocketEvent.GameDeleted, { gameId: game.gameInformation.id });
-        this.router.reloadPage('admin');
+        this.gameCardService.deleteGame(game.gameInformation.id).subscribe(() => {
+            this.socketService.send(SocketEvent.GameDeleted, { gameId: game.gameInformation.id });
+            this.router.reloadPage('admin');
+        });
     }
 
     onClickPlayGame(): void {

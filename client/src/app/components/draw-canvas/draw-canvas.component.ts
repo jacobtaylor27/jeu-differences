@@ -40,7 +40,6 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.canvasStateService.states.push(currentState);
 
         this.toolBoxService.addCanvasType(this.canvasType);
-        this.drawService.addDrawingCanvas(this.canvasType);
         this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
             this.pencil = newPencil;
         });

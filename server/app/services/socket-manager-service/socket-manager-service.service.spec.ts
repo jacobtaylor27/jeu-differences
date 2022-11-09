@@ -163,7 +163,7 @@ describe('SocketManager', () => {
     it('should leave a game if the game is found', () => {
         const fakeSockets = {
             emit: (eventName: string, _message: string) => {
-                expect(eventName).to.equal(SocketEvent.Win);
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.EventMessage).to.equal(true);
             },
         };
 
@@ -220,7 +220,7 @@ describe('SocketManager', () => {
                 if (eventName === SocketEvent.Difference) callback();
             },
             emit: (eventName: string, message: string) => {
-                expect(eventName).to.equal(SocketEvent.DifferenceNotFound);
+                expect(eventName === SocketEvent.DifferenceNotFound || eventName === SocketEvent.EventMessage).to.equal(true);
             },
             join: (id: string) => {
                 return;
@@ -233,26 +233,28 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-        } as io.Server;
+            to: () => fakeSocket,
+        } as unknown as io.Server;
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'isDifference').callsFake(() => null);
         service.handleSockets();
     });
 
-    it('should return found difference in solo if the game is found', () => {
+    it('should return found difference in solo if the game is found and the difference found message', () => {
         const expectedDifferenceFound = {
             coords: [],
             isPlayerFoundDifference: true,
             isGameOver: false,
             nbDifferencesLeft: 2,
         };
+        const expectedEventMessage = `Difference trouvée a ${new Date().toLocaleTimeString()}`;
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
                 if (eventName === SocketEvent.Difference) callback();
             },
             emit: (eventName: string, message: unknown) => {
-                expect(eventName).to.equal(SocketEvent.DifferenceFound);
-                expect(message).to.deep.equal(expectedDifferenceFound);
+                expect(eventName === SocketEvent.DifferenceFound || eventName === SocketEvent.EventMessage).to.equal(true);
+                expect(message === expectedDifferenceFound || message === expectedEventMessage).to.equal(true);
             },
             join: (id: string) => {
                 return;
@@ -265,7 +267,8 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-        } as io.Server;
+            to: () => fakeSocket,
+        } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
@@ -285,7 +288,9 @@ describe('SocketManager', () => {
                 if (eventName === SocketEvent.Difference) callback();
             },
             emit: (eventName: string, message: unknown) => {
-                expect(eventName === SocketEvent.Win || eventName === SocketEvent.DifferenceFound).to.equal(true);
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.DifferenceFound || eventName === SocketEvent.EventMessage).to.equal(
+                    true,
+                );
             },
             join: (id: string) => {
                 return;
@@ -298,7 +303,8 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-        } as io.Server;
+            to: () => fakeSocket,
+        } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
@@ -328,8 +334,7 @@ describe('SocketManager', () => {
                 if (eventName === SocketEvent.Difference) callback();
             },
             emit: (eventName: string, message: unknown) => {
-                expect(eventName).to.equal(SocketEvent.DifferenceFound);
-                expect(message).to.deep.equal(expectedDifferenceFound);
+                expect(eventName === SocketEvent.DifferenceFound || eventName === SocketEvent.EventMessage).to.equal(true);
             },
             join: (id: string) => {
                 return;
@@ -344,7 +349,8 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-        } as io.Server;
+            to: () => fakeSocket,
+        } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
@@ -379,7 +385,9 @@ describe('SocketManager', () => {
                 if (eventName === SocketEvent.Difference) callback();
             },
             emit: (eventName: string, message: unknown) => {
-                expect(eventName === SocketEvent.Win || eventName === SocketEvent.DifferenceFound).to.equal(true);
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.DifferenceFound || eventName === SocketEvent.EventMessage).to.equal(
+                    true,
+                );
             },
             join: (id: string) => {
                 return;
@@ -394,7 +402,8 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-        } as io.Server;
+            to: () => fakeSocket,
+        } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);

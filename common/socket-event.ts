@@ -25,4 +25,5 @@ export enum SocketEvent {
     Difference = 'difference',
     GetGamesWaiting = 'getGamesWaiting',
     Message = 'message',
+    EventMessage = 'eventMessage',
 }

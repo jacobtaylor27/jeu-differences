@@ -1,3 +1,4 @@
+import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
@@ -9,7 +10,11 @@ import { Service } from 'typedi';
 export class SocketManagerService {
     private sio: Server;
 
-    constructor(private gameManager: GameManagerService, private readonly multiplayerGameManager: MultiplayerGameManager) {}
+    constructor(
+        private gameManager: GameManagerService,
+        private readonly multiplayerGameManager: MultiplayerGameManager,
+        private eventMessageService: EventMessageService,
+    ) {}
 
     set server(server: http.Server) {
         this.sio = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
@@ -87,6 +92,12 @@ export class SocketManagerService {
                     return;
                 }
                 if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
+                    socket.broadcast
+                        .to(gameId)
+                        .emit(
+                            SocketEvent.EventMessage,
+                            this.eventMessageService.leavingGameMessage(this.gameManager['findGame'](gameId)?.findPlayer(socket.id)),
+                        );
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
                 }
                 this.gameManager.leaveGame(socket.id, gameId);
@@ -146,8 +157,26 @@ export class SocketManagerService {
                 const differences = this.gameManager.isDifference(gameId, socket.id, differenceCoord);
                 if (!differences) {
                     socket.emit(SocketEvent.DifferenceNotFound);
+                    this.sio
+                        .to(gameId)
+                        .emit(
+                            SocketEvent.EventMessage,
+                            this.eventMessageService.differenceNotFoundMessage(
+                                this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
+                                this.gameManager.isGameMultiplayer(gameId),
+                            ),
+                        );
                     return;
                 }
+                this.sio
+                    .to(gameId)
+                    .emit(
+                        SocketEvent.EventMessage,
+                        this.eventMessageService.differenceFoundMessage(
+                            this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
+                            this.gameManager.isGameMultiplayer(gameId),
+                        ),
+                    );
                 if (this.gameManager.isGameOver(gameId)) {
                     this.gameManager.leaveGame(socket.id, gameId);
                     socket.emit(SocketEvent.Win);

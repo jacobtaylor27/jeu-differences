@@ -11,7 +11,7 @@ import { SocketEvent } from '@common/socket-event';
 export class ChatBoxComponent implements OnInit, AfterViewInit {
     @ViewChild('scroll', { static: true }) scroll: ElementRef;
     messages: ChatMessage[] = [];
-    isOpponentConnected: boolean = true;
+    isOpponentConnected: boolean;
     currentMessage: string;
 
     constructor(public communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
@@ -30,13 +30,13 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.isOpponentConnected = this.gameInformation.isMulti;
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
             this.addingMessage(message, 'opponent');
         });
-
-        // this.communicationSocket.on(SocketEvent.DifferenceFound, () => {});
-        // this.communicationSocket.on(SocketEvent.DifferenceNotFound, () => {});
-        // this.communicationSocket.on(SocketEvent.LeaveGame, () => {});
+        this.communicationSocket.on(SocketEvent.EventMessage, (message: string) => {
+            this.addingMessage(message, 'gameMaster');
+        });
     }
 
     ngAfterViewInit() {
@@ -62,32 +62,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     }
 
     addingMessage(message: string, senderType: string) {
-        this.messages.push({ content: message, type: senderType });
+        if (message.trim().length !== 0) {
+            this.messages.push({ content: message, type: senderType });
+        }
         this.scrollDown();
     }
-
-    // private differenceFoundMessage(userName: string, isMulti: boolean) {
-    //     let eventMessage: string;
-    //     if (isMulti) {
-    //         eventMessage = `Difference trouvée par ${userName}`;
-    //     } else {
-    //         eventMessage = 'Difference trouvée ';
-    //     }
-    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    // }
-
-    // private differenceNotFoundMessage(userName: string, isMulti: boolean) {
-    //     let eventMessage: string;
-    //     if (isMulti) {
-    //         eventMessage = `Erreur par ${userName}`;
-    //     } else {
-    //         eventMessage = 'Erreur';
-    //     }
-    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    // }
-
-    // private leavingGameMessage(userName: string) {
-    //     const eventMessage = `${userName} a abandonné la partie`;
-    //     this.messages.push({ content: eventMessage, type: 'gameMaster' });
-    // }
 }

@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CommonToolBoxComponent } from '@app/components/common-tool-box/common-tool-box.component';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
@@ -55,6 +56,7 @@ describe('CreateGamePageComponent', () => {
                 PageHeaderComponent,
                 ExitGameButtonComponent,
                 LoadingScreenComponent,
+                CommonToolBoxComponent,
             ],
             imports: [
                 AppMaterialModule,

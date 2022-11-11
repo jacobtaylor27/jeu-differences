@@ -5,12 +5,12 @@ export class EventMessageService {
     differenceFoundMessage(userName?: string | undefined, isMulti?: boolean | undefined) {
         return isMulti && userName
             ? `Difference trouvée par ${userName} a ${new Date().toLocaleTimeString('en-US')}`
-            : `Difference trouvée a ${new Date().toLocaleTimeString()}`;
+            : `Difference trouvée a ${new Date().toLocaleTimeString('en-US')}`;
     }
 
     differenceNotFoundMessage(userName?: string | undefined, isMulti?: boolean | undefined) {
         return isMulti && userName
-            ? `Erreur par ${userName} a ${new Date().toLocaleTimeString()}`
+            ? `Erreur par ${userName} a ${new Date().toLocaleTimeString('en-US')}`
             : `Erreur a ${new Date().toLocaleTimeString('en-US')}`;
     }
 

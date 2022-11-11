@@ -4,12 +4,14 @@ import { Service } from 'typedi';
 export class EventMessageService {
     differenceFoundMessage(userName?: string | undefined, isMulti?: boolean | undefined) {
         return isMulti && userName
-            ? `Difference trouvée par ${userName} a ${new Date().toLocaleString('en-US')}`
+            ? `Difference trouvée par ${userName} a ${new Date().toLocaleTimeString('en-US')}`
             : `Difference trouvée a ${new Date().toLocaleTimeString()}`;
     }
 
     differenceNotFoundMessage(userName?: string | undefined, isMulti?: boolean | undefined) {
-        return isMulti && userName ? `Erreur par ${userName} a ${new Date().toLocaleTimeString()}` : `Erreur a ${new Date().toLocaleString('en-US')}`;
+        return isMulti && userName
+            ? `Erreur par ${userName} a ${new Date().toLocaleTimeString()}`
+            : `Erreur a ${new Date().toLocaleTimeString('en-US')}`;
     }
 
     leavingGameMessage(userName: string | undefined) {

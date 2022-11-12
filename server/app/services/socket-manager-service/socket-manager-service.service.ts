@@ -228,4 +228,8 @@ export class SocketManagerService {
             socket.join(roomId);
         }
     }
+
+    refreshGames() {
+        this.sio.emit(SocketEvent.RefreshGames);
+    }
 }

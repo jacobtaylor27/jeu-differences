@@ -9,22 +9,25 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { CarouselInformation } from '@common/carousel-information';
 import { PublicGameInformation } from '@common/game-information';
 import { SocketEvent } from '@common/socket-event';
+import { RefreshSnackbarComponent } from '@app/components/refresh-snackbar/refresh-snackbar.component';
 
 @Component({
     selector: 'app-game-carousel',
     templateUrl: './game-carousel.component.html',
     styleUrls: ['./game-carousel.component.scss'],
 })
-export class GameCarouselComponent implements OnInit {
+export class GameCarouselComponent implements OnInit, OnDestroy {
     @Input() isAdmin: boolean = false;
     isLoaded: boolean;
     games: GameCard[] = [];
     favoriteTheme: string = Theme.ClassName;
 
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly gameCarouselService: GameCarouselService,
         readonly communicationService: CommunicationService,
         private readonly socketService: CommunicationSocketService,
+        private readonly snackBar: MatSnackBar,
     ) {}
 
     ngOnInit(): void {
@@ -32,10 +35,16 @@ export class GameCarouselComponent implements OnInit {
         this.handleSocket();
     }
 
+
     handleSocket(): void {
         this.socketService.on(SocketEvent.RefreshGames, () => {
             this.getFirstPage();
+            this.openSnackBar();
         });
+    }
+
+    openSnackBar() {
+        this.snackBar.openFromComponent(RefreshSnackbarComponent, { duration: 3000 });
     }
 
     getFirstPage(): void {

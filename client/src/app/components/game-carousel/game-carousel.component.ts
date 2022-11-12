@@ -4,9 +4,11 @@ import { Theme } from '@app/enums/theme';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { CarouselInformation } from '@common/carousel-information';
 import { PublicGameInformation } from '@common/game-information';
+import { SocketEvent } from '@common/socket-event';
 
 @Component({
     selector: 'app-game-carousel',
@@ -19,10 +21,19 @@ export class GameCarouselComponent implements OnInit {
     games: GameCard[] = [];
     favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
+    constructor(private readonly gameCarouselService: GameCarouselService, 
+        readonly communicationService: CommunicationService,
+        private readonly socketService : CommunicationSocketService) {}
 
     ngOnInit(): void {
         this.getFirstPage();
+        this.handleSocket();
+    }
+
+    handleSocket() : void {
+        this.socketService.on(SocketEvent.RefreshGames, () => {
+            this.getFirstPage();
+        })
     }
 
     getFirstPage(): void {

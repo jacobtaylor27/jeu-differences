@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCard } from '@app/interfaces/game-card';
@@ -35,6 +36,9 @@ export class GameCarouselComponent implements OnInit, OnDestroy {
         this.handleSocket();
     }
 
+    ngOnDestroy(): void {
+        this.socketService.off(SocketEvent.RefreshGames);
+    }
 
     handleSocket(): void {
         this.socketService.on(SocketEvent.RefreshGames, () => {

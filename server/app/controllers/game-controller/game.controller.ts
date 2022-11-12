@@ -47,6 +47,7 @@ export class GameController {
                 .catch(() => {
                     res.status(StatusCodes.BAD_REQUEST).send();
                 });
+            this.socketManager.refreshGames();
         });
 
         this.router.get('/cards', (req: Request, res: Response) => {

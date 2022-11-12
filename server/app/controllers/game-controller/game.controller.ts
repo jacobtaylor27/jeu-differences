@@ -7,12 +7,18 @@ import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import * as LZString from 'lz-string';
+import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
 
 @Service()
 export class GameController {
     router: Router;
 
-    constructor(private gameInfo: GameInfoService, private gameValidation: GameValidation, private bmpSubtractor: BmpSubtractorService) {
+    constructor(
+        private gameInfo: GameInfoService,
+        private gameValidation: GameValidation,
+        private bmpSubtractor: BmpSubtractorService,
+        private readonly socketManager: SocketManagerService,
+    ) {
         this.configureRouter();
     }
 
@@ -29,6 +35,7 @@ export class GameController {
                 .catch(() => {
                     res.status(StatusCodes.BAD_REQUEST).send();
                 });
+            this.socketManager.refreshGames();
         });
 
         this.router.delete('/cards', (req: Request, res: Response) => {

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Server } from '@app/server';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 import { expect } from 'chai';
@@ -604,7 +605,7 @@ describe('SocketManager', () => {
         const spySendTimer = stub(service['gameManager'], 'sendTimer').callsFake(() => {});
         const spyEmit = stub(fakeSocket, 'emit');
         const spyJoin = stub(fakeSocket, 'join');
-        await service.createGameSolo('player', '', { card: '', isMulti: false }, fakeSocket);
+        await service.createGameSolo('player', GameMode.Classic, { card: '', isMulti: false }, fakeSocket);
         expect(spySetTimer.called).to.equal(true);
         expect(spyCreateGame.called).to.equal(true);
         expect(spySendTimer.called).to.equal(true);
@@ -632,7 +633,7 @@ describe('SocketManager', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyAddRequest = stub(service['multiplayerGameManager'], 'addNewRequest').callsFake(() => {});
         stub(service['multiplayerGameManager'], 'theresOneRequest').callsFake(() => true);
-        await service.createGameMulti('', '', { card: '', isMulti: true }, fakeSocket);
+        await service.createGameMulti('', GameMode.Classic, { card: '', isMulti: true }, fakeSocket);
         expect(spyEmit.called).to.equal(true);
         expect(spyRoomWaiting.called).to.equal(true);
         expect(spyAddRequest.called).to.equal(false);
@@ -654,7 +655,7 @@ describe('SocketManager', () => {
         const spyRoomWaiting = stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => '');
         const spyAddRequest = stub(service['multiplayerGameManager'], 'addNewRequest').callsFake(() => {});
         stub(service['multiplayerGameManager'], 'theresOneRequest').callsFake(() => true);
-        await service.createGameMulti('', '', { card: '', isMulti: true }, fakeSocket);
+        await service.createGameMulti('', GameMode.Classic, { card: '', isMulti: true }, fakeSocket);
         expect(spyEmit.called).to.equal(true);
         expect(spyRoomWaiting.called).to.equal(true);
         expect(spyAddRequest.called).to.equal(true);
@@ -680,7 +681,7 @@ describe('SocketManager', () => {
             return new Promise(() => '');
         });
         spyCreateGame.resolves();
-        await service.createGameMulti('', '', { card: '', isMulti: true }, fakeSocket);
+        await service.createGameMulti('', GameMode.Classic, { card: '', isMulti: true }, fakeSocket);
         expect(spyEmit.called).to.equal(true);
         expect(spyJoin.called).to.equal(true);
         expect(spyBroadcastEmit.called).to.equal(true);

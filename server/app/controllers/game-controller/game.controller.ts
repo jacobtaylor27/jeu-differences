@@ -13,6 +13,7 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
 export class GameController {
     router: Router;
 
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private gameInfo: GameInfoService,
         private gameValidation: GameValidation,

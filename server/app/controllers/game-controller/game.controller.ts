@@ -134,6 +134,7 @@ export class GameController {
             this.gameInfo
                 .addGameInfoWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
                 .then(() => {
+                    this.socketManager.refreshGames();
                     res.status(StatusCodes.CREATED).send();
                 })
                 .catch(() => {

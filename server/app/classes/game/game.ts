@@ -12,6 +12,7 @@ export class Game {
     players: Map<string, string>;
     timerId: NodeJS.Timer;
     private id: string;
+    private mode: GameMode;
     private isMulti: boolean;
     private info: PrivateGameInformation;
     private getNbDifferencesFound: Map<string, Set<Coordinate[]>>;
@@ -19,8 +20,9 @@ export class Game {
     private context: GameContext;
     private initialTime: Date;
 
-    constructor(mode: string, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
+    constructor(mode: GameMode, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
+        this.mode = mode;
         this.players = new Map();
         this.isMulti = playerInfo.isMulti;
         this.getNbDifferencesFound = new Map();
@@ -59,8 +61,17 @@ export class Game {
 
     calculateTime(): number {
         const presentTime = new Date();
-        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-        return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
+        if (this.mode === GameMode.Classic) {
+            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
+            return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
+        } else {
+            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
+            const time = 5 - Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
+            if (time === 0) {
+                this.context.next();
+            }
+            return time;
+        }
     }
 
     findDifference(differenceCoords: Coordinate): Coordinate[] | undefined {

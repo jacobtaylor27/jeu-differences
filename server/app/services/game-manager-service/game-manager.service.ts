@@ -4,6 +4,7 @@ import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpret
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 import { Server } from 'socket.io';
@@ -14,7 +15,7 @@ export class GameManagerService {
     games: Map<string, Game> = new Map();
     constructor(private gameInfo: GameInfoService, public differenceService: BmpDifferenceInterpreter) {}
 
-    async createGame(playerInfo: { player: User; isMulti: boolean }, mode: string, gameCardId: string) {
+    async createGame(playerInfo: { player: User; isMulti: boolean }, mode: GameMode, gameCardId: string) {
         const gameCard: PrivateGameInformation = await this.gameInfo.getGameInfoById(gameCardId);
         const game = new Game(mode, playerInfo, gameCard);
         this.games.set(game.identifier, game);

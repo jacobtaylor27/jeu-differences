@@ -21,19 +21,21 @@ export class GameCarouselComponent implements OnInit {
     games: GameCard[] = [];
     favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly gameCarouselService: GameCarouselService, 
+    constructor(
+        private readonly gameCarouselService: GameCarouselService,
         readonly communicationService: CommunicationService,
-        private readonly socketService : CommunicationSocketService) {}
+        private readonly socketService: CommunicationSocketService,
+    ) {}
 
     ngOnInit(): void {
         this.getFirstPage();
         this.handleSocket();
     }
 
-    handleSocket() : void {
+    handleSocket(): void {
         this.socketService.on(SocketEvent.RefreshGames, () => {
             this.getFirstPage();
-        })
+        });
     }
 
     getFirstPage(): void {

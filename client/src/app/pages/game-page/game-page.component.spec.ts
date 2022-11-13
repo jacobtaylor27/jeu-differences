@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
@@ -19,6 +19,7 @@ import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
 
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
+import { GameMode } from '@common/game-mode';
 
 class SocketClientServiceMock extends CommunicationSocketService {
     // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
@@ -33,6 +34,13 @@ describe('GamePageComponent', () => {
     let gameInformationHandlerServiceSpy: jasmine.SpyObj<GameInformationHandlerService>;
     let socketHelper: SocketTestHelper;
     let socketServiceMock: SocketClientServiceMock;
+    const model = {
+        data: {
+            win: true,
+            winner: '',
+            isClassic: true,
+        },
+    };
 
     beforeEach(async () => {
         socketHelper = new SocketTestHelper();
@@ -54,6 +62,7 @@ describe('GamePageComponent', () => {
                 'getOpponent',
                 'getNbDifferences',
                 'getNbTotalDifferences',
+                'setGameMode',
             ],
             { $differenceFound: new Subject<string>() },
         );
@@ -81,6 +90,7 @@ describe('GamePageComponent', () => {
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
+                { provide: MAT_DIALOG_DATA, useValue: model },
                 {
                     provide: GameInformationHandlerService,
                     useValue: gameInformationHandlerServiceSpy,
@@ -96,7 +106,17 @@ describe('GamePageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should open the game over dialog', () => {
+    it('should open the game over dialog when game mode is Limited time', () => {
+        gameInformationHandlerServiceSpy.setGameMode(GameMode.LimitedTime);
+        component.openGameOverDialog(false);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+
+        component.openGameOverDialog(true);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+    });
+
+    it('should open the game over dialog when game mode is classic', () => {
+        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
         component.openGameOverDialog(false);
         expect(dialogSpyObj.open).toHaveBeenCalled();
         expect(gameInformationHandlerServiceSpy.getOpponent).toHaveBeenCalled();

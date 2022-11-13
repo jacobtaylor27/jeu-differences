@@ -65,6 +65,7 @@ export class Game {
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
             return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
         } else {
+            // TO DO : ADD ADMINS TIME
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
             const time = 5 - Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
             if (time === 0) {

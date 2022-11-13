@@ -5,6 +5,7 @@ import { Theme } from '@app/enums/theme';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -35,10 +36,19 @@ export class GamePageComponent implements OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.minWidth = '50%';
-        dialogConfig.data = {
-            win: isWin,
-            winner: isWin ? this.gameInfoHandlerService.getPlayer().name : this.gameInfoHandlerService.getOpponent().name,
-        };
+        if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
+            dialogConfig.data = {
+                win: isWin,
+                winner: isWin ? this.gameInfoHandlerService.getPlayer().name : this.gameInfoHandlerService.getOpponent().name,
+                isClassic: true,
+            };
+        } else {
+            dialogConfig.data = {
+                win: isWin,
+                winner: undefined,
+                isClassic: false,
+            };
+        }
         this.dialog.open(DialogGameOverComponent, dialogConfig);
     }
 

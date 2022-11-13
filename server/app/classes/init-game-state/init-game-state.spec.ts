@@ -1,7 +1,7 @@
 import { GameContext } from '@app/classes/game-context/game-context';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
-import { GameMode } from '@app/enum/game-mode';
+import { GameMode } from '@common/game-mode';
 import { expect } from 'chai';
 import { SinonSpiedInstance, spy } from 'sinon';
 

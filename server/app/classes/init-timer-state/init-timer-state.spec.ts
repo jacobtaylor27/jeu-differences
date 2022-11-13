@@ -2,7 +2,7 @@ import { FindDifferenceState } from '@app/classes/find-difference-state/find-dif
 import { GameContext } from '@app/classes/game-context/game-context';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
 import { PlayerOneTurnState } from '@app/classes/player-one-tour-state/player-one-tour-state';
-import { GameMode } from '@app/enum/game-mode';
+import { GameMode } from '@common/game-mode';
 import { expect } from 'chai';
 import { SinonSpiedInstance, spy } from 'sinon';
 

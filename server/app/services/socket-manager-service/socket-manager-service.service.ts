@@ -1,3 +1,4 @@
+import { GameMode } from '@common/game-mode';
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
@@ -35,13 +36,13 @@ export class SocketManagerService {
 
             socket.on(
                 SocketEvent.CreateGame,
-                async (player: string, mode: string, game: { card: string; isMulti: boolean }) =>
+                async (player: string, mode: GameMode, game: { card: string; isMulti: boolean }) =>
                     await this.createGameSolo(player, mode, game, socket),
             );
 
             socket.on(
                 SocketEvent.CreateGameMulti,
-                async (player: string, mode: string, game: { card: string; isMulti: boolean }) =>
+                async (player: string, mode: GameMode, game: { card: string; isMulti: boolean }) =>
                     await this.createGameMulti(player, mode, game, socket),
             );
             socket.on(SocketEvent.Message, (message: string, roomId: string) => {
@@ -197,16 +198,16 @@ export class SocketManagerService {
     }
 
     // eslint-disable-next-line max-params -- absolutely need all the params
-    async createGameSolo(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
+    async createGameSolo(player: string, mode: GameMode, game: { card: string; isMulti: boolean }, socket: Socket) {
         const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
         socket.join(id);
         this.gameManager.setTimer(id);
-        socket.emit(SocketEvent.Play, id);
         this.gameManager.sendTimer(this.sio, id);
+        socket.emit(SocketEvent.Play, id);
     }
 
     // eslint-disable-next-line max-params -- absolutely need all the params
-    async createGameMulti(player: string, mode: string, game: { card: string; isMulti: boolean }, socket: Socket) {
+    async createGameMulti(player: string, mode: GameMode, game: { card: string; isMulti: boolean }, socket: Socket) {
         let roomId = this.multiplayerGameManager.getRoomIdWaiting(game.card);
         socket.emit(SocketEvent.WaitPlayer);
         if (this.multiplayerGameManager.isGameWaiting(game.card)) {

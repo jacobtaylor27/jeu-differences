@@ -2,7 +2,7 @@ import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
-import { GameMode } from '@app/enum/game-mode';
+import { GameMode } from '@common/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { Coordinate } from '@common/coordinate';
@@ -27,7 +27,7 @@ describe('Game', () => {
         differences: [[{} as Coordinate]],
     };
     const expectedPlayer = { player: { name: 'test player', id: 'test' }, isMulti: false };
-    const expectedMode = 'classic';
+    const expectedMode = GameMode.Classic;
     beforeEach(() => {
         game = new Game(expectedMode, expectedPlayer, expectedGameInfo);
         clock = useFakeTimers();

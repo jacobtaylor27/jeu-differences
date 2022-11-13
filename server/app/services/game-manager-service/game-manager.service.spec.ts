@@ -74,7 +74,9 @@ describe('GameManagerService', () => {
     it('should set the timer', () => {
         expect(gameManager.setTimer('1')).to.equal(null);
         const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
-        const expectedGame = stub(new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation));
+        const expectedGame = stub(
+            new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation),
+        );
         gameManager.setTimer('1');
         expect(expectedGame.status).to.equal(GameStatus.InitTimer);
         expect(findGameStub.called).to.equal(true);

@@ -33,7 +33,7 @@ export class GameManagerService {
         }
 
         game.timerId = setInterval(() => {
-            if (game.gameMode === GameMode.LimitedTime && game.isGameOver()) {
+            if (game.gameMode === GameMode.LimitedTime && this.isGameOver(gameId)) {
                 // high scores to handle here
                 sio.sockets.to(gameId).emit(SocketEvent.Lose);
                 this.leaveGame(playerId, gameId);

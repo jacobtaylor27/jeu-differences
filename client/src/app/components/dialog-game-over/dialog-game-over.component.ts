@@ -10,9 +10,11 @@ import { Theme } from '@app/enums/theme';
 export class DialogGameOverComponent {
     isWin: boolean;
     winner: string;
+    isClassic: boolean;
     theme = Theme.ClassName;
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string }) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string; isClassic: boolean }) {
         this.isWin = data.win;
         this.winner = data.winner;
+        this.isClassic = data.isClassic;
     }
 }

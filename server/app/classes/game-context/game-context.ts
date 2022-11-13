@@ -1,5 +1,5 @@
 import { GameState } from '@app/classes/game-state/game-state';
-import { GameMode } from '@app/enum/game-mode';
+import { GameMode } from '@common/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 
 export class GameContext {

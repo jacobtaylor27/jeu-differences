@@ -1,6 +1,6 @@
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { GameContext } from '@app/classes/game-context/game-context';
-import { GameMode } from '@app/enum/game-mode';
+import { GameMode } from '@common/game-mode';
 import { expect } from 'chai';
 import { SinonSpiedInstance, spy } from 'sinon';
 import { FindDifferenceState } from './find-difference-state';

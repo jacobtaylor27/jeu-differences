@@ -2,7 +2,7 @@ import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
-import { GameMode } from '@app/enum/game-mode';
+import { GameMode } from '@common/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { Coordinate } from '@common/coordinate';
@@ -27,7 +27,7 @@ describe('Game', () => {
         differences: [[{} as Coordinate]],
     };
     const expectedPlayer = { player: { name: 'test player', id: 'test' }, isMulti: false };
-    const expectedMode = 'classic';
+    const expectedMode = GameMode.Classic;
     beforeEach(() => {
         game = new Game(expectedMode, expectedPlayer, expectedGameInfo);
         clock = useFakeTimers();
@@ -60,11 +60,24 @@ describe('Game', () => {
         expect(game.seconds).to.equal(2);
     });
 
-    it('should calculate time', () => {
+    it('should calculate time in mode Classic', () => {
+        game['mode'] = GameMode.Classic;
         game.setTimer();
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);
         expect(game.calculateTime()).to.equal(5);
+    });
+
+    // Test needs to be changed with admins command
+    it('should calculate time in mode Limited', () => {
+        game['mode'] = GameMode.LimitedTime;
+        game.setTimer();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
+        clock.tick(2000);
+        expect(game.calculateTime()).to.equal(3);
+        clock.tick(3000);
+        expect(game.calculateTime()).to.equal(0);
+        expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
     });
 
     it('should get the status of the game', () => {

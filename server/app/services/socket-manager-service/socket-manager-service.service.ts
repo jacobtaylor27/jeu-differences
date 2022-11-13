@@ -68,7 +68,7 @@ export class SocketManagerService {
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
                 this.gameManager.setTimer(roomId);
-                this.gameManager.sendTimer(this.sio, roomId, socket.id);
+                this.gameManager.sendTimer(this.sio, roomId, roomId);
             });
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {

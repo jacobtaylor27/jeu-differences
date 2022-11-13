@@ -72,7 +72,7 @@ export class Game {
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
             const time = 5 - Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
             if (time === 0) {
-                this.context.next();
+                this.context.end();
             }
             return time;
         }

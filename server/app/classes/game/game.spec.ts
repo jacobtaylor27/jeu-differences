@@ -60,11 +60,21 @@ describe('Game', () => {
         expect(game.seconds).to.equal(2);
     });
 
-    it('should calculate time', () => {
+    it('should calculate time in mode Classic', () => {
+        game['mode'] = GameMode.Classic;
         game.setTimer();
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);
         expect(game.calculateTime()).to.equal(5);
+    });
+
+    // Test needs to be changed with admins command
+    it('should calculate time in mode Limited', () => {
+        game['mode'] = GameMode.LimitedTime;
+        game.setTimer();
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
+        clock.tick(2000);
+        expect(game.calculateTime()).to.equal(3);
     });
 
     it('should get the status of the game', () => {

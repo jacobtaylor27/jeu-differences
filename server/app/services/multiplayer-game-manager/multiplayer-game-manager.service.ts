@@ -74,10 +74,12 @@ export class MultiplayerGameManager {
         return (this.requestsOnHold.get(roomId) as User[])[0];
     }
 
-    getGamesWaiting() {
+    getGamesWaiting(mode: GameMode) {
         const gamesId = [];
         for (const game of this.gamesWaiting) {
-            gamesId.push(game.gameId);
+            if (game.mode === mode) {
+                gamesId.push(game.gameId);
+            }
         }
         return gamesId;
     }

@@ -2,7 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Theme } from '@app/enums/theme';
 import { GameCard } from '@app/interfaces/game-card';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
+import { GameMode } from '@common/game-mode';
 import { Score } from '@common/score';
 import { SocketEvent } from '@common/socket-event';
 
@@ -16,7 +18,11 @@ export class GameCardComponent implements OnInit {
     favoriteTheme: string = Theme.ClassName;
     imageSrc: string;
 
-    constructor(private readonly communicationSocket: CommunicationSocketService, private readonly timeFormatter: TimeFormatterService) {}
+    constructor(
+        private readonly communicationSocket: CommunicationSocketService,
+        private readonly timeFormatter: TimeFormatterService,
+        private readonly gameInfoService: GameInformationHandlerService,
+    ) {}
 
     ngOnInit() {
         this.setImagesSrc();
@@ -24,12 +30,14 @@ export class GameCardComponent implements OnInit {
     }
 
     listenForOpenLobbies(): void {
-        this.communicationSocket.send(SocketEvent.GetGamesWaiting);
+        this.communicationSocket.send(SocketEvent.GetGamesWaiting, { mode: this.gameInfoService.gameMode });
 
-        this.communicationSocket.on(SocketEvent.GetGamesWaiting, (gamesInfo: string[]) => {
-            for (const info of gamesInfo) {
-                if (this.gameCard.gameInformation.id === info) {
-                    this.gameCard.isMulti = true;
+        this.communicationSocket.on(SocketEvent.GetGamesWaiting, (games: string[]) => {
+            if (this.gameInfoService.gameMode === GameMode.Classic) {
+                for (const info of games) {
+                    if (this.gameCard.gameInformation.id === info) {
+                        this.gameCard.isMulti = true;
+                    }
                 }
             }
         });

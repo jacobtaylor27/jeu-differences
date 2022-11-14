@@ -68,7 +68,7 @@ export class SocketManagerService {
                 }
                 this.multiplayerGameManager.deleteAllRequests(roomId);
                 this.gameManager.setTimer(roomId);
-                this.gameManager.sendTimer(this.sio, roomId);
+                this.gameManager.sendTimer(this.sio, roomId, roomId);
             });
 
             socket.on(SocketEvent.RejectPlayer, (roomId: string, opponentsRoomId: string) => {
@@ -202,7 +202,7 @@ export class SocketManagerService {
         const id = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
         socket.join(id);
         this.gameManager.setTimer(id);
-        this.gameManager.sendTimer(this.sio, id);
+        this.gameManager.sendTimer(this.sio, id, socket.id);
         socket.emit(SocketEvent.Play, id);
     }
 

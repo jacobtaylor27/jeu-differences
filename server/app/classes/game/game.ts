@@ -31,11 +31,14 @@ export class Game {
         this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
         this.id = v4();
         this.context.next();
-        // go directly to the Found Difference State because timer is not initialize in the server for now
     }
 
     get identifier() {
         return this.id;
+    }
+
+    get gameMode() {
+        return this.mode;
     }
 
     get multi() {
@@ -69,7 +72,7 @@ export class Game {
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
             const time = 5 - Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
             if (time === 0) {
-                this.context.next();
+                this.context.end();
             }
             return time;
         }

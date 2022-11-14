@@ -26,13 +26,21 @@ export class GameManagerService {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).setTimer() : null;
     }
 
-    sendTimer(sio: Server, gameId: string) {
+    sendTimer(sio: Server, gameId: string, playerId: string) {
         const game = this.findGame(gameId);
         if (!game) {
             return;
         }
+
         game.timerId = setInterval(() => {
-            sio.sockets.to(gameId).emit(SocketEvent.Clock, this.getTime(gameId));
+            if (game.gameMode === GameMode.LimitedTime && this.isGameOver(gameId)) {
+                // high scores to handle here
+                sio.sockets.to(gameId).emit(SocketEvent.Lose);
+                this.leaveGame(playerId, gameId);
+                this.deleteTimer(gameId);
+            } else {
+                sio.sockets.to(gameId).emit(SocketEvent.Clock, this.getTime(gameId));
+            }
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- one second is 1000 ms
         }, 1000);
     }

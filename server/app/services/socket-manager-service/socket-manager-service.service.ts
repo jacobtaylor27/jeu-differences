@@ -84,6 +84,7 @@ export class SocketManagerService {
             socket.on(SocketEvent.JoinGame, (player: string, gameId: string) => {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
+                socket.broadcast.to(gameId).emit(SocketEvent.JoinGame, { roomId : gameId, playerName : player });
                 this.sio.to(gameId).emit(SocketEvent.Play, gameId);
             });
 
@@ -216,11 +217,20 @@ export class SocketManagerService {
                 return;
             }
 
-            this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
-
-            if (this.multiplayerGameManager.theresOneRequest(roomId)) {
-                this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
+            if(mode === GameMode.Classic){
+                this.multiplayerGameManager.addNewRequest(roomId, { name: player, id: socket.id });
+    
+                if (this.multiplayerGameManager.theresOneRequest(roomId)) {
+                    this.sio.to(this.multiplayerGameManager.getRoomIdWaiting(game.card)).emit(SocketEvent.RequestToJoin, { name: player, id: socket.id });
+                }
             }
+
+            else{
+                socket.join(roomId);
+                socket.broadcast.to(roomId).emit(SocketEvent.JoinGame, { roomId : roomId, playerName : player });
+
+            }
+
         } else {
             roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
             this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });

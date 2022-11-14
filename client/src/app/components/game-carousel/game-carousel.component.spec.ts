@@ -12,12 +12,23 @@ import { PublicGameInformation } from '@common/game-information';
 import { of } from 'rxjs';
 import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { GameCarouselComponent } from './game-carousel.component';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { Socket } from 'socket.io-client';
+import { SocketEvent } from '@common/socket-event';
+
+class SocketClientServiceMock extends CommunicationSocketService {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
+    override connect() {}
+}
 
 describe('GameCarouselComponent', () => {
     let component: GameCarouselComponent;
     let fixture: ComponentFixture<GameCarouselComponent>;
     let spyGameCarouselService: GameCarouselService;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let socketServiceMock: SocketClientServiceMock;
+    let socketHelper: SocketTestHelper;
 
     beforeEach(async () => {
         spyGameCarouselService = jasmine.createSpyObj('GameCarouselService', [
@@ -34,6 +45,9 @@ describe('GameCarouselComponent', () => {
             'setCarouselInformation',
         ]);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new SocketClientServiceMock();
+        socketServiceMock['socket'] = socketHelper as unknown as Socket;
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule, BrowserModule, ReactiveFormsModule],
             declarations: [GameCarouselComponent, GameCardComponent, LoadingScreenComponent],
@@ -42,6 +56,7 @@ describe('GameCarouselComponent', () => {
                     provide: GameCarouselService,
                     useValue: spyGameCarouselService,
                 },
+                { provide: CommunicationSocketService, useValue: socketServiceMock },
                 {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
@@ -146,5 +161,25 @@ describe('GameCarouselComponent', () => {
     it('should return true if there are more than one card', () => {
         component.hasMoreThanOneCard();
         expect(spyGameCarouselService.hasMoreThanOneCard).toHaveBeenCalled();
+    });
+
+    it('should open snackbar', () => {
+        const spySnackBar = spyOn(component['snackBar'], 'openFromComponent').and.resolveTo();
+
+        component.openSnackBar();
+        expect(spySnackBar).toHaveBeenCalled();
+    });
+
+    it('should handle socket when refresh games', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spyGetFirstPage = spyOn(component, 'getFirstPage').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spyOpenSnackBar = spyOn(component, 'openSnackBar').and.callFake(() => {});
+
+        component.handleSocket();
+        socketHelper.peerSideEmit(SocketEvent.RefreshGames);
+
+        expect(spyGetFirstPage).toHaveBeenCalled();
+        expect(spyOpenSnackBar).toHaveBeenCalled();
     });
 });

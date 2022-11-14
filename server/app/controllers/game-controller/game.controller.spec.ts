@@ -6,17 +6,20 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
-import { createStubInstance, SinonStubbedInstance } from 'sinon';
+import { createStubInstance, SinonStubbedInstance, stub } from 'sinon';
 import { Container } from 'typedi';
 import * as supertest from 'supertest';
+import { GameController } from './game.controller';
 
 describe('GameController', () => {
+    let gameController: GameController;
     let gameManager: SinonStubbedInstance<GameManagerService>;
     let gameInfo: SinonStubbedInstance<GameInfoService>;
     let gameValidation: SinonStubbedInstance<GameValidation>;
     let expressApp: Express.Application;
 
     beforeEach(async () => {
+        gameController = Container.get(GameController);
         gameInfo = createStubInstance(GameInfoService);
         gameValidation = createStubInstance(GameValidation);
         const app = Container.get(Application);
@@ -126,6 +129,8 @@ describe('GameController', () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
         gameInfo.addGameInfoWrapper.resolves();
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        stub(gameController['socketManager'], 'refreshGames').callsFake(() => {});
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },

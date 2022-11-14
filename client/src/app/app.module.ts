@@ -38,7 +38,7 @@ import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stop
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
-import { CluesAreaComponent } from './components/clues-area/clues-area.component';
+import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -81,7 +81,7 @@ import { CluesAreaComponent } from './components/clues-area/clues-area.component
         CommonToolBoxComponent,
         PlayerLeftSnackbarComponent,
         RejectedDialogComponent,
-        CluesAreaComponent,
+        RefreshSnackbarComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

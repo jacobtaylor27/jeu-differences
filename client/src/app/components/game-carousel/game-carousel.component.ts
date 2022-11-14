@@ -1,28 +1,54 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { CarouselInformation } from '@common/carousel-information';
 import { PublicGameInformation } from '@common/game-information';
+import { SocketEvent } from '@common/socket-event';
+import { RefreshSnackbarComponent } from '@app/components/refresh-snackbar/refresh-snackbar.component';
 
 @Component({
     selector: 'app-game-carousel',
     templateUrl: './game-carousel.component.html',
     styleUrls: ['./game-carousel.component.scss'],
 })
-export class GameCarouselComponent implements OnInit {
+export class GameCarouselComponent implements OnInit, OnDestroy {
     @Input() isAdmin: boolean = false;
     isLoaded: boolean;
     games: GameCard[] = [];
     favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly gameCarouselService: GameCarouselService, readonly communicationService: CommunicationService) {}
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
+    constructor(
+        private readonly gameCarouselService: GameCarouselService,
+        readonly communicationService: CommunicationService,
+        private readonly socketService: CommunicationSocketService,
+        private readonly snackBar: MatSnackBar,
+    ) {}
 
     ngOnInit(): void {
         this.getFirstPage();
+        this.handleSocket();
+    }
+
+    ngOnDestroy(): void {
+        this.socketService.off(SocketEvent.RefreshGames);
+    }
+
+    handleSocket(): void {
+        this.socketService.on(SocketEvent.RefreshGames, () => {
+            this.getFirstPage();
+            this.openSnackBar();
+        });
+    }
+
+    openSnackBar() {
+        this.snackBar.openFromComponent(RefreshSnackbarComponent, { duration: 3000 });
     }
 
     getFirstPage(): void {

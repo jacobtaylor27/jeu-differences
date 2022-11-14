@@ -47,4 +47,14 @@ export class DifferencesAreaComponent implements OnInit {
         }
         return nbPlayerDifference.toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
     }
+
+    setNbDifferencesFoundLimitedMulti() {
+        const nbPlayerDifference = this.gameInformationHandlerService.getNbDifferences(this.mainPlayer.name);
+        const nbOpponentDifference = this.gameInformationHandlerService.getNbDifferences(this.opponentPlayer.name);
+
+        if (nbPlayerDifference === undefined || nbOpponentDifference === undefined) {
+            return '';
+        }
+        return (nbPlayerDifference + nbOpponentDifference).toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
+    }
 }

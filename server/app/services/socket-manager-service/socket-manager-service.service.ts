@@ -121,8 +121,8 @@ export class SocketManagerService {
                 this.multiplayerGameManager.deleteRequest(this.multiplayerGameManager.getRoomIdWaiting(gameCard), socket.id);
             });
 
-            socket.on(SocketEvent.GetGamesWaiting, () => {
-                socket.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+            socket.on(SocketEvent.GetGamesWaiting, (mode: GameMode) => {
+                socket.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting(mode));
             });
 
             socket.on(SocketEvent.GameDeleted, (gameId: string) => {
@@ -139,7 +139,7 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.GamesDeleted, () => {
-                for (const gameId of this.multiplayerGameManager.getGamesWaiting()) {
+                for (const gameId of this.multiplayerGameManager.getGamesWaiting(GameMode.Classic)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
                     this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
                     const request = this.multiplayerGameManager.getRequest(roomId);
@@ -231,8 +231,8 @@ export class SocketManagerService {
             }
         } else {
             roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);
-            this.multiplayerGameManager.addGameWaiting({ gameId: game.card, roomId });
-            socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting());
+            this.multiplayerGameManager.addGameWaiting({ gameId: game.card, mode, roomId });
+            socket.broadcast.emit(SocketEvent.GetGamesWaiting, this.multiplayerGameManager.getGamesWaiting(mode));
             socket.emit(SocketEvent.WaitPlayer, roomId);
             socket.join(roomId);
         }

@@ -34,6 +34,10 @@ export class DifferencesAreaComponent implements OnInit {
         this.differenceDetectionHandler.resetNumberDifferencesFound();
     }
 
+    isMultiLimited(): boolean {
+        return this.gameInformationHandlerService.gameMode === GameMode.LimitedTime && this.gameInformationHandlerService.isMulti;
+    }
+
     getPlayerIndex(playerName: string) {
         return this.players.findIndex((player: { name: string; nbDifference: string }) => player.name === playerName);
     }

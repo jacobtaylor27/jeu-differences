@@ -1,12 +1,13 @@
 import { User } from '@common/user';
 import { Service } from 'typedi';
 import { RejectMessages } from '@app/interface/reject-messages';
+import { GameMode } from '@common/game-mode';
 
 @Service()
 export class MultiplayerGameManager {
     requestsOnHold: Map<string, User[]> = new Map();
     rejectMessages = {} as RejectMessages;
-    private gamesWaiting: { gameId: string; roomId: string }[] = [];
+    private gamesWaiting: { gameId: string; mode: GameMode; roomId: string }[] = [];
 
     constructor() {
         this.initializeRejectMessages();
@@ -93,7 +94,7 @@ export class MultiplayerGameManager {
         return !gameWaiting ? '' : gameWaiting.roomId;
     }
 
-    addGameWaiting(infos: { gameId: string; roomId: string }): void {
+    addGameWaiting(infos: { gameId: string; mode: GameMode; roomId: string }): void {
         this.gamesWaiting.push(infos);
     }
 

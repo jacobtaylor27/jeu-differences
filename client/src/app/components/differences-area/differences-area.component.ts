@@ -8,8 +8,6 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
     styleUrls: ['./differences-area.component.scss'],
 })
 export class DifferencesAreaComponent implements OnInit {
-    name: string;
-    nbDifferences: string;
     players: { name: string; nbDifference: string }[];
     constructor(
         private readonly gameInformationHandlerService: GameInformationHandlerService,

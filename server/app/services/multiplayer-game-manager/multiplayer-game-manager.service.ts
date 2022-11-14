@@ -85,8 +85,14 @@ export class MultiplayerGameManager {
         return gamesId;
     }
 
-    isGameWaiting(gameId: string) {
-        return this.gamesWaiting.map((game: { gameId: string; roomId: string }) => game.gameId).includes(gameId);
+    isGameWaiting(gameId: string, mode: GameMode | undefined) {
+        if (!mode) {
+            return this.gamesWaiting.map((game: { gameId: string; roomId: string }) => game.gameId).includes(gameId);
+        }
+        return (
+            this.gamesWaiting.map((game: { gameId: string; mode: GameMode; roomId: string }) => game.gameId).includes(gameId) &&
+            this.gamesWaiting.map((game: { gameId: string; mode: GameMode; roomId: string }) => game.mode).includes(mode)
+        );
     }
 
     getRoomIdWaiting(gameId: string) {

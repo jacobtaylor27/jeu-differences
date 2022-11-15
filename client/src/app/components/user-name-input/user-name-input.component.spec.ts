@@ -7,6 +7,7 @@ import { AdminCommandsComponent } from '@app/components/admin-commands/admin-com
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { GameMode } from '@common/game-mode';
 
 import { UserNameInputComponent } from './user-name-input.component';
 
@@ -90,5 +91,20 @@ describe('UserNameInputComponent', () => {
         component.onClickContinue();
         expect(spySocketCommunication.send).toHaveBeenCalled();
         expect(spyGameInformationService.setPlayerName).toHaveBeenCalled();
+    });
+
+    it('should open dialog when GameMode is Limited Time', () => {
+        spyGameInformationService.gameMode = GameMode.LimitedTime;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spyDialog = spyOn(component, 'openGameModeDialog').and.callFake(() => {});
+        component.playerName = 'test';
+        component.onClickContinue();
+        expect(spyDialog).toHaveBeenCalled();
+    });
+
+    it('should open dialog dialog on openGameModeDialog', () => {
+        const spyDialog = spyOn(component['matDialog'], 'open');
+        component.openGameModeDialog();
+        expect(spyDialog).toHaveBeenCalled();
     });
 });

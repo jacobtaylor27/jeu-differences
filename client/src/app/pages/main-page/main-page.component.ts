@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
 import { Theme } from '@app/enums/theme';
 import { MainPageService } from '@app/services/main-page/main-page.service';
 import { GameMode } from '@common/game-mode';
@@ -12,7 +14,7 @@ export class MainPageComponent {
     readonly title: string = 'Jeu de différences';
     favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly mainPageService: MainPageService) {}
+    constructor(private readonly mainPageService: MainPageService, private readonly matDialog: MatDialog) {}
 
     onClickPlayClassic(): void {
         this.mainPageService.setGameMode(GameMode.Classic);
@@ -20,5 +22,10 @@ export class MainPageComponent {
 
     onClickPlayLimited(): void {
         this.mainPageService.setGameMode(GameMode.LimitedTime);
+        this.openNameDialog();
+    }
+
+    openNameDialog(isMulti: boolean = false) {
+        this.matDialog.open(UserNameInputComponent, { data: { isMulti } });
     }
 }

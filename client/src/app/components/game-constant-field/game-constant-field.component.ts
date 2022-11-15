@@ -8,4 +8,19 @@ import { Component, Input } from '@angular/core';
 export class GameConstantFieldComponent {
     @Input() value: number;
     @Input() label: string;
+    @Input() min: number;
+    @Input() max: number;
+    @Input() step: number;
+
+    togglePlus(): void {
+        if (this.value < this.max) {
+            this.value += this.step;
+        }
+    }
+
+    toggleMinus(): void {
+        if (this.value > this.min) {
+            this.value -= this.step;
+        }
+    }
 }

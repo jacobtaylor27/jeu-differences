@@ -31,4 +31,20 @@ describe('DialogLimitedTimeComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should send Socket Event and handle socket on click solo', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spySocket = spyOn(component['communicationSocketService'], 'send').and.callFake(() => {});
+        component.onClickSolo();
+        expect(spySocket).toHaveBeenCalled();
+        expect(gameInformationHandlerService.handleSocketEvent).toHaveBeenCalled();
+    });
+
+    it('should send Socket Event and handle socket on click coop', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spySocket = spyOn(component['communicationSocketService'], 'send').and.callFake(() => {});
+        component.onClickCoop();
+        expect(spySocket).toHaveBeenCalled();
+        expect(gameInformationHandlerService.handleSocketEvent).toHaveBeenCalled();
+    });
 });

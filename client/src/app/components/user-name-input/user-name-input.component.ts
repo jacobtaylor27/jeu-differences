@@ -1,9 +1,11 @@
 import { Component, HostListener, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Theme } from '@app/enums/theme';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
+import { DialogLimitedTimeComponent } from '../dialog-limited-time/dialog-limited-time.component';
 
 @Component({
     selector: 'app-user-name-input',
@@ -20,6 +22,7 @@ export class UserNameInputComponent {
         private readonly dialogRef: MatDialogRef<UserNameInputComponent>,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
         private communicationSocketService: CommunicationSocketService,
+        private readonly matDialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) private data: { isMulti: boolean },
     ) {
         this.isMulti = this.data.isMulti;
@@ -37,6 +40,11 @@ export class UserNameInputComponent {
         if (this.isValidName()) {
             this.gameInformationHandlerService.setPlayerName(this.playerName);
             this.dialogRef.close(true);
+
+            if (this.gameInformationHandlerService.gameMode === GameMode.LimitedTime) {
+                this.openGameModeDialog();
+                return;
+            }
             if (!this.isMulti) {
                 this.communicationSocketService.send(SocketEvent.CreateGame, {
                     player: this.playerName,
@@ -59,5 +67,9 @@ export class UserNameInputComponent {
     isValidName(): boolean {
         this.playerName = this.playerName.trim();
         return this.playerName !== undefined && this.playerName !== '';
+    }
+
+    openGameModeDialog() {
+        this.matDialog.open(DialogLimitedTimeComponent);
     }
 }

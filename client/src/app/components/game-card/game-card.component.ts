@@ -4,7 +4,7 @@ import { GameCard } from '@app/interfaces/game-card';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
-import { GamesWaitingInfo } from '@common/games-waiting-info'
+import { GamesWaitingInfo } from '@common/games-waiting-info';
 import { Score } from '@common/score';
 import { SocketEvent } from '@common/socket-event';
 

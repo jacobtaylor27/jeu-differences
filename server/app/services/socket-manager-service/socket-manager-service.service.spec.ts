@@ -911,7 +911,55 @@ describe('SocketManager', () => {
         service.handleSockets();
     });
 
-    it('should all delete games', () => {
+    it('should not delete if the game is not waiting', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.GameDeleted) callback();
+            },
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => fakeSocket,
+        } as unknown as io.Server;
+
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => false);
+        const spyGetRequest = stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ id: 'playerTest' } as User]);
+        service.handleSockets();
+        expect(spyGetRequest.called).to.equal(false);
+    });
+
+    it('should not reject player if the game is waiting but no request', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.GameDeleted) callback();
+            },
+            emit: (eventName: string, message: string) => {},
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => fakeSocket,
+        } as unknown as io.Server;
+
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => undefined);
+        const spyEmit = stub(service['sio'].to(''), 'emit');
+        service.handleSockets();
+        expect(spyEmit.calledTwice).to.equal(false);
+    });
+
+    it('should delete all games', () => {
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
                 if (eventName === SocketEvent.GamesDeleted) callback();

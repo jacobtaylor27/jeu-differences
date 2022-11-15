@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Theme } from '@app/enums/theme';
 
 @Component({
   selector: 'app-dialog-limited-time',
@@ -7,7 +8,13 @@ import { Component } from '@angular/core';
 })
 export class DialogLimitedTimeComponent {
 
+  favoriteTheme: string = Theme.ClassName;
 
+  constructor(){}
+
+  onClickSolo(){}
+
+  OnClickCoop(){}
 
 
 }

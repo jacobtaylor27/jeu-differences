@@ -523,6 +523,33 @@ describe('SocketManager', () => {
         });
         service.handleSockets();
     });
+    it('should not reject request if no request is found', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.RejectPlayer) callback();
+            },
+        };
+
+        service['sio'] = {
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => {
+                return {
+                    emit: (eventName: string, message: unknown) => {},
+                };
+            },
+        } as unknown as io.Server;
+        stub(service['multiplayerGameManager'], 'deleteFirstRequest').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'theresARequest').callsFake(() => false);
+        const spyNewRequest = stub(service['multiplayerGameManager'], 'getNewRequest').callsFake(() => {
+            return { name: 'test', id: '' };
+        });
+        service.handleSockets();
+        expect(spyNewRequest.called).to.equal(false);
+    });
 
     it('should join the game', () => {
         const fakeSocket = {

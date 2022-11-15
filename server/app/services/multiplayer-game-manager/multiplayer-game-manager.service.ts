@@ -1,12 +1,13 @@
 import { User } from '@common/user';
 import { Service } from 'typedi';
 import { RejectMessages } from '@app/interface/reject-messages';
+import { GameMode } from '@common/game-mode';
 
 @Service()
 export class MultiplayerGameManager {
     requestsOnHold: Map<string, User[]> = new Map();
     rejectMessages = {} as RejectMessages;
-    private gamesWaiting: { gameId: string; roomId: string }[] = [];
+    private gamesWaiting: { gameId: string; mode: GameMode; roomId: string }[] = [];
 
     constructor() {
         this.initializeRejectMessages();
@@ -74,16 +75,24 @@ export class MultiplayerGameManager {
         return (this.requestsOnHold.get(roomId) as User[])[0];
     }
 
-    getGamesWaiting() {
+    getGamesWaiting(mode: GameMode) {
         const gamesId = [];
         for (const game of this.gamesWaiting) {
-            gamesId.push(game.gameId);
+            if (game.mode === mode) {
+                gamesId.push(game.gameId);
+            }
         }
         return gamesId;
     }
 
-    isGameWaiting(gameId: string) {
-        return this.gamesWaiting.map((game: { gameId: string; roomId: string }) => game.gameId).includes(gameId);
+    isGameWaiting(gameId: string, mode: GameMode | undefined) {
+        if (!mode) {
+            return this.gamesWaiting.map((game: { gameId: string; roomId: string }) => game.gameId).includes(gameId);
+        }
+        return (
+            this.gamesWaiting.map((game: { gameId: string; mode: GameMode; roomId: string }) => game.gameId).includes(gameId) &&
+            this.gamesWaiting.map((game: { gameId: string; mode: GameMode; roomId: string }) => game.mode).includes(mode)
+        );
     }
 
     getRoomIdWaiting(gameId: string) {
@@ -91,7 +100,7 @@ export class MultiplayerGameManager {
         return !gameWaiting ? '' : gameWaiting.roomId;
     }
 
-    addGameWaiting(infos: { gameId: string; roomId: string }): void {
+    addGameWaiting(infos: { gameId: string; mode: GameMode; roomId: string }): void {
         this.gamesWaiting.push(infos);
     }
 

@@ -5,7 +5,7 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
-import { DialogLimitedTimeComponent } from '../dialog-limited-time/dialog-limited-time.component';
+import { DialogLimitedTimeComponent } from '@app/components/dialog-limited-time/dialog-limited-time.component';
 
 @Component({
     selector: 'app-user-name-input',

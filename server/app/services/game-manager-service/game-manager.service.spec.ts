@@ -12,12 +12,13 @@ import { Coordinate } from '@common/coordinate';
 import { User } from '@common/user';
 
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { GameMode } from '@common/game-mode';
+import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
 import { Server } from 'socket.io';
 import { Container } from 'typedi';
-import { GameMode } from '@common/game-mode';
 
 describe('GameManagerService', () => {
     let clock: sinon.SinonFakeTimers;
@@ -219,12 +220,18 @@ describe('GameManagerService', () => {
         expect(spyDeleteGame.called).to.equal(true);
     });
 
-    it('should return a object that represent a difference found', () => {
+    it('should return a object that represent a difference found in solo', () => {
         const expectedDifference = { coords: [], nbDifferencesLeft: 2 };
         stub(gameManager, 'isGameOver').callsFake(() => false);
         stub(gameManager, 'isDifference').callsFake(() => []);
         stub(gameManager, 'nbDifferencesLeft').callsFake(() => 2);
         expect(gameManager.getNbDifferencesFound([], '')).to.deep.equal(expectedDifference);
+    });
+
+    it('should return a object that represent a difference found in multi', () => {
+        const expectedDifference = { coords: [], nbDifferencesLeft: 2, isPlayerFoundDifference: false };
+        stub(gameManager, 'nbDifferencesLeft').callsFake(() => 2);
+        expect(gameManager.getNbDifferencesFound([], '', false)).to.deep.equal(expectedDifference);
     });
 
     it('should send timer to a player', async () => {
@@ -253,7 +260,31 @@ describe('GameManagerService', () => {
         expect(spyInterval.called).to.equal(true);
         expect(expectedGame.timerId).to.equal(expectedTimer);
     });
+    it('should send the timer if the game is not found and the game mode is not Limited Time', () => {
+        const expectedGame = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        stub(Object.getPrototypeOf(gameManager), 'isGameOver').callsFake(() => false);
+        stub(Object.getPrototypeOf(gameManager), 'getTime').callsFake(() => 0);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        gameManager.sendTimer(
+            {
+                sockets: {
+                    to: () => {
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake Emit and return {}
+                        return {
+                            emit: (eventName: string) => {
+                                expect(eventName).to.equal(SocketEvent.Clock);
+                            },
+                        };
+                    },
+                },
+            } as unknown as Server,
+            '',
+            '',
+        );
 
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1001 to trigger the set interval */
+        clock.tick(1001);
+    });
     it('should send that the game is over when 0 sec is left in Limited time gamemode', async () => {
         const expectedGame = new Game(GameMode.LimitedTime, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         stub(Object.getPrototypeOf(gameManager), 'isGameOver').callsFake(() => true);
@@ -292,5 +323,14 @@ describe('GameManagerService', () => {
         spyFindGame.callsFake(() => expectedGame);
         gameManager.deleteTimer('');
         expect(spyClearInterval.called).to.equal(true);
+    });
+
+    it('should find a player', () => {
+        const expectedGame = new Game(GameMode.Classic, { player: { name: 'test', id: '0' } as User, isMulti: false }, {} as PrivateGameInformation);
+        const spyFindPlayer = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
+        expect(gameManager.findPlayer('', '')).to.equal(undefined);
+        spyFindPlayer.callsFake(() => expectedGame);
+        expect(gameManager.findPlayer('', '')).to.equal(undefined);
+        expect(gameManager.findPlayer('', '0')).to.equal('test');
     });
 });

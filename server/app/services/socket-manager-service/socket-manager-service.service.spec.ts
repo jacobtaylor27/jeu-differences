@@ -414,7 +414,7 @@ describe('SocketManager', () => {
     });
 
     it('should get games waiting', () => {
-        const expectedGames = ['game1', 'game2'];
+        const expectedGames = { mode: undefined, gamesWaiting: ['game1', 'game2'] };
 
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
@@ -433,7 +433,7 @@ describe('SocketManager', () => {
                 }
             },
         } as io.Server;
-        stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => expectedGames);
+        stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => ['game1', 'game2']);
         service.handleSockets();
     });
 

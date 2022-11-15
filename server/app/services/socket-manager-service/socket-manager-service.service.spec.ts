@@ -750,6 +750,27 @@ describe('SocketManager', () => {
         expect(spyAddRequest.called).to.equal(true);
     });
 
+    it('should wait a player to join a game', async () => {
+        service['sio'] = {
+            to: () => {
+                return { emit: () => {} };
+            },
+        } as unknown as io.Server;
+        const fakeSocket = {
+            join: () => {},
+            emit: () => {},
+        } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+        stub(fakeSocket, 'emit');
+        stub(service['gameManager'], 'hasSameName').callsFake(() => false);
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => '');
+        stub(service['multiplayerGameManager'], 'addNewRequest').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'theresOneRequest').callsFake(() => false);
+        await service.createGameMulti('', GameMode.Classic, { card: '', isMulti: true }, fakeSocket);
+        const spyEmit = stub(service['sio'].to(''), 'emit');
+        expect(spyEmit.called).to.equal(false);
+    });
+
     it('should create a game if no game is already created', async () => {
         service['sio'] = {
             to: () => {

@@ -124,6 +124,10 @@ export class GameManagerService {
               };
     }
 
+    findPlayer(gameId: string, playerId: string) {
+        return this.findGame(gameId)?.findPlayer(playerId);
+    }
+
     private findGame(gameId: string): Game | undefined {
         return this.games.get(gameId);
     }

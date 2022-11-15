@@ -293,4 +293,13 @@ describe('GameManagerService', () => {
         gameManager.deleteTimer('');
         expect(spyClearInterval.called).to.equal(true);
     });
+
+    it('should find a player', () => {
+        const expectedGame = new Game(GameMode.Classic, { player: { name: 'test', id: '0' } as User, isMulti: false }, {} as PrivateGameInformation);
+        const spyFindPlayer = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
+        expect(gameManager.findPlayer('', '')).to.equal(undefined);
+        spyFindPlayer.callsFake(() => expectedGame);
+        expect(gameManager.findPlayer('', '')).to.equal(undefined);
+        expect(gameManager.findPlayer('', '0')).to.equal('test');
+    });
 });

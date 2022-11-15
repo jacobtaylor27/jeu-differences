@@ -248,7 +248,7 @@ describe('SocketManager', () => {
             isGameOver: false,
             nbDifferencesLeft: 2,
         };
-        const expectedEventMessage = `Difference trouvée a ${new Date().toLocaleTimeString()}`;
+        const expectedEventMessage = `Difference trouvée a ${new Date().toLocaleTimeString('en-US')}`;
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
                 if (eventName === SocketEvent.Difference) callback();
@@ -501,6 +501,15 @@ describe('SocketManager', () => {
                 expect(eventName).to.equal(SocketEvent.Play);
             },
             join: (id: string) => {},
+            broadcast: {
+                to: () => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.JoinGame);
+                        },
+                    };
+                },
+            },
         };
 
         service['sio'] = {

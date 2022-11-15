@@ -9,6 +9,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
@@ -98,7 +99,7 @@ describe('GameCardComponent', () => {
     });
 
     it('should get all the games waiting for opponent', () => {
-        socketHelper.peerSideEmit(SocketEvent.GetGamesWaiting, ['1', '2']);
+        socketHelper.peerSideEmit(SocketEvent.GetGamesWaiting, { mode: GameMode.Classic, gamesWaiting: ['1', '2'] });
         component.ngOnInit();
         expect(gameCard1.isMulti).toEqual(true);
     });

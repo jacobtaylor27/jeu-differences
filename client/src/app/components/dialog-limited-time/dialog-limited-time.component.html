@@ -1,1 +1,13 @@
-<p>dialog-limited-time works!</p>
+<section [ngClass]="favoriteTheme">
+    <div class="dialog-content">
+       
+        <h1 mat-dialog-title>En quel mode de jeu voulez-vous jouer ?</h1>
+
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-flat-button color="primary" (click)="onClickSolo()">Solo</button>
+        <button mat-flat-button color="primary" (click)="OnClickCoop()">Coop</button>
+    </div>
+</section>
+

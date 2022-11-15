@@ -72,6 +72,8 @@ describe('GamePageComponent', () => {
         gameInformationHandlerServiceSpy.getOpponent.and.callFake(() => {
             return { name: 'test2', nbDifferences: 0 };
         });
+        gameInformationHandlerServiceSpy.isMulti = false;
+        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
         gameInformationHandlerServiceSpy.getNbDifferences.and.callFake(() => 0);
         gameInformationHandlerServiceSpy.getNbTotalDifferences.and.callFake(() => 0);
         await TestBed.configureTestingModule({
@@ -106,8 +108,18 @@ describe('GamePageComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('should set the title', () => {
+        expect(component.title).toEqual('Mode Classique Solo');
+
+        gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
+        gameInformationHandlerServiceSpy.isMulti = true;
+        fixture = TestBed.createComponent(GamePageComponent);
+        component = fixture.componentInstance;
+        expect(component.title).toEqual('Mode Temps Limité Multijoueur');
+    });
+
     it('should open the game over dialog when game mode is Limited time', () => {
-        gameInformationHandlerServiceSpy.setGameMode(GameMode.LimitedTime);
+        gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
         component.openGameOverDialog(false);
         expect(dialogSpyObj.open).toHaveBeenCalled();
 

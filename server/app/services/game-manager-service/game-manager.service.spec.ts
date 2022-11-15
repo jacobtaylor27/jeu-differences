@@ -260,7 +260,31 @@ describe('GameManagerService', () => {
         expect(spyInterval.called).to.equal(true);
         expect(expectedGame.timerId).to.equal(expectedTimer);
     });
+    it('should send the timer if the game is not found and the game mode is not Limited Time', () => {
+        const expectedGame = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        stub(Object.getPrototypeOf(gameManager), 'isGameOver').callsFake(() => false);
+        stub(Object.getPrototypeOf(gameManager), 'getTime').callsFake(() => 0);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        gameManager.sendTimer(
+            {
+                sockets: {
+                    to: () => {
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake Emit and return {}
+                        return {
+                            emit: (eventName: string) => {
+                                expect(eventName).to.equal(SocketEvent.Clock);
+                            },
+                        };
+                    },
+                },
+            } as unknown as Server,
+            '',
+            '',
+        );
 
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- 1001 to trigger the set interval */
+        clock.tick(1001);
+    });
     it('should send that the game is over when 0 sec is left in Limited time gamemode', async () => {
         const expectedGame = new Game(GameMode.LimitedTime, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         stub(Object.getPrototypeOf(gameManager), 'isGameOver').callsFake(() => true);

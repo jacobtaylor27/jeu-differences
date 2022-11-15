@@ -237,6 +237,7 @@ describe('SocketManager', () => {
             to: () => fakeSocket,
         } as unknown as io.Server;
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'findPlayer').callsFake(() => 'test');
         stub(service['gameManager'], 'isDifference').callsFake(() => null);
         service.handleSockets();
     });

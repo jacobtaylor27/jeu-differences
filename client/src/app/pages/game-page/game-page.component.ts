@@ -15,6 +15,7 @@ import { SocketEvent } from '@common/socket-event';
 })
 export class GamePageComponent implements OnDestroy {
     favoriteTheme: string = Theme.ClassName;
+    title: string;
     clock: string;
 
     // eslint-disable-next-line max-params -- absolutely need all the imported services
@@ -25,6 +26,7 @@ export class GamePageComponent implements OnDestroy {
         private socket: CommunicationSocketService,
     ) {
         exitButtonService.setGamePage();
+        this.title = 'Mode ' + this.gameInfoHandlerService.gameMode + ' ' + (this.gameInfoHandlerService.isMulti ? 'Multijoueur' : 'Solo');
         this.handleSocket();
     }
     handleSocket() {

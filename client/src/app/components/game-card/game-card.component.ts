@@ -4,7 +4,7 @@ import { GameCard } from '@app/interfaces/game-card';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
-import { GameMode } from '@common/game-mode';
+import { GamesWaitingInfo } from '@common/games-waiting-info'
 import { Score } from '@common/score';
 import { SocketEvent } from '@common/socket-event';
 
@@ -32,9 +32,9 @@ export class GameCardComponent implements OnInit {
     listenForOpenLobbies(): void {
         this.communicationSocket.send(SocketEvent.GetGamesWaiting, { mode: this.gameInfoService.gameMode });
 
-        this.communicationSocket.on(SocketEvent.GetGamesWaiting, (games: string[]) => {
-            if (this.gameInfoService.gameMode === GameMode.Classic) {
-                for (const info of games) {
+        this.communicationSocket.on(SocketEvent.GetGamesWaiting, (games: GamesWaitingInfo) => {
+            if (this.gameInfoService.gameMode === games.mode) {
+                for (const info of games.gamesWaiting) {
                     if (this.gameCard.gameInformation.id === info) {
                         this.gameCard.isMulti = true;
                     }

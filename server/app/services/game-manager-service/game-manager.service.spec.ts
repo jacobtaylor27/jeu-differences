@@ -12,12 +12,13 @@ import { Coordinate } from '@common/coordinate';
 import { User } from '@common/user';
 
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { GameMode } from '@common/game-mode';
+import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
 import { Server } from 'socket.io';
 import { Container } from 'typedi';
-import { GameMode } from '@common/game-mode';
 
 describe('GameManagerService', () => {
     let clock: sinon.SinonFakeTimers;
@@ -219,12 +220,18 @@ describe('GameManagerService', () => {
         expect(spyDeleteGame.called).to.equal(true);
     });
 
-    it('should return a object that represent a difference found', () => {
+    it('should return a object that represent a difference found in solo', () => {
         const expectedDifference = { coords: [], nbDifferencesLeft: 2 };
         stub(gameManager, 'isGameOver').callsFake(() => false);
         stub(gameManager, 'isDifference').callsFake(() => []);
         stub(gameManager, 'nbDifferencesLeft').callsFake(() => 2);
         expect(gameManager.getNbDifferencesFound([], '')).to.deep.equal(expectedDifference);
+    });
+
+    it('should return a object that represent a difference found in multi', () => {
+        const expectedDifference = { coords: [], nbDifferencesLeft: 2, isPlayerFoundDifference: false };
+        stub(gameManager, 'nbDifferencesLeft').callsFake(() => 2);
+        expect(gameManager.getNbDifferencesFound([], '', false)).to.deep.equal(expectedDifference);
     });
 
     it('should send timer to a player', async () => {

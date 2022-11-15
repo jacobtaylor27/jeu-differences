@@ -231,6 +231,8 @@ export class SocketManagerService {
             } else {
                 socket.join(roomId);
                 socket.broadcast.to(roomId).emit(SocketEvent.JoinGame, { roomId, playerName: player });
+                this.gameManager.setTimer(roomId);
+                this.gameManager.sendTimer(this.sio, roomId, roomId);
             }
         } else {
             roomId = await this.gameManager.createGame({ player: { name: player, id: socket.id }, isMulti: game.isMulti }, mode, game.card);

@@ -144,5 +144,16 @@ export class GameController {
                     res.status(StatusCodes.NOT_ACCEPTABLE).send();
                 });
         });
+
+        this.router.get('/constants', (req: Request, res: Response) => {
+            this.gameTimeConstantService
+                .getGameTimeConstant()
+                .then((gameTimeConstants) => {
+                    res.status(StatusCodes.OK).send(gameTimeConstants);
+                })
+                .catch(() => {
+                    res.status(StatusCodes.BAD_REQUEST).send();
+                });
+        });
     }
 }

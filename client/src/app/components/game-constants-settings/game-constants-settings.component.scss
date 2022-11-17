@@ -3,9 +3,19 @@
 }
 
 .close-button {
-    margin-right: 0.5vw;
+    flex: 1;
+}
+
+.change-button {
+    margin-right: 2vw;
 }
 
 .default-button {
-    margin-left: 0.5vw;
+    margin-right: 8vw;
+}
+
+.buttons-controls-container {
+    margin-top: 6vh;
+    display: flex;
+    flex-direction: row;
 }

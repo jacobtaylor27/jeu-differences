@@ -41,5 +41,7 @@ export class BmpDifferenceInterpreter {
             }
         }
         return differences;
+    private isCoordinateValid(coord: Coordinate) {
+        return coord.x >= 0 && coord.x < DEFAULT_IMAGE_HEIGHT && coord.y >= 0 && coord.y < DEFAULT_IMAGE_WIDTH;
     }
 }

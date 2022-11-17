@@ -41,7 +41,11 @@ export class GameConstantsSettingsComponent {
         //
     }
 
-    setSuccessTime(value: number): void {
-        //
+    isDefaultValues(): boolean {
+        return (
+            this.gameTimeConstants.gameTime === DEFAULT_GAME_TIME &&
+            this.gameTimeConstants.penaltyTime === DEFAULT_PENALTY_TIME &&
+            this.gameTimeConstants.successTime === DEFAULT_SUCCESS_TIME
+        );
     }
 }

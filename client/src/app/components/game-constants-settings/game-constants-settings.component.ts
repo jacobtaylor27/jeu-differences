@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion -- values are stored in a map and are always present */
 import { Component } from '@angular/core';
 import { Theme } from '@app/enums/theme';
-import { GameConstants, GameConstantsDefault } from '@common/game-constants';
+
+const DEFAULT_GAME_TIME = 30;
+const DEFAULT_PENALTY_TIME = 5;
+const DEFAULT_SUCCESS_TIME = 5;
 
 @Component({
     selector: 'app-game-constants-settings',

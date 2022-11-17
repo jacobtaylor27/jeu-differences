@@ -26,8 +26,13 @@ export class GameConstantsSettingsComponent {
         this.getConstants();
     }
 
-    getGameTime(): number {
-        //
+    onClickRestoreDefaultValues(): void {
+        this.setGameTimeConstants(true);
+        this.gameTimeConstants = {
+            gameTime: DEFAULT_GAME_TIME,
+            penaltyTime: DEFAULT_PENALTY_TIME,
+            successTime: DEFAULT_SUCCESS_TIME,
+        };
     }
 
     setGameTime(value: number): void {

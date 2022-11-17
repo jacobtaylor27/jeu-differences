@@ -17,8 +17,8 @@ export class GameConstantsSettingsComponent {
 
     onClickRestoreDefaultValues(): void {
         this.setGameTime(DEFAULT_GAME_TIME);
-        this.setPenaltyTime(DEFAULT_PENALTY_TIME);
-        this.setSuccessTime(DEFAULT_SUCCESS_TIME);
+    ngOnInit(): void {
+        this.getConstants();
     }
 
     getGameTime(): number {

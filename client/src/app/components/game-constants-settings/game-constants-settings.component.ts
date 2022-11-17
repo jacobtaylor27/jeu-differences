@@ -12,7 +12,7 @@ const DEFAULT_SUCCESS_TIME = 5;
     templateUrl: './game-constants-settings.component.html',
     styleUrls: ['./game-constants-settings.component.scss'],
 })
-export class GameConstantsSettingsComponent {
+export class GameConstantsSettingsComponent implements OnInit {
     favoriteTheme: string = Theme.ClassName;
     gameTimeConstants: GameTimeConstants = {
         gameTime: DEFAULT_GAME_TIME,
@@ -20,8 +20,8 @@ export class GameConstantsSettingsComponent {
         successTime: DEFAULT_SUCCESS_TIME,
     };
 
-    onClickRestoreDefaultValues(): void {
-        this.setGameTime(DEFAULT_GAME_TIME);
+    constructor(private readonly communicationService: CommunicationService) {}
+
     ngOnInit(): void {
         this.getConstants();
     }
@@ -35,20 +35,20 @@ export class GameConstantsSettingsComponent {
         };
     }
 
-    setGameTime(value: number): void {
-        //
+    setGameTimeConstants(isDefault: boolean = false): void {
+        const timeConstants = isDefault
+            ? { gameTime: DEFAULT_GAME_TIME, penaltyTime: DEFAULT_PENALTY_TIME, successTime: DEFAULT_SUCCESS_TIME }
+            : this.gameTimeConstants;
+
+        this.communicationService.setGameTimeConstants(timeConstants).subscribe();
     }
 
-    getPenaltyTime(): number {
-        //
-    }
-
-    setPenaltyTime(value: number): void {
-        //
-    }
-
-    getSuccessTime(): number {
-        //
+    getConstants(): void {
+        this.communicationService.getGameTimeConstants().subscribe((gameTimeConstants) => {
+            if (gameTimeConstants && gameTimeConstants.body) {
+                this.gameTimeConstants = gameTimeConstants.body;
+            }
+        });
     }
 
     isDefaultValues(): boolean {

@@ -52,4 +52,29 @@ export class BmpDifferenceInterpreter {
     private isCoordinateValid(coord: Coordinate) {
         return coord.x >= 0 && coord.x < DEFAULT_IMAGE_HEIGHT && coord.y >= 0 && coord.y < DEFAULT_IMAGE_WIDTH;
     }
+    
+    private breadthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] {
+    Queue<pair > q = new LinkedList<>();
+    q.add({x:row,y:column});
+    pixels[row][column].isVisited = true; 
+    while (!q.isEmpty())
+    {
+        const coordinate = q.peek();
+        q.remove();
+ 
+        for(int i = 0; i < 4; i++)
+        {
+            int adjx = x + dRow[i];
+            int adjy = y + dCol[i];
+
+            const neighbor:Coordinate = {x:adjx,y:adjy};
+
+            if (this.isCoordinateValid(neighbor))
+            {
+                q.add(neighbor);
+                pixels[neighbor.x][neighbor.y].isVisited = true;
+            }
+        }
+    }
+    }
 }

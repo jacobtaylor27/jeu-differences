@@ -3,7 +3,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 
 import { GameConstantFieldComponent } from './game-constant-field.component';
 
-fdescribe('GameConstantFieldComponent', () => {
+describe('GameConstantFieldComponent', () => {
     let component: GameConstantFieldComponent;
     let fixture: ComponentFixture<GameConstantFieldComponent>;
 

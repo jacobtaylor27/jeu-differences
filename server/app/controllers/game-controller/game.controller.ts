@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import * as LZString from 'lz-string';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
 
 @Service()
 export class GameController {
@@ -19,6 +20,7 @@ export class GameController {
         private gameValidation: GameValidation,
         private bmpSubtractor: BmpSubtractorService,
         private readonly socketManager: SocketManagerService,
+        private readonly gameTimeConstantService: GameTimeConstantService,
     ) {
         this.configureRouter();
     }

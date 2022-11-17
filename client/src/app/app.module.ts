@@ -39,6 +39,7 @@ import { UserNameInputComponent } from './components/user-name-input/user-name-i
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
+import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dialog-limited-time.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -82,6 +83,7 @@ import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-
         PlayerLeftSnackbarComponent,
         RejectedDialogComponent,
         RefreshSnackbarComponent,
+        DialogLimitedTimeComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

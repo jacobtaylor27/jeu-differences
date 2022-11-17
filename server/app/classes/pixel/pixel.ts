@@ -6,6 +6,7 @@ export class Pixel {
     g: number;
     b: number;
     a: number;
+    isVisited: boolean = false;
 
     constructor(r: number, g: number, b: number) {
         if (!this.arePixelsValid(r, g, b)) throw new Error('Les pixels ne peuvent pas avoir une valeur négative');

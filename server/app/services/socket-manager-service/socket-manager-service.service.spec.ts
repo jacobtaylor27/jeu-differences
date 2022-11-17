@@ -184,11 +184,42 @@ describe('SocketManager', () => {
             },
         } as io.Server;
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'findPlayer').callsFake(() => 'test');
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         const spyLeaveGame = stub(service['gameManager'], 'leaveGame').callsFake(() => {});
         service.handleSockets();
         expect(spyLeaveGame.called).to.equal(true);
+    });
+
+    it('should not bradcast leaving message when the player is in solo', () => {
+        const fakeSockets = {
+            emit: (eventName: string, _message: string) => {},
+        };
+
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.LeaveGame) callback();
+            },
+            broadcast: { to: () => fakeSockets },
+            leave: () => {},
+        };
+
+        service['sio'] = {
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => false);
+        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => false);
+        const spyLeaveGame = stub(service['gameManager'], 'leaveGame').callsFake(() => {});
+        const spyEmit = stub(fakeSockets, 'emit');
+        service.handleSockets();
+        expect(spyLeaveGame.called).to.equal(true);
+        expect(spyEmit.called).to.equal(false);
     });
 
     it('should find difference if the game is not found', () => {
@@ -237,6 +268,7 @@ describe('SocketManager', () => {
             to: () => fakeSocket,
         } as unknown as io.Server;
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'findPlayer').callsFake(() => 'test');
         stub(service['gameManager'], 'isDifference').callsFake(() => null);
         service.handleSockets();
     });
@@ -248,7 +280,7 @@ describe('SocketManager', () => {
             isGameOver: false,
             nbDifferencesLeft: 2,
         };
-        const expectedEventMessage = `Difference trouvée a ${new Date().toLocaleTimeString()}`;
+        const expectedEventMessage = `Difference trouvée a ${new Date().toLocaleTimeString('en-US')}`;
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
                 if (eventName === SocketEvent.Difference) callback();
@@ -414,7 +446,7 @@ describe('SocketManager', () => {
     });
 
     it('should get games waiting', () => {
-        const expectedGames = ['game1', 'game2'];
+        const expectedGames = { mode: undefined, gamesWaiting: ['game1', 'game2'] };
 
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
@@ -433,7 +465,7 @@ describe('SocketManager', () => {
                 }
             },
         } as io.Server;
-        stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => expectedGames);
+        stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => ['game1', 'game2']);
         service.handleSockets();
     });
 
@@ -491,6 +523,33 @@ describe('SocketManager', () => {
         });
         service.handleSockets();
     });
+    it('should not reject request if no request is found', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.RejectPlayer) callback();
+            },
+        };
+
+        service['sio'] = {
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => {
+                return {
+                    emit: (eventName: string, message: unknown) => {},
+                };
+            },
+        } as unknown as io.Server;
+        stub(service['multiplayerGameManager'], 'deleteFirstRequest').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'theresARequest').callsFake(() => false);
+        const spyNewRequest = stub(service['multiplayerGameManager'], 'getNewRequest').callsFake(() => {
+            return { name: 'test', id: '' };
+        });
+        service.handleSockets();
+        expect(spyNewRequest.called).to.equal(false);
+    });
 
     it('should join the game', () => {
         const fakeSocket = {
@@ -501,6 +560,15 @@ describe('SocketManager', () => {
                 expect(eventName).to.equal(SocketEvent.Play);
             },
             join: (id: string) => {},
+            broadcast: {
+                to: () => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.JoinGame);
+                        },
+                    };
+                },
+            },
         };
 
         service['sio'] = {
@@ -570,6 +638,36 @@ describe('SocketManager', () => {
         stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ name: 'test', id: '0' }]);
         stub(service['multiplayerGameManager'], 'playersRequestExists').callsFake(() => true);
         service.handleSockets();
+    });
+
+    it('should accept a player if a main player accepted', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.AcceptPlayer) callback();
+            },
+            emit: (eventName: string, message: unknown) => {},
+            join: (id: string) => {},
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: (id: string) => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['gameManager'], 'setTimer').callsFake(() => {});
+        stub(service['gameManager'], 'sendTimer').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'removeGameWaiting').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'deleteAllRequests').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'isNotAPlayersRequest').callsFake(() => false);
+        stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ name: 'test', id: '0' }]);
+        stub(service['multiplayerGameManager'], 'playersRequestExists').callsFake(() => true);
+        const spyEmit = stub(service['sio'].to(''), 'emit');
+        service.handleSockets();
+        expect(spyEmit.calledThrice).to.equal(false);
     });
 
     it('should disconnect a client', () => {
@@ -661,6 +759,27 @@ describe('SocketManager', () => {
         expect(spyAddRequest.called).to.equal(true);
     });
 
+    it('should wait a player to join a game', async () => {
+        service['sio'] = {
+            to: () => {
+                return { emit: () => {} };
+            },
+        } as unknown as io.Server;
+        const fakeSocket = {
+            join: () => {},
+            emit: () => {},
+        } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+        stub(fakeSocket, 'emit');
+        stub(service['gameManager'], 'hasSameName').callsFake(() => false);
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => '');
+        stub(service['multiplayerGameManager'], 'addNewRequest').callsFake(() => {});
+        stub(service['multiplayerGameManager'], 'theresOneRequest').callsFake(() => false);
+        await service.createGameMulti('', GameMode.Classic, { card: '', isMulti: true }, fakeSocket);
+        const spyEmit = stub(service['sio'].to(''), 'emit');
+        expect(spyEmit.called).to.equal(false);
+    });
+
     it('should create a game if no game is already created', async () => {
         service['sio'] = {
             to: () => {
@@ -694,6 +813,9 @@ describe('SocketManager', () => {
             on: (eventName: string, callback: (roomId: string, gameCard: string) => void) => {
                 if (eventName === SocketEvent.LeaveWaiting) callback('roomId', 'gameId');
             },
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.RejectPlayer);
+            },
         };
 
         service['sio'] = {
@@ -704,16 +826,49 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
+            to: (id: string) => fakeSocket,
         } as unknown as io.Server;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyRemoveGameWaiting = stub(service['multiplayerGameManager'], 'removeGameWaiting').callsFake(() => {});
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyDeleteRequest = stub(service['multiplayerGameManager'], 'deleteRequest').callsFake(() => {});
+        const spyRequest = stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ id: '1', name: 'test' }]);
         service.handleSockets();
+        expect(spyRequest.called).to.equal(true);
         expect(spyDeleteRequest.called).to.equal(false);
         expect(spyRemoveGameWaiting.called).to.equal(true);
     });
 
+    it('should not reject player if the roomId is found but no request found', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: (roomId: string, gameCard: string) => void) => {
+                if (eventName === SocketEvent.LeaveWaiting) callback('roomId', 'gameId');
+            },
+            emit: (eventName: string, message: string) => {},
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: (id: string) => fakeSocket,
+        } as unknown as io.Server;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyRemoveGameWaiting = stub(service['multiplayerGameManager'], 'removeGameWaiting').callsFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyDeleteRequest = stub(service['multiplayerGameManager'], 'deleteRequest').callsFake(() => {});
+        const spyRequest = stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => undefined);
+        const spyEmit = stub(service['sio'].to(''), 'emit');
+        service.handleSockets();
+        expect(spyRequest.called).to.equal(true);
+        expect(spyEmit.called).to.equal(false);
+        expect(spyDeleteRequest.called).to.equal(false);
+        expect(spyRemoveGameWaiting.called).to.equal(true);
+    });
     it('should delete request of game waiting if the roomId is not found', () => {
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
@@ -765,7 +920,55 @@ describe('SocketManager', () => {
         service.handleSockets();
     });
 
-    it('should all delete games', () => {
+    it('should not delete if the game is not waiting', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.GameDeleted) callback();
+            },
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => fakeSocket,
+        } as unknown as io.Server;
+
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => false);
+        const spyGetRequest = stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ id: 'playerTest' } as User]);
+        service.handleSockets();
+        expect(spyGetRequest.called).to.equal(false);
+    });
+
+    it('should not reject player if the game is waiting but no request', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.GameDeleted) callback();
+            },
+            emit: (eventName: string, message: string) => {},
+        };
+
+        service['sio'] = {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => fakeSocket,
+        } as unknown as io.Server;
+
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => undefined);
+        const spyEmit = stub(service['sio'].to(''), 'emit');
+        service.handleSockets();
+        expect(spyEmit.calledTwice).to.equal(false);
+    });
+
+    it('should delete all games', () => {
         const fakeSocket = {
             on: (eventName: string, callback: () => void) => {
                 if (eventName === SocketEvent.GamesDeleted) callback();
@@ -791,5 +994,44 @@ describe('SocketManager', () => {
         stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => ['gameTestRequest']);
         stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => 'gameTest');
         service.handleSockets();
+    });
+
+    it('should delete all games but reject no one if no request found', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.GamesDeleted) callback();
+            },
+            // eslint-disable-next-line no-unused-vars
+            emit: (eventName: string, message: string) => {},
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            on: (eventName: string, callback: (socket: any) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => undefined);
+        const spyEmit = stub(service['sio'].to(''), 'emit');
+        stub(service['multiplayerGameManager'], 'getGamesWaiting').callsFake(() => ['gameTestRequest']);
+        stub(service['multiplayerGameManager'], 'getRoomIdWaiting').callsFake(() => 'gameTest');
+        service.handleSockets();
+        expect(spyEmit.calledTwice).to.equal(false);
+    });
+
+    it('should refresh game', () => {
+        service['sio'] = {
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.RefreshGames);
+            },
+        } as unknown as io.Server;
+        const spyEmit = stub(service['sio'], 'emit');
+        service.refreshGames();
+        expect(spyEmit.called).to.equal(true);
     });
 });

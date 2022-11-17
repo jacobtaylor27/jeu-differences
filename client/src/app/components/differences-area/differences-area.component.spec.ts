@@ -29,6 +29,9 @@ describe('DifferencesAreaComponent', () => {
         spyGameInfosService.getPlayer.and.callFake(() => {
             return { name: 'test', nbDifferences: 0 };
         });
+        spyGameInfosService.getOpponent.and.callFake(() => {
+            return { name: 'test2', nbDifferences: 0 };
+        });
         spyGameInfosService.getNbDifferences.and.returnValue(0);
         spyGameInfosService.getNbTotalDifferences.and.returnValue(10);
         await TestBed.configureTestingModule({
@@ -90,5 +93,13 @@ describe('DifferencesAreaComponent', () => {
     it('should return string empty when player not found', () => {
         spyGameInfosService.getNbDifferences.and.callFake(() => undefined);
         expect(component.setNbDifferencesFound('')).toEqual('');
+    });
+
+    it('should set nb of differences on limited and multi mode ', () => {
+        spyGameInfosService.getNbDifferences.and.callFake(() => undefined);
+        expect(component.setNbDifferencesFoundLimitedMulti()).toEqual('');
+
+        spyGameInfosService.getNbDifferences.and.callFake(() => 1);
+        expect(component.setNbDifferencesFoundLimitedMulti()).toEqual('2 / 10');
     });
 });

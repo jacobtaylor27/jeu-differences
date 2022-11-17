@@ -15,46 +15,32 @@ export class GameConstantsSettingsComponent {
     favoriteTheme: string = Theme.ClassName;
 
     onClickRestoreDefaultValues(): void {
-        this.setGameTime(this.getDefaultGameTime());
-
-        this.setPenaltyTime(this.getDefaultPenaltyTime());
-
-        this.setSuccessTime(this.getDefaultSuccessTime());
+        this.setGameTime(DEFAULT_GAME_TIME);
+        this.setPenaltyTime(DEFAULT_PENALTY_TIME);
+        this.setSuccessTime(DEFAULT_SUCCESS_TIME);
     }
 
     getGameTime(): number {
-        return GameConstants.get('gameTime')!;
+        //
     }
 
     setGameTime(value: number): void {
-        GameConstants.set('gameTime', value);
+        //
     }
 
     getPenaltyTime(): number {
-        return GameConstants.get('penaltyTime')!;
+        //
     }
 
     setPenaltyTime(value: number): void {
-        GameConstants.set('penaltyTime', value);
+        //
     }
 
     getSuccessTime(): number {
-        return GameConstants.get('successTime')!;
+        //
     }
 
     setSuccessTime(value: number): void {
-        GameConstants.set('successTime', value);
-    }
-
-    getDefaultGameTime(): number {
-        return GameConstantsDefault.get('gameTime')!;
-    }
-
-    getDefaultPenaltyTime(): number {
-        return GameConstantsDefault.get('penaltyTime')!;
-    }
-
-    getDefaultSuccessTime(): number {
-        return GameConstantsDefault.get('successTime')!;
+        //
     }
 }

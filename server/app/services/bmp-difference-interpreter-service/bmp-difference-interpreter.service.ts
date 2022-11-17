@@ -26,21 +26,29 @@ export class BmpDifferenceInterpreter {
         let differenceArea: Coordinate[] = [{ x: column, y: row }];
         const pixelNeighborsCoordinates = this.pixelNeighborsCoord({ x: row, y: column });
 
-        }
-        if (pixels[row][column].isWhite()) {
-            return [];
+        for (let i = 0; i < pixelNeighborsCoordinates.length; i++) {
+            const coordinate: Coordinate = { x: pixelNeighborsCoordinates[i].x, y: pixelNeighborsCoordinates[i].y };
+            if (!pixels[coordinate.x][coordinate.y].isVisited && pixels[coordinate.x][coordinate.y].isBlack()) {
+                const newDfs = this.depthFirstSearch(pixels, coordinate.x, coordinate.y);
+                differenceArea = differenceArea.concat(newDfs);
+            }
         }
         return differenceArea;
-        pixels[row][column].setWhite();
+    }
 
-            for (let c = column - 1; c <= column + 1; c++) {
-                if (r !== row || c !== column) {
-                    const newElement: Coordinate[] = await this.getRegion(pixels, r, c);
-                    differences = differences.concat(newElement);
+    private pixelNeighborsCoord(pixel: Coordinate): Coordinate[] {
+        const coordinateResult: Coordinate[] = [];
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                const offsetCoord: Coordinate = { x: pixel.x + i, y: pixel.y + j };
+                if (this.isCoordinateValid(offsetCoord) && (offsetCoord.x !== pixel.x || offsetCoord.y !== pixel.y)) {
+                    coordinateResult.push(offsetCoord);
                 }
             }
         }
-        return differences;
+        return coordinateResult;
+    }
+
     private isCoordinateValid(coord: Coordinate) {
         return coord.x >= 0 && coord.x < DEFAULT_IMAGE_HEIGHT && coord.y >= 0 && coord.y < DEFAULT_IMAGE_WIDTH;
     }

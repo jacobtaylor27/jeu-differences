@@ -21,16 +21,18 @@ export class BmpDifferenceInterpreter {
         return differences;
     }
 
-    private async getRegion(pixels: Pixel[][], row: number, column: number): Promise<Coordinate[]> {
-        if (row < 0 || column < 0 || row >= pixels.length || column >= pixels[row].length) {
-            return [];
+    private depthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] {
+        pixels[row][column].isVisited = true;
+        let differenceArea: Coordinate[] = [{ x: column, y: row }];
+        const pixelNeighborsCoordinates = this.pixelNeighborsCoord({ x: row, y: column });
+
         }
         if (pixels[row][column].isWhite()) {
             return [];
         }
-        let differences: Coordinate[] = [{ x: column, y: row }];
+        return differenceArea;
         pixels[row][column].setWhite();
-        for (let r = row - 1; r <= row + 1; r++) {
+
             for (let c = column - 1; c <= column + 1; c++) {
                 if (r !== row || c !== column) {
                     const newElement: Coordinate[] = await this.getRegion(pixels, r, c);

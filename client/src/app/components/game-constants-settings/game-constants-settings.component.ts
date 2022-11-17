@@ -2,10 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Theme } from '@app/enums/theme';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameTimeConstants } from '@common/game-time-constants';
-
-const DEFAULT_GAME_TIME = 30;
-const DEFAULT_PENALTY_TIME = 5;
-const DEFAULT_SUCCESS_TIME = 5;
+import { GAME_TIME_CONSTANTS_PARAMS } from '@app/constants/game-constants';
 
 @Component({
     selector: 'app-game-constants-settings',
@@ -15,10 +12,11 @@ const DEFAULT_SUCCESS_TIME = 5;
 export class GameConstantsSettingsComponent implements OnInit {
     favoriteTheme: string = Theme.ClassName;
     gameTimeConstants: GameTimeConstants = {
-        gameTime: DEFAULT_GAME_TIME,
-        penaltyTime: DEFAULT_PENALTY_TIME,
-        successTime: DEFAULT_SUCCESS_TIME,
+        gameTime: GAME_TIME_CONSTANTS_PARAMS.gameTime,
+        penaltyTime: GAME_TIME_CONSTANTS_PARAMS.penaltyTime,
+        successTime: GAME_TIME_CONSTANTS_PARAMS.successTime,
     };
+    gameTimeConstantsParams = GAME_TIME_CONSTANTS_PARAMS;
 
     constructor(private readonly communicationService: CommunicationService) {}
 
@@ -29,15 +27,19 @@ export class GameConstantsSettingsComponent implements OnInit {
     onClickRestoreDefaultValues(): void {
         this.setGameTimeConstants(true);
         this.gameTimeConstants = {
-            gameTime: DEFAULT_GAME_TIME,
-            penaltyTime: DEFAULT_PENALTY_TIME,
-            successTime: DEFAULT_SUCCESS_TIME,
+            gameTime: GAME_TIME_CONSTANTS_PARAMS.gameTime,
+            penaltyTime: GAME_TIME_CONSTANTS_PARAMS.penaltyTime,
+            successTime: GAME_TIME_CONSTANTS_PARAMS.successTime,
         };
     }
 
     setGameTimeConstants(isDefault: boolean = false): void {
         const timeConstants = isDefault
-            ? { gameTime: DEFAULT_GAME_TIME, penaltyTime: DEFAULT_PENALTY_TIME, successTime: DEFAULT_SUCCESS_TIME }
+            ? {
+                  gameTime: GAME_TIME_CONSTANTS_PARAMS.gameTime,
+                  penaltyTime: GAME_TIME_CONSTANTS_PARAMS.penaltyTime,
+                  successTime: GAME_TIME_CONSTANTS_PARAMS.successTime,
+              }
             : this.gameTimeConstants;
 
         this.communicationService.setGameTimeConstants(timeConstants).subscribe();
@@ -53,9 +55,9 @@ export class GameConstantsSettingsComponent implements OnInit {
 
     isDefaultValues(): boolean {
         return (
-            this.gameTimeConstants.gameTime === DEFAULT_GAME_TIME &&
-            this.gameTimeConstants.penaltyTime === DEFAULT_PENALTY_TIME &&
-            this.gameTimeConstants.successTime === DEFAULT_SUCCESS_TIME
+            this.gameTimeConstants.gameTime === GAME_TIME_CONSTANTS_PARAMS.gameTime &&
+            this.gameTimeConstants.penaltyTime === GAME_TIME_CONSTANTS_PARAMS.penaltyTime &&
+            this.gameTimeConstants.successTime === GAME_TIME_CONSTANTS_PARAMS.successTime
         );
     }
 }

@@ -112,7 +112,7 @@ export class GameManagerService {
     }
 
     getNbDifferencesFound(differenceCoords: Coordinate[], gameId: string, isPlayerFoundDifference?: boolean): DifferenceFound {
-        return isPlayerFoundDifference
+        return isPlayerFoundDifference !== undefined
             ? {
                   coords: differenceCoords,
                   nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
@@ -122,6 +122,10 @@ export class GameManagerService {
                   coords: differenceCoords,
                   nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
               };
+    }
+
+    findPlayer(gameId: string, playerId: string) {
+        return this.findGame(gameId)?.findPlayer(playerId);
     }
 
     private findGame(gameId: string): Game | undefined {

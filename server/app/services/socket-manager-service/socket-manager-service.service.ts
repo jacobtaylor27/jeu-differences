@@ -1,8 +1,8 @@
-import { GameMode } from '@common/game-mode';
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
@@ -101,7 +101,7 @@ export class SocketManagerService {
                         .to(gameId)
                         .emit(
                             SocketEvent.EventMessage,
-                            this.eventMessageService.leavingGameMessage(this.gameManager['findGame'](gameId)?.findPlayer(socket.id)),
+                            this.eventMessageService.leavingGameMessage(this.gameManager.findPlayer(gameId, socket.id) as string),
                         );
                     socket.broadcast.to(gameId).emit(SocketEvent.Win);
                 }
@@ -167,7 +167,7 @@ export class SocketManagerService {
                         .emit(
                             SocketEvent.EventMessage,
                             this.eventMessageService.differenceNotFoundMessage(
-                                this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
+                                this.gameManager.findPlayer(gameId, socket.id) as string,
                                 this.gameManager.isGameMultiplayer(gameId),
                             ),
                         );
@@ -178,7 +178,7 @@ export class SocketManagerService {
                     .emit(
                         SocketEvent.EventMessage,
                         this.eventMessageService.differenceFoundMessage(
-                            this.gameManager['findGame'](gameId)?.findPlayer(socket.id),
+                            this.gameManager.findPlayer(gameId, socket.id) as string,
                             this.gameManager.isGameMultiplayer(gameId),
                         ),
                     );

@@ -1,6 +1,7 @@
 import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
+import { MAX_VALUE_PIXEL, MIN_VALUE_PIXEL } from '@app/constants/encoding';
 import { MidpointAlgorithm } from '@app/services/mid-point-algorithm/mid-point-algorithm';
 import { Coordinate } from '@common/coordinate';
 import { DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@common/image-size';
@@ -19,21 +20,20 @@ export class BmpSubtractorService {
     }
 
     private async getDifference(originalImage: Bmp, modifiedImage: Bmp): Promise<Bmp> {
-        const resultImage: Bmp = new Bmp(
-            { width: modifiedImage.getWidth(), height: modifiedImage.getHeight() },
-            Pixel.convertPixelsToARGB(modifiedImage.getPixels()),
-        );
+        const pixels: Pixel[][] = [];
 
         for (let i = 0; i < originalImage.getHeight(); i++) {
+            const lineOfPixels: Pixel[] = [];
             for (let j = 0; j < originalImage.getWidth(); j++) {
                 if (originalImage.getPixels()[i][j].isEqual(modifiedImage.getPixels()[i][j])) {
-                    resultImage.getPixels()[i][j].setWhite();
+                    lineOfPixels.push(new Pixel(MAX_VALUE_PIXEL, MAX_VALUE_PIXEL, MAX_VALUE_PIXEL));
                 } else {
-                    resultImage.getPixels()[i][j].setBlack();
+                    lineOfPixels.push(new Pixel(MIN_VALUE_PIXEL, MIN_VALUE_PIXEL, MIN_VALUE_PIXEL));
                 }
             }
+            pixels.push(lineOfPixels);
         }
-        return resultImage;
+        return new Bmp({ width: modifiedImage.getWidth(), height: modifiedImage.getHeight() }, [], pixels);
     }
 
     private async applyEnlargment(originalImage: Bmp, radius: number): Promise<Bmp> {

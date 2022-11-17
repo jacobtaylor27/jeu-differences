@@ -155,5 +155,20 @@ export class GameController {
                     res.status(StatusCodes.BAD_REQUEST).send();
                 });
         });
+
+        this.router.post('/constants', (req: Request, res: Response) => {
+            if (req.body) {
+                this.gameTimeConstantService
+                    .setGameTimeConstant(req.body)
+                    .then(() => {
+                        res.status(StatusCodes.OK).send();
+                    })
+                    .catch(() => {
+                        res.status(StatusCodes.BAD_REQUEST).send();
+                    });
+            } else {
+                res.status(StatusCodes.BAD_REQUEST).send();
+            }
+        });
     }
 }

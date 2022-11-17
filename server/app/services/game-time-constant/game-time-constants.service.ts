@@ -5,11 +5,11 @@ import { GameTimeConstants } from '@common/game-time-constants';
 @Service()
 export class GameTimeConstantService {
     async getGameTimeConstant(): Promise<GameTimeConstants> {
-        const file = await fs.readFile('@app/assets/game-time-constant.json');
+        const file = await fs.readFile('./assets/game-time-constants.json');
         return JSON.parse(file.toString()) as GameTimeConstants;
     }
 
     async setGameTimeConstant(gameTimeConstants: GameTimeConstants): Promise<void> {
-        await fs.writeFile('@app/assets/game-time-constant.json', JSON.stringify(gameTimeConstants));
+        await fs.writeFile('./assets/game-time-constants.json', JSON.stringify(gameTimeConstants));
     }
 }

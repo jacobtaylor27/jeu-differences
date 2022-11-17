@@ -9,6 +9,7 @@ import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { GameTimeConstants } from '@common/game-time-constants';
 
 @Injectable({
     providedIn: 'root',
@@ -107,6 +108,18 @@ export class CommunicationService {
 
     getGamesInfoByPage(page: number = 1): Observable<HttpResponse<CarouselResponse>> {
         return this.http.get<CarouselResponse>(`${this.baseUrl}/game/cards/?page=${page}`, { observe: 'response' }).pipe();
+    }
+
+    getGameTimeConstants(): Observable<HttpResponse<GameTimeConstants>> {
+        return this.http
+            .get<GameTimeConstants>(`${this.baseUrl}/game/constants`, { observe: 'response' })
+            .pipe(catchError(this.handleError<HttpResponse<GameTimeConstants>>('get time constants')));
+    }
+
+    setGameTimeConstants(gameTimeConstants: GameTimeConstants): Observable<void> {
+        return this.http
+            .post<void>(`${this.baseUrl}/game/constants`, gameTimeConstants)
+            .pipe(catchError(this.handleError<void>('set time constants')));
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

@@ -14,6 +14,11 @@ const DEFAULT_SUCCESS_TIME = 5;
 })
 export class GameConstantsSettingsComponent {
     favoriteTheme: string = Theme.ClassName;
+    gameTimeConstants: GameTimeConstants = {
+        gameTime: DEFAULT_GAME_TIME,
+        penaltyTime: DEFAULT_PENALTY_TIME,
+        successTime: DEFAULT_SUCCESS_TIME,
+    };
 
     onClickRestoreDefaultValues(): void {
         this.setGameTime(DEFAULT_GAME_TIME);

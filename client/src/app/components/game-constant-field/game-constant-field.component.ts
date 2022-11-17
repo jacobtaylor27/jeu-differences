@@ -26,4 +26,12 @@ export class GameConstantFieldComponent {
             this.valueChange.emit(this.value);
         }
     }
+
+    isAtMin(): boolean {
+        return this.value === this.min;
+    }
+
+    isAtMax(): boolean {
+        return this.value === this.max;
+    }
 }

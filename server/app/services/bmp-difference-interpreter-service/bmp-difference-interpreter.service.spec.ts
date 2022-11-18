@@ -51,29 +51,17 @@ describe('Bmp difference interpreter service', async () => {
     });
 
     it('An array of difference should contain all of the differences', async () => {
+        const numberOfDifferences = 2;
         const filepath = './assets/test-bmp/two_difference_appart.bmp';
         const decodedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);
         const interpretedBmp: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(decodedBmp);
-        // eslint-disable-next-line -- no magic number
-        const firstDifference: BmpCoordinate[] = [new BmpCoordinate(0, 0), new BmpCoordinate(1, 0), new BmpCoordinate(0, 1)];
-        // eslint-disable-next-line -- no magic number
-        const secondDifference: BmpCoordinate[] = [new BmpCoordinate(5, 0), new BmpCoordinate(4, 1), new BmpCoordinate(5, 1)];
-        const expectedCoordinates: BmpCoordinate[][] = [firstDifference, secondDifference];
-        expect(interpretedBmp).to.eql(expectedCoordinates);
-        interpretedBmp[0].forEach((coordinate, index) => {
-            expect(coordinate.x).to.deep.equal(firstDifference[index].getX());
-            expect(coordinate.y).to.deep.equal(firstDifference[index].getY());
-        });
-        interpretedBmp[1].forEach((coordinate, index) => {
-            expect(coordinate.x).to.deep.equal(secondDifference[index].getX());
-            expect(coordinate.y).to.deep.equal(secondDifference[index].getY());
-        });
+        expect(interpretedBmp.length).to.equal(numberOfDifferences);
     });
 
     it('The algorithm should also work on a bmp with a large width and height', async () => {
-        const filepath = './assets/test-bmp/ten_difference.bmp';
+        const filepath = './assets/test-bmp/image_7_diff.bmp';
         const bmpDecoded = await bmpDecoderService.decodeBIntoBmp(filepath);
-        const nbOfDifference = 10;
+        const nbOfDifference = 7;
         const differences: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
         expect(differences.length).to.equal(nbOfDifference);
     });

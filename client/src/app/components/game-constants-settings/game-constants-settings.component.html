@@ -32,8 +32,8 @@
     </div>
     
     <div class="buttons-controls-container">
-        <button class="change-button control-button" mat-flat-button matTooltip="Appliquer les changements" color="primary" [disabled]="isDefaultValues()" (click)="setGameTimeConstants()">Appliquer</button>
-        <button class="default-button control-button" mat-flat-button matTooltip="Restaurer les valeurs par défaut" color="primary" [disabled]="isDefaultValues()" (click)="onClickRestoreDefaultValues()">Défaut</button>
         <button class="close-button control-button" mat-flat-button matTooltip="Fermer le menu" color="primary" mat-dialog-close>Fermer</button>
+        <button class="default-button control-button" mat-flat-button matTooltip="Restaurer les valeurs par défaut" color="primary" [disabled]="isDefaultValues()" (click)="onClickRestoreDefaultValues()">Défaut</button>
+        <button class="change-button control-button" mat-flat-button matTooltip="Appliquer les changements" color="primary" (click)="setGameTimeConstants()" mat-dialog-close>Appliquer</button>
     </div>
 </section>

@@ -25,7 +25,6 @@ export class GameConstantsSettingsComponent implements OnInit {
     }
 
     onClickRestoreDefaultValues(): void {
-        this.setGameTimeConstants(true);
         this.gameTimeConstants = {
             gameTime: GAME_TIME_CONSTANTS_PARAMS.gameTime,
             penaltyTime: GAME_TIME_CONSTANTS_PARAMS.penaltyTime,
@@ -33,16 +32,8 @@ export class GameConstantsSettingsComponent implements OnInit {
         };
     }
 
-    setGameTimeConstants(isDefault: boolean = false): void {
-        const timeConstants = isDefault
-            ? {
-                  gameTime: GAME_TIME_CONSTANTS_PARAMS.gameTime,
-                  penaltyTime: GAME_TIME_CONSTANTS_PARAMS.penaltyTime,
-                  successTime: GAME_TIME_CONSTANTS_PARAMS.successTime,
-              }
-            : this.gameTimeConstants;
-
-        this.communicationService.setGameTimeConstants(timeConstants).subscribe();
+    setGameTimeConstants(): void {
+        this.communicationService.setGameTimeConstants(this.gameTimeConstants).subscribe();
     }
 
     getConstants(): void {

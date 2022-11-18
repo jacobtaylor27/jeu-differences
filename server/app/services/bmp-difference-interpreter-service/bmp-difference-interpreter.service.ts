@@ -21,21 +21,6 @@ export class BmpDifferenceInterpreter {
         return differences;
     }
 
-    // private depthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] {
-    //     pixels[row][column].isVisited = true;
-    //     let differenceArea: Coordinate[] = [{ x: column, y: row }];
-    //     const pixelNeighborsCoordinates = this.pixelNeighborsCoord({ x: row, y: column });
-
-    //     for (let i = 0; i < pixelNeighborsCoordinates.length; i++) {
-    //         const coordinate: Coordinate = { x: pixelNeighborsCoordinates[i].x, y: pixelNeighborsCoordinates[i].y };
-    //         if (!pixels[coordinate.x][coordinate.y].isVisited && pixels[coordinate.x][coordinate.y].isBlack()) {
-    //             const newDfs = this.depthFirstSearch(pixels, coordinate.x, coordinate.y);
-    //             differenceArea = differenceArea.concat(newDfs);
-    //         }
-    //     }
-    //     return differenceArea;
-    // }
-
     private breadthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] {
         const queue = new Queue();
 

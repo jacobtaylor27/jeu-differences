@@ -28,7 +28,6 @@ export class DrawService {
     indexOfCommand: number = -1;
     strokeIndex: number = 0;
     commands: DrawingCommand[] = [];
-    drawingCommands: DrawingCommand[] = [];
     currentCommand: Command = {
         canvasType: CanvasType.None,
         name: '',

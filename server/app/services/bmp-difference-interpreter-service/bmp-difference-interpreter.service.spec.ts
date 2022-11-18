@@ -42,17 +42,14 @@ describe('Bmp difference interpreter service', async () => {
         expect(differences.length).to.equal(nbOfDifference);
     });
 
-    it('Black pixels side by side should be considered as one difference', async () => {
-        // eslint-disable-next-line -- no magic number
-        const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0];
-        const width = 2;
-        const height = 2;
-        const bmpWithColors = new Bmp({ width, height }, rawData);
+    it('A big black region on an image should be considered as one difference ', async () => {
         const nbOfDifference = 1;
-
-        const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
-        expect(coordinates.length).to.equal(nbOfDifference);
+        const blackImageFilepath = './assets/test-bmp/test-performance/majorityBlackImage.bmp';
+        const bmpDecoded = await bmpDecoderService.decodeBIntoBmp(blackImageFilepath);
+        const differences: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
+        expect(differences.length).to.equal(nbOfDifference);
     });
+
     it('Black pixels in diagonal should be considered as one difference', async () => {
         // eslint-disable-next-line -- no magic number
         const rawData = [0, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0];

@@ -54,10 +54,6 @@ export class Pixel {
         return this.isColor(PIXEL_COLOR.black);
     }
 
-    setWhite() {
-        this.setColor(PIXEL_COLOR.white);
-    }
-
     setBlack() {
         this.setColor(PIXEL_COLOR.black);
     }

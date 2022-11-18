@@ -140,8 +140,7 @@ export class DrawService {
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            this.clearForeground(foreground);
-            this.addCurrentCommand(new ClearForegroundCommand(this.currentCommand));
+            this.addCurrentCommand(new ClearForegroundCommand(this.currentCommand, foreground, this));
         }
         this.updateImages();
     }
@@ -194,9 +193,17 @@ export class DrawService {
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
-            this.switchForegroundImageData(leftCanvas, rightCanvas);
-            this.addCurrentCommand(new SwitchForegroundCommand(this.currentCommand));
+            this.addCurrentCommand(new SwitchForegroundCommand(this.currentCommand, leftCanvas, rightCanvas, this));
         }
+    }
+
+    switchForegroundImageData(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
+        const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        primaryForeground.putImageData(rightImageData, 0, 0);
+        secondForeground.putImageData(leftImageData, 0, 0);
     }
 
     pasteExternalForegroundOn(canvasType: CanvasType) {
@@ -264,20 +271,11 @@ export class DrawService {
                     break;
                 }
                 case 'clearForeground': {
-                    const canvasState = this.canvasStateService.getCanvasState(command.canvasType);
-                    if (canvasState) {
-                        const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-                        this.clearForeground(foreground);
-                    }
+                    drawingCommand.execute();
                     break;
                 }
                 case 'switchForegrounds': {
-                    const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
-                    const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
-
-                    if (leftCanvas && rightCanvas) {
-                        this.switchForegroundImageData(leftCanvas, rightCanvas);
-                    }
+                    drawingCommand.execute();
                     break;
                 }
                 case 'pasteExternalForegroundOn': {
@@ -301,6 +299,7 @@ export class DrawService {
     private addCurrentCommand(drawingCommand: DrawingCommand) {
         this.indexOfCommand++;
         this.commands[this.indexOfCommand] = drawingCommand;
+        drawingCommand.execute();
     }
 
     private setcurrentCommand(name: string, canvasType: CanvasType) {
@@ -317,15 +316,6 @@ export class DrawService {
         const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         targetForeground.putImageData(selectedImageData, 0, 0);
-    }
-
-    private switchForegroundImageData(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
-        const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        primaryForeground.putImageData(rightImageData, 0, 0);
-        secondForeground.putImageData(leftImageData, 0, 0);
     }
 
     private removeCommandsPastIndex() {

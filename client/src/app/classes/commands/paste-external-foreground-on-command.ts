@@ -3,8 +3,8 @@ import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 
 export class PasteExternalForegroundOnCommand implements DrawingCommand {
-    firstCanvas: CanvasState;
-    secondCanvas: CanvasState;
+    private firstCanvas: CanvasState;
+    private secondCanvas: CanvasState;
 
     constructor(firstCanvas: CanvasState, secondCanvas: CanvasState, private readonly drawService: DrawService) {
         this.firstCanvas = firstCanvas;

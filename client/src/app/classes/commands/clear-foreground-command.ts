@@ -2,7 +2,7 @@ import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 
 export class ClearForegroundCommand implements DrawingCommand {
-    foreground: CanvasRenderingContext2D;
+    private foreground: CanvasRenderingContext2D;
 
     constructor(foreground: CanvasRenderingContext2D, private readonly drawService: DrawService) {
         this.foreground = foreground;

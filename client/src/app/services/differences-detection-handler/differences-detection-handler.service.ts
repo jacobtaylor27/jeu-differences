@@ -78,7 +78,7 @@ export class DifferencesDetectionHandlerService {
 
     differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
         this.playCorrectSound();
-        this.displayDifferenceTemp(ctx, coords);
+        this.displayDifferenceTemp(ctx, coords, false);
         this.clearDifference(ctxModified, coords);
         this.socketService.off(SocketEvent.DifferenceNotFound);
     }
@@ -99,9 +99,10 @@ export class DifferencesDetectionHandlerService {
                         ctx.fillRect(coordinate.x, coordinate.y, 1, 1);
                     }
                 }
-
                 counter++;
-        }, 500);
+            },
+            isCheatMode ? 125 : 500,
+        ) as unknown as number;
         return interval;
     }
 

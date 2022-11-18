@@ -1,13 +1,13 @@
 import { Command } from '@app/interfaces/command';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 
 export class DrawCommand implements DrawCommand {
     command: Command;
 
-    constructor(command: Command) {
+    constructor(command: Command, private readonly drawService: DrawService) {
         this.command = command;
     }
-
     execute(): void {
-        console.log('draw command');
+        this.drawService.redraw(this.command);
     }
 }

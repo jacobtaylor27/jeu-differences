@@ -70,6 +70,14 @@ export class DrawService {
         this.updateImages();
     }
 
+    redraw(command: Command) {
+        command.strokes.forEach((stroke) => {
+            stroke.lines.forEach((line) => {
+                this.createStroke(line, command.style, command.canvasType);
+            });
+        });
+    }
+
     stopDrawing() {
         this.isClick = false;
         if (this.pencil.state === 'Pencil') {
@@ -77,7 +85,7 @@ export class DrawService {
         } else {
             this.currentCommand.name = 'erase';
         }
-        this.addCurrentCommand(new DrawCommand(this.currentCommand));
+        this.addCurrentCommand(new DrawCommand(this.currentCommand, this));
         this.removeCommandsPastIndex();
     }
 
@@ -325,13 +333,5 @@ export class DrawService {
                 this.commands.pop();
             }
         }
-    }
-
-    private redraw(command: Command) {
-        command.strokes.forEach((stroke) => {
-            stroke.lines.forEach((line) => {
-                this.createStroke(line, command.style, command.canvasType);
-            });
-        });
     }
 }

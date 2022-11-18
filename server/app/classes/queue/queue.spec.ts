@@ -1,10 +1,7 @@
 import { Coordinate } from '@common/coordinate';
-import * as chai from 'chai';
 import { expect } from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 import { Queue } from './queue';
-chai.use(chaiAsPromised);
 
 describe('Queue', () => {
     it('Should add a coordinate into queue', () => {
@@ -21,16 +18,6 @@ describe('Queue', () => {
         const expectedCoordinate: Coordinate = { x: 1, y: 1 };
         queue.remove();
         expect(queue['array'][0]).to.deep.eq(expectedCoordinate);
-    });
-
-    it('Should throw an error if we use peek method with an empty queue', () => {
-        const queue = new Queue();
-        expect(queue.peek()).to.eventually.be.rejectedWith('EmptyQueueException').and.be.an.instanceOf(Error);
-    });
-
-    it('Should throw an error if we use peek method with an empty queue', () => {
-        const queue = new Queue();
-        expect(queue.peek()).to.eventually.be.rejectedWith('EmptyQueueException').and.be.an.instanceOf(Error);
     });
 
     it('Should only read the first element in the queue when using peek method ', () => {

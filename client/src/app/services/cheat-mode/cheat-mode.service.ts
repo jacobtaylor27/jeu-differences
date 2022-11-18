@@ -34,3 +34,10 @@ export class CheatModeService {
     findClocksDifference(difference: Coordinate[]) {
         return this.intervals.find((interval) => interval.difference === difference);
     }
+
+    private fetchAllDifferenceNotFound() {
+        this.socket.once(SocketEvent.FetchDifferences, (coords: Coordinate[][]) => {
+            this.coords = coords;
+        });
+        this.socket.send(SocketEvent.FetchDifferences, { gameId: this.gameInformationHandler.roomId });
+    }

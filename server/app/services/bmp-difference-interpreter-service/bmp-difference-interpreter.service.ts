@@ -27,7 +27,7 @@ export class BmpDifferenceInterpreter {
         queue.add({ x: row, y: column });
         pixels[row][column].isVisited = true;
 
-        const differenceArea: Coordinate[] = [{ x: column, y: row }];
+        const differenceArea: Coordinate[] = [{ x: row, y: column }];
 
         while (!queue.isEmpty()) {
             const coordinate: Coordinate = queue.peek();

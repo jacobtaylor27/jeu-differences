@@ -41,3 +41,11 @@ export class CheatModeService {
         });
         this.socket.send(SocketEvent.FetchDifferences, { gameId: this.gameInformationHandler.roomId });
     }
+
+    private startCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D): boolean {
+        this.fetchAllDifferenceNotFound();
+        this.coords.forEach((difference: Coordinate[]) =>
+            this.intervals.push({ difference, clocks: this.startCheatModeDifference(ctx, ctxModified, difference) }),
+        );
+        return true;
+    }

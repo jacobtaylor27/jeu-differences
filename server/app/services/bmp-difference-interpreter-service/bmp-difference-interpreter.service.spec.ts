@@ -33,17 +33,15 @@ describe('Bmp difference interpreter service', async () => {
         const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
         expect(coordinates.length).to.equal(nbOfDifference);
     });
-    it('A black image should have one difference', async () => {
-        // eslint-disable-next-line -- no magic number
-        const rawData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        const width = 2;
-        const height = 2;
-        const bmpWithColors = new Bmp({ width, height }, rawData);
-        const nbOfDifference = 1;
 
-        const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
-        expect(coordinates.length).to.equal(nbOfDifference);
+    it('A black image should have one difference', async () => {
+        const nbOfDifference = 1;
+        const blackImageFilepath = './assets/test-bmp/test-performance/blackImage.bmp';
+        const bmpDecoded = await bmpDecoderService.decodeBIntoBmp(blackImageFilepath);
+        const differences: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
+        expect(differences.length).to.equal(nbOfDifference);
     });
+
     it('Black pixels side by side should be considered as one difference', async () => {
         // eslint-disable-next-line -- no magic number
         const rawData = [0, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0];

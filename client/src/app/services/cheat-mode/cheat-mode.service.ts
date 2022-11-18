@@ -24,9 +24,13 @@ export class CheatModeService {
     }
 
     stopCheatModeDifference(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, difference: Coordinate[]) {
-        this.findClocksDifferenceIndex(difference)?.clocks.forEach((clock: number) => clearInterval(clock));
+        this.findClocksDifference(difference)?.clocks.forEach((clock: number) => clearInterval(clock));
         for (const coord of difference) {
             ctx.clearRect(coord.x, coord.y, 1, 1);
             ctxModified.clearRect(coord.x, coord.y, 1, 1);
         }
+    }
+
+    findClocksDifference(difference: Coordinate[]) {
+        return this.intervals.find((interval) => interval.difference === difference);
     }

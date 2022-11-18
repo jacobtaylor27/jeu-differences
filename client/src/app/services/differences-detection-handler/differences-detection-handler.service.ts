@@ -83,24 +83,26 @@ export class DifferencesDetectionHandlerService {
         this.socketService.off(SocketEvent.DifferenceNotFound);
     }
 
-    private displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
+    displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[], isCheatMode: boolean): number {
         let counter = 0;
-        const interval = setInterval(() => {
-            for (const coordinate of coords) {
-                ctx.clearRect(coordinate.x, coordinate.y, 1, 1);
-            }
-            if (counter === 5) {
-                clearInterval(interval);
-            }
-            if (counter % 2 === 0) {
-                ctx.fillStyle = 'yellow';
+        const interval = setInterval(
+            () => {
                 for (const coordinate of coords) {
-                    ctx.fillRect(coordinate.x, coordinate.y, 1, 1);
+                    ctx.clearRect(coordinate.x, coordinate.y, 1, 1);
                 }
-            }
+                if (counter === 5 && !isCheatMode) {
+                    clearInterval(interval);
+                }
+                if (counter % 2 === 0) {
+                    ctx.fillStyle = 'yellow';
+                    for (const coordinate of coords) {
+                        ctx.fillRect(coordinate.x, coordinate.y, 1, 1);
+                    }
+                }
 
-            counter++;
+                counter++;
         }, 500);
+        return interval;
     }
 
     private clearDifference(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {

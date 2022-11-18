@@ -46,6 +46,17 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
     }
+
+    @HostListener('window:keyup', ['$event'])
+    keyBoardDetected(event: KeyboardEvent) {
+        if ((event.target as HTMLElement).tagName === 'INPUT') {
+            return;
+        }
+        if (event.key === 't') {
+            this.cheatMode.manageCheatMode(this.getContextOriginal(), this.getContextModified());
+        }
+    }
+
     ngAfterViewInit(): void {
         this.displayImage(true, this.getContextImgModified());
         this.displayImage(false, this.getContextDifferences());

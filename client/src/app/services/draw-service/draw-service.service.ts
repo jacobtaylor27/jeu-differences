@@ -147,7 +147,7 @@ export class DrawService {
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            this.addCurrentCommand(new ClearForegroundCommand(this.currentCommand, foreground, this));
+            this.addCurrentCommand(new ClearForegroundCommand(foreground, this));
         }
         this.updateImages();
     }
@@ -221,10 +221,10 @@ export class DrawService {
 
         if (leftCanvas && rightCanvas) {
             if (canvasType === CanvasType.Left) {
-                this.addCurrentCommand(new PasteExternalForegroundOnCommand(this.currentCommand, leftCanvas, rightCanvas, this));
+                this.addCurrentCommand(new PasteExternalForegroundOnCommand(leftCanvas, rightCanvas, this));
             }
             if (canvasType === CanvasType.Right) {
-                this.addCurrentCommand(new PasteExternalForegroundOnCommand(this.currentCommand, rightCanvas, leftCanvas, this));
+                this.addCurrentCommand(new PasteExternalForegroundOnCommand(rightCanvas, leftCanvas, this));
             }
         }
     }

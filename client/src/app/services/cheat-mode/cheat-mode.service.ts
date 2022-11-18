@@ -32,7 +32,13 @@ export class CheatModeService {
     }
 
     findClocksDifference(difference: Coordinate[]) {
-        return this.intervals.find((interval) => interval.difference === difference);
+        return this.intervals.find(
+            (interval) =>
+                interval.difference.length === difference.length &&
+                interval.difference.every((differencePosition) =>
+                    difference.find((position) => position.x === differencePosition.x && position.y === position.y),
+                ),
+        );
     }
 
     private fetchAllDifferenceNotFound() {

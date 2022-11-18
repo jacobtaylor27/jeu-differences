@@ -200,7 +200,7 @@ export class DrawService {
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
-            this.addCurrentCommand(new SwitchForegroundCommand(this.currentCommand, leftCanvas, rightCanvas, this));
+            this.addCurrentCommand(new SwitchForegroundCommand(leftCanvas, rightCanvas, this));
         }
     }
 

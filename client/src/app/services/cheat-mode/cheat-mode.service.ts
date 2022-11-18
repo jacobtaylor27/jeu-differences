@@ -67,9 +67,8 @@ export class CheatModeService {
     }
 
     private stopCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D): boolean {
-        Array.from(this.intervals.map((interval) => interval.difference)).forEach((difference) =>
-            this.stopCheatModeDifference(ctx, ctxModified, difference),
-        );
+        this.intervals.forEach((interval) => this.stopCheatModeDifference(ctx, ctxModified, interval.difference));
+        this.intervals = [];
         return false;
     }
 }

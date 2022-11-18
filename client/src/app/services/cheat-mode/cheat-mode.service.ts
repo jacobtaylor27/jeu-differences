@@ -19,8 +19,8 @@ export class CheatModeService {
         private gameInformationHandler: GameInformationHandlerService,
     ) {}
 
-    manageCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D) {
-        this.isCheatModeActivated = this.isCheatModeActivated ? this.stopCheatMode(ctx, ctxModified) : this.startCheatMode(ctx, ctxModified);
+    async manageCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D): Promise<void> {
+        this.isCheatModeActivated = this.isCheatModeActivated ? this.stopCheatMode(ctx, ctxModified) : await this.startCheatMode(ctx, ctxModified);
     }
 
     stopCheatModeDifference(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, difference: Coordinate[]) {
@@ -41,15 +41,18 @@ export class CheatModeService {
         );
     }
 
-    private fetchAllDifferenceNotFound() {
-        this.socket.once(SocketEvent.FetchDifferences, (coords: Coordinate[][]) => {
-            this.coords = coords;
+    private async fetchAllDifferenceNotFound(): Promise<void> {
+        return new Promise((resolve) => {
+            this.socket.once(SocketEvent.FetchDifferences, (coords: Coordinate[][]) => {
+                this.coords = coords;
+                resolve();
+            });
+            this.socket.send(SocketEvent.FetchDifferences, { gameId: this.gameInformationHandler.roomId });
         });
-        this.socket.send(SocketEvent.FetchDifferences, { gameId: this.gameInformationHandler.roomId });
     }
 
-    private startCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D): boolean {
-        this.fetchAllDifferenceNotFound();
+    private async startCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D): Promise<boolean> {
+        await this.fetchAllDifferenceNotFound();
         this.coords.forEach((difference: Coordinate[]) =>
             this.intervals.push({ difference, clocks: this.startCheatModeDifference(ctx, ctxModified, difference) }),
         );

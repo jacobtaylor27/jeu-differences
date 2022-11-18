@@ -50,12 +50,12 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('window:keyup', ['$event'])
-    keyBoardDetected(event: KeyboardEvent) {
+    async keyBoardDetected(event: KeyboardEvent) {
         if ((event.target as HTMLElement).tagName === 'INPUT') {
             return;
         }
         if (event.key === 't') {
-            this.cheatMode.manageCheatMode(this.getContextOriginal(), this.getContextModified());
+            await this.cheatMode.manageCheatMode(this.getContextOriginal(), this.getContextModified());
         }
     }
 

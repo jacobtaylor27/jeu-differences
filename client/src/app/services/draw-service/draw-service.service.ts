@@ -271,11 +271,11 @@ export class DrawService {
             const command: Command = drawingCommand.command;
             switch (command.name) {
                 case 'draw': {
-                    this.redraw(command);
+                    drawingCommand.execute();
                     break;
                 }
                 case 'erase': {
-                    this.redraw(command);
+                    drawingCommand.execute();
                     break;
                 }
                 case 'clearForeground': {

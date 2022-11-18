@@ -1,14 +1,13 @@
 import { Command } from '@app/interfaces/command';
 import { DrawingCommand } from '@app/interfaces/drawing-command';
 
-export class ClearForegroundCommand implements DrawingCommand {
+export class PasteExternalForegroundOnCommand implements DrawingCommand {
     command: Command;
 
     constructor(command: Command) {
         this.command = command;
     }
-
-    execute() {
-        console.log('command');
+    execute(): void {
+        console.log('PasteExternalForegroundOnCommand');
     }
 }

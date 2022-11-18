@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
+import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-command';
+import { DrawCommand } from '@app/classes/commands/draw-command';
+import { PasteExternalForegroundOnCommand } from '@app/classes/commands/paste-external-foreground-on-command';
+import { SwitchForegroundCommand } from '@app/classes/commands/switch-foreground-command';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { CanvasState } from '@app/interfaces/canvas-state';
 import { Command } from '@app/interfaces/command';
+import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
@@ -22,7 +27,8 @@ export class DrawService {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfCommand: number = -1;
     strokeIndex: number = 0;
-    commands: Command[] = [];
+    commands: DrawingCommand[] = [];
+    drawingCommands: DrawingCommand[] = [];
     currentCommand: Command = {
         canvasType: CanvasType.None,
         name: '',
@@ -71,7 +77,7 @@ export class DrawService {
         } else {
             this.currentCommand.name = 'erase';
         }
-        this.addCurrentCommand();
+        this.addCurrentCommand(new DrawCommand(this.currentCommand));
         this.removeCommandsPastIndex();
     }
 
@@ -135,7 +141,7 @@ export class DrawService {
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             this.clearForeground(foreground);
-            this.addCurrentCommand();
+            this.addCurrentCommand(new ClearForegroundCommand(this.currentCommand));
         }
         this.updateImages();
     }
@@ -189,7 +195,7 @@ export class DrawService {
 
         if (leftCanvas && rightCanvas) {
             this.switchForegroundImageData(leftCanvas, rightCanvas);
-            this.addCurrentCommand();
+            this.addCurrentCommand(new SwitchForegroundCommand(this.currentCommand));
         }
     }
 
@@ -206,7 +212,7 @@ export class DrawService {
             if (canvasType === CanvasType.Right) {
                 this.pasteImageDataOn(rightCanvas, leftCanvas);
             }
-            this.addCurrentCommand();
+            this.addCurrentCommand(new PasteExternalForegroundOnCommand(this.currentCommand));
         }
     }
 
@@ -245,7 +251,7 @@ export class DrawService {
         this.clearAllForegrounds();
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
-            const command: Command = this.commands[i];
+            const command: Command = this.commands[i].command;
             switch (command.name) {
                 case 'draw': {
                     this.redraw(command);
@@ -290,9 +296,9 @@ export class DrawService {
         }
     }
 
-    private addCurrentCommand() {
+    private addCurrentCommand(drawingCommand: DrawingCommand) {
         this.indexOfCommand++;
-        this.commands[this.indexOfCommand] = this.currentCommand;
+        this.commands[this.indexOfCommand] = drawingCommand;
     }
 
     private setcurrentCommand(name: string, canvasType: CanvasType) {

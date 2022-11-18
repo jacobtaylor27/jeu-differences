@@ -277,8 +277,9 @@ export class DrawService {
     private addCurrentCommand(drawingCommand: DrawingCommand, needsToBeExecuted?: boolean) {
         this.indexOfCommand++;
         this.commands[this.indexOfCommand] = drawingCommand;
-        if (!needsToBeExecuted) return;
-        drawingCommand.execute();
+        if (needsToBeExecuted !== false) {
+            drawingCommand.execute();
+        }
     }
 
     private setcurrentCommand(name: string, canvasType: CanvasType) {

@@ -50,18 +50,6 @@ describe('Bmp difference interpreter service', async () => {
         expect(differences.length).to.equal(nbOfDifference);
     });
 
-    it('Black pixels in diagonal should be considered as one difference', async () => {
-        // eslint-disable-next-line -- no magic number
-        const rawData = [0, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0];
-        const width = 2;
-        const height = 2;
-        const bmpWithColors = new Bmp({ width, height }, rawData);
-        const nbOfDifference = 1;
-
-        const coordinates: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpWithColors);
-        expect(coordinates.length).to.equal(nbOfDifference);
-    });
-
     it('An array of difference should contain all of the differences', async () => {
         const filepath = './assets/test-bmp/two_difference_appart.bmp';
         const decodedBmp = await bmpDecoderService.decodeBIntoBmp(filepath);

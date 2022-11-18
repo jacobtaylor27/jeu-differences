@@ -15,14 +15,14 @@ export class BmpDifferenceInterpreter {
             for (let column = 0; column < pixels[row].length; column++) {
                 if (!pixels[row][column].isVisited && pixels[row][column].isBlack()) {
                     const difference = this.breadthFirstSearch(pixels, row, column);
-                    differences.push(difference);
+                    if (difference) differences.push(difference);
                 }
             }
         }
         return differences;
     }
 
-    private breadthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] {
+    private breadthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] | undefined {
         const queue = new Queue();
 
         queue.add({ x: column, y: row });
@@ -31,8 +31,11 @@ export class BmpDifferenceInterpreter {
         const differenceArea: Coordinate[] = [{ x: column, y: row }];
 
         while (!queue.isEmpty()) {
-            const coordinate: Coordinate = queue.peek();
+            const coordinate: Coordinate | undefined = queue.peek();
             queue.remove();
+            if (!coordinate) {
+                return;
+            }
             const pixelNeighborsCoordinates = this.pixelNeighborsCoord(coordinate);
 
             for (let i = 0; i < pixelNeighborsCoordinates.length; i++) {

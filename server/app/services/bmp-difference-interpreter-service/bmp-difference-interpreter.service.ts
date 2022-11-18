@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import { Bmp } from '@app/classes/bmp/bmp';
 import { Pixel } from '@app/classes/pixel/pixel';
+import { Queue } from '@app/classes/queue/queue';
 import { Coordinate } from '@common/coordinate';
 import { DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@common/image-size';
 import { Service } from 'typedi';
-
 @Service()
 export class BmpDifferenceInterpreter {
     async getCoordinates(bmpDifferentiated: Bmp): Promise<Coordinate[][]> {
@@ -54,29 +54,29 @@ export class BmpDifferenceInterpreter {
     }
 
     private breadthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] {
+        const queue = new Queue();
 
-    Queue<Coordinate> q = new LinkedList<>();
+        queue.add({ x: row, y: column });
+        pixels[row][column].isVisited = true;
 
-    q.add({x:row,y:column});
-    pixels[row][column].isVisited = true;
+        const differenceArea: Coordinate[] = [{ x: column, y: row }];
 
-    let differenceArea: Coordinate[] = [{ x: column, y: row }];
+        while (!queue.isEmpty()) {
+            const coordinate: Coordinate = queue.peek();
+            queue.remove();
+            const pixelNeighborsCoordinates = this.pixelNeighborsCoord(coordinate);
 
-    while (!q.isEmpty())
-    {
-        const coordinate = q.poll();
-        const pixelNeighborsCoordinates = this.pixelNeighborsCoord(coordinate);
+            for (let i = 0; i < pixelNeighborsCoordinates.length; i++) {
+                const coord: Coordinate = { x: pixelNeighborsCoordinates[i].x, y: pixelNeighborsCoordinates[i].y };
 
-        for(let i=0;i<pixelNeighborsCoordinates.length;i++) {
-            const coordinate: Coordinate = { x: pixelNeighborsCoordinates[i].x, y: pixelNeighborsCoordinates[i].y };
-            
-            if (!pixels[coordinate.x][coordinate.y].isVisited && pixels[coordinate.x][coordinate.y].isBlack()) {
-                pixels[coordinate.x][coordinate.y].isVisited = true;
-                // bfsParent[w] = v;
-                differenceArea.push(coordinate);
-                q.add(coordinate);
-                }    
+                if (!pixels[coord.x][coord.y].isVisited && pixels[coord.x][coord.y].isBlack()) {
+                    pixels[coord.x][coord.y].isVisited = true;
+                    // bfsParent[w] = v;
+                    differenceArea.push(coord);
+                    queue.add(coord);
+                }
             }
-    }
+        }
+        return differenceArea;
     }
 }

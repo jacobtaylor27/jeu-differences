@@ -49,3 +49,10 @@ export class CheatModeService {
         );
         return true;
     }
+
+    private startCheatModeDifference(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
+        return [
+            this.differenceDetectionHandler.displayDifferenceTemp(ctx, coords, true),
+            this.differenceDetectionHandler.displayDifferenceTemp(ctxModified, coords, true),
+        ];
+    }

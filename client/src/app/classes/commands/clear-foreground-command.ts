@@ -9,6 +9,6 @@ export class ClearForegroundCommand implements DrawingCommand {
     }
 
     execute() {
-        console.log('command');
+        console.log('execute clear Foreground');
     }
 }

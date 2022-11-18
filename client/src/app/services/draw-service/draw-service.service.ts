@@ -251,7 +251,9 @@ export class DrawService {
         this.clearAllForegrounds();
 
         for (let i = 0; i < this.indexOfCommand + 1; i++) {
-            const command: Command = this.commands[i].command;
+            // remove .command from the interace DrawingCommand
+            const drawingCommand: DrawingCommand = this.commands[i];
+            const command: Command = drawingCommand.command;
             switch (command.name) {
                 case 'draw': {
                     this.redraw(command);

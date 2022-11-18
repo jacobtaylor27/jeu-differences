@@ -22,3 +22,11 @@ export class CheatModeService {
     manageCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D) {
         this.isCheatModeActivated = this.isCheatModeActivated ? this.stopCheatMode(ctx, ctxModified) : this.startCheatMode(ctx, ctxModified);
     }
+
+    stopCheatModeDifference(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, difference: Coordinate[]) {
+        this.findClocksDifferenceIndex(difference)?.clocks.forEach((clock: number) => clearInterval(clock));
+        for (const coord of difference) {
+            ctx.clearRect(coord.x, coord.y, 1, 1);
+            ctxModified.clearRect(coord.x, coord.y, 1, 1);
+        }
+    }

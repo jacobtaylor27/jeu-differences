@@ -56,3 +56,11 @@ export class CheatModeService {
             this.differenceDetectionHandler.displayDifferenceTemp(ctxModified, coords, true),
         ];
     }
+
+    private stopCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D): boolean {
+        Array.from(this.intervals.map((interval) => interval.difference)).forEach((difference) =>
+            this.stopCheatModeDifference(ctx, ctxModified, difference),
+        );
+        return false;
+    }
+}

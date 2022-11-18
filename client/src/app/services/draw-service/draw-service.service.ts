@@ -84,7 +84,7 @@ export class DrawService {
         } else {
             this.currentCommand.name = 'erase';
         }
-        this.addCurrentCommand(new DrawCommand(this.currentCommand, this));
+        this.addCurrentCommand(new DrawCommand(this.currentCommand, this), false);
         this.removeCommandsPastIndex();
     }
 
@@ -274,9 +274,10 @@ export class DrawService {
         }
     }
 
-    private addCurrentCommand(drawingCommand: DrawingCommand) {
+    private addCurrentCommand(drawingCommand: DrawingCommand, needsToBeExecuted?: boolean) {
         this.indexOfCommand++;
         this.commands[this.indexOfCommand] = drawingCommand;
+        if (!needsToBeExecuted) return;
         drawingCommand.execute();
     }
 

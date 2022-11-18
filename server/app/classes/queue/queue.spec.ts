@@ -34,5 +34,14 @@ describe('Queue', () => {
         const expectedCoordinate: Coordinate = queue.peek();
         expect(queue['array'][0]).to.deep.eq(expectedCoordinate);
     });
+    it('Should return false if the queue is empty ', () => {
+        const queue = new Queue();
+        expect(queue.isEmpty()).to.equal(true);
+    });
 
+    it('Should return true if the queue is not empty', () => {
+        const queue = new Queue();
+        queue.add({ x: 10, y: 6 });
+        expect(queue.isEmpty()).to.equal(false);
+    });
 });

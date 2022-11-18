@@ -52,29 +52,31 @@ export class BmpDifferenceInterpreter {
     private isCoordinateValid(coord: Coordinate) {
         return coord.x >= 0 && coord.x < DEFAULT_IMAGE_HEIGHT && coord.y >= 0 && coord.y < DEFAULT_IMAGE_WIDTH;
     }
-    
+
     private breadthFirstSearch(pixels: Pixel[][], row: number, column: number): Coordinate[] {
-    Queue<pair > q = new LinkedList<>();
+
+    Queue<Coordinate> q = new LinkedList<>();
+
     q.add({x:row,y:column});
-    pixels[row][column].isVisited = true; 
+    pixels[row][column].isVisited = true;
+
+    let differenceArea: Coordinate[] = [{ x: column, y: row }];
+
     while (!q.isEmpty())
     {
-        const coordinate = q.peek();
-        q.remove();
- 
-        for(int i = 0; i < 4; i++)
-        {
-            int adjx = x + dRow[i];
-            int adjy = y + dCol[i];
+        const coordinate = q.poll();
+        const pixelNeighborsCoordinates = this.pixelNeighborsCoord(coordinate);
 
-            const neighbor:Coordinate = {x:adjx,y:adjy};
-
-            if (this.isCoordinateValid(neighbor))
-            {
-                q.add(neighbor);
-                pixels[neighbor.x][neighbor.y].isVisited = true;
+        for(let i=0;i<pixelNeighborsCoordinates.length;i++) {
+            const coordinate: Coordinate = { x: pixelNeighborsCoordinates[i].x, y: pixelNeighborsCoordinates[i].y };
+            
+            if (!pixels[coordinate.x][coordinate.y].isVisited && pixels[coordinate.x][coordinate.y].isBlack()) {
+                pixels[coordinate.x][coordinate.y].isVisited = true;
+                // bfsParent[w] = v;
+                differenceArea.push(coordinate);
+                q.add(coordinate);
+                }    
             }
-        }
     }
     }
 }

@@ -2,7 +2,7 @@ import { BmpCoordinate } from '@app/classes/bmp-coordinate/bmp-coordinate';
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
-// import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
+import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { Coordinate } from '@common/coordinate';
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -14,12 +14,12 @@ chai.use(chaiAsPromised);
 describe('Bmp difference interpreter service', async () => {
     let bmpDifferenceInterpreter: BmpDifferenceInterpreter;
     let bmpDecoderService: BmpDecoderService;
-    // let bmpSubtractorService: BmpSubtractorService;
+    let bmpSubtractorService: BmpSubtractorService;
 
     beforeEach(async () => {
         bmpDifferenceInterpreter = Container.get(BmpDifferenceInterpreter);
         bmpDecoderService = Container.get(BmpDecoderService);
-        // bmpSubtractorService = Container.get(BmpSubtractorService);
+        bmpSubtractorService = Container.get(BmpSubtractorService);
     });
 
     it("A white image shouldn't have any difference", async () => {
@@ -104,12 +104,12 @@ describe('Bmp difference interpreter service', async () => {
     });
 
     it.only('getting the number of differences', async () => {
-        // const radius = 9;
+        const radius = 15;
         const filepath = './assets/src-bmp/projet2-equipe-106-a935c378-eaaa-4602-9a08-dc841986d3d5.bmp';
-        // const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/white_bmp.bmp');
+        const whiteBmp = await bmpDecoderService.decodeBIntoBmp('./assets/test-bmp/test-performance/white_bmp.bmp');
         const bmpDecoded = await bmpDecoderService.decodeBIntoBmp(filepath);
-        // const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpDecoded, whiteBmp, radius);
-        const differences: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpDecoded);
+        const bmpResulting = await bmpSubtractorService.getDifferenceBMP(bmpDecoded, whiteBmp, radius);
+        const differences: Coordinate[][] = await bmpDifferenceInterpreter.getCoordinates(bmpResulting);
         console.log(differences.length);
     });
 });

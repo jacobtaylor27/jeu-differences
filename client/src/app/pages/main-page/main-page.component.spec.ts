@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -17,7 +20,7 @@ describe('MainPageComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [MainPageComponent],
-            imports: [AppMaterialModule],
+            imports: [AppMaterialModule, RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
             providers: [
                 {
                     provide: MainPageService,

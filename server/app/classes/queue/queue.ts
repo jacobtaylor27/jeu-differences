@@ -1,17 +1,19 @@
-export class Queue<T> {
-    private array: T[] = [];
+import { Coordinate } from '@common/coordinate';
 
-    add(data: T): void {
+export class Queue<T> {
+    private array: Coordinate[] = [];
+
+    add(data: Coordinate): void {
         this.array.push(data);
     }
 
-    remove(): T | undefined {
+    remove(): Coordinate | undefined {
         if (this.isEmpty()) throw new Error('EmptyQueueException');
 
         return this.array.shift();
     }
 
-    peek(): T {
+    peek(): Coordinate {
         if (this.isEmpty()) throw new Error('EmptyQueueException');
 
         return this.array[0];

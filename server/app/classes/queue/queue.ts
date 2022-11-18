@@ -1,6 +1,6 @@
 import { Coordinate } from '@common/coordinate';
 
-export class Queue<T> {
+export class Queue {
     private array: Coordinate[] = [];
 
     add(data: Coordinate): void {

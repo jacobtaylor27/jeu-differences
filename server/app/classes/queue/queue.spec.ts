@@ -11,7 +11,7 @@ describe('Queue', () => {
         expect(queue['array'][0]).to.equal(coordinateToadd);
     });
 
-    it.only('Should remove the first coord from the queue when using the remove method ', () => {
+    it('Should remove the first coord from the queue when using the remove method ', () => {
         const queue = new Queue();
         queue.add({ x: 2, y: 5 });
         queue.add({ x: 1, y: 1 });
@@ -19,4 +19,20 @@ describe('Queue', () => {
         queue.remove();
         expect(queue['array'][0]).to.deep.eq(expectedCoordinate);
     });
+
+    it('Should only read the first element in the queue when using peek method ', () => {
+        const queue = new Queue();
+        queue.add({ x: 2, y: 5 });
+        queue.add({ x: 1, y: 1 });
+        const expectedCoordinate: Coordinate = queue.peek();
+        expect(queue['array'][0]).to.deep.eq(expectedCoordinate);
+    });
+
+    it('Should not remove the first element in the queue when using peek method ', () => {
+        const queue = new Queue();
+        queue.add({ x: 10, y: 6 });
+        const expectedCoordinate: Coordinate = queue.peek();
+        expect(queue['array'][0]).to.deep.eq(expectedCoordinate);
+    });
+
 });

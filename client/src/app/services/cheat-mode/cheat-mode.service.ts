@@ -3,6 +3,7 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { Coordinate } from '@common/coordinate';
+import { SocketEvent } from '@common/socket-event';
 
 @Injectable({
     providedIn: 'root',
@@ -17,4 +18,7 @@ export class CheatModeService {
         private socket: CommunicationSocketService,
         private gameInformationHandler: GameInformationHandlerService,
     ) {}
-}
+
+    manageCheatMode(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D) {
+        this.isCheatModeActivated = this.isCheatModeActivated ? this.stopCheatMode(ctx, ctxModified) : this.startCheatMode(ctx, ctxModified);
+    }

@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
+import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
@@ -22,7 +23,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     @Input() gameId: string;
 
     buttonPressed = '';
-
+    intervals = [];
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
@@ -30,6 +31,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
         private readonly communicationService: CommunicationService,
         private readonly mouseHandlerService: MouseHandlerService,
         private readonly communicationSocketService: CommunicationSocketService,
+        private cheatMode: CheatModeService,
     ) {
         this.handleSocketDifferenceFound();
     }
@@ -83,6 +85,9 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
             );
             this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
             this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
+            if (this.cheatMode.isCheatModeActivated) {
+                this.cheatMode.stopCheatModeDifference(this.getContextOriginal(), this.getContextModified(), data.coords);
+            }
         });
     }
 

@@ -174,7 +174,7 @@ describe('DifferencesDetectionHandlerService', () => {
         const clearRectSpy = spyOn(ctx, 'clearRect');
         const fillRectSpy = spyOn(ctx, 'fillRect');
 
-        service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }]);
+        service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], false);
         tick(1500);
         expect(fillRectSpy).toHaveBeenCalled();
         tick(1500);

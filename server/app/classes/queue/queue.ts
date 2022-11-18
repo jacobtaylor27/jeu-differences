@@ -7,15 +7,14 @@ export class Queue {
         this.array.push(data);
     }
 
-    remove(): Coordinate | null {
-        if (this.isEmpty()) return null;
+    remove(): Coordinate | undefined {
+        if (this.isEmpty()) return undefined;
 
         return this.array.shift() as Coordinate;
     }
 
-    peek(): Coordinate | null {
-        if (this.isEmpty()) return null;
-
+    peek(): Coordinate | undefined {
+        if (this.isEmpty()) return undefined;
         return this.array[0];
     }
 

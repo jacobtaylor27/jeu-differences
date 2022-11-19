@@ -88,8 +88,16 @@ export class GameInfoService {
             differenceRadius: radius,
             differences,
             idDifferenceBmp,
-            soloScore: [],
-            multiplayerScore: [],
+            soloScore: [
+                { playerName: 'test', time: 1 },
+                { playerName: 'test1', time: 2 },
+                { playerName: 'test2', time: 3 },
+            ],
+            multiplayerScore: [
+                { playerName: 'test', time: 1 },
+                { playerName: 'test1', time: 2 },
+                { playerName: 'test2', time: 3 },
+            ],
         });
     }
 

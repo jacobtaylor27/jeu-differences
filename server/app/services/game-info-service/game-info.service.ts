@@ -113,4 +113,12 @@ export class GameInfoService {
         await this.bmpService.deleteAllSourceImages(this.srcPath);
         await this.collection.deleteMany({});
     }
+
+    async resetAllHighScores(): Promise<void> {
+        await this.collection.updateMany({}, { $set: { soloScore: [], multiplayerScore: [] } });
+    }
+
+    async resetHighScores(gameId: string): Promise<void> {
+        await this.collection.updateOne({ id: gameId }, { $set: { soloScore: [], multiplayerScore: [] } });
+    }
 }

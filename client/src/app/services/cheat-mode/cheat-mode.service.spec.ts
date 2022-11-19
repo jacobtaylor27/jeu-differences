@@ -63,6 +63,30 @@ describe('CheatModeService', () => {
         expect(service.intervals).toEqual([]);
     });
 
+    it('should start cheat mode difference', () => {
+        differenceDetectionHandlerSpyObj.displayDifferenceTemp.and.callFake(() => 1);
+        expect(service['startCheatModeDifference']({} as CanvasRenderingContext2D, {} as CanvasRenderingContext2D, [])).toEqual([1, 1]);
+    });
+
+    it('should start cheat mode', async () => {
+        const fetchAllDifferenceNotFound = spyOn(Object.getPrototypeOf(service), 'fetchAllDifferenceNotFound').and.callFake(
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            async () => new Promise(() => {}),
+        );
+        fetchAllDifferenceNotFound.and.resolveTo();
+        const spyStartCheatModeDifference = spyOn(Object.getPrototypeOf(service), 'startCheatModeDifference').and.callFake(() => [1]);
+        service.coords = [[{ x: 0, y: 0 }]];
+        expect(await service['startCheatMode']({} as CanvasRenderingContext2D, {} as CanvasRenderingContext2D)).toEqual(true);
+        expect(fetchAllDifferenceNotFound).toHaveBeenCalled();
+        expect(spyStartCheatModeDifference).toHaveBeenCalled();
+        expect(
+            service.intervals.find(
+                (interval: { difference: Coordinate[]; clocks: number[] }) =>
+                    interval.difference[0].x === 0 && interval.difference[0].y === 0 && interval.clocks[0] === 1,
+            ),
+        ).not.toEqual(undefined);
+    });
+
     it('should stop cheat mode difference', () => {
         const expectedDifference = [{ x: 0, y: 0 }];
         spyOn(Object.getPrototypeOf(service), 'findClocksDifference').and.callFake(() => {

@@ -26,6 +26,29 @@ export class GameController {
     private configureRouter(): void {
         this.router = Router();
 
+        this.router.delete('/game/scores/:id', (req: Request, res: Response) => {
+            const id = req.params.id;
+            this.gameInfo
+                .resetHighScores(id)
+                .then(() => {
+                    res.sendStatus(StatusCodes.OK);
+                })
+                .catch(() => {
+                    res.sendStatus(StatusCodes.NOT_FOUND);
+                });
+        });
+
+        this.router.delete('/game/scores', (req: Request, res: Response) => {
+            this.gameInfo
+                .resetAllHighScores()
+                .then(() => {
+                    res.sendStatus(StatusCodes.OK);
+                })
+                .catch(() => {
+                    res.sendStatus(StatusCodes.BAD_REQUEST);
+                });
+        });
+
         this.router.delete('/cards/:id', (req: Request, res: Response) => {
             const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
             isGameDeleted

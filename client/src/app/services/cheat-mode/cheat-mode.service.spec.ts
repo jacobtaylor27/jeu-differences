@@ -87,6 +87,14 @@ describe('CheatModeService', () => {
         ).not.toEqual(undefined);
     });
 
+    it('should fetch all difference not found', async () => {
+        const expectedCoords = [[{ x: 0, y: 0 }]];
+        const fetch = service['fetchAllDifferenceNotFound']();
+        socketHelper.peerSideEmit(SocketEvent.FetchDifferences, expectedCoords);
+        await fetch;
+        expect(service.coords).toEqual(expectedCoords);
+    });
+
     it('should stop cheat mode difference', () => {
         const expectedDifference = [{ x: 0, y: 0 }];
         spyOn(Object.getPrototypeOf(service), 'findClocksDifference').and.callFake(() => {

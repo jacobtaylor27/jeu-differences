@@ -268,5 +268,23 @@ describe('PlayAreaComponent', () => {
         await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 'a' } as unknown as KeyboardEvent);
         expect(cheatModeService.manageCheatMode).not.toHaveBeenCalled();
     });
+
+    it('should manage the cheat mode if the t is press', async () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        cheatModeService.manageCheatMode.and
+            .callFake(async () => {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                return new Promise(() => {});
+            })
+            .and.resolveTo();
+        spyOn(component, 'getContextOriginal').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextModified').and.callFake(() => {
+            return ctx;
+        });
+        await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 't' } as unknown as KeyboardEvent);
+        expect(cheatModeService.manageCheatMode).toHaveBeenCalled();
     });
 });

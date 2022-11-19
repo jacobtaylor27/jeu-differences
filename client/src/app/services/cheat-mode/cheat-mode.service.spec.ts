@@ -54,4 +54,34 @@ describe('CheatModeService', () => {
         expect(startSpy).toHaveBeenCalled();
     });
 
+    it('should stop all clock for cheat mode', () => {
+        service.intervals = [{ difference: [], clocks: [1] }];
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const stopCheatModeDifference = spyOn(service, 'stopCheatModeDifference').and.callFake(() => {});
+        expect(service['stopCheatMode']({} as CanvasRenderingContext2D, {} as CanvasRenderingContext2D)).toEqual(false);
+        expect(stopCheatModeDifference).toHaveBeenCalled();
+        expect(service.intervals).toEqual([]);
+    });
+
+    it('should stop cheat mode difference', () => {
+        const expectedDifference = [{ x: 0, y: 0 }];
+        spyOn(Object.getPrototypeOf(service), 'findClocksDifference').and.callFake(() => {
+            return { difference: expectedDifference, clocks: [1] };
+        });
+        const spyClearInterval = spyOn(window, 'clearInterval').and.callFake(() => {});
+        const ctx = { clearRect: () => {} } as unknown as CanvasRenderingContext2D;
+        service.stopCheatModeDifference(ctx, ctx, expectedDifference);
+        expect(spyClearInterval).toHaveBeenCalled();
+    });
+
+    it('should stop cheat mode difference', () => {
+        const expectedDifference = [{ x: 0, y: 0 }];
+        spyOn(Object.getPrototypeOf(service), 'findClocksDifference').and.callFake(() => {
+            return;
+        });
+        const spyClearInterval = spyOn(window, 'clearInterval').and.callFake(() => {});
+        const ctx = { clearRect: () => {} } as unknown as CanvasRenderingContext2D;
+        service.stopCheatModeDifference(ctx, ctx, expectedDifference);
+        expect(spyClearInterval).not.toHaveBeenCalled();
+    });
 });

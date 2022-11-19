@@ -78,7 +78,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     }
 
     handleSocketDifferenceFound() {
-        this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+        this.communicationSocketService.on<DifferenceFound>(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
             this.differencesDetectionHandlerService.setNumberDifferencesFound(
                 !data.isPlayerFoundDifference,
                 this.gameInfoHandlerService.getNbTotalDifferences(),

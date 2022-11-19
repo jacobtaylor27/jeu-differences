@@ -95,6 +95,13 @@ describe('CheatModeService', () => {
         expect(service.coords).toEqual(expectedCoords);
     });
 
+    it('should find clocks of a specific difference', () => {
+        const expectedDifference = [{ x: 0, y: 0 }];
+        const expectedInterval = { difference: expectedDifference, clocks: [1] };
+        service.intervals = [expectedInterval];
+        expect(service.findClocksDifference(expectedDifference)).toEqual(expectedInterval);
+    });
+
     it('should stop cheat mode difference', () => {
         const expectedDifference = [{ x: 0, y: 0 }];
         spyOn(Object.getPrototypeOf(service), 'findClocksDifference').and.callFake(() => {

@@ -28,7 +28,6 @@ export class GameInformationHandlerService {
     handleSocketEvent() {
         if (!this.isMulti) {
             this.socket.once(SocketEvent.Play, (infos: GameId) => {
-
                 if (infos.gameCard) {
                     this.setGameInformation(infos.gameCard);
                 }

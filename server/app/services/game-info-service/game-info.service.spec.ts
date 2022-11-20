@@ -16,7 +16,7 @@ import * as sinon from 'sinon';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
 
-describe.only('GameInfo Service', async () => {
+describe('GameInfo Service', async () => {
     let gameInfoService: GameInfoService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;

@@ -79,10 +79,6 @@ export class GameController {
             }
         });
 
-        // this.router.patch('/scores/solo/:id', (req: Request, res: Response) => {});
-
-        // this.router.patch('/scores/multi/:id', (req: Request, res: Response) => {});
-
         this.router.delete('/cards/:id', (req: Request, res: Response) => {
             const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
             isGameDeleted

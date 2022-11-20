@@ -19,7 +19,8 @@ export class Game {
     private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
     private initialTime: Date;
-    private gamesToPlay: PrivateGameInformation[];
+    private gamesToPlay: PrivateGameInformation[] = [];
+    private currentIndex: number = 0;
 
     constructor(mode: GameMode, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
@@ -60,7 +61,17 @@ export class Game {
 
     setGamesToPlay(gamesRandomized: PrivateGameInformation[]) {
         this.gamesToPlay = gamesRandomized;
-        this.info = this.gamesToPlay[0];
+        this.info = this.gamesToPlay[this.currentIndex];
+    }
+
+    nextGame() {
+        this.currentIndex++;
+
+        if (this.currentIndex === this.gamesToPlay.length) {
+            return;
+        }
+
+        this.info = this.gamesToPlay[this.currentIndex];
     }
 
     setTimer() {

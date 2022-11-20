@@ -63,7 +63,7 @@ describe('GameInformationHandlerService', () => {
 
     it('should handle socket', () => {
         service.handleSocketEvent();
-        socketHelper.peerSideEmit(SocketEvent.Play, 'id');
+        socketHelper.peerSideEmit(SocketEvent.Play, { gameId: 'id'});
         expect(service.roomId).toEqual('id');
 
         socketHelper.peerSideEmit(SocketEvent.WaitPlayer, 'id');

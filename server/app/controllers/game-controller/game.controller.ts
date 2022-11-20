@@ -26,7 +26,7 @@ export class GameController {
     private configureRouter(): void {
         this.router = Router();
 
-        this.router.delete('/game/scores/:id', (req: Request, res: Response) => {
+        this.router.patch('/scores/:id/reset', (req: Request, res: Response) => {
             const id = req.params.id;
             this.gameInfo
                 .resetHighScores(id)
@@ -38,7 +38,7 @@ export class GameController {
                 });
         });
 
-        this.router.delete('/game/scores', (req: Request, res: Response) => {
+        this.router.patch('/scores/reset', (req: Request, res: Response) => {
             this.gameInfo
                 .resetAllHighScores()
                 .then(() => {

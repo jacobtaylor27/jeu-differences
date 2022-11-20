@@ -22,13 +22,16 @@ export class GameManagerService {
 
     async createGame(playerInfo: { player: User; isMulti: boolean }, mode: GameMode, gameCardId: string) {
         let gameCard: PrivateGameInformation;
+        let game: Game;
         if (mode === GameMode.LimitedTime) {
             const gamesRandomized = await this.limitedTimeGame.generateGames();
             gameCard = gamesRandomized[0];
+            game = new Game(mode, playerInfo, gameCard);
+            game.setGamesToPlay(gamesRandomized);
         } else {
             gameCard = await this.gameInfo.getGameInfoById(gameCardId);
+            game = new Game(mode, playerInfo, gameCard);
         }
-        const game = new Game(mode, playerInfo, gameCard);
         this.games.set(game.identifier, game);
         return game.identifier;
     }

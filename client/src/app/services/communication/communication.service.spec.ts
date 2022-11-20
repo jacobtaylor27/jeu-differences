@@ -281,6 +281,6 @@ describe('CommunicationService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/game/constants`);
-        expect(req.request.method).toBe('POST');
+        expect(req.request.method).toBe('PATCH');
     });
 });

@@ -75,7 +75,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
             this.displayImage(false, this.getContextDifferences());
             this.displayImage(false, this.getContextImgOriginal());
         });
-        if(this.gameInfoHandlerService.gameMode === GameMode.Classic){
+        if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
             this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
                 this.differencesDetectionHandlerService.setNumberDifferencesFound(
                     !data.isPlayerFoundDifference,

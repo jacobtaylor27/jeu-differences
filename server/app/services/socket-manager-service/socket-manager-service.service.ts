@@ -1,12 +1,15 @@
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
+import { PublicGameInformation } from '@common/game-information';
 import { Coordinate } from '@common/coordinate';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
+import * as LZString from 'lz-string';
+
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -207,7 +210,24 @@ export class SocketManagerService {
         socket.join(id);
         this.gameManager.setTimer(id);
         this.gameManager.sendTimer(this.sio, id, socket.id);
-        socket.emit(SocketEvent.Play, id);
+        const gameCard = this.gameManager.getGameInfo(id);
+        let gameCardInfo: PublicGameInformation;
+        if (gameCard) {
+            gameCardInfo = {
+                id: gameCard.id,
+                name: gameCard.name,
+                thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(gameCard.thumbnail),
+                nbDifferences: gameCard.differences.length,
+                idEditedBmp: gameCard.idEditedBmp,
+                idOriginalBmp: gameCard.idOriginalBmp,
+                multiplayerScore: gameCard.multiplayerScore,
+                soloScore: gameCard.soloScore,
+                isMulti: false,
+            };
+            socket.emit(SocketEvent.Play, { gameID: id, gameCard: gameCardInfo });
+            return;
+        }
+        socket.emit(SocketEvent.Play, { gameID: id });
     }
 
     // eslint-disable-next-line max-params -- absolutely need all the params

@@ -13,6 +13,7 @@ import { GameCarousel } from '@app/interface/game-carousel';
 // can't import this otherwise
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import LZString = require('lz-string');
+import { Score } from '@common/score';
 
 const NB_TO_RETRIEVE = 4;
 
@@ -128,5 +129,25 @@ export class GameInfoService {
 
     async resetHighScores(gameId: string): Promise<void> {
         await this.collection.updateOne({ id: gameId }, { $set: { soloScore: [], multiplayerScore: [] } });
+    }
+
+    async getHighScores(gameId: string): Promise<{ soloScore: Score[]; multiplayerScore: Score[] } | null> {
+        const game = await this.getGameInfoById(gameId);
+        if (game) {
+            return { soloScore: game.soloScore, multiplayerScore: game.multiplayerScore };
+        }
+        return null;
+    }
+
+    async updateHighScores(gameId: string, soloScore: Score[], multiplayerScore: Score[]): Promise<void> {
+        await this.collection.updateOne({ id: gameId }, { $set: { soloScore, multiplayerScore } });
+    }
+
+    async updateSoloHighScores(gameId: string, soloScore: Score[]): Promise<void> {
+        await this.collection.updateOne({ id: gameId }, { $set: { soloScore } });
+    }
+
+    async updateMultiplayerHighScores(gameId: string, multiplayerScore: Score[]): Promise<void> {
+        await this.collection.updateOne({ id: gameId }, { $set: { multiplayerScore } });
     }
 }

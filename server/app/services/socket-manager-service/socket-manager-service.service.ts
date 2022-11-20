@@ -196,9 +196,29 @@ export class SocketManagerService {
                     }
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
                     socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+
                     return;
                 } else {
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
+                    if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
+                        this.gameManager.setNextGame(gameId);
+                        const nextGameCard = this.gameManager.getGameInfo(gameId);
+                        let gameCardInfo: PublicGameInformation;
+                        if (nextGameCard) {
+                            gameCardInfo = {
+                                id: nextGameCard.id,
+                                name: nextGameCard.name,
+                                thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(nextGameCard.thumbnail),
+                                nbDifferences: nextGameCard.differences.length,
+                                idEditedBmp: nextGameCard.idEditedBmp,
+                                idOriginalBmp: nextGameCard.idOriginalBmp,
+                                multiplayerScore: nextGameCard.multiplayerScore,
+                                soloScore: nextGameCard.soloScore,
+                                isMulti: false,
+                            };
+                            socket.emit(SocketEvent.NewGameBoard, gameCardInfo);
+                        }
+                    }
                 }
             });
         });

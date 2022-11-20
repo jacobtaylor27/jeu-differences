@@ -7,6 +7,7 @@ import { DifferencesDetectionHandlerService } from '@app/services/differences-de
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 import { DifferenceFound } from '@common/difference';
+import { PublicGameInformation } from '@common/game-information';
 import { SocketEvent } from '@common/socket-event';
 @Component({
     selector: 'app-play-area',
@@ -60,11 +61,18 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     onClick($event: MouseEvent, canvas: string) {
         if (!this.isMouseDisabled()) {
             const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
-            this.mouseHandlerService.mouseHitDetect($event, ctx, this.gameId);
+            this.mouseHandlerService.mouseHitDetect($event, ctx, this.gameInfoHandlerService.roomId);
         }
     }
 
     handleSocketDifferenceFound() {
+        this.communicationSocketService.on(SocketEvent.NewGameBoard, (data: PublicGameInformation) => {
+            this.gameInfoHandlerService.setGameInformation(data);
+            this.displayImage(true, this.getContextImgModified());
+            this.displayImage(false, this.getContextDifferences());
+            this.displayImage(false, this.getContextImgOriginal());
+            this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
+        });
         this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
             this.differencesDetectionHandlerService.setNumberDifferencesFound(
                 !data.isPlayerFoundDifference,

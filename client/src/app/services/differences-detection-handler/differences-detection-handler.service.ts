@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers -- tests for differences detection with random numbers*/
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { FlashTimer } from '@app/constants/game-constants';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -101,7 +102,7 @@ export class DifferencesDetectionHandlerService {
                 }
                 counter++;
             },
-            isCheatMode ? 125 : 500,
+            isCheatMode ? FlashTimer.CheatMode : FlashTimer.Classic,
         ) as unknown as number;
         return interval;
     }

@@ -49,9 +49,9 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
         this.buttonPressed = event.key;
     }
     ngAfterViewInit(): void {
+        this.displayImage(false, this.getContextImgOriginal());
         this.displayImage(true, this.getContextImgModified());
         this.displayImage(false, this.getContextDifferences());
-        this.displayImage(false, this.getContextImgOriginal());
         this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
     }
 

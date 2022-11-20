@@ -49,6 +49,7 @@ describe('PlayAreaComponent', () => {
             'getOriginalBmpId',
             'getModifiedBmpId',
             'getGameInformation',
+            'setGameInformation',
         ]);
 
         await TestBed.configureTestingModule({

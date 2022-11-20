@@ -16,7 +16,7 @@ import * as sinon from 'sinon';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
 
-describe('GameInfo Service', async () => {
+describe.only('GameInfo Service', async () => {
     let gameInfoService: GameInfoService;
     let bmpSubtractorService: BmpSubtractorService;
     let bmpService: BmpService;
@@ -146,5 +146,45 @@ describe('GameInfo Service', async () => {
     it('should get the games information based on a page number', async () => {
         const value = await gameInfoService.getGamesInfo(1);
         expect(value.games).to.deep.equal([]);
+    });
+
+    it('should get the scores', async () => {
+        gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        const value = await gameInfoService.getHighScores('0');
+        expect(value?.multiplayerScore).to.deep.equal([]);
+        expect(value?.soloScore).to.deep.equal([]);
+    });
+
+    it('should update the highscores', async () => {
+        gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
+        await gameInfoService.updateHighScores('0', [{ playerName: 'jacob', time: 1 }], [{ playerName: 'jacob', time: 1 }]);
+        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([{ playerName: 'jacob', time: 1 }]);
+        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.deep.equal([{ playerName: 'jacob', time: 1 }]);
+    });
+
+    it('should reset all the scores', async () => {
+        const game1 = DEFAULT_GAMES[0];
+        const game2 = DEFAULT_GAMES[1];
+        game1.multiplayerScore = [{ playerName: 'jacob', time: 1 }];
+        game1.multiplayerScore = [{ playerName: 'jacob', time: 1 }];
+        game2.soloScore = [{ playerName: 'jacob', time: 1 }];
+        game2.soloScore = [{ playerName: 'jacob', time: 1 }];
+        gameInfoService.addGameInfo(game1);
+        gameInfoService.addGameInfo(game2);
+        await gameInfoService.resetAllHighScores();
+        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([]);
+        expect((await gameInfoService.getHighScores('1'))?.multiplayerScore).to.deep.equal([]);
+        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.deep.equal([]);
+        expect((await gameInfoService.getHighScores('1'))?.soloScore).to.deep.equal([]);
+    });
+
+    it('should reset scores from single game', async () => {
+        const game1 = DEFAULT_GAMES[0];
+        game1.multiplayerScore = [{ playerName: 'jacob', time: 1 }];
+        game1.soloScore = [{ playerName: 'jacob', time: 1 }];
+        gameInfoService.addGameInfo(game1);
+        await gameInfoService.resetHighScores('0');
+        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([]);
+        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.deep.equal([]);
     });
 });

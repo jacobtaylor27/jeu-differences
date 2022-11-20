@@ -49,6 +49,40 @@ export class GameController {
                 });
         });
 
+        this.router.get('/scores/:id', (req: Request, res: Response) => {
+            const id = req.params.id;
+            this.gameInfo
+                .getHighScores(id)
+                .then((scores) => {
+                    res.status(StatusCodes.OK).send(scores);
+                })
+                .catch(() => {
+                    res.sendStatus(StatusCodes.NOT_FOUND);
+                });
+        });
+
+        this.router.patch('/scores/:id', (req: Request, res: Response) => {
+            const id = req.params.id;
+            const scoresSolo = req.body.scoresSolo;
+            const scoresMulti = req.body.scoresMulti;
+            if (id && scoresSolo && scoresMulti) {
+                this.gameInfo
+                    .updateHighScores(id, scoresSolo, scoresMulti)
+                    .then(() => {
+                        res.sendStatus(StatusCodes.OK);
+                    })
+                    .catch(() => {
+                        res.sendStatus(StatusCodes.BAD_REQUEST);
+                    });
+            } else {
+                res.sendStatus(StatusCodes.BAD_REQUEST);
+            }
+        });
+
+        // this.router.patch('/scores/solo/:id', (req: Request, res: Response) => {});
+
+        // this.router.patch('/scores/multi/:id', (req: Request, res: Response) => {});
+
         this.router.delete('/cards/:id', (req: Request, res: Response) => {
             const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
             isGameDeleted

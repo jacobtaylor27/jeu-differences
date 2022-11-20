@@ -224,10 +224,10 @@ export class SocketManagerService {
                 soloScore: gameCard.soloScore,
                 isMulti: false,
             };
-            socket.emit(SocketEvent.Play, { gameID: id, gameCard: gameCardInfo });
+            socket.emit(SocketEvent.Play, { gameId: id, gameCard: gameCardInfo });
             return;
         }
-        socket.emit(SocketEvent.Play, { gameID: id });
+        socket.emit(SocketEvent.Play, { gameId: id });
     }
 
     // eslint-disable-next-line max-params -- absolutely need all the params

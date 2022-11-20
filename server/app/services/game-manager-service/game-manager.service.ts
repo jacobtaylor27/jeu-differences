@@ -37,6 +37,10 @@ export class GameManagerService {
         return this.findGame(gameId)?.information;
     }
 
+    setNextGame(gameId: string) {
+        this.findGame(gameId)?.nextGame();
+    }
+
     setTimer(gameId: string) {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).setTimer() : null;
     }

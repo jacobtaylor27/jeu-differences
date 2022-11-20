@@ -8,6 +8,7 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 @Component({
     selector: 'app-play-area',
@@ -56,6 +57,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         this.communicationSocketService.off(SocketEvent.DifferenceFound);
+        this.communicationSocketService.off(SocketEvent.NewGameBoard);
     }
 
     onClick($event: MouseEvent, canvas: string) {
@@ -67,20 +69,22 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
 
     handleSocketDifferenceFound() {
         this.communicationSocketService.on(SocketEvent.NewGameBoard, (data: PublicGameInformation) => {
+            this.differencesDetectionHandlerService.playCorrectSound();
             this.gameInfoHandlerService.setGameInformation(data);
             this.displayImage(true, this.getContextImgModified());
             this.displayImage(false, this.getContextDifferences());
             this.displayImage(false, this.getContextImgOriginal());
-            this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
         });
-        this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
-            this.differencesDetectionHandlerService.setNumberDifferencesFound(
-                !data.isPlayerFoundDifference,
-                this.gameInfoHandlerService.getNbTotalDifferences(),
-            );
-            this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
-            this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
-        });
+        if(this.gameInfoHandlerService.gameMode === GameMode.Classic){
+            this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+                this.differencesDetectionHandlerService.setNumberDifferencesFound(
+                    !data.isPlayerFoundDifference,
+                    this.gameInfoHandlerService.getNbTotalDifferences(),
+                );
+                this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
+                this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
+            });
+        }
     }
 
     getContextImgOriginal() {

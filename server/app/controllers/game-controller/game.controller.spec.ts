@@ -172,7 +172,7 @@ describe('GameController', () => {
     it('should post new game time constants when valid', async () => {
         gameTimeConstantsService.setGameTimeConstant.resolves();
         return supertest(expressApp)
-            .post('/api/game/constants')
+            .patch('/api/game/constants')
             .send({
                 gameTime: 30,
                 penaltyTime: 10,
@@ -183,7 +183,7 @@ describe('GameController', () => {
 
     it('should not post new game time constants when invalid', async () => {
         gameTimeConstantsService.setGameTimeConstant.rejects();
-        return supertest(expressApp).post('/api/game/constants').expect(StatusCodes.BAD_REQUEST);
+        return supertest(expressApp).patch('/api/game/constants').expect(StatusCodes.BAD_REQUEST);
     });
 
     it('should get game time constants when valid', async () => {

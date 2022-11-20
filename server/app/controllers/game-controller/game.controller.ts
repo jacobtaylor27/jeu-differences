@@ -156,7 +156,7 @@ export class GameController {
                 });
         });
 
-        this.router.post('/constants', (req: Request, res: Response) => {
+        this.router.patch('/constants', (req: Request, res: Response) => {
             this.gameTimeConstantService
                 .setGameTimeConstant(req.body)
                 .then(() => {

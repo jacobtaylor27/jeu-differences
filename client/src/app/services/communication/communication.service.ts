@@ -118,7 +118,7 @@ export class CommunicationService {
 
     setGameTimeConstants(gameTimeConstants: GameTimeConstants): Observable<void> {
         return this.http
-            .post<void>(`${this.baseUrl}/game/constants`, gameTimeConstants)
+            .patch<void>(`${this.baseUrl}/game/constants`, gameTimeConstants)
             .pipe(catchError(this.handleError<void>('set time constants')));
     }
 

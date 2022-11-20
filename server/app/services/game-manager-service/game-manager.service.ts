@@ -9,14 +9,25 @@ import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 @Service()
 export class GameManagerService {
     games: Map<string, Game> = new Map();
-    constructor(private gameInfo: GameInfoService, public differenceService: BmpDifferenceInterpreter) {}
+    constructor(
+        private gameInfo: GameInfoService,
+        public differenceService: BmpDifferenceInterpreter,
+        private readonly limitedTimeGame: LimitedTimeGame,
+    ) {}
 
     async createGame(playerInfo: { player: User; isMulti: boolean }, mode: GameMode, gameCardId: string) {
-        const gameCard: PrivateGameInformation = await this.gameInfo.getGameInfoById(gameCardId);
+        let gameCard: PrivateGameInformation;
+        if (mode === GameMode.LimitedTime) {
+            const gamesRandomized = await this.limitedTimeGame.generateGames();
+            gameCard = gamesRandomized[0];
+        } else {
+            gameCard = await this.gameInfo.getGameInfoById(gameCardId);
+        }
         const game = new Game(mode, playerInfo, gameCard);
         this.games.set(game.identifier, game);
         return game.identifier;

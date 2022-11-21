@@ -90,23 +90,16 @@ describe('Game', () => {
         expect(game.status).to.equal(expectGameState.status());
     });
 
-    it('should set games to play', () => {
-        game['currentIndex'] = 0;
-        const gamesRandomized: PrivateGameInformation[] = [{ id: '1' } as PrivateGameInformation];
-        game.setGamesToPlay(gamesRandomized);
-        expect(game['info'].id).to.equal('1');
+    it('should set info', () => {
+        const gameInfo = { id: '1' } as PrivateGameInformation;
+        game.setInfo(gameInfo);
+        expect(game.information).to.equal(gameInfo);
     });
 
-    it('should go to the next game', () => {
-        game['currentIndex'] = 0;
-        const gamesRandomized: PrivateGameInformation[] = [{ id: '1' } as PrivateGameInformation, { id: '2' } as PrivateGameInformation];
-        game.setGamesToPlay(gamesRandomized);
-        game.nextGame();
-        expect(game['info'].id).to.equal('2');
-        expect(game['currentIndex']).to.equal(1);
-        game.nextGame();
-        expect(game['currentIndex']).to.equal(2);
-        expect(game['info'].id).to.equal('2');
+    it('should increment index', () => {
+        expect(game.currentIndex).to.equal(0);
+        game.nextIndex();
+        expect(game.currentIndex).to.equal(1);
     });
 
     it('should set timer', () => {

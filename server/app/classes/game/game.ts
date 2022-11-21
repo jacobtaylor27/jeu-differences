@@ -11,6 +11,7 @@ import { v4 } from 'uuid';
 export class Game {
     players: Map<string, string>;
     timerId: NodeJS.Timer;
+    currentIndex: number = 0;
     private id: string;
     private mode: GameMode;
     private isMulti: boolean;
@@ -19,8 +20,6 @@ export class Game {
     private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
     private initialTime: Date;
-    private gamesToPlay: PrivateGameInformation[] = [];
-    private currentIndex: number = 0;
 
     constructor(mode: GameMode, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
         this.info = info;
@@ -59,19 +58,12 @@ export class Game {
         return this.calculateTime();
     }
 
-    setGamesToPlay(gamesRandomized: PrivateGameInformation[]) {
-        this.gamesToPlay = gamesRandomized;
-        this.info = this.gamesToPlay[this.currentIndex];
+    setInfo(gamesRandomized: PrivateGameInformation) {
+        this.info = gamesRandomized;
     }
 
-    nextGame() {
+    nextIndex() {
         this.currentIndex++;
-
-        if (this.currentIndex === this.gamesToPlay.length) {
-            return;
-        }
-
-        this.info = this.gamesToPlay[this.currentIndex];
     }
 
     setTimer() {

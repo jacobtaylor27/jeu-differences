@@ -90,6 +90,13 @@ describe('Game', () => {
         expect(game.status).to.equal(expectGameState.status());
     });
 
+    it('should set games to play', () => {
+        game['currentIndex'] = 0;
+        const gamesRandomized: PrivateGameInformation[] = [{ id: '1' } as PrivateGameInformation];
+        game.setGamesToPlay(gamesRandomized);
+        expect(game['info'].id).to.equal('1');
+    });
+
     it('should set timer', () => {
         game.setTimer();
         expect(game['initialTime'].getDate()).to.equal(new Date().getDate());

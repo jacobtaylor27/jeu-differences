@@ -58,8 +58,8 @@ export class Game {
         return this.calculateTime();
     }
 
-    setInfo(gamesRandomized: PrivateGameInformation) {
-        this.info = gamesRandomized;
+    setInfo(gameInfo: PrivateGameInformation) {
+        this.info = gameInfo;
     }
 
     nextIndex() {

@@ -59,7 +59,7 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should set the nb of differences found at the beginning of the game', () => {
-        expect(component.players[0].nbDifference).toEqual('0 / 10');
+        expect(component.players[0].nbDifference).toEqual('0');
     });
 
     it('should set the nb of differences found during the game', () => {
@@ -100,6 +100,6 @@ describe('DifferencesAreaComponent', () => {
         expect(component.setNbDifferencesFoundLimitedMulti()).toEqual('');
 
         spyGameInfosService.getNbDifferences.and.callFake(() => 1);
-        expect(component.setNbDifferencesFoundLimitedMulti()).toEqual('2 / 10');
+        expect(component.setNbDifferencesFoundLimitedMulti()).toEqual('2');
     });
 });

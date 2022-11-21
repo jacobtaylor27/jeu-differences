@@ -125,6 +125,11 @@ export class CommunicationService {
     refreshAllGames(): Observable<void> {
         return this.http.patch<void>(`${this.baseUrl}/game/scores/reset`, {}).pipe(catchError(this.handleError<void>('refreshAllGames')));
     }
+
+    refreshSingleGame(id: string): Observable<void> {
+        return this.http.patch<void>(`${this.baseUrl}/game/scores/${id}/reset`, {}).pipe(catchError(this.handleError<void>('refreshSingleGame')));
+    }
+
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }

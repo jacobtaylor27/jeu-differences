@@ -122,6 +122,9 @@ export class CommunicationService {
             .pipe(catchError(this.handleError<void>('set time constants')));
     }
 
+    refreshAllGames(): Observable<void> {
+        return this.http.patch<void>(`${this.baseUrl}/game/scores/reset`, {}).pipe(catchError(this.handleError<void>('refreshAllGames')));
+    }
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return () => of(result as T);
     }

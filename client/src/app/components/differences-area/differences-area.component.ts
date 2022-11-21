@@ -61,7 +61,11 @@ export class DifferencesAreaComponent implements OnInit {
         if (nbPlayerDifference === undefined) {
             return '';
         }
-        return nbPlayerDifference.toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
+        if (this.gameInformationHandlerService.gameMode === GameMode.Classic) {
+            return nbPlayerDifference.toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
+        } else {
+            return nbPlayerDifference.toString();
+        }
     }
 
     setNbDifferencesFoundLimitedMulti() {
@@ -71,6 +75,6 @@ export class DifferencesAreaComponent implements OnInit {
         if (nbPlayerDifference === undefined || nbOpponentDifference === undefined) {
             return '';
         }
-        return (nbPlayerDifference + nbOpponentDifference).toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
+        return (nbPlayerDifference + nbOpponentDifference).toString();
     }
 }

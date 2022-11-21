@@ -18,12 +18,12 @@ export const TEST_BMP_DATA = [
 
 export const EQUIVALENT_DATA = [
     [
-        { a: 255, r: 1, g: 2, b: 3 },
-        { a: 255, r: 1, g: 2, b: 3 },
+        { isVisited: false, a: 255, r: 1, g: 2, b: 3 },
+        { isVisited: false, a: 255, r: 1, g: 2, b: 3 },
     ],
     [
-        { a: 255, r: 1, g: 2, b: 3 },
-        { a: 255, r: 1, g: 2, b: 3 },
+        { isVisited: false, a: 255, r: 1, g: 2, b: 3 },
+        { isVisited: false, a: 255, r: 1, g: 2, b: 3 },
     ],
 ];
 

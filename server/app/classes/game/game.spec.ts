@@ -78,8 +78,8 @@ describe('Game', () => {
         game.setTimer();
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(2000);
-        expect(game.calculateTime()).to.equal(3);
-        clock.tick(3000);
+        expect(game.calculateTime()).to.equal(58);
+        clock.tick(58000);
         expect(game.calculateTime()).to.equal(0);
         expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
     });

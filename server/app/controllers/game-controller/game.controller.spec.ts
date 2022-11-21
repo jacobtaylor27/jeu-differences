@@ -10,22 +10,26 @@ import { createStubInstance, SinonStubbedInstance, stub } from 'sinon';
 import { Container } from 'typedi';
 import * as supertest from 'supertest';
 import { GameController } from './game.controller';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
 
 describe('GameController', () => {
     let gameController: GameController;
     let gameManager: SinonStubbedInstance<GameManagerService>;
     let gameInfo: SinonStubbedInstance<GameInfoService>;
     let gameValidation: SinonStubbedInstance<GameValidation>;
+    let gameTimeConstantsService: SinonStubbedInstance<GameTimeConstantService>;
     let expressApp: Express.Application;
 
     beforeEach(async () => {
         gameController = Container.get(GameController);
         gameInfo = createStubInstance(GameInfoService);
         gameValidation = createStubInstance(GameValidation);
+        gameTimeConstantsService = createStubInstance(GameTimeConstantService);
         const app = Container.get(Application);
         Object.defineProperty(app['gameController'], 'gameManager', { value: gameManager });
         Object.defineProperty(app['gameController'], 'gameInfo', { value: gameInfo });
         Object.defineProperty(app['gameController'], 'gameValidation', { value: gameValidation });
+        Object.defineProperty(app['gameController'], 'gameTimeConstantService', { value: gameTimeConstantsService });
         expressApp = app.app;
     });
 
@@ -163,6 +167,33 @@ describe('GameController', () => {
     it('should send bad request if there is an error while deleting all the games', async () => {
         gameInfo.deleteAllGamesInfo.rejects();
         return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should post new game time constants when valid', async () => {
+        gameTimeConstantsService.setGameTimeConstant.resolves();
+        return supertest(expressApp)
+            .patch('/api/game/constants')
+            .send({
+                gameTime: 30,
+                penaltyTime: 10,
+                successTime: 10,
+            })
+            .expect(StatusCodes.OK);
+    });
+
+    it('should not post new game time constants when invalid', async () => {
+        gameTimeConstantsService.setGameTimeConstant.rejects();
+        return supertest(expressApp).patch('/api/game/constants').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should get game time constants when valid', async () => {
+        gameTimeConstantsService.getGameTimeConstant.resolves();
+        return supertest(expressApp).get('/api/game/constants').expect(StatusCodes.OK);
+    });
+
+    it('should not get game time constants when invalid', async () => {
+        gameTimeConstantsService.getGameTimeConstant.rejects();
+        return supertest(expressApp).get('/api/game/constants').expect(StatusCodes.BAD_REQUEST);
     });
 
     it('should reset scores for a specific game when valid', async () => {

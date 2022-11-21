@@ -4,6 +4,8 @@ import { GameInfoService } from '@app/services/game-info-service/game-info.servi
 
 @Service()
 export class LimitedTimeGame {
+    gamesShuffled: Map<string, PrivateGameInformation[]> = new Map();
+
     constructor(private readonly gameInfoService: GameInfoService) {}
 
     async generateGames() {

@@ -43,10 +43,12 @@ export class GameManagerService {
     setNextGame(gameId: string) {
         const game = this.findGame(gameId);
         if (game) {
-            // need to add condition for index -> gameover
             game.nextIndex();
             const gamesToPlay = this.limitedTimeGame.getGamesToPlay(gameId);
-            if (gamesToPlay) {
+            if (gamesToPlay?.length === game.currentIndex) {
+                game.next();
+                return;
+            } else if (gamesToPlay) {
                 game.setInfo(gamesToPlay[game.currentIndex]);
             }
         }

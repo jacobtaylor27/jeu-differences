@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { GameTimeConstants } from '@common/game-time-constants';
+import { Score } from '@common/score';
 
 @Injectable({
     providedIn: 'root',

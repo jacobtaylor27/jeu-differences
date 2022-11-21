@@ -17,4 +17,8 @@ export class GameCardService {
     deleteGame(id: string): Observable<void> {
         return this.communicationService.deleteGame(id);
     }
+
+    refreshGame(id: string): Observable<void> {
+        return this.communicationService.refreshSingleGame(id);
+    }
 }

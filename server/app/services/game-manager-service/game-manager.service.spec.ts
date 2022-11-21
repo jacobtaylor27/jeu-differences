@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Game } from '@app/classes/game/game';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';

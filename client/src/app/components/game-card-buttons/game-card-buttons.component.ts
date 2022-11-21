@@ -43,4 +43,10 @@ export class GameCardButtonsComponent {
         this.gameInfoHandlerService.isMulti = true;
         this.gameCardService.openNameDialog(true);
     }
+
+    onClickRefreshGame(): void {
+        this.gameCardService.refreshGame(this.gameCard.gameInformation.id).subscribe(() => {
+            this.router.reloadPage('admin');
+        });
+    }
 }

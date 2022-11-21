@@ -87,6 +87,14 @@ describe('GameManagerService', () => {
         expect(gameManager.isGameFound('')).to.equal(false);
     });
 
+    it('should return game info', () => {
+        const expectedGame = stub(
+            new Game(GameMode.LimitedTime, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation),
+        );
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        expect(gameManager.getGameInfo('1')).to.deep.equal({ id: '1' });
+    });
+
     it('should set the next game in the array', () => {
         const expectedGame = stub(
             new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation),

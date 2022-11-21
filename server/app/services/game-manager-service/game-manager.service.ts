@@ -45,10 +45,12 @@ export class GameManagerService {
         if (game) {
             game.nextIndex();
             const gamesToPlay = this.limitedTimeGame.getGamesToPlay(gameId);
-            if (gamesToPlay?.length === game.currentIndex) {
+            if (!gamesToPlay) {
+                return;
+            } else if (gamesToPlay.length === game.currentIndex) {
                 game.next();
                 return;
-            } else if (gamesToPlay) {
+            } else {
                 game.setInfo(gamesToPlay[game.currentIndex]);
             }
         }

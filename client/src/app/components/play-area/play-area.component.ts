@@ -49,9 +49,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
         this.buttonPressed = event.key;
     }
     ngAfterViewInit(): void {
-        this.displayImage(false, this.getContextImgOriginal());
-        this.displayImage(true, this.getContextImgModified());
-        this.displayImage(false, this.getContextDifferences());
+        this.displayImages();
         this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
     }
 
@@ -71,9 +69,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
         this.communicationSocketService.on(SocketEvent.NewGameBoard, (data: PublicGameInformation) => {
             this.differencesDetectionHandlerService.playCorrectSound();
             this.gameInfoHandlerService.setGameInformation(data);
-            this.displayImage(true, this.getContextImgModified());
-            this.displayImage(false, this.getContextDifferences());
-            this.displayImage(false, this.getContextImgOriginal());
+            this.displayImages();
         });
         if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
             this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
@@ -126,6 +122,12 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
 
             ctx.putImageData(image, 0, 0);
         });
+    }
+
+    private displayImages() {
+        this.displayImage(true, this.getContextImgModified());
+        this.displayImage(false, this.getContextDifferences());
+        this.displayImage(false, this.getContextImgOriginal());
     }
 
     private isMouseDisabled() {

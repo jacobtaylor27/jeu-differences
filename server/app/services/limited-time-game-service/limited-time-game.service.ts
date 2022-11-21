@@ -8,6 +8,10 @@ export class LimitedTimeGame {
 
     constructor(private readonly gameInfoService: GameInfoService) {}
 
+    getGamesToPlay(gameId: string) {
+        return this.gamesShuffled.get(gameId);
+    }
+
     async generateGames() {
         const allGames = await this.gameInfoService.getAllGameInfos();
         return this.shuffle(allGames);

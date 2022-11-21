@@ -25,4 +25,9 @@ export class AdminCommandsComponent {
         this.adminService.deleteAllGames();
         this.router.reloadPage('admin');
     }
+
+    onClickRefreshGames(): void {
+        this.adminService.refreshAllGames();
+        this.router.reloadPage('admin');
+    }
 }

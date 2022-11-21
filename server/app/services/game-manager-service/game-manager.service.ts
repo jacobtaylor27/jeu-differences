@@ -27,7 +27,7 @@ export class GameManagerService {
             const gamesRandomized = await this.limitedTimeGame.generateGames();
             gameCard = gamesRandomized[0];
             game = new Game(mode, playerInfo, gameCard);
-            game.setGamesToPlay(gamesRandomized);
+            this.limitedTimeGame.gamesShuffled.set(game.identifier, gamesRandomized);
         } else {
             gameCard = await this.gameInfo.getGameInfoById(gameCardId);
             game = new Game(mode, playerInfo, gameCard);

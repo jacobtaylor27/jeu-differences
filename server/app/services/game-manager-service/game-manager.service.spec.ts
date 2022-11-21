@@ -19,6 +19,7 @@ import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
 import { Server } from 'socket.io';
 import { Container } from 'typedi';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 describe('GameManagerService', () => {
     let clock: sinon.SinonFakeTimers;
@@ -42,8 +43,9 @@ describe('GameManagerService', () => {
         });
         const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
+        const limitedTimeService = new LimitedTimeGame(gameInfo);
         gameInfoSpyObj = stub(gameInfo);
-        gameManager = new GameManagerService(gameInfo, differenceService);
+        gameManager = new GameManagerService(gameInfo, differenceService, limitedTimeService);
     });
 
     afterEach(() => {
@@ -51,7 +53,7 @@ describe('GameManagerService', () => {
         restore();
     });
 
-    it('should create a game', async () => {
+    it('should create a game mode Classic', async () => {
         expect(await gameManager.createGame({ player: { name: 'test', id: '' }, isMulti: false }, GameMode.Classic, '')).to.equal(
             Array.from(gameManager['games'].values())[0].identifier,
         );

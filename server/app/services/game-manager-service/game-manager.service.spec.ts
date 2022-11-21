@@ -31,6 +31,7 @@ describe('GameManagerService', () => {
     let gameInfoSpyObj: SinonSpiedInstance<GameInfoService>;
     let bmpEncoderService: BmpEncoderService;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
+    let limitedTimeService: LimitedTimeGame;
 
     beforeEach(() => {
         clock = useFakeTimers();
@@ -44,7 +45,7 @@ describe('GameManagerService', () => {
         });
         const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
-        const limitedTimeService = new LimitedTimeGame(gameInfo);
+        limitedTimeService = new LimitedTimeGame(gameInfo);
         gameInfoSpyObj = stub(gameInfo);
         gameManager = new GameManagerService(gameInfo, differenceService, limitedTimeService);
     });
@@ -59,6 +60,17 @@ describe('GameManagerService', () => {
             Array.from(gameManager['games'].values())[0].identifier,
         );
         expect(gameInfoSpyObj.getGameInfoById.called).to.equal(true);
+        expect(gameManager['games'].size).not.to.equal(0);
+    });
+
+    it('should create a game mode Limited', async () => {
+        const spyLimitedTime = stub(limitedTimeService, 'generateGames')
+            .resolves()
+            .returns({} as Promise<PrivateGameInformation[]>);
+        expect(await gameManager.createGame({ player: { name: 'test', id: '' }, isMulti: false }, GameMode.LimitedTime, '')).to.equal(
+            Array.from(gameManager['games'].values())[0].identifier,
+        );
+        expect(spyLimitedTime.called).to.equal(true);
         expect(gameManager['games'].size).not.to.equal(0);
     });
 

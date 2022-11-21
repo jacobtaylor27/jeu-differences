@@ -97,6 +97,18 @@ describe('Game', () => {
         expect(game['info'].id).to.equal('1');
     });
 
+    it('should go to the next game', () => {
+        game['currentIndex'] = 0;
+        const gamesRandomized: PrivateGameInformation[] = [{ id: '1' } as PrivateGameInformation, { id: '2' } as PrivateGameInformation];
+        game.setGamesToPlay(gamesRandomized);
+        game.nextGame();
+        expect(game['info'].id).to.equal('2');
+        expect(game['currentIndex']).to.equal(1);
+        game.nextGame();
+        expect(game['currentIndex']).to.equal(2);
+        expect(game['info'].id).to.equal('2');
+    });
+
     it('should set timer', () => {
         game.setTimer();
         expect(game['initialTime'].getDate()).to.equal(new Date().getDate());

@@ -246,6 +246,16 @@ describe('GameManagerService', () => {
         expect(gameManager.hasSameName('room', 'test')).to.equal(false);
     });
 
+    it('should return the game mode', () => {
+        const stubFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame');
+        stubFindGame.callsFake(() => undefined);
+        expect(gameManager.findGameMode('room')).to.equal(undefined);
+
+        const expectedGame = stub(new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, {} as PrivateGameInformation));
+        stubFindGame.callsFake(() => expectedGame);
+        expect(gameManager.findGameMode('')).to.equal(GameMode.Classic);
+    });
+
     it('should check if the game is in multiplayer', () => {
         const game = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);

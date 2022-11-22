@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
@@ -29,7 +30,7 @@ describe('Game', () => {
     const expectedPlayer = { player: { name: 'test player', id: 'test' }, isMulti: false };
     const expectedMode = GameMode.Classic;
     beforeEach(() => {
-        game = new Game(expectedMode, expectedPlayer, expectedGameInfo);
+        game = new Game(expectedPlayer, { info: expectedGameInfo, mode: expectedMode });
         clock = useFakeTimers();
     });
 
@@ -39,7 +40,7 @@ describe('Game', () => {
 
     it('should create a game with specific mode, players and game information', () => {
         const expectedGameState = new InitTimerState();
-        const newGame = new Game(expectedMode, expectedPlayer, expectedGameInfo);
+        const newGame = new Game(expectedPlayer, { info: expectedGameInfo, mode: expectedMode });
         expect(newGame.information).to.deep.equal(expectedGameInfo);
         expect(newGame['players'].has(expectedPlayer.player.id)).to.equal(true);
         expect(newGame['isMulti']).to.deep.equal(expectedPlayer.isMulti);

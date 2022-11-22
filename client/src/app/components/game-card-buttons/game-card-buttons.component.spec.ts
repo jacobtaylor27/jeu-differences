@@ -63,7 +63,8 @@ describe('GameCardButtonsComponent', () => {
 
     it('onClickPlayGame should call the open name dialog method', () => {
         component.onClickPlayGame();
-        expect(spyGameCardService.openNameDialog).toHaveBeenCalled();
+        expect(spyGameInfoHandlerService.setGameInformation).toHaveBeenCalled();
+        expect(spyMatDialog.open).toHaveBeenCalled();
     });
 
     it('should return is multi attribute', () => {

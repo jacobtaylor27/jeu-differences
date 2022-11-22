@@ -59,4 +59,10 @@ describe('GameCardButtonsComponent', () => {
         component.onClickCreateJoinGame();
         expect(spyGameCardService.openNameDialog).toHaveBeenCalled();
     });
+
+    it('should delete game on click', () => {
+        component.onClickDeleteGame(gameCard1);
+        expect(spyGameCardService.deleteGame).toHaveBeenCalled();
+    });
+
 });

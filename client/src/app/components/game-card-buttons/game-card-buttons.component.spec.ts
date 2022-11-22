@@ -73,7 +73,8 @@ describe('GameCardButtonsComponent', () => {
 
     it('should call open name dialog when clicking create or join', () => {
         component.onClickCreateJoinGame();
-        expect(spyGameCardService.openNameDialog).toHaveBeenCalled();
+        expect(spyGameInfoHandlerService.setGameInformation).toHaveBeenCalled();
+        expect(spyMatDialog.open).toHaveBeenCalled();
     });
 
     it('should delete game on click', () => {

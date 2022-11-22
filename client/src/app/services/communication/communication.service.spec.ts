@@ -8,6 +8,7 @@ import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { GameTimeConstants } from '@common/game-time-constants';
 import { Message } from '@common/message';
+import { Score } from '@common/score';
 
 describe('CommunicationService', () => {
     let httpMock: HttpTestingController;

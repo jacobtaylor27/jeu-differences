@@ -14,7 +14,7 @@ describe('GameCardService', () => {
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
     beforeEach(() => {
-        spyCommunicationService = jasmine.createSpyObj<CommunicationService>('CommunicationService', ['deleteGame']);
+        spyCommunicationService = jasmine.createSpyObj<CommunicationService>('CommunicationService', ['deleteGame', 'refreshSingleGame']);
         spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, NoopAnimationsModule, HttpClientModule],

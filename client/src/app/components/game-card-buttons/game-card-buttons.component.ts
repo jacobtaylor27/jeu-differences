@@ -52,4 +52,8 @@ export class GameCardButtonsComponent {
             this.router.reloadPage('admin');
         });
     }
+
+    private openNameDialog(isMulti: boolean = false): void {
+        this.matDialog.open(UserNameInputComponent, { data: { isMulti } });
+    }
 }

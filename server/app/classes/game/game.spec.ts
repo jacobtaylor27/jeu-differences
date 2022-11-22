@@ -82,11 +82,10 @@ describe('Game', () => {
     // Test needs to be changed with admins command
     it('should calculate time in mode Limited', () => {
         game['mode'] = GameMode.LimitedTime;
-        game.setTimer();
-        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
-        clock.tick(2000);
-        expect(game.calculateTime()).to.equal(58);
-        clock.tick(58000);
+        const spyCalculateLimitedTimer = stub(game, 'calculateLimitedGameTimer').callsFake(() => 1);
+        expect(game.calculateTime()).to.equal(1);
+        expect(spyCalculateLimitedTimer.called).to.equal(true);
+        spyCalculateLimitedTimer.callsFake(() => 0);
         expect(game.calculateTime()).to.equal(0);
         expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
     });

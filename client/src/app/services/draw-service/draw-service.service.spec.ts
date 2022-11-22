@@ -180,4 +180,11 @@ describe('DrawServiceService', () => {
         expect(ctx.lineCap).toEqual(service.pencil.cap);
         expect(ctx.strokeStyle).toEqual(service.pencil.color);
     });
+
+    it('startDrawing should handle mouse event', () => {
+        // Mock l'implémentation de canvasState service pour obtenir un return undefined
+        service.startDrawing({} as MouseEvent);
+
+        expect(service.isClick).toBeTruthy();
+    });
 });

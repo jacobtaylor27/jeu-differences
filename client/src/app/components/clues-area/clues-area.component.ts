@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, Output } from '@angular/core';
-
+import { CluesService } from '@app/services/clues-service/clues.service';
 @Component({
     selector: 'app-clues-area',
     templateUrl: './clues-area.component.html',
@@ -11,6 +11,8 @@ export class CluesAreaComponent {
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
     private numberOfClues: number = 3;
+
+    constructor(private readonly clueService: CluesService) {}
 
     @HostListener('window: keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {

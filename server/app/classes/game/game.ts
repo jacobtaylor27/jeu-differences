@@ -85,6 +85,7 @@ export class Game {
             this.timerConstant.gameTime -
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
             Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000) +
+            this.timerConstant.successTime * this.getNbDifferencesTotalFound.size -
         return timer;
     }
 

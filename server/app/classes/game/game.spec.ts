@@ -48,6 +48,12 @@ describe('Game', () => {
         expect(newGame['context'].gameState()).to.equal(expectedGameState.status());
     });
 
+    it('should initialize the timer game constant', () => {
+        const expectedConstant = { gameTime: 60, successTime: 5, penaltyTime: 0 };
+        const newGame = new Game(expectedPlayer, { info: expectedGameInfo, mode: GameMode.LimitedTime, timerConstant: expectedConstant });
+        expect(newGame['timerConstant']).to.deep.equal(expectedConstant);
+    });
+
     it('should get the id of the game', () => {
         expect(game.identifier).to.equal(game['id']);
     });

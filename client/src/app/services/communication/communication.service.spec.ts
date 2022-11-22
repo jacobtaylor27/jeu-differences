@@ -284,4 +284,15 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(`${baseUrl}/game/constants`);
         expect(req.request.method).toBe('PATCH');
     });
+    it('should update the scores of a single game', () => {
+        service.updateGameScores('1', [], []).subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/scores/1`);
+        expect(req.request.method).toBe('PATCH');
+    });
 });

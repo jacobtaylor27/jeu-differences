@@ -58,4 +58,10 @@ describe('AdminCommandsComponent', () => {
         expect(spyAdminService.deleteAllGames).toHaveBeenCalled();
         expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
     });
+
+    it('onClickRefreshGames should call refreshAllGames from admin service', () => {
+        component.onClickRefreshGames();
+        expect(spyAdminService.refreshAllGames).toHaveBeenCalled();
+        expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
+    });
 });

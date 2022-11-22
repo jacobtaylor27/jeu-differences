@@ -355,4 +355,9 @@ describe('Game', () => {
         game['getNbDifferencesTotalFound'].add(expectedDifferences[0]);
         expect(game.getAllDifferencesNotFound()).to.deep.equal([expectedDifferences[1]]);
     });
-});
+
+    it('should calculate the time for limited timer game mode', () => {
+        game['initialTime'] = new Date(0);
+        game['timerConstant'] = { gameTime: 60, successTime: 0, penaltyTime: 0 };
+        expect(game.calculateLimitedGameTimer()).to.equal(60);
+    });

@@ -345,7 +345,10 @@ describe('GameManagerService', () => {
     });
 
     it('should find a player', () => {
-        const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
+        const expectedGame = new Game(
+            { player: { id: '0', name: 'test' } as User, isMulti: false },
+            { info: {} as PrivateGameInformation, mode: GameMode.Classic },
+        );
         const spyFindPlayer = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         expect(gameManager.findPlayer('', '')).to.equal(undefined);
         spyFindPlayer.callsFake(() => expectedGame);

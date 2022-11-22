@@ -15,7 +15,7 @@ describe('GameCardButtonsComponent', () => {
     let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(async () => {
-        spyGameCardService = jasmine.createSpyObj('GameCardService', ['openNameDialog', 'deleteGame', 'resetHighScores']);
+        spyGameCardService = jasmine.createSpyObj('GameCardService', ['openNameDialog', 'deleteGame', 'refreshGame']);
         spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule, RouterTestingModule],

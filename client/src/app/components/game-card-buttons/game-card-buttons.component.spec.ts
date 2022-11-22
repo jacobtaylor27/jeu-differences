@@ -5,6 +5,7 @@ import { gameCard1 } from '@app/constants/game-card-constant.spec';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { GameCardService } from '@app/services/game-card/game-card.service';
 import { RouterService } from '@app/services/router-service/router.service';
+import { of } from 'rxjs';
 import { GameCardButtonsComponent } from './game-card-buttons.component';
 
 describe('GameCardButtonsComponent', () => {

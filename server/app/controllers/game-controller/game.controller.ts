@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import * as LZString from 'lz-string';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
 
 @Service()
 export class GameController {
@@ -19,12 +20,66 @@ export class GameController {
         private gameValidation: GameValidation,
         private bmpSubtractor: BmpSubtractorService,
         private readonly socketManager: SocketManagerService,
+        private readonly gameTimeConstantService: GameTimeConstantService,
     ) {
         this.configureRouter();
     }
 
     private configureRouter(): void {
         this.router = Router();
+
+        this.router.patch('/scores/:id/reset', (req: Request, res: Response) => {
+            const id = req.params.id;
+            this.gameInfo
+                .resetHighScores(id)
+                .then(() => {
+                    res.sendStatus(StatusCodes.OK);
+                })
+                .catch(() => {
+                    res.sendStatus(StatusCodes.NOT_FOUND);
+                });
+        });
+
+        this.router.patch('/scores/reset', (req: Request, res: Response) => {
+            this.gameInfo
+                .resetAllHighScores()
+                .then(() => {
+                    res.sendStatus(StatusCodes.OK);
+                })
+                .catch(() => {
+                    res.sendStatus(StatusCodes.BAD_REQUEST);
+                });
+        });
+
+        this.router.get('/scores/:id', (req: Request, res: Response) => {
+            const id = req.params.id;
+            this.gameInfo
+                .getHighScores(id)
+                .then((scores) => {
+                    res.status(StatusCodes.OK).send(scores);
+                })
+                .catch(() => {
+                    res.sendStatus(StatusCodes.NOT_FOUND);
+                });
+        });
+
+        this.router.patch('/scores/:id', (req: Request, res: Response) => {
+            const id = req.params.id;
+            const scoresSolo = req.body.scoresSolo;
+            const scoresMulti = req.body.scoresMulti;
+            if (id && scoresSolo && scoresMulti) {
+                this.gameInfo
+                    .updateHighScores(id, scoresSolo, scoresMulti)
+                    .then(() => {
+                        res.sendStatus(StatusCodes.OK);
+                    })
+                    .catch(() => {
+                        res.sendStatus(StatusCodes.BAD_REQUEST);
+                    });
+            } else {
+                res.sendStatus(StatusCodes.BAD_REQUEST);
+            }
+        });
 
         this.router.delete('/cards/:id', (req: Request, res: Response) => {
             const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
@@ -140,6 +195,28 @@ export class GameController {
                 })
                 .catch(() => {
                     res.status(StatusCodes.NOT_ACCEPTABLE).send();
+                });
+        });
+
+        this.router.get('/constants', (req: Request, res: Response) => {
+            this.gameTimeConstantService
+                .getGameTimeConstant()
+                .then((gameTimeConstants) => {
+                    res.status(StatusCodes.OK).send(gameTimeConstants);
+                })
+                .catch(() => {
+                    res.status(StatusCodes.BAD_REQUEST).send();
+                });
+        });
+
+        this.router.patch('/constants', (req: Request, res: Response) => {
+            this.gameTimeConstantService
+                .setGameTimeConstant(req.body)
+                .then(() => {
+                    res.status(StatusCodes.OK).send();
+                })
+                .catch(() => {
+                    res.status(StatusCodes.BAD_REQUEST).send();
                 });
         });
     }

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Game } from '@app/classes/game/game';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
@@ -12,6 +13,7 @@ import { Coordinate } from '@common/coordinate';
 import { User } from '@common/user';
 
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
@@ -19,7 +21,6 @@ import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
 import { Server } from 'socket.io';
 import { Container } from 'typedi';
-import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 describe('GameManagerService', () => {
     let clock: sinon.SinonFakeTimers;

@@ -1,11 +1,15 @@
 <div [ngClass]="theme">
-    <div *ngIf="this.isWin">
+    <div *ngIf="!this.isClassic">
+        <h1 mat-dialog-title>Partie terminée !</h1>
+        <div mat-dialog-content>Félicitations, tu as trouvé <b>{{nbPoints}}</b> différence(s) ! </div>
+    </div>
+    <div *ngIf="this.isWin && this.isClassic">
         <h1 mat-dialog-title>Partie terminée !</h1>
         <div mat-dialog-content>Félicitations, tu as <b>gagné</b>. </div>
         <div *ngIf="isClassic" mat-dialog-content>Tu es le vainqueur ! </div>
 
     </div>
-    <div *ngIf="!this.isWin">
+    <div *ngIf="!this.isWin && this.isClassic">
         <h1 mat-dialog-title>Partie terminée !</h1>
         <div mat-dialog-content>Bonne partie, mais tu as <b>perdu </b>.</div>
         <div *ngIf="isClassic" mat-dialog-content>Le vainqueur est :  {{winner}}.</div>

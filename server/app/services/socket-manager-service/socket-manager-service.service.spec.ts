@@ -1034,4 +1034,25 @@ describe('SocketManager', () => {
         service.refreshGames();
         expect(spyEmit.called).to.equal(true);
     });
+
+    it('should fetch all not difference found', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.FetchDifferences) callback();
+            },
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.FetchDifferences);
+            },
+        };
+
+        service['sio'] = {
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+        } as io.Server;
+        stub(service['gameManager'], 'getNbDifferenceNotFound').callsFake(() => []);
+        service.handleSockets();
+    });
 });

@@ -27,3 +27,8 @@ export const GAME_TIME_CONSTANTS_PARAMS = {
     successTimeMin: SUCCESS_TIME_MIN,
     successTimeMax: SUCCESS_TIME_MAX,
 };
+
+export enum FlashTimer {
+    CheatMode = 125,
+    Classic = 500,
+}

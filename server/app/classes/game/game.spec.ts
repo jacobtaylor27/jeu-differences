@@ -2,10 +2,10 @@ import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
-import { GameMode } from '@common/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { Coordinate } from '@common/coordinate';
+import { GameMode } from '@common/game-mode';
 import { Score } from '@common/score';
 import { User } from '@common/user';
 import { expect } from 'chai';
@@ -322,5 +322,19 @@ describe('Game', () => {
 
         game.information.differences.length = 5;
         expect(game.getNbDifferencesThreshold()).to.equal(3);
+    });
+
+    it('should find all difference not found', () => {
+        const expectedDifferences = [
+            [
+                { x: 0, y: 0 },
+                { x: 1, y: 1 },
+            ],
+            [{ x: 3, y: 2 }],
+        ];
+        game['info'].differences = expectedDifferences;
+        expect(game.getAllDifferencesNotFound()).to.deep.equal(expectedDifferences);
+        game['getNbDifferencesTotalFound'].add(expectedDifferences[0]);
+        expect(game.getAllDifferencesNotFound()).to.deep.equal([expectedDifferences[1]]);
     });
 });

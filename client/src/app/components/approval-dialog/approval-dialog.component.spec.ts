@@ -73,7 +73,7 @@ describe('ApprovalDialogComponent', () => {
         expect(gameInformationHandlerService.setPlayerName).toHaveBeenCalled();
     });
 
-    it('shoud open snack bar when player left', () => {
+    it('should open snack bar when player left', () => {
         gameInformationHandlerService.getPlayer.and.callFake(() => {
             return { name: 'test', nbDifferences: 0 };
         });

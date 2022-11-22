@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';

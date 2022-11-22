@@ -40,4 +40,9 @@ describe('GameCardService', () => {
         service.deleteGame(gameCard1.gameInformation.id);
         expect(spyCommunicationService.deleteGame).toHaveBeenCalled();
     });
+
+    it('refreshGame should call refreshSingleGame from gameCardHandlerService', () => {
+        service.refreshGame(gameCard1.gameInformation.id);
+        expect(spyCommunicationService.refreshSingleGame).toHaveBeenCalled();
+    });
 });

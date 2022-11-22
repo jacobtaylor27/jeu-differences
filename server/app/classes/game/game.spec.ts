@@ -361,3 +361,10 @@ describe('Game', () => {
         game['timerConstant'] = { gameTime: 60, successTime: 0, penaltyTime: 0 };
         expect(game.calculateLimitedGameTimer()).to.equal(60);
     });
+
+    it('should add time if difference is found for limited timer game mode', () => {
+        game['initialTime'] = new Date(0);
+        game['timerConstant'] = { gameTime: 60, successTime: 5, penaltyTime: 0 };
+        game['getNbDifferencesTotalFound'] = { size: 2 } as Set<Coordinate[]>;
+        expect(game.calculateLimitedGameTimer()).to.equal(70);
+    });

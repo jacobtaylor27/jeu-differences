@@ -27,6 +27,7 @@ describe('AdminService', () => {
         });
         service = TestBed.inject(AdminService);
         spyCommunicationService.deleteAllGameCards.and.returnValue(of());
+        spyCommunicationService.refreshAllGames.and.returnValue(of());
     });
 
     it('should be created', () => {

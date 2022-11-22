@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Game } from '@app/classes/game/game';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
@@ -12,6 +13,8 @@ import { Coordinate } from '@common/coordinate';
 import { User } from '@common/user';
 
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
@@ -19,7 +22,6 @@ import * as sinon from 'sinon';
 import { restore, SinonSpiedInstance, stub, useFakeTimers } from 'sinon';
 import { Server } from 'socket.io';
 import { Container } from 'typedi';
-import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 describe('GameManagerService', () => {
     let clock: sinon.SinonFakeTimers;
@@ -44,8 +46,9 @@ describe('GameManagerService', () => {
         const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
         const limitedTimeService = new LimitedTimeGame(gameInfo);
+        const gameTimerConstant = new GameTimeConstantService();
         gameInfoSpyObj = stub(gameInfo);
-        gameManager = new GameManagerService(gameInfo, differenceService, limitedTimeService);
+        gameManager = new GameManagerService(gameInfo, differenceService, limitedTimeService, gameTimerConstant);
     });
 
     afterEach(() => {
@@ -76,7 +79,7 @@ describe('GameManagerService', () => {
 
     it('should set the next game in the array', () => {
         const expectedGame = stub(
-            new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation),
+            new Game({ player: { name: 'test', id: '' }, isMulti: false }, { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic }),
         );
         const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         gameManager.setNextGame('1');
@@ -87,7 +90,7 @@ describe('GameManagerService', () => {
         expect(gameManager.setTimer('1')).to.equal(null);
         const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         const expectedGame = stub(
-            new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation),
+            new Game({ player: { name: 'test', id: '' }, isMulti: false }, { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic }),
         );
         gameManager.setTimer('1');
         expect(expectedGame.status).to.equal(GameStatus.InitTimer);
@@ -96,7 +99,10 @@ describe('GameManagerService', () => {
 
     it('should get the timer', () => {
         expect(gameManager.getTime('')).to.equal(null);
-        const expectedGame = new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation);
+        const expectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
         expectedGame.setTimer();
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);
@@ -109,7 +115,9 @@ describe('GameManagerService', () => {
 
     it('should check if the game is over', () => {
         const gameFoundSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
-        const expectedGame = stub(new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, {} as PrivateGameInformation));
+        const expectedGame = stub(
+            new Game({ player: { name: 'test', id: '' }, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic }),
+        );
         expectedGame.isGameOver.callsFake(() => false);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         expect(gameManager.isGameOver('')).to.equal(null);
@@ -162,7 +170,7 @@ describe('GameManagerService', () => {
     });
 
     it('should check if the game is full', () => {
-        const game = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         expect(gameManager.isGameAlreadyFull('')).to.equal(true);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
         const spyIsGameFull = stub(game, 'isGameFull').callsFake(() => false);
@@ -172,7 +180,7 @@ describe('GameManagerService', () => {
     });
 
     it('should add player', () => {
-        const game = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const spyAddPlayer = stub(game, 'addPlayer');
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         gameManager.addPlayer({ name: '', id: '' }, '');
@@ -187,7 +195,7 @@ describe('GameManagerService', () => {
         stubFindGame.callsFake(() => undefined);
         expect(gameManager.hasSameName('room', 'name')).to.equal(false);
 
-        const game = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         stubFindGame.callsFake(() => game);
         expect(gameManager.hasSameName('room', 'name')).to.equal(false);
 
@@ -198,7 +206,7 @@ describe('GameManagerService', () => {
     });
 
     it('should check if the game is in multiplayer', () => {
-        const game = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         expect(gameManager.isGameMultiplayer('')).to.equal(undefined);
         spyFindGame.callsFake(() => game);
@@ -208,7 +216,7 @@ describe('GameManagerService', () => {
     });
 
     it('should leave game', () => {
-        const game = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyLeaveGame = stub(game, 'leaveGame').callsFake(() => {});
@@ -220,7 +228,7 @@ describe('GameManagerService', () => {
     });
 
     it('should delete a game if all player leave', () => {
-        const game = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
         const spyDeleteGame = stub(gameManager.games, 'delete');
         const spyhasNoPlayer = stub(game, 'hasNoPlayer').callsFake(() => false);
@@ -247,7 +255,7 @@ describe('GameManagerService', () => {
 
     it('should send timer to a player', async () => {
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
-        const expectedGame = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const expectedTimer = {} as NodeJS.Timer;
         // eslint-disable-next-line no-unused-vars -- callback
         const spyInterval = stub(global, 'setInterval').callsFake((callback: (args: void) => void, ms?: number | undefined) => {
@@ -272,7 +280,7 @@ describe('GameManagerService', () => {
         expect(expectedGame.timerId).to.equal(expectedTimer);
     });
     it('should send the timer if the game is not found and the game mode is not Limited Time', () => {
-        const expectedGame = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.LimitedTime });
         stub(Object.getPrototypeOf(gameManager), 'isGameOver').callsFake(() => false);
         stub(Object.getPrototypeOf(gameManager), 'getTime').callsFake(() => 0);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
@@ -297,7 +305,7 @@ describe('GameManagerService', () => {
         clock.tick(1001);
     });
     it('should send that the game is over when 0 sec is left in Limited time gamemode', async () => {
-        const expectedGame = new Game(GameMode.LimitedTime, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.LimitedTime });
         stub(Object.getPrototypeOf(gameManager), 'isGameOver').callsFake(() => true);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         const spyLeaveGame = stub(Object.getPrototypeOf(gameManager), 'leaveGame').callsFake(() => expectedGame);
@@ -326,7 +334,7 @@ describe('GameManagerService', () => {
 
     it('should clear a timer of a game', () => {
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
-        const expectedGame = new Game(GameMode.Classic, { player: {} as User, isMulti: false }, {} as PrivateGameInformation);
+        const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyClearInterval = stub(global, 'clearInterval').callsFake(() => {});
         gameManager.deleteTimer('');
@@ -337,7 +345,7 @@ describe('GameManagerService', () => {
     });
 
     it('should find a player', () => {
-        const expectedGame = new Game(GameMode.Classic, { player: { name: 'test', id: '0' } as User, isMulti: false }, {} as PrivateGameInformation);
+        const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const spyFindPlayer = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         expect(gameManager.findPlayer('', '')).to.equal(undefined);
         spyFindPlayer.callsFake(() => expectedGame);
@@ -345,7 +353,7 @@ describe('GameManagerService', () => {
         expect(gameManager.findPlayer('', '0')).to.equal('test');
     });
     it('should get all nb of difference not found', () => {
-        const expectedGame = new Game(GameMode.Classic, { player: { name: 'test', id: '0' } as User, isMulti: false }, {} as PrivateGameInformation);
+        const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const expectedDifferenceNotFound = [[{ x: 0, y: 0 }]];
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         stub(expectedGame, 'getAllDifferencesNotFound').callsFake(() => expectedDifferenceNotFound);

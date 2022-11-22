@@ -48,4 +48,9 @@ describe('AdminService', () => {
         service.openSettings();
         expect(spyMatDialog.open).toHaveBeenCalled();
     });
+
+    it('should call refreshAllGames from communication service', () => {
+        service.refreshAllGames();
+        expect(spyCommunicationService.refreshAllGames).toHaveBeenCalled();
+    });
 });

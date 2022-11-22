@@ -2,8 +2,10 @@
     <div class="gamer-info" *ngFor="let player of this.players">
         <p class="first-player-name player-name">Nom du joueur : {{ player.name }}</p>
         <section class="differences">
-            <p>{{ player.nbDifference }}</p>
-            <mat-icon class="magnifying-glass">search</mat-icon>
+            <p>
+                {{ player.nbDifference }}
+                <mat-icon >search</mat-icon>
+            </p>
         </section>
     </div>
 </section>

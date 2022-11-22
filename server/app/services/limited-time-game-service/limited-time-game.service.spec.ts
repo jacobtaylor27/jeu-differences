@@ -23,6 +23,12 @@ describe('LimitedTimeGameService', () => {
         expect(test.called).to.equal(true);
     });
 
+    it('should return the games to play', () => {
+        limitedTimeGameService.gamesShuffled = new Map();
+        limitedTimeGameService.gamesShuffled.set('1', []);
+        expect(limitedTimeGameService.getGamesToPlay('1')).to.deep.equal([]);
+    });
+
     it('should shuffle an array', () => {
         const arrayStart = [{ id: '1' }, { id: '2' }, { id: '3' }] as PrivateGameInformation[];
         const arrayEnd = limitedTimeGameService['shuffle'](arrayStart);

@@ -6,6 +6,7 @@ import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { SIZE } from '@app/constants/canvas';
+import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
@@ -27,6 +28,7 @@ describe('PlayAreaComponent', () => {
     let spyMouseHandlerService: jasmine.SpyObj<MouseHandlerService>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     let differenceService: jasmine.SpyObj<DifferencesDetectionHandlerService>;
+    let cheatModeService: jasmine.SpyObj<CheatModeService>;
     let socketHelper: SocketTestHelper;
     let socketServiceMock: SocketClientServiceMock;
 
@@ -41,6 +43,7 @@ describe('PlayAreaComponent', () => {
             'setNumberDifferencesFound',
             'differenceDetected',
         ]);
+        cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
         gameInformationHandlerServiceSpy = jasmine.createSpyObj('GameInformationHandlerService', [
             'getGameMode',
             'getGameName',
@@ -50,6 +53,7 @@ describe('PlayAreaComponent', () => {
             'getModifiedBmpId',
             'getGameInformation',
             'setGameInformation',
+            'getNbTotalDifferences',
         ]);
 
         await TestBed.configureTestingModule({
@@ -60,6 +64,10 @@ describe('PlayAreaComponent', () => {
                 {
                     provide: GameInformationHandlerService,
                     useValue: gameInformationHandlerServiceSpy,
+                },
+                {
+                    provide: CheatModeService,
+                    useValue: cheatModeService,
                 },
                 {
                     provide: MouseHandlerService,
@@ -76,9 +84,7 @@ describe('PlayAreaComponent', () => {
                 { provide: CommunicationSocketService, usValue: socketServiceMock },
             ],
         }).compileComponents();
-    });
 
-    beforeEach(() => {
         fixture = TestBed.createComponent(PlayAreaComponent);
         component = fixture.componentInstance;
         gameInformationHandlerServiceSpy.gameInformation = {
@@ -252,5 +258,34 @@ describe('PlayAreaComponent', () => {
 
         const expected = component.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         expect(component.getContextModified()).toEqual(expected);
+    });
+
+    it('should detect keyboard event and not pass if the target is an input', async () => {
+        await component.keyBoardDetected({ target: { tagName: 'INPUT' } as unknown as HTMLElement } as unknown as KeyboardEvent);
+        expect(cheatModeService.manageCheatMode).not.toHaveBeenCalled();
+    });
+
+    it('should detect keyboard event and not pass if the the key is not t', async () => {
+        await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 'a' } as unknown as KeyboardEvent);
+        expect(cheatModeService.manageCheatMode).not.toHaveBeenCalled();
+    });
+
+    it('should manage the cheat mode if the t is press', async () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        cheatModeService.manageCheatMode.and
+            .callFake(async () => {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                return new Promise(() => {});
+            })
+            .and.resolveTo();
+        spyOn(component, 'getContextOriginal').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextModified').and.callFake(() => {
+            return ctx;
+        });
+        await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 't' } as unknown as KeyboardEvent);
+        expect(cheatModeService.manageCheatMode).toHaveBeenCalled();
     });
 });

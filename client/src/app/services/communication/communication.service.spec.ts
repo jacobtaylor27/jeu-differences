@@ -6,6 +6,7 @@ import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
+import { GameTimeConstants } from '@common/game-time-constants';
 import { Message } from '@common/message';
 
 describe('CommunicationService', () => {
@@ -257,5 +258,29 @@ describe('CommunicationService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/game/cards/?page=1`);
         expect(req.request.method).toBe('GET');
+    });
+
+    it('should get the game time constants', () => {
+        service.getGameTimeConstants().subscribe({
+            next: (response: HttpResponse<GameTimeConstants>) => {
+                expect(response.body).toEqual({} as GameTimeConstants);
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/constants`);
+        expect(req.request.method).toBe('GET');
+    });
+
+    it('should set the game time constants', () => {
+        service.setGameTimeConstants({} as GameTimeConstants).subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/constants`);
+        expect(req.request.method).toBe('PATCH');
     });
 });

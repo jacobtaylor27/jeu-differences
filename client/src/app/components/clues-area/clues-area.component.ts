@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input } from '@angular/core';
 
 @Component({
     selector: 'app-clues-area',
@@ -6,7 +6,7 @@ import { Component, EventEmitter, HostListener, Output } from '@angular/core';
     styleUrls: ['./clues-area.component.scss'],
 })
 export class CluesAreaComponent {
-    @Output() clueCounter = new EventEmitter<number>();
+    @Input() clueCounter = new EventEmitter<number>();
 
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;

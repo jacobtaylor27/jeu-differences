@@ -86,6 +86,7 @@ export class Game {
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
             Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000) +
             this.timerConstant.successTime * this.getNbDifferencesTotalFound.size -
+            this.timerConstant.penaltyTime * 0; // TO DO : multiply by the nb of clue activate
         return timer;
     }
 

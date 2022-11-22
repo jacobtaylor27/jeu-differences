@@ -14,7 +14,7 @@ describe('AdminService', () => {
     let spyCarouselService: jasmine.SpyObj<GameCarouselService>;
 
     beforeEach(() => {
-        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards', 'refreshAllGames']);
         spyCarouselService = jasmine.createSpyObj('GameCarouselService', ['hasCards']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         TestBed.configureTestingModule({

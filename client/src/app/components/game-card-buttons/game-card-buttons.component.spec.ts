@@ -85,6 +85,7 @@ describe('GameCardButtonsComponent', () => {
 
     it('should refresh the scores on click', () => {
         component.onClickRefreshGame();
-        expect(spyGameCardService.refreshGame).toHaveBeenCalled();
+        expect(spyCommunicationService.refreshSingleGame).toHaveBeenCalled();
+        expect(spyRouterService.reloadPage).toHaveBeenCalled();
     });
 });

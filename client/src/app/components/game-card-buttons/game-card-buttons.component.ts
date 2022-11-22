@@ -38,13 +38,13 @@ export class GameCardButtonsComponent {
 
     onClickPlayGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
-        this.gameCardService.openNameDialog();
+        this.openNameDialog();
     }
 
     onClickCreateJoinGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
         this.gameInfoHandlerService.isMulti = true;
-        this.gameCardService.openNameDialog(true);
+        this.openNameDialog(true);
     }
 
     onClickRefreshGame(): void {

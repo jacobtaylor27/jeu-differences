@@ -1,5 +1,5 @@
 export enum SocketEvent {
-    RefreshGames = "refreshGames",
+    RefreshGames = 'refreshGames',
     AcceptPlayer = 'acceptPlayer',
     RejectPlayer = 'rejectPlayer',
     PlayerLeft = 'playerLeft',
@@ -28,4 +28,5 @@ export enum SocketEvent {
     GetGamesWaiting = 'getGamesWaiting',
     Message = 'message',
     EventMessage = 'eventMessage',
+    FetchDifferences = 'fetchDifferences',
 }

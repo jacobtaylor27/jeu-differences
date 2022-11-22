@@ -119,6 +119,10 @@ export class GameManagerService {
         game?.addPlayer(player);
     }
 
+    getNbDifferenceNotFound(gameId: string) {
+        return this.findGame(gameId)?.getAllDifferencesNotFound();
+    }
+
     hasSameName(roomId: string, playersName: string) {
         const game = this.findGame(roomId);
         if (game) {

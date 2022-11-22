@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'app-game-constant-field',
@@ -7,5 +7,31 @@ import { Component, Input } from '@angular/core';
 })
 export class GameConstantFieldComponent {
     @Input() value: number;
+    @Output() valueChange = new EventEmitter<number>();
     @Input() label: string;
+    @Input() min: number;
+    @Input() max: number;
+    @Input() step: number;
+
+    togglePlus(): void {
+        if (this.value < this.max) {
+            this.value += this.step;
+            this.valueChange.emit(this.value);
+        }
+    }
+
+    toggleMinus(): void {
+        if (this.value > this.min) {
+            this.value -= this.step;
+            this.valueChange.emit(this.value);
+        }
+    }
+
+    isAtMin(): boolean {
+        return this.value === this.min;
+    }
+
+    isAtMax(): boolean {
+        return this.value === this.max;
+    }
 }

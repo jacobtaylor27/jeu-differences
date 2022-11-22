@@ -48,8 +48,13 @@ export class SocketManagerService {
                 async (player: string, mode: GameMode, game: { card: string; isMulti: boolean }) =>
                     await this.createGameMulti(player, mode, game, socket),
             );
+
             socket.on(SocketEvent.Message, (message: string, roomId: string) => {
                 socket.broadcast.to(roomId).emit(SocketEvent.Message, message);
+            });
+
+            socket.on(SocketEvent.FetchDifferences, (gameId: string) => {
+                socket.emit(SocketEvent.FetchDifferences, this.gameManager.getNbDifferenceNotFound(gameId));
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {

@@ -79,6 +79,15 @@ export class Game {
         this.context.next();
     }
 
+    calculateLimitedGameTimer(): number {
+        const presentTime = new Date();
+        let timer =
+            this.timerConstant.gameTime -
+            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
+            Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000) +
+        return timer;
+    }
+
     calculateTime(): number {
         const presentTime = new Date();
         if (this.mode === GameMode.Classic) {
@@ -86,8 +95,7 @@ export class Game {
             return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
         } else {
             // TO DO : ADD ADMINS TIME
-            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            const time = 60 - Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
+            const time = this.calculateLimitedGameTimer();
             if (time === 0) {
                 this.context.end();
             }

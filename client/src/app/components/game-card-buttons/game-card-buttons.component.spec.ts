@@ -37,6 +37,8 @@ describe('GameCardButtonsComponent', () => {
         fixture = TestBed.createComponent(GameCardButtonsComponent);
         component = fixture.componentInstance;
         component.gameCard = gameCard1;
+        spyGameCardService.refreshGame.and.returnValue(of(void 0));
+        spyGameCardService.deleteGame.and.returnValue(of(void 0));
         fixture.detectChanges();
     });
 

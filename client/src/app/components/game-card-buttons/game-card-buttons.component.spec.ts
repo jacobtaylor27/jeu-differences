@@ -79,7 +79,8 @@ describe('GameCardButtonsComponent', () => {
 
     it('should delete game on click', () => {
         component.onClickDeleteGame(gameCard1);
-        expect(spyGameCardService.deleteGame).toHaveBeenCalled();
+        expect(spyCommunicationService.deleteGame).toHaveBeenCalled();
+        expect(spyRouterService.reloadPage).toHaveBeenCalled();
     });
 
     it('should refresh the scores on click', () => {

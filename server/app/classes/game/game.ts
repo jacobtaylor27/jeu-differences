@@ -132,7 +132,7 @@ export class Game {
         }
         this.getNbDifferencesTotalFound.add(differenceCoords);
         player.add(differenceCoords);
-        if (this.isAllDifferenceFound(playerId) && !this.isGameOver()) {
+        if (this.isAllDifferenceFound(playerId) && !this.isGameOver() && this.gameMode === GameMode.Classic) {
             this.context.end();
         }
     }

@@ -46,10 +46,14 @@ export class GameManagerService {
     setNextGame(gameId: string) {
         const game = this.findGame(gameId);
         if (game) {
-            // need to add condition for index -> gameover
             game.nextIndex();
             const gamesToPlay = this.limitedTimeGame.getGamesToPlay(gameId);
-            if (gamesToPlay) {
+            if (!gamesToPlay) {
+                return;
+            } else if (gamesToPlay.length === game.currentIndex) {
+                game.next();
+                return;
+            } else {
                 game.setInfo(gamesToPlay[game.currentIndex]);
             }
         }
@@ -68,7 +72,7 @@ export class GameManagerService {
         game.timerId = setInterval(() => {
             if (game.gameMode === GameMode.LimitedTime && this.isGameOver(gameId)) {
                 // high scores to handle here
-                sio.sockets.to(gameId).emit(SocketEvent.Lose);
+                sio.sockets.to(gameId).emit(SocketEvent.Win);
                 this.leaveGame(playerId, gameId);
                 this.deleteTimer(gameId);
             } else {

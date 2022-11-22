@@ -32,11 +32,14 @@ describe('GameManagerService', () => {
     let gameInfoSpyObj: SinonSpiedInstance<GameInfoService>;
     let bmpEncoderService: BmpEncoderService;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
+    let limitedTimeService: LimitedTimeGame;
+    let gameTimerConstant: GameTimeConstantService;
 
     beforeEach(() => {
         clock = useFakeTimers();
         bmpEncoderService = Container.get(BmpEncoderService);
         bmpService = Container.get(BmpService);
+        gameTimerConstant = Container.get(GameTimeConstantService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
         idGeneratorService = sinon.createStubInstance(IdGeneratorService);
@@ -45,8 +48,7 @@ describe('GameManagerService', () => {
         });
         const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
-        const limitedTimeService = new LimitedTimeGame(gameInfo);
-        const gameTimerConstant = new GameTimeConstantService();
+        limitedTimeService = new LimitedTimeGame(gameInfo);
         gameInfoSpyObj = stub(gameInfo);
         gameManager = new GameManagerService(gameInfo, differenceService, limitedTimeService, gameTimerConstant);
     });
@@ -64,6 +66,17 @@ describe('GameManagerService', () => {
         expect(gameManager['games'].size).not.to.equal(0);
     });
 
+    it('should create a game mode Limited', async () => {
+        const spyLimitedTime = stub(limitedTimeService, 'generateGames')
+            .resolves()
+            .returns({} as Promise<PrivateGameInformation[]>);
+        expect(await gameManager.createGame({ player: { name: 'test', id: '' }, isMulti: false }, GameMode.LimitedTime, '')).to.equal(
+            Array.from(gameManager['games'].values())[0].identifier,
+        );
+        expect(spyLimitedTime.called).to.equal(true);
+        expect(gameManager['games'].size).not.to.equal(0);
+    });
+
     it('should check if the game is found', () => {
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
             return {} as Game;
@@ -77,13 +90,58 @@ describe('GameManagerService', () => {
         expect(gameManager.isGameFound('')).to.equal(false);
     });
 
+    it('should return game info', () => {
+        const expectedGame = stub(
+            new Game(
+                { player: { name: 'test', id: '' }, isMulti: false },
+                { info: { id: '1' } as PrivateGameInformation, mode: GameMode.LimitedTime },
+            ),
+        );
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        expect(gameManager.getGameInfo('1')).to.deep.equal({ id: '1' });
+    });
+
     it('should set the next game in the array', () => {
         const expectedGame = stub(
             new Game({ player: { name: 'test', id: '' }, isMulti: false }, { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic }),
         );
+        stub(limitedTimeService, 'getGamesToPlay').callsFake(() => [{ id: '1' } as PrivateGameInformation, { id: '2' } as PrivateGameInformation]);
         const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         gameManager.setNextGame('1');
         expect(findGameStub.called).to.equal(true);
+        expect(expectedGame.setInfo.called).to.equal(true);
+        expectedGame.currentIndex = 2;
+        gameManager.setNextGame('1');
+        expect(expectedGame.next.called).to.equal(true);
+        expect(expectedGame.setInfo.called).to.equal(true);
+    });
+
+    it('should not set next game if array is undefined', () => {
+        const expectedGame = stub(
+            new Game(
+                { player: { name: 'test', id: '' }, isMulti: false },
+                { info: { id: '1' } as PrivateGameInformation, mode: GameMode.LimitedTime },
+            ),
+        );
+        stub(limitedTimeService, 'getGamesToPlay').callsFake(() => undefined);
+        const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        gameManager.setNextGame('1');
+        expect(findGameStub.called).to.equal(true);
+        expect(expectedGame.setInfo.called).to.equal(false);
+    });
+
+    it('should not set the next game when index is maxed out', () => {
+        const expectedGame = stub(
+            new Game(
+                { player: { name: 'test', id: '' }, isMulti: false },
+                { info: { id: '1' } as PrivateGameInformation, mode: GameMode.LimitedTime },
+            ),
+        );
+        stub(limitedTimeService, 'getGamesToPlay').callsFake(() => [{ id: '1' } as PrivateGameInformation, { id: '2' } as PrivateGameInformation]);
+        const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
+        gameManager.setNextGame('1');
+        expect(findGameStub.called).to.equal(true);
+        expect(expectedGame.setInfo.called).to.equal(false);
     });
 
     it('should set the timer', () => {
@@ -203,6 +261,18 @@ describe('GameManagerService', () => {
         game.players.set('id', 'name');
         expect(gameManager.hasSameName('room', 'name')).to.equal(true);
         expect(gameManager.hasSameName('room', 'test')).to.equal(false);
+    });
+
+    it('should return the game mode', () => {
+        const stubFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame');
+        stubFindGame.callsFake(() => undefined);
+        expect(gameManager.findGameMode('room')).to.equal(undefined);
+
+        const expectedGame = stub(
+            new Game({ player: { name: 'test', id: '' }, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic }),
+        );
+        stubFindGame.callsFake(() => expectedGame);
+        expect(gameManager.findGameMode('')).to.equal(GameMode.Classic);
     });
 
     it('should check if the game is in multiplayer', () => {

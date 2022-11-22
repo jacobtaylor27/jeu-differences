@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Game } from '@app/classes/game/game';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
@@ -12,6 +13,7 @@ import { Coordinate } from '@common/coordinate';
 import { User } from '@common/user';
 
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
@@ -42,8 +44,9 @@ describe('GameManagerService', () => {
         });
         const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
         const differenceService = new BmpDifferenceInterpreter();
+        const limitedTimeService = new LimitedTimeGame(gameInfo);
         gameInfoSpyObj = stub(gameInfo);
-        gameManager = new GameManagerService(gameInfo, differenceService);
+        gameManager = new GameManagerService(gameInfo, differenceService, limitedTimeService);
     });
 
     afterEach(() => {
@@ -51,7 +54,7 @@ describe('GameManagerService', () => {
         restore();
     });
 
-    it('should create a game', async () => {
+    it('should create a game mode Classic', async () => {
         expect(await gameManager.createGame({ player: { name: 'test', id: '' }, isMulti: false }, GameMode.Classic, '')).to.equal(
             Array.from(gameManager['games'].values())[0].identifier,
         );
@@ -70,6 +73,15 @@ describe('GameManagerService', () => {
             return undefined;
         });
         expect(gameManager.isGameFound('')).to.equal(false);
+    });
+
+    it('should set the next game in the array', () => {
+        const expectedGame = stub(
+            new Game(GameMode.Classic, { player: { name: 'test', id: '' }, isMulti: false }, { id: '1' } as PrivateGameInformation),
+        );
+        const findGameStub = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        gameManager.setNextGame('1');
+        expect(findGameStub.called).to.equal(true);
     });
 
     it('should set the timer', () => {

@@ -52,6 +52,7 @@ describe('PlayAreaComponent', () => {
             'getOriginalBmpId',
             'getModifiedBmpId',
             'getGameInformation',
+            'setGameInformation',
             'getNbTotalDifferences',
         ]);
 

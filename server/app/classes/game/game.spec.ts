@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
@@ -78,8 +79,8 @@ describe('Game', () => {
         game.setTimer();
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(2000);
-        expect(game.calculateTime()).to.equal(3);
-        clock.tick(3000);
+        expect(game.calculateTime()).to.equal(58);
+        clock.tick(58000);
         expect(game.calculateTime()).to.equal(0);
         expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
     });
@@ -88,6 +89,18 @@ describe('Game', () => {
         const expectGameState = new InitGameState();
         stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
         expect(game.status).to.equal(expectGameState.status());
+    });
+
+    it('should set info', () => {
+        const gameInfo = { id: '1' } as PrivateGameInformation;
+        game.setInfo(gameInfo);
+        expect(game.information).to.equal(gameInfo);
+    });
+
+    it('should increment index', () => {
+        expect(game.currentIndex).to.equal(0);
+        game.nextIndex();
+        expect(game.currentIndex).to.equal(1);
     });
 
     it('should set timer', () => {

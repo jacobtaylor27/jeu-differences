@@ -1,6 +1,8 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialog } from '@angular/material/dialog';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
@@ -13,15 +15,18 @@ describe('MainPageComponent', () => {
     let fixture: ComponentFixture<MainPageComponent>;
     let spyMainPageService: jasmine.SpyObj<MainPageService>;
     let spyGameInfosHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
+    let spyMatDialog: jasmine.SpyObj<MatDialog>;
 
     beforeEach(async () => {
         spyMainPageService = jasmine.createSpyObj('GamePageService', ['setGameMode']);
         spyGameInfosHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameMode', 'getGameName', 'getGameMode']);
+        spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
 
         await TestBed.configureTestingModule({
             declarations: [MainPageComponent],
-            imports: [AppMaterialModule, RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
+            imports: [AppMaterialModule, NoopAnimationsModule, RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule, HttpClientModule],
             providers: [
+                { provide: MatDialog, useValue: spyMatDialog },
                 {
                     provide: MainPageService,
                     useValue: spyMainPageService,

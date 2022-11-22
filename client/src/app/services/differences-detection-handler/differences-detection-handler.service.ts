@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers -- tests for differences detection with random numbers*/
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { FlashTimer } from '@app/constants/game-constants';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
@@ -78,29 +79,32 @@ export class DifferencesDetectionHandlerService {
 
     differenceDetected(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D, coords: Coordinate[]) {
         this.playCorrectSound();
-        this.displayDifferenceTemp(ctx, coords);
+        this.displayDifferenceTemp(ctx, coords, false);
         this.clearDifference(ctxModified, coords);
         this.socketService.off(SocketEvent.DifferenceNotFound);
     }
 
-    private displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
+    displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[], isCheatMode: boolean): number {
         let counter = 0;
-        const interval = setInterval(() => {
-            for (const coordinate of coords) {
-                ctx.clearRect(coordinate.x, coordinate.y, 1, 1);
-            }
-            if (counter === 5) {
-                clearInterval(interval);
-            }
-            if (counter % 2 === 0) {
-                ctx.fillStyle = 'yellow';
+        const interval = setInterval(
+            () => {
                 for (const coordinate of coords) {
-                    ctx.fillRect(coordinate.x, coordinate.y, 1, 1);
+                    ctx.clearRect(coordinate.x, coordinate.y, 1, 1);
                 }
-            }
-
-            counter++;
-        }, 500);
+                if (counter === 5 && !isCheatMode) {
+                    clearInterval(interval);
+                }
+                if (counter % 2 === 0) {
+                    ctx.fillStyle = 'yellow';
+                    for (const coordinate of coords) {
+                        ctx.fillRect(coordinate.x, coordinate.y, 1, 1);
+                    }
+                }
+                counter++;
+            },
+            isCheatMode ? FlashTimer.CheatMode : FlashTimer.Classic,
+        ) as unknown as number;
+        return interval;
     }
 
     private clearDifference(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {

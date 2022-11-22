@@ -1,10 +1,10 @@
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { GameContext } from '@app/classes/game-context/game-context';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
-import { GameMode } from '@common/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { Coordinate } from '@common/coordinate';
+import { GameMode } from '@common/game-mode';
 import { User } from '@common/user';
 import { v4 } from 'uuid';
 
@@ -134,6 +134,10 @@ export class Game {
         } else {
             return Math.trunc(this.info.differences.length / 2) + 1;
         }
+    }
+
+    getAllDifferencesNotFound() {
+        return this.info.differences.filter((difference: Coordinate[]) => !this.getNbDifferencesTotalFound.has(difference));
     }
 
     isEven(number: number) {

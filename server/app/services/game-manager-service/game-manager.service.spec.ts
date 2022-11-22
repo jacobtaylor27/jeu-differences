@@ -333,4 +333,13 @@ describe('GameManagerService', () => {
         expect(gameManager.findPlayer('', '')).to.equal(undefined);
         expect(gameManager.findPlayer('', '0')).to.equal('test');
     });
+    it('should get all nb of difference not found', () => {
+        const expectedGame = new Game(GameMode.Classic, { player: { name: 'test', id: '0' } as User, isMulti: false }, {} as PrivateGameInformation);
+        const expectedDifferenceNotFound = [[{ x: 0, y: 0 }]];
+        const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        stub(expectedGame, 'getAllDifferencesNotFound').callsFake(() => expectedDifferenceNotFound);
+        expect(gameManager.getNbDifferenceNotFound('')).to.deep.equal(expectedDifferenceNotFound);
+        spyFindGame.callsFake(() => undefined);
+        expect(gameManager.getNbDifferenceNotFound('')).to.equal(undefined);
+    });
 });

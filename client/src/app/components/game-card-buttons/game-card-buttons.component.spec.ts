@@ -1,9 +1,12 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { gameCard1 } from '@app/constants/game-card-constant.spec';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { GameCardService } from '@app/services/game-card/game-card.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
 import { of } from 'rxjs';
 import { GameCardButtonsComponent } from './game-card-buttons.component';
@@ -11,25 +14,37 @@ import { GameCardButtonsComponent } from './game-card-buttons.component';
 describe('GameCardButtonsComponent', () => {
     let component: GameCardButtonsComponent;
     let fixture: ComponentFixture<GameCardButtonsComponent>;
-    let spyGameCardService: jasmine.SpyObj<GameCardService>;
     let spyRouterService: jasmine.SpyObj<RouterService>;
+    let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyGameInfoHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
+    let spyMatDialog: jasmine.SpyObj<MatDialog>;
 
     beforeEach(async () => {
-        spyGameCardService = jasmine.createSpyObj('GameCardService', ['openNameDialog', 'deleteGame', 'refreshGame']);
         spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteGame', 'refreshSingleGame']);
+        spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameInformation']);
+        spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         await TestBed.configureTestingModule({
-            imports: [AppMaterialModule, RouterTestingModule],
+            imports: [AppMaterialModule, RouterTestingModule, NoopAnimationsModule],
             declarations: [GameCardButtonsComponent],
             providers: [
                 HttpHandler,
                 HttpClient,
                 {
-                    provide: GameCardService,
-                    useValue: spyGameCardService,
-                },
-                {
                     provide: RouterService,
                     useValue: spyRouterService,
+                },
+                {
+                    provide: CommunicationService,
+                    useValue: spyCommunicationService,
+                },
+                {
+                    provide: GameInformationHandlerService,
+                    useValue: spyGameInfoHandlerService,
+                },
+                {
+                    provide: MatDialog,
+                    useValue: spyMatDialog,
                 },
             ],
         }).compileComponents();

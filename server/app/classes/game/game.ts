@@ -5,6 +5,7 @@ import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { Coordinate } from '@common/coordinate';
 import { GameMode } from '@common/game-mode';
+import { GameTimeConstants } from '@common/game-time-constants';
 import { User } from '@common/user';
 import { v4 } from 'uuid';
 
@@ -15,21 +16,28 @@ export class Game {
     private id: string;
     private mode: GameMode;
     private isMulti: boolean;
+    private timerConstant: GameTimeConstants;
     private info: PrivateGameInformation;
     private getNbDifferencesFound: Map<string, Set<Coordinate[]>>;
     private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
     private initialTime: Date;
 
-    constructor(mode: GameMode, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
-        this.info = info;
-        this.mode = mode;
+    constructor(
+        player: { player: User; isMulti: boolean },
+        game: { info: PrivateGameInformation; mode: GameMode; timerConstant?: GameTimeConstants },
+    ) {
+        if (game.mode === GameMode.LimitedTime) {
+            this.timerConstant = game.timerConstant as GameTimeConstants;
+        }
+        this.info = game.info;
+        this.mode = game.mode;
         this.players = new Map();
-        this.isMulti = playerInfo.isMulti;
+        this.isMulti = player.isMulti;
         this.getNbDifferencesFound = new Map();
         this.getNbDifferencesTotalFound = new Set();
-        this.addPlayer(playerInfo.player);
-        this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
+        this.addPlayer(player.player);
+        this.context = new GameContext(game.mode as GameMode, new InitGameState(), player.isMulti);
         this.id = v4();
         this.context.next();
     }

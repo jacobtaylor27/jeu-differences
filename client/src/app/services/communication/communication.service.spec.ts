@@ -285,6 +285,18 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('PATCH');
     });
 
+    it('should reset the scores for a single game', () => {
+        service.refreshSingleGame('1').subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/scores/1/reset`);
+        expect(req.request.method).toBe('PATCH');
+    });
+
     it('should get the game scores for a specific game', () => {
         service.getGameScores('1').subscribe({
             next: (response: HttpResponse<{ solo: Score[]; multi: Score[] }>) => {

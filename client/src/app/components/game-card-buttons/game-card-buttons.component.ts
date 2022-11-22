@@ -48,7 +48,7 @@ export class GameCardButtonsComponent {
     }
 
     onClickRefreshGame(): void {
-        this.gameCardService.refreshGame(this.gameCard.gameInformation.id).subscribe(() => {
+        this.communicationService.refreshSingleGame(this.gameCard.gameInformation.id).subscribe(() => {
             this.router.reloadPage('admin');
         });
     }

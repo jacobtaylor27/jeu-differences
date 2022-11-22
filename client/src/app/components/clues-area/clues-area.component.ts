@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Component({
     selector: 'app-clues-area',
@@ -6,7 +6,7 @@ import { Component, EventEmitter, HostListener, Input } from '@angular/core';
     styleUrls: ['./clues-area.component.scss'],
 })
 export class CluesAreaComponent {
-    @Input() clueCounter = new EventEmitter<number>();
+    @Output() clueCounter = new EventEmitter<number>();
 
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
@@ -27,6 +27,5 @@ export class CluesAreaComponent {
         if (this.clueAskedCounter === this.numberOfClues) {
             this.isDisabled = true;
         }
-        // TODO add logic with service sprint 3
     }
 }

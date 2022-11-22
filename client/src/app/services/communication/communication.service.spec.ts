@@ -285,6 +285,18 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('PATCH');
     });
 
+    it('should refresh all the scores for each game', () => {
+        service.refreshAllGames().subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/scores/reset`);
+        expect(req.request.method).toBe('PATCH');
+    });
+
     it('should reset the scores for a single game', () => {
         service.refreshSingleGame('1').subscribe({
             next: (response: void) => {

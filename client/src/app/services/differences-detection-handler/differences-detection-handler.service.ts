@@ -43,6 +43,7 @@ export class DifferencesDetectionHandlerService {
 
     playCorrectSound() {
         this.playSound(this.correctSound);
+        this.socketService.off(SocketEvent.DifferenceNotFound);
     }
 
     playSound(sound: HTMLAudioElement) {
@@ -81,7 +82,6 @@ export class DifferencesDetectionHandlerService {
         this.playCorrectSound();
         this.displayDifferenceTemp(ctx, coords, false);
         this.clearDifference(ctxModified, coords);
-        this.socketService.off(SocketEvent.DifferenceNotFound);
     }
 
     displayDifferenceTemp(ctx: CanvasRenderingContext2D, coords: Coordinate[], isCheatMode: boolean): number {

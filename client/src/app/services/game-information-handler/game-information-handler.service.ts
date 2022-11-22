@@ -5,6 +5,7 @@ import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { Subject } from 'rxjs';
+import { GameId } from '@common/game-id';
 
 @Injectable({
     providedIn: 'root',
@@ -26,8 +27,11 @@ export class GameInformationHandlerService {
 
     handleSocketEvent() {
         if (!this.isMulti) {
-            this.socket.on(SocketEvent.Play, (gameId: string) => {
-                this.roomId = gameId;
+            this.socket.once(SocketEvent.Play, (infos: GameId) => {
+                if (infos.gameCard) {
+                    this.setGameInformation(infos.gameCard);
+                }
+                this.roomId = infos.gameId;
                 this.routerService.navigateTo('game');
             });
         }

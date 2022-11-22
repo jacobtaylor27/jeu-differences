@@ -18,9 +18,11 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
 import { ChatBoxComponent } from './components/chat-box/chat-box.component';
+import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { CommonToolBoxComponent } from './components/common-tool-box/common-tool-box.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
 import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
+import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dialog-limited-time.component';
 import { DialogUploadFormComponent } from './components/dialog-upload-form/dialog-upload-form.component';
 import { DifferencesAreaComponent } from './components/differences-area/differences-area.component';
 import { ExitGameButtonComponent } from './components/exit-game-button/exit-game-button.component';
@@ -33,13 +35,12 @@ import { GameScoreComponent } from './components/game-score/game-score.component
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { PlayerLeftSnackbarComponent } from './components/player-left-snackbar/player-left-snackbar.component';
+import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
 import { RejectedDialogComponent } from './components/rejected-dialog/rejected-dialog.component';
 import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stopwatch.component';
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
-import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
-import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dialog-limited-time.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -65,6 +66,7 @@ import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dia
         UserNameInputComponent,
         GameCarouselComponent,
         AdminCommandsComponent,
+        CluesAreaComponent,
         PlayAreaComponent,
         ExitGameButtonComponent,
         TimerStopwatchComponent,

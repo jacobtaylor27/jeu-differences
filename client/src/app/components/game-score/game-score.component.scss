@@ -10,4 +10,12 @@ ul.highscores {
 
 .empty-scores {
     color: gray;
+    display: flex;
+    flex-direction: row;
+}
+
+.game-score {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

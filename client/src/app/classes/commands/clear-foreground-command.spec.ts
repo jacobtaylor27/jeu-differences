@@ -12,8 +12,9 @@ describe('clearForegroundCommand', () => {
 
     it('clearForeground should be called', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        const clearForeground = new ClearForegroundCommand(canvas.getContext('2d') as CanvasRenderingContext2D, drawServiceSpy);
-        clearForeground.execute();
-        expect(drawServiceSpy.clearForeground).toHaveBeenCalled();
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const command = new ClearForegroundCommand(ctx, drawServiceSpy);
+        command.execute();
+        expect(drawServiceSpy.clearForeground).toHaveBeenCalledWith(ctx);
     });
 });

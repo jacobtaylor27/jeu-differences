@@ -2,6 +2,7 @@ import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { CanvasState } from '@app/interfaces/canvas-state';
 import { Line } from '@app/interfaces/line';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
@@ -13,9 +14,11 @@ describe('DrawServiceService', () => {
     let service: DrawService;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
     let canvasStateServiceSpyObj: jasmine.SpyObj<CanvasStateService>;
+
     beforeEach(() => {
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $resetBackground: new Map(), $resetForeground: new Map() });
         canvasStateServiceSpyObj = jasmine.createSpyObj('CanvasStateService', ['getCanvasState', 'getFocusedCanvas']);
+
         TestBed.configureTestingModule({
             providers: [
                 { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
@@ -181,10 +184,42 @@ describe('DrawServiceService', () => {
         expect(ctx.strokeStyle).toEqual(service.pencil.color);
     });
 
-    it('startDrawing should handle mouse event', () => {
-        // Mock l'implémentation de canvasState service pour obtenir un return undefined
-        service.startDrawing({} as MouseEvent);
+    it('startDrawing should handle mouse event and return undefined if no canvas is in focus', () => {
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return undefined;
+        });
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(service.isClick).toBeTruthy();
+    });
 
+    it('startDrawing should handle mouse event if no canvas is in focus', () => {
+        const respositionSpy = spyOn(service, 'reposition');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return undefined;
+        });
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).not.toHaveBeenCalled();
+        expect(service.isClick).toBeTruthy();
+    });
+
+    it('startDrawing should handle mouse event if a canvas is in focus', () => {
+        const respositionSpy = spyOn(service, 'reposition');
+        const setCurrentCommandSpy = spyOn(service, 'setCurrentCommand');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            const canvasState: CanvasState = {
+                canvasType: CanvasType.Right,
+                foreground: {} as ElementRef<HTMLCanvasElement>,
+                background: {} as ElementRef<HTMLCanvasElement>,
+                temporary: {} as ElementRef<HTMLCanvasElement>,
+            };
+            return canvasState;
+        });
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).toHaveBeenCalled();
+        expect(setCurrentCommandSpy).toHaveBeenCalled();
         expect(service.isClick).toBeTruthy();
     });
 });

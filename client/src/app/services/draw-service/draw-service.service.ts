@@ -49,7 +49,7 @@ export class DrawService {
         if (focusedCanvas === undefined) return;
 
         this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
-        this.setcurrentCommand('', focusedCanvas.canvasType);
+        this.setCurrentCommand('', focusedCanvas.canvasType);
     }
 
     draw(event: MouseEvent) {
@@ -143,7 +143,7 @@ export class DrawService {
     }
 
     resetForeground(canvasType: CanvasType) {
-        this.setcurrentCommand('clearForeground', canvasType);
+        this.setCurrentCommand('clearForeground', canvasType);
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -195,7 +195,7 @@ export class DrawService {
     }
 
     switchForegrounds() {
-        this.setcurrentCommand('switchForegrounds', CanvasType.Both);
+        this.setCurrentCommand('switchForegrounds', CanvasType.Both);
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
@@ -214,7 +214,7 @@ export class DrawService {
     }
 
     pasteExternalForegroundOn(canvasType: CanvasType) {
-        this.setcurrentCommand('pasteExternalForegroundOn', canvasType);
+        this.setCurrentCommand('pasteExternalForegroundOn', canvasType);
 
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
@@ -282,7 +282,7 @@ export class DrawService {
         }
     }
 
-    private setcurrentCommand(name: string, canvasType: CanvasType) {
+    private setCurrentCommand(name: string, canvasType: CanvasType) {
         this.currentCommand = {
             canvasType,
             name,

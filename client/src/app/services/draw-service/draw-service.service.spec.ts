@@ -222,4 +222,35 @@ describe('DrawServiceService', () => {
         expect(setCurrentCommandSpy).toHaveBeenCalled();
         expect(service.isClick).toBeTruthy();
     });
+
+    it('draw(...) should return undefined if the pencil is not clicked', () => {
+        service['isClick'] = false;
+        const spyOnMouseCoordinate = spyOn(service, 'updateMouseCoordinates');
+        expect(service.draw({} as MouseEvent)).toBe(undefined);
+        expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
+    });
+    it('draw(...) should return undefined iif the pencil is undefined', () => {});
+    it('draw(...) should call updateMouseCoordinates(event) and update the current line', () => {});
+    it('draw(...) should update the current command strokes and style', () => {});
+    it('draw(...) should create a stroke', () => {});
+    it('draw(...) should update the image', () => {});
 });
+
+/*
+    draw(event: MouseEvent) {
+        if (!this.isClick || !this.pencil) {
+            return;
+        }
+        const line = this.updateMouseCoordinates(event);
+        this.currentCommand.strokes[0].lines.push(line);
+
+        this.currentCommand.style = {
+            color: this.pencil.color,
+            cap: this.pencil.cap,
+            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
+            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
+        };
+        this.createStroke(line, this.currentCommand.style);
+        this.updateImages();
+    }
+    */

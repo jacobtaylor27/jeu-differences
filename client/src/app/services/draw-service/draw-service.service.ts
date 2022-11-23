@@ -158,19 +158,6 @@ export class DrawService {
         });
     }
 
-    createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
-        const focusedCanvas = canvasType ? this.canvasStateService.getCanvasState(canvasType) : this.canvasStateService.getFocusedCanvas();
-        const ctx: CanvasRenderingContext2D = focusedCanvas?.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        ctx.beginPath();
-        ctx.globalCompositeOperation = strokeStyle.destination;
-        ctx.lineWidth = strokeStyle.width;
-        ctx.lineCap = strokeStyle.cap;
-        ctx.strokeStyle = strokeStyle.color;
-        ctx.moveTo(line.initCoord.x, line.initCoord.y);
-        ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
-        ctx.stroke();
-    }
-
     switchForegrounds() {
         this.setCurrentCommand('switchForegrounds', CanvasType.Both);
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
@@ -242,6 +229,19 @@ export class DrawService {
         }
         this.indexOfCommand--;
         this.executeAllCommand();
+    }
+
+    private createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
+        const focusedCanvas = canvasType ? this.canvasStateService.getCanvasState(canvasType) : this.canvasStateService.getFocusedCanvas();
+        const ctx: CanvasRenderingContext2D = focusedCanvas?.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        ctx.beginPath();
+        ctx.globalCompositeOperation = strokeStyle.destination;
+        ctx.lineWidth = strokeStyle.width;
+        ctx.lineCap = strokeStyle.cap;
+        ctx.strokeStyle = strokeStyle.color;
+        ctx.moveTo(line.initCoord.x, line.initCoord.y);
+        ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
+        ctx.stroke();
     }
 
     private reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {

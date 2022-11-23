@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
-import { Line } from '@app/interfaces/line';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 import { DrawService } from './draw-service.service';
-import { drawingBoardStub, fakeCurrentCommand, fakeLine, fakeMouseEvent, fakePencil } from './draw-service.service.spec.constants';
+import { drawingBoardStub, fakeCurrentCommand, fakeLine, fakeMouseEvent, fakePencil, fakeStrokeStyle } from './draw-service.service.spec.constants';
 
 describe('DrawServiceService', () => {
     let service: DrawService;
@@ -137,10 +136,11 @@ describe('DrawServiceService', () => {
         const moveToSpy = spyOn(ctx, 'moveTo');
         const lineToSpy = spyOn(ctx, 'lineTo');
         const stokeSpy = spyOn(ctx, 'stroke');
-        service.createStroke(
-            { initCoord: { x: 0, y: 0 }, finalCoord: { x: 0, y: 0 } } as Line,
-            { width: service.pencil.width.pencil, cap: service.pencil.cap, color: service.pencil.color } as StrokeStyle,
-        );
+        service['createStroke'](fakeLine, {
+            width: service.pencil.width.pencil,
+            cap: service.pencil.cap,
+            color: service.pencil.color,
+        } as StrokeStyle);
         expect(beginPathSpy).toHaveBeenCalled();
         expect(moveToSpy).toHaveBeenCalled();
         expect(lineToSpy).toHaveBeenCalled();
@@ -211,7 +211,25 @@ describe('DrawServiceService', () => {
         expect(service['currentCommand'].style).toEqual(expectedStyle);
     });
 
-    it('createStroke(...) should create a stroke', () => {});
+    it('createStroke(...) should create a stroke with a given canvas', () => {
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        service['createStroke'](fakeLine, fakeStrokeStyle, CanvasType.Right);
+        expect(canvasStateServiceSpyObj.getCanvasState).toHaveBeenCalled();
+    });
+
+    it('createStroke(...) should create a stroke without a canvas passed in parameter', () => {
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        service['createStroke'](fakeLine, fakeStrokeStyle);
+        expect(canvasStateServiceSpyObj.getFocusedCanvas).toHaveBeenCalled();
+    });
+
+    it('updateImages(...) redraw background and foreground accordingly', () => {
+        
+    });
 
     /*
     draw(event: MouseEvent) {
@@ -243,8 +261,6 @@ describe('DrawServiceService', () => {
     it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {});
 
     it('switchForegrounds(...) should make the right verification before adding command', () => {});
-
-    it('updateImages(...) redraw background and foreground accordingly', () => {});
 
     it('clearAllBackground(...) should iterate through all backgrounds and clear them all', () => {});
 

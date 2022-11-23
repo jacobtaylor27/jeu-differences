@@ -29,7 +29,6 @@ export class CluesAreaComponent implements OnInit {
             this.isDisabled = true;
         }
         this.communicationSocket.send(SocketEvent.Clue, { clueIndex: this.clueAskedCounter, gameId: this.gameInformation.getId() });
-        // console.log(this.clueService.foo);
     }
 
     // @HostListener('window: keydown', ['$event'])

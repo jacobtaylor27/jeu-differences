@@ -213,16 +213,7 @@ describe('DrawServiceService', () => {
 
     it('createStroke(...) should create a stroke', () => {});
 
-    it('draw(...) should call update current command, create a stroke and update image', () => {});
-
-    it('draw(...) should update the current command style', () => {});
-
-    it('draw(...) should create a stroke', () => {});
-
-    it('draw(...) should update the image', () => {});
-});
-
-/*
+    /*
     draw(event: MouseEvent) {
         if (!this.isClick) return;
         const line = this.updateMouseCoordinates(event);
@@ -231,14 +222,35 @@ describe('DrawServiceService', () => {
         this.updateImages();
     }
 
-    private updateCurrentCommand(line: Line) {
-        this.currentCommand.strokes[0].lines.push(line);
-        this.currentCommand.style = {
-            color: this.pencil.color,
-            cap: this.pencil.cap,
-            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
-            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
-        };
-    }
-
     */
+
+    it('draw(...) should call update current command, create a stroke and update image', () => {});
+
+    it('draw(...) should update the current command style', () => {});
+
+    it('draw(...) should create a stroke', () => {});
+
+    it('draw(...) should update the image', () => {});
+
+    it('redraw(...) should iterate over all the drawing lines', () => {});
+
+    it('stopDrawing(...) should stop the drawing', () => {});
+
+    it('leaveCanvas(...) should stop the drawing', () => {});
+
+    it('executeAllCommands(...) should iterate through all commands', () => {});
+
+    it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {});
+
+    it('switchForegrounds(...) should make the right verification before adding command', () => {});
+
+    it('updateImages(...) redraw background and foreground accordingly', () => {});
+
+    it('clearAllBackground(...) should iterate through all backgrounds and clear them all', () => {});
+
+    it('clearBackground(...) should clear a specific background', () => {});
+
+    it('clearAllForegrounds(...) should iterate through all foreground and clear them all', () => {});
+
+    it('clearForeground(...) should clear a specific foreground', () => {});
+});

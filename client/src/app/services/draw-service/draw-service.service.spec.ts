@@ -632,26 +632,25 @@ describe('DrawServiceService', () => {
         expect(spyExecuteAllCommands).not.toHaveBeenCalled();
     });
 
-    it('undo(...) should iterate over all of the commands and change the index for the correct one', () => {});
-});
-
-/*
-    redo() {
-        if (this.indexOfCommand >= this.commands.length - 1) {
-            return;
-        }
-        this.indexOfCommand++;
-        this.executeAllCommand();
-    }
-
-    undo() {
-        // same justification as before
+    it('undo(...) should iterate over all of the commands and change the index for the correct one', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        service.commands = [newCommand];
+        service['indexOfCommand'] = 0;
+        service.undo();
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        if (this.indexOfCommand <= -1) {
-            return;
-        }
-        this.indexOfCommand--;
-        this.executeAllCommand();
-    }
+        expect(service['indexOfCommand']).toEqual(-1);
+        expect(spyExecuteAllCommands).toHaveBeenCalled();
+    });
 
-*/
+    it('undo(...) should not iterate over commands if the index is less than 0', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
+        service['indexOfCommand'] = -1;
+        service.undo();
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(service['indexOfCommand']).toEqual(-1);
+        expect(spyExecuteAllCommands).not.toHaveBeenCalled();
+    });
+});

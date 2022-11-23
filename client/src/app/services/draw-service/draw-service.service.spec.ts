@@ -1,4 +1,6 @@
+/* eslint-disable max-lines */
 import { TestBed } from '@angular/core/testing';
+import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-command';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { Command } from '@app/interfaces/command';
@@ -341,7 +343,18 @@ describe('DrawServiceService', () => {
         expect(spyStopDrawing).not.toHaveBeenCalled();
     });
 
-    it('executeAllCommands(...) should iterate through all commands', () => {});
+    it('executeAllCommands(...) should iterate through all commands', () => {
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecute = spyOn(newCommand, 'execute').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearAllForegrounds = spyOn(service, 'clearAllForegrounds').and.callFake(() => {});
+        service.commands = [newCommand];
+        service['indexOfCommand'] = 0;
+        service['executeAllCommand']();
+        expect(spyExecute).toHaveBeenCalled();
+        expect(spyClearAllForegrounds).toHaveBeenCalled();
+    });
 
     it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {});
 

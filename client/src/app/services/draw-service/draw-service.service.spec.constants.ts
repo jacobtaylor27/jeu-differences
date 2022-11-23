@@ -18,6 +18,7 @@ export const drawingBoardStub: DrawingBoardState = {
 export const fakeMouseEvent = {
     clientX: 0,
     clientY: 0,
+    buttons: 1,
 } as MouseEvent;
 
 export const fakePencil: Pencil = {

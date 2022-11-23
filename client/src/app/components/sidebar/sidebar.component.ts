@@ -8,8 +8,8 @@ import { GameMode } from '@common/game-mode';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-    gameMode: GameMode
-    gameName: string 
+    gameMode: GameMode;
+    gameName: string;
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
         this.gameMode = this.gameInformationHandlerService.getGameMode();
@@ -17,8 +17,6 @@ export class SidebarComponent {
         this.gameInformationHandlerService.$newGame.subscribe(() => {
             this.gameMode = this.gameInformationHandlerService.getGameMode();
             this.gameName = this.gameInformationHandlerService.getGameName();
-        })
-
+        });
     }
-
 }

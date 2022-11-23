@@ -227,9 +227,28 @@ describe('DrawServiceService', () => {
         expect(canvasStateServiceSpyObj.getFocusedCanvas).toHaveBeenCalled();
     });
 
-    it('updateImages(...) redraw background and foreground accordingly', () => {
-        
+    it('updateImages(...) should update the context according to the background and the foreground', () => {
+        canvasStateServiceSpyObj.states = [drawingBoardStub];
+        const states = canvasStateServiceSpyObj.states;
+        const spyContextDrawImage = spyOn(states[0].temporary.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'drawImage');
+        service.updateImages();
+        expect(spyContextDrawImage).toHaveBeenCalled();
+        expect((states[0].temporary.nativeElement.getContext('2d') as CanvasRenderingContext2D).globalCompositeOperation).toEqual('source-over');
     });
+
+    /*
+    updateImages() {
+        const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
+        this.canvasStateService.states.forEach((state) => {
+            const ctx: CanvasRenderingContext2D = state?.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
+            ctx.drawImage(state.background.nativeElement, 0, 0);
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.drawImage(state.foreground.nativeElement, 0, 0);
+            this.$drawingImage.get(state.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
+        });
+    }
+
+    */
 
     /*
     draw(event: MouseEvent) {

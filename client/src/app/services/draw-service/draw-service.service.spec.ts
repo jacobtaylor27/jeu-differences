@@ -206,7 +206,7 @@ describe('DrawServiceService', () => {
 
     it('startDrawing should handle mouse event if a canvas is in focus', () => {
         const respositionSpy = spyOn(service, 'reposition');
-        const setCurrentCommandSpy = spyOn(service, 'setCurrentCommand');
+        const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             const canvasState: CanvasState = {
                 canvasType: CanvasType.Right,

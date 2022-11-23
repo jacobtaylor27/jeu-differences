@@ -226,11 +226,17 @@ describe('DrawServiceService', () => {
     it('draw(...) should return undefined if the pencil is not clicked', () => {
         service['isClick'] = false;
         const spyOnMouseCoordinate = spyOn(Object.getPrototypeOf(service), 'updateMouseCoordinates');
-        expect(service.draw({} as MouseEvent)).toBe(undefined);
+        const defaultReturn = service.draw({} as MouseEvent);
+        expect(defaultReturn).toBe(undefined);
         expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
     });
 
-    it('draw(...) should call updateMouseCoordinates(event) and update the current line', () => {});
+    it('draw(...) should call updateMouseCoordinates(event)', () => {
+        const spyOnMouseCoordinate = spyOn(Object.getPrototypeOf(service), 'updateMouseCoordinates');
+        service.draw({} as MouseEvent);
+        expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
+    });
+
     it('draw(...) should update the current command strokes and style', () => {});
     it('draw(...) should create a stroke', () => {});
     it('draw(...) should update the image', () => {});

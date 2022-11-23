@@ -254,7 +254,14 @@ describe('DrawServiceService', () => {
         expect(spyUpdateImages).toHaveBeenCalled();
     });
 
-    it('redraw(...) should iterate over all the drawing lines', () => {});
+    it('redraw(...) should iterate over all the drawing lines', () => {
+        const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
+        service.redraw(fakeCurrentCommand);
+        const line = fakeCurrentCommand.strokes[0].lines[0];
+        const style = fakeCurrentCommand.style;
+        const canvasType = fakeCurrentCommand.canvasType;
+        expect(spyCreateStroke).toHaveBeenCalledWith(line, style, canvasType);
+    });
 
     /*
     redraw(command: Command) {

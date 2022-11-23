@@ -11,6 +11,7 @@ import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
 import { Stroke } from '@app/interfaces/stroke';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
+import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
@@ -179,7 +180,10 @@ describe('DrawServiceService', () => {
     });
 
     it('startDrawing should handle mouse event if a canvas is in focus', () => {
-        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition');
+        const newCoord: Vec2 = { x: 0, y: 0 };
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => {
+            return newCoord;
+        });
         const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             return drawingBoardStub;
@@ -189,6 +193,7 @@ describe('DrawServiceService', () => {
         expect(respositionSpy).toHaveBeenCalled();
         expect(setCurrentCommandSpy).toHaveBeenCalled();
         expect(service.isClick).toBeTruthy();
+        expect(service.coordDraw).toBe(newCoord);
     });
 
     it('updateMouseCoordinate(...) should update return a line according to the given coordinates', () => {

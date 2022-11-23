@@ -2,6 +2,8 @@ import { Game } from '@app/classes/game/game';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { GameMode } from '@common/game-mode';
@@ -9,15 +11,16 @@ import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';
-import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 @Service()
 export class GameManagerService {
     games: Map<string, Game> = new Map();
+    // eslint-disable-next-line max-params
     constructor(
         private gameInfo: GameInfoService,
         public differenceService: BmpDifferenceInterpreter,
         private readonly limitedTimeGame: LimitedTimeGame,
+        private timeConstant: GameTimeConstantService,
     ) {}
 
     async createGame(playerInfo: { player: User; isMulti: boolean }, mode: GameMode, gameCardId: string) {
@@ -26,11 +29,11 @@ export class GameManagerService {
         if (mode === GameMode.LimitedTime) {
             const gamesRandomized = await this.limitedTimeGame.generateGames();
             gameCard = gamesRandomized[0];
-            game = new Game(mode, playerInfo, gameCard);
+            game = new Game(playerInfo, { info: gameCard, mode, timerConstant: await this.timeConstant.getGameTimeConstant() });
             this.limitedTimeGame.gamesShuffled.set(game.identifier, gamesRandomized);
         } else {
             gameCard = await this.gameInfo.getGameInfoById(gameCardId);
-            game = new Game(mode, playerInfo, gameCard);
+            game = new Game(playerInfo, { info: gameCard, mode });
         }
         this.games.set(game.identifier, game);
         return game.identifier;

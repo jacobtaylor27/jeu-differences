@@ -85,11 +85,14 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
             this.displayImages();
             this.gameInfoHandlerService.$newGame.next('');
         });
-        this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+        this.communicationSocketService.on<DifferenceFound>(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
             this.differencesDetectionHandlerService.setNumberDifferencesFound(
                 !data.isPlayerFoundDifference,
                 this.gameInfoHandlerService.getNbTotalDifferences(),
             );
+            if (this.cheatMode.isCheatModeActivated) {
+                this.cheatMode.stopCheatModeDifference(this.getContextOriginal(), this.getContextModified(), data.coords);
+            }
             if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);

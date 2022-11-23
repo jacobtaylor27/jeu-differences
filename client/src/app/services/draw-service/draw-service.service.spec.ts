@@ -183,13 +183,6 @@ describe('DrawServiceService', () => {
         expect(service.isClick).toBeTruthy();
     });
 
-    it('draw(...) should return undefined if the pencil is not clicked', () => {
-        service['isClick'] = false;
-        const spyOnMouseCoordinate = spyOn(Object.getPrototypeOf(service), 'updateMouseCoordinates');
-        service.draw({} as MouseEvent);
-        expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
-    });
-
     it('updateMouseCoordinate(...) should update return a line according to the given coordinates', () => {
         const line = service['updateMouseCoordinates'](fakeMouseEvent);
         const expectedLine = { x: 0, y: 0 };
@@ -236,19 +229,26 @@ describe('DrawServiceService', () => {
         expect((states[0].temporary.nativeElement.getContext('2d') as CanvasRenderingContext2D).globalCompositeOperation).toEqual('source-over');
     });
 
-    /*
-    updateImages() {
-        const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
-        this.canvasStateService.states.forEach((state) => {
-            const ctx: CanvasRenderingContext2D = state?.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
-            ctx.drawImage(state.background.nativeElement, 0, 0);
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.drawImage(state.foreground.nativeElement, 0, 0);
-            this.$drawingImage.get(state.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
-        });
-    }
+    it('draw(...) should return undefined if the pencil is not clicked', () => {
+        service['isClick'] = false;
+        const spyOnMouseCoordinate = spyOn(Object.getPrototypeOf(service), 'updateMouseCoordinates');
+        service.draw({} as MouseEvent);
+        expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
+    });
 
-    */
+    it('draw(...) should call update current command, create a stroke and update image', () => {
+        canvasStateServiceSpyObj.states = [drawingBoardStub];
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        service['isClick'] = true;
+        service['pencil'] = fakePencil;
+        service['currentCommand'] = fakeCurrentCommand;
+        service['updateCurrentCommand'](fakeLine);
+        const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
+        service.draw(fakeMouseEvent);
+        expect(spyUpdateCurrentCommand).toHaveBeenCalled();
+    });
 
     /*
     draw(event: MouseEvent) {

@@ -70,11 +70,7 @@ export class DrawService {
 
     stopDrawing() {
         this.isClick = false;
-        if (this.pencil.state === 'Pencil') {
-            this.currentCommand.name = 'draw';
-        } else {
-            this.currentCommand.name = 'erase';
-        }
+        this.currentCommand.name = this.pencil.state === 'Pencil' ? 'draw' : 'erase';
         this.addCurrentCommand(new DrawCommand(this.currentCommand, this), false);
         this.removeCommandsPastIndex();
     }

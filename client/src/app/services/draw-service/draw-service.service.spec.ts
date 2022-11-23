@@ -263,17 +263,33 @@ describe('DrawServiceService', () => {
         expect(spyCreateStroke).toHaveBeenCalledWith(line, style, canvasType);
     });
 
-    /*
-    redraw(command: Command) {
-        command.strokes.forEach((stroke) => {
-            stroke.lines.forEach((line) => {
-                this.createStroke(line, command.style, command.canvasType);
-            });
-        });
-    }
-    */
+    it('stopDrawing(...) should stop the drawing', () => {
+        service['isClick'] = true;
+        service.pencil = fakePencil;
+        service.pencil.state = Tool.Pencil;
+        service['currentCommand'] = fakeCurrentCommand;
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
+        service.stopDrawing();
+        expect(service['isClick']).toBeFalsy();
+        expect(service['currentCommand'].name).toEqual('draw');
+        expect(spyAddCurrentCommand).toHaveBeenCalled();
+        expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+    });
 
-    it('stopDrawing(...) should stop the drawing', () => {});
+    it('stopDrawing(...) should stop the erasing', () => {
+        service['isClick'] = true;
+        service.pencil = fakePencil;
+        service.pencil.state = Tool.Eraser;
+        service['currentCommand'] = fakeCurrentCommand;
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
+        service.stopDrawing();
+        expect(service['isClick']).toBeFalsy();
+        expect(service['currentCommand'].name).toEqual('erase');
+        expect(spyAddCurrentCommand).toHaveBeenCalled();
+        expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+    });
 
     it('leaveCanvas(...) should stop the drawing', () => {});
 

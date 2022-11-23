@@ -577,6 +577,16 @@ describe('DrawServiceService', () => {
         expect(spyGetImageData).toHaveBeenCalled();
     });
 
+    it('clearAllLayers(...) should return if CanvasType is None', () => {
+        service.clearAllLayers(CanvasType.None);
+        expect(canvasStateServiceSpyObj.getCanvasState).not.toHaveBeenCalled();
+    });
+
+    it('clearAllLayers(...) should return if CanvasType is Both', () => {
+        service.clearAllLayers(CanvasType.Both);
+        expect(canvasStateServiceSpyObj.getCanvasState).not.toHaveBeenCalled();
+    });
+
     it('clearAllLayers(...) should call functions to clear background and foreground', () => {});
 
     it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {});
@@ -585,10 +595,16 @@ describe('DrawServiceService', () => {
 });
 
 /*
-    pasteImageDataOn(targetedForeground: DrawingBoardState, selectedForeground: DrawingBoardState) {
-        const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        targetForeground.putImageData(selectedImageData, 0, 0);
+    clearAllLayers(canvasType: CanvasType) {
+        if (canvasType === CanvasType.None || canvasType === CanvasType.Both) return;
+        const canvasState = this.canvasStateService.getCanvasState(canvasType);
+
+        if (canvasState) {
+            const background = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            const foreground = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.clearBackground(background);
+            this.clearForeground(foreground);
+        }
+        this.updateImages();
     }
 */

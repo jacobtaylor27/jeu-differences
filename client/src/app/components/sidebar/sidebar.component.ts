@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { GameMode } from '@common/game-mode';
 
@@ -8,24 +8,17 @@ import { GameMode } from '@common/game-mode';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-    @Input() timer = '';
-    gameMode: GameMode;
-    gameName: string;
+    gameMode: GameMode
+    gameName: string 
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
-        this.getGameInformation();
+        this.gameMode = this.gameInformationHandlerService.getGameMode();
+        this.gameName = this.gameInformationHandlerService.getGameName();
+        this.gameInformationHandlerService.$newGame.subscribe(() => {
+            this.gameMode = this.gameInformationHandlerService.getGameMode();
+            this.gameName = this.gameInformationHandlerService.getGameName();
+        })
+
     }
 
-    getGameInformation(): void {
-        this.gameMode = this.getGameMode();
-        this.gameName = this.getGameName();
-    }
-
-    getGameName() {
-        return this.gameInformationHandlerService.getGameName();
-    }
-
-    getGameMode() {
-        return this.gameInformationHandlerService.getGameMode();
-    }
 }

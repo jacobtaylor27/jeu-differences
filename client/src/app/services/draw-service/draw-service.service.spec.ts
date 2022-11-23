@@ -201,7 +201,14 @@ describe('DrawServiceService', () => {
         service['pencil'] = fakePencil;
         service['currentCommand'] = fakeCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
-        expect(service['currentCommand'].strokes[0].lines[0]).toEqual(fakeLine);
+        const expectedStyle: StrokeStyle = {
+            color: fakePencil.color,
+            cap: fakePencil.cap,
+            width: fakePencil.width.pencil,
+            destination: 'source-over',
+        };
+        expect(service['currentCommand'].strokes[0].lines[0]).toBe(fakeLine);
+        expect(service['currentCommand'].style).toEqual(expectedStyle);
     });
 
     it('createStroke(...) should create a stroke', () => {});

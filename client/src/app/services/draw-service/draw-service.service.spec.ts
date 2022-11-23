@@ -60,7 +60,6 @@ describe('DrawServiceService', () => {
         spyOn(service, 'updateImages').and.callFake(() => {});
         const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
             drawingBoardStub.canvasType = CanvasType.Left;
             return drawingBoardStub;
@@ -401,7 +400,32 @@ describe('DrawServiceService', () => {
         expect(secondPutImageSpy).toHaveBeenCalled();
     });
 
-    it('switchForegrounds(...) should make the right verification before adding command', () => {});
+    it('switchForegrounds(...) should make the right verification before adding command', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake((canvasType) => {
+            if (canvasType === CanvasType.Right) {
+                return drawingBoardStubRight;
+            } else {
+                return drawingBoardStubLeft;
+            }
+        });
+        const spySetCurrentCommand = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        service.switchForegrounds();
+        expect(spySetCurrentCommand).toHaveBeenCalledWith('switchForegrounds', CanvasType.Both);
+        expect(spyAddCurrentCommand).toHaveBeenCalled();
+    });
 
     it('clearAllBackground(...) should iterate through all backgrounds and clear them all', () => {});
 

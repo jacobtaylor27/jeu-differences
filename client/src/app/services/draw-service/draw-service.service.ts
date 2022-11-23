@@ -187,7 +187,7 @@ export class DrawService {
     }
 
     clearAllLayers(canvasType: CanvasType) {
-        if (canvasType === CanvasType.None || canvasType === CanvasType.Both) return;
+        if (!(canvasType === CanvasType.Right || canvasType === CanvasType.Left)) return;
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
 
         if (canvasState) {

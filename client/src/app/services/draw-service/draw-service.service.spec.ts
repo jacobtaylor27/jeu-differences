@@ -587,7 +587,9 @@ describe('DrawServiceService', () => {
         expect(canvasStateServiceSpyObj.getCanvasState).not.toHaveBeenCalled();
     });
 
-    it('clearAllLayers(...) should call functions to clear background and foreground', () => {});
+    it('clearAllLayers(...) should call functions to clear background and foreground', () => {
+        // service.clearAllLayers(CanvasType.Right);
+    });
 
     it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {});
 

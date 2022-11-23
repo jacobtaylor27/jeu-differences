@@ -11,7 +11,13 @@ describe('AdminCommandsComponent', () => {
     let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(async () => {
-        spyAdminService = jasmine.createSpyObj('AdminService', ['openSettings', 'deleteAllGames', 'resetAllHighScores', 'hasCards']);
+        spyAdminService = jasmine.createSpyObj('AdminService', [
+            'openSettings',
+            'deleteAllGames',
+            'resetAllHighScores',
+            'hasCards',
+            'refreshAllGames',
+        ]);
         spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
@@ -50,6 +56,12 @@ describe('AdminCommandsComponent', () => {
     it('onClickDeleteGames should call deleteAllGames from admin service', () => {
         component.onClickDeleteGames();
         expect(spyAdminService.deleteAllGames).toHaveBeenCalled();
+        expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
+    });
+
+    it('onClickRefreshGames should call refreshAllGames from admin service', () => {
+        component.onClickRefreshGames();
+        expect(spyAdminService.refreshAllGames).toHaveBeenCalled();
         expect(spyRouterService.reloadPage).toHaveBeenCalledWith('admin');
     });
 });

@@ -356,7 +356,24 @@ describe('DrawServiceService', () => {
         expect(spyClearAllForegrounds).toHaveBeenCalled();
     });
 
-    it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {});
+    it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        service.commands = [newCommand, newCommand];
+        service['indexOfCommand'] = 0;
+        service['removeCommandsPastIndex']();
+        expect(service.commands.length).toEqual(1);
+    });
+
+    /*
+        private removeCommandsPastIndex() {
+        const commandsToDelete: number = this.commands.length - 1 - this.indexOfCommand;
+        if (commandsToDelete > 0) {
+            for (let i = 0; i < commandsToDelete; i++) {
+                this.commands.pop();
+            }
+        }
+    }
+    */
 
     it('switchForegrounds(...) should make the right verification before adding command', () => {});
 

@@ -578,17 +578,39 @@ describe('DrawServiceService', () => {
     });
 
     it('clearAllLayers(...) should return if CanvasType is None', () => {
+        const spyUpdateImage = spyOn(service, 'updateImages');
         service.clearAllLayers(CanvasType.None);
         expect(canvasStateServiceSpyObj.getCanvasState).not.toHaveBeenCalled();
+        expect(spyUpdateImage).not.toHaveBeenCalled();
     });
 
     it('clearAllLayers(...) should return if CanvasType is Both', () => {
+        const spyUpdateImage = spyOn(service, 'updateImages');
         service.clearAllLayers(CanvasType.Both);
         expect(canvasStateServiceSpyObj.getCanvasState).not.toHaveBeenCalled();
+        expect(spyUpdateImage).not.toHaveBeenCalled();
     });
 
     it('clearAllLayers(...) should call functions to clear background and foreground', () => {
-        // service.clearAllLayers(CanvasType.Right);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImage = spyOn(service, 'updateImages').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearForeground = spyOn(service, 'clearForeground').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearBackground = spyOn(service, 'clearBackground').and.callFake(() => {});
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return drawingBoardStubRight;
+        });
+        service.clearAllLayers(CanvasType.Right);
+        expect(spyUpdateImage).toHaveBeenCalled();
+        expect(spyClearForeground).toHaveBeenCalledWith(drawingBoardStub.background.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        expect(spyClearBackground).toHaveBeenCalledWith(drawingBoardStub.background.nativeElement.getContext('2d') as CanvasRenderingContext2D);
     });
 
     it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {});

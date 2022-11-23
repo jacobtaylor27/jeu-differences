@@ -364,16 +364,12 @@ describe('DrawServiceService', () => {
         expect(service.commands.length).toEqual(1);
     });
 
-    /*
-        private removeCommandsPastIndex() {
-        const commandsToDelete: number = this.commands.length - 1 - this.indexOfCommand;
-        if (commandsToDelete > 0) {
-            for (let i = 0; i < commandsToDelete; i++) {
-                this.commands.pop();
-            }
-        }
-    }
-    */
+    it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {
+        service.commands = [];
+        service['indexOfCommand'] = -1;
+        service['removeCommandsPastIndex']();
+        expect(service.commands.length).toEqual(0);
+    });
 
     it('switchForegrounds(...) should make the right verification before adding command', () => {});
 

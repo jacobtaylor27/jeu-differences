@@ -48,7 +48,7 @@ export class DrawService {
         const focusedCanvas = this.canvasStateService.getFocusedCanvas();
         if (focusedCanvas === undefined) return;
 
-        this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
+        this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
         this.setCurrentCommand('', focusedCanvas.canvasType);
     }
 

@@ -160,6 +160,7 @@ describe('DrawServiceService', () => {
     });
 
     it('startDrawing should handle mouse event and return undefined if no canvas is in focus', () => {
+        service['isClick'] = false;
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             return undefined;
         });
@@ -169,6 +170,7 @@ describe('DrawServiceService', () => {
     });
 
     it('startDrawing should handle mouse event if no canvas is in focus', () => {
+        service['isClick'] = false;
         const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition');
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             return undefined;
@@ -180,6 +182,7 @@ describe('DrawServiceService', () => {
     });
 
     it('startDrawing should handle mouse event if a canvas is in focus', () => {
+        service['isClick'] = false;
         const newCoord: Vec2 = { x: 0, y: 0 };
         const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => {
             return newCoord;

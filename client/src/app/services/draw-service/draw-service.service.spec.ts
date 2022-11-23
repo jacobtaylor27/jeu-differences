@@ -291,7 +291,19 @@ describe('DrawServiceService', () => {
         expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
     });
 
-    it('leaveCanvas(...) should stop the drawing', () => {});
+    it('leaveCanvas(...) should stop drawing if already drawing', () => {
+        const spyStopDrawing = spyOn(service, 'stopDrawing');
+        const fakeMouseButtonEvent = { buttons: 1 } as MouseEvent;
+        service.leaveCanvas(fakeMouseButtonEvent);
+        expect(spyStopDrawing).toHaveBeenCalled();
+    });
+
+    it('leaveCanvas(...) shouldnt do anything if not drawing', () => {
+        const spyStopDrawing = spyOn(service, 'stopDrawing');
+        const fakeMouseButtonEvent = { buttons: 0 } as MouseEvent;
+        service.leaveCanvas(fakeMouseButtonEvent);
+        expect(spyStopDrawing).not.toHaveBeenCalled();
+    });
 
     it('executeAllCommands(...) should iterate through all commands', () => {});
 

@@ -1,4 +1,5 @@
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
+import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { Coordinate } from '@common/coordinate';
@@ -9,15 +10,16 @@ import * as http from 'http';
 import * as LZString from 'lz-string';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
-
 @Service()
 export class SocketManagerService {
     private sio: Server;
 
+    // eslint-disable-next-line max-params
     constructor(
         private gameManager: GameManagerService,
         private readonly multiplayerGameManager: MultiplayerGameManager,
         private eventMessageService: EventMessageService,
+        private cluesService: CluesService,
     ) {}
 
     set server(server: http.Server) {
@@ -58,8 +60,7 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
-                console.log(clueIndex);
-                console.log(gameId);
+                console.log(this.cluesService.findRandomDifference(gameId));
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {

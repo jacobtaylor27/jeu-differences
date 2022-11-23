@@ -1,5 +1,5 @@
-import { Coordinate } from '@common/coordinate';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { Coordinate } from '@common/coordinate';
 
 export class CluesService {
     constructor(private readonly gameManager: GameManagerService) {}

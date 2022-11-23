@@ -53,9 +53,8 @@ export class DrawService {
     }
 
     draw(event: MouseEvent) {
-        if (!this.isClick || !this.pencil) {
-            return;
-        }
+        if (!this.isClick) return;
+
         const line = this.updateMouseCoordinates(event);
         this.currentCommand.strokes[0].lines.push(line);
 

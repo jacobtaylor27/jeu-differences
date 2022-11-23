@@ -230,7 +230,6 @@ describe('DrawServiceService', () => {
         expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
     });
 
-    it('draw(...) should return undefined iif the pencil is undefined', () => {});
     it('draw(...) should call updateMouseCoordinates(event) and update the current line', () => {});
     it('draw(...) should update the current command strokes and style', () => {});
     it('draw(...) should create a stroke', () => {});

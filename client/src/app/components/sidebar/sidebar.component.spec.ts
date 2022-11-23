@@ -82,4 +82,12 @@ describe('SidebarComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should set new game values', () => {
+        component.gameName = 'test';
+        spyGameInfosService.$newGame.subscribe(() => {
+            expect(component.gameName).not.toEqual('test');
+        });
+        spyGameInfosService.$newGame.next('');
+    });
 });

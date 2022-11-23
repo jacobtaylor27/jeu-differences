@@ -125,7 +125,6 @@ describe('DrawServiceService', () => {
         const expectedFinalCoord = { x: 1, y: 1 };
         const expectedInitCoord = { x: 0, y: 0 };
         service.coordDraw = expectedInitCoord;
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             drawingBoardStub.canvasType = CanvasType.Right;
             return drawingBoardStub;

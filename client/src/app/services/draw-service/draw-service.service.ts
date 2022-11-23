@@ -258,7 +258,7 @@ export class DrawService {
         const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         const focusedCanvas = this.canvasStateService.getFocusedCanvas();
         if (focusedCanvas) {
-            this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
+            this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
         }
         const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
         return { initCoord, finalCoord };

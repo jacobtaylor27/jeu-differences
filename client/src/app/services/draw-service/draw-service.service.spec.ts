@@ -33,7 +33,7 @@ describe('DrawServiceService', () => {
 
     it('reposition should return a position', () => {
         const expectedReposition = { x: 10, y: 10 };
-        expect(service.reposition({ offsetLeft: 0, offsetTop: 0 } as HTMLCanvasElement, { clientX: 10, clientY: 10 } as MouseEvent)).toEqual(
+        expect(service['reposition']({ offsetLeft: 0, offsetTop: 0 } as HTMLCanvasElement, { clientX: 10, clientY: 10 } as MouseEvent)).toEqual(
             expectedReposition,
         );
     });
@@ -122,7 +122,7 @@ describe('DrawServiceService', () => {
             drawingBoardStub.canvasType = CanvasType.Right;
             return drawingBoardStub;
         });
-        spyOn(service, 'reposition').and.callFake(() => expectedFinalCoord);
+        spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => expectedFinalCoord);
         expect(service['updateMouseCoordinates']({} as MouseEvent)).toEqual({ initCoord: expectedInitCoord, finalCoord: expectedFinalCoord });
     });
 
@@ -131,7 +131,7 @@ describe('DrawServiceService', () => {
         drawingBoardStub.canvasType = CanvasType.Left;
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => drawingBoardStub);
         service.pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
-        spyOn(service, 'reposition').and.returnValue({ x: 0, y: 0 });
+        spyOn(Object.getPrototypeOf(service), 'reposition').and.returnValue({ x: 0, y: 0 });
         const ctx = drawingBoardStub.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
         const moveToSpy = spyOn(ctx, 'moveTo');
@@ -160,7 +160,7 @@ describe('DrawServiceService', () => {
     });
 
     it('startDrawing should handle mouse event if no canvas is in focus', () => {
-        const respositionSpy = spyOn(service, 'reposition');
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition');
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             return undefined;
         });
@@ -171,7 +171,7 @@ describe('DrawServiceService', () => {
     });
 
     it('startDrawing should handle mouse event if a canvas is in focus', () => {
-        const respositionSpy = spyOn(service, 'reposition');
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition');
         const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             return drawingBoardStub;

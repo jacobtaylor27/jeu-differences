@@ -171,10 +171,6 @@ export class DrawService {
         ctx.stroke();
     }
 
-    reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {
-        return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
-    }
-
     switchForegrounds() {
         this.setCurrentCommand('switchForegrounds', CanvasType.Both);
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
@@ -246,6 +242,10 @@ export class DrawService {
         }
         this.indexOfCommand--;
         this.executeAllCommand();
+    }
+
+    private reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {
+        return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
     }
 
     private updateCurrentCommand(line: Line) {

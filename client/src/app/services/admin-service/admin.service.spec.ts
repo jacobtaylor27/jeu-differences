@@ -14,7 +14,7 @@ describe('AdminService', () => {
     let spyCarouselService: jasmine.SpyObj<GameCarouselService>;
 
     beforeEach(() => {
-        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards', 'refreshAllGames']);
         spyCarouselService = jasmine.createSpyObj('GameCarouselService', ['hasCards']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         TestBed.configureTestingModule({
@@ -27,6 +27,7 @@ describe('AdminService', () => {
         });
         service = TestBed.inject(AdminService);
         spyCommunicationService.deleteAllGameCards.and.returnValue(of());
+        spyCommunicationService.refreshAllGames.and.returnValue(of());
     });
 
     it('should be created', () => {
@@ -46,5 +47,10 @@ describe('AdminService', () => {
     it('openSettings should call call matDialog s method open', () => {
         service.openSettings();
         expect(spyMatDialog.open).toHaveBeenCalled();
+    });
+
+    it('should call refreshAllGames from communication service', () => {
+        service.refreshAllGames();
+        expect(spyCommunicationService.refreshAllGames).toHaveBeenCalled();
     });
 });

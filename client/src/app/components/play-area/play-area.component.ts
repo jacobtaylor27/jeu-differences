@@ -83,17 +83,18 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
             this.differencesDetectionHandlerService.playCorrectSound();
             this.gameInfoHandlerService.setGameInformation(data);
             this.displayImages();
+            this.gameInfoHandlerService.$newGame.next('');
         });
-        if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
-            this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
-                this.differencesDetectionHandlerService.setNumberDifferencesFound(
-                    !data.isPlayerFoundDifference,
-                    this.gameInfoHandlerService.getNbTotalDifferences(),
-                );
+        this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+            this.differencesDetectionHandlerService.setNumberDifferencesFound(
+                !data.isPlayerFoundDifference,
+                this.gameInfoHandlerService.getNbTotalDifferences(),
+            );
+            if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
-            });
-        }
+            }
+        });
     }
 
     getContextImgOriginal() {

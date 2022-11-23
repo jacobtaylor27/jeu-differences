@@ -19,7 +19,7 @@ describe('SidebarComponent', () => {
         spyGameInfosService = jasmine.createSpyObj(
             'GameInformationHandlerService',
             ['getGameName', 'getGameMode', 'getPlayer', 'getOpponent', 'getNbDifferences', 'getNbTotalDifferences'],
-            { $differenceFound: new Subject<string>() },
+            { $newGame: new Subject<string>(), $differenceFound: new Subject<string>() },
         );
         spyDifferencesDetection = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['nbDifferencesFound', 'resetNumberDifferencesFound']);
         spyGameInfosService.getPlayer.and.callFake(() => {
@@ -81,5 +81,13 @@ describe('SidebarComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should set new game values', () => {
+        component.gameName = 'test';
+        spyGameInfosService.$newGame.subscribe(() => {
+            expect(component.gameName).not.toEqual('test');
+        });
+        spyGameInfosService.$newGame.next('');
     });
 });

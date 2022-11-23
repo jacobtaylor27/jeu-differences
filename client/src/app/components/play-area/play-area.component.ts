@@ -83,6 +83,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
             this.differencesDetectionHandlerService.playCorrectSound();
             this.gameInfoHandlerService.setGameInformation(data);
             this.displayImages();
+            this.gameInfoHandlerService.$newGame.next('');
         });
         this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
             this.differencesDetectionHandlerService.setNumberDifferencesFound(

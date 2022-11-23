@@ -173,8 +173,7 @@ export class DrawService {
         if (leftCanvas && rightCanvas) {
             if (canvasType === CanvasType.Left) {
                 this.addCurrentCommand(new PasteExternalForegroundOnCommand(leftCanvas, rightCanvas, this));
-            }
-            if (canvasType === CanvasType.Right) {
+            } else if (canvasType === CanvasType.Right) {
                 this.addCurrentCommand(new PasteExternalForegroundOnCommand(rightCanvas, leftCanvas, this));
             }
         }

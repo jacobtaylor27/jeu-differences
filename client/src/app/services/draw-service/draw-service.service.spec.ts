@@ -2,6 +2,7 @@
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-command';
+import { PasteExternalForegroundOnCommand } from '@app/classes/commands/paste-external-foreground-on-command';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { Command } from '@app/interfaces/command';
@@ -502,7 +503,59 @@ describe('DrawServiceService', () => {
         expect(spyUpdateImages).toHaveBeenCalled();
     });
 
-    it('pasteExternalForegroundOn(...) should paste an external canvas on the focused canvas', () => {});
+    it('pasteExternalForegroundOn(...) should paste an external canvas on the focused canvas', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake((canvasType) => {
+            if (canvasType === CanvasType.Right) {
+                return drawingBoardStubRight;
+            } else {
+                return drawingBoardStubLeft;
+            }
+        });
+        const spySetCurrentCommand = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        service.pasteExternalForegroundOn(CanvasType.Left);
+        expect(spySetCurrentCommand).toHaveBeenCalledWith('pasteExternalForegroundOn', CanvasType.Left);
+        expect(spyAddCurrentCommand).toHaveBeenCalledWith(new PasteExternalForegroundOnCommand(drawingBoardStubLeft, drawingBoardStubRight, service));
+    });
+
+    it('pasteExternalForegroundOn(...) should paste an external canvas on the focused canvas', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake((canvasType) => {
+            if (canvasType === CanvasType.Right) {
+                return drawingBoardStubRight;
+            } else {
+                return drawingBoardStubLeft;
+            }
+        });
+        const spySetCurrentCommand = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        service.pasteExternalForegroundOn(CanvasType.Right);
+        expect(spySetCurrentCommand).toHaveBeenCalledWith('pasteExternalForegroundOn', CanvasType.Right);
+        expect(spyAddCurrentCommand).toHaveBeenCalledWith(new PasteExternalForegroundOnCommand(drawingBoardStubRight, drawingBoardStubLeft, service));
+    });
 
     it('pasteImageDataOn(...) should replace the image data of a context for a new one', () => {});
 

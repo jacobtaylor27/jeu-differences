@@ -160,7 +160,7 @@ export class DrawService {
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
-            this.addCurrentCommand(new SwitchForegroundCommand(leftCanvas, rightCanvas));
+            this.addCurrentCommand(new SwitchForegroundCommand(leftCanvas, rightCanvas, this));
         }
     }
 
@@ -216,6 +216,15 @@ export class DrawService {
         }
         this.indexOfCommand--;
         this.executeAllCommand();
+    }
+
+    switchForegroundImageData(primaryCanvasState: DrawingBoardState, secondCanvasState: DrawingBoardState) {
+        const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        primaryForeground.putImageData(rightImageData, 0, 0);
+        secondForeground.putImageData(leftImageData, 0, 0);
     }
 
     private createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {

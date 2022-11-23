@@ -1,9 +1,11 @@
 /* eslint-disable max-lines */
+import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-command';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
 import { Command } from '@app/interfaces/command';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
 import { Stroke } from '@app/interfaces/stroke';
@@ -369,6 +371,34 @@ describe('DrawServiceService', () => {
         service['indexOfCommand'] = -1;
         service['removeCommandsPastIndex']();
         expect(service.commands.length).toEqual(0);
+    });
+
+    it('switchForegroundImageData should switch the data from two foreground', () => {
+        const firstCanvasState: DrawingBoardState = {
+            canvasType: CanvasType.Left,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+
+        const secondCanvasState: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+
+        const firstPutImageSpy = spyOn(firstCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'putImageData');
+        const firstGetImageSpy = spyOn(firstCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'getImageData');
+        const secondPutImageSpy = spyOn(secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'putImageData');
+        const secondGetImageSpy = spyOn(secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'getImageData');
+
+        service.switchForegroundImageData(firstCanvasState, secondCanvasState);
+
+        expect(firstGetImageSpy).toHaveBeenCalled();
+        expect(firstPutImageSpy).toHaveBeenCalled();
+        expect(secondGetImageSpy).toHaveBeenCalled();
+        expect(secondPutImageSpy).toHaveBeenCalled();
     });
 
     it('switchForegrounds(...) should make the right verification before adding command', () => {});

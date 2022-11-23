@@ -1,4 +1,3 @@
-import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
@@ -8,7 +7,7 @@ import { CanvasStateService } from '@app/services/canvas-state/canvas-state.serv
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 import { DrawService } from './draw-service.service';
-import { drawingBoardStub, fakeMouseEvent } from './draw-service.service.spec.constants';
+import { drawingBoardStub, fakeCurrentCommand, fakeLine, fakeMouseEvent, fakePencil } from './draw-service.service.spec.constants';
 
 describe('DrawServiceService', () => {
     let service: DrawService;
@@ -129,16 +128,11 @@ describe('DrawServiceService', () => {
 
     it('drawPoint should set the style of the pencil and create the point', () => {
         service.coordDraw = { x: 0, y: 0 };
-        const expectedCanvasState = {
-            canvasType: CanvasType.Left,
-            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
-            background: {} as ElementRef<HTMLCanvasElement>,
-            temporary: {} as ElementRef<HTMLCanvasElement>,
-        };
-        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => expectedCanvasState);
+        drawingBoardStub.canvasType = CanvasType.Left;
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => drawingBoardStub);
         service.pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
         spyOn(service, 'reposition').and.returnValue({ x: 0, y: 0 });
-        const ctx = expectedCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = drawingBoardStub.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
         const moveToSpy = spyOn(ctx, 'moveTo');
         const lineToSpy = spyOn(ctx, 'lineTo');
@@ -203,7 +197,14 @@ describe('DrawServiceService', () => {
         expect(line.finalCoord).toEqual(expectedLine);
     });
 
-    it('updateCurrentCommand(...) should update the current command', () => {});
+    it('updateCurrentCommand(...) should update the current command', () => {
+        service['pencil'] = fakePencil;
+        service['currentCommand'] = fakeCurrentCommand;
+        service['updateCurrentCommand'](fakeLine);
+        expect(service['currentCommand'].strokes[0].lines[0]).toEqual(fakeLine);
+    });
+
+    it('createStroke(...) should create a stroke', () => {});
 
     it('draw(...) should call update current command, create a stroke and update image', () => {});
 

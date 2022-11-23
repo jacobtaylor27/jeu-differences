@@ -10,12 +10,9 @@ import { StrokeStyle } from '@app/interfaces/stroke-style';
 
 export const drawingBoardStub: DrawingBoardState = {
     canvasType: CanvasType.None,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    background: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    temporary: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
+    foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+    background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+    temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
 };
 
 export const fakeMouseEvent = {
@@ -24,13 +21,13 @@ export const fakeMouseEvent = {
 } as MouseEvent;
 
 export const fakePencil: Pencil = {
-    color: 'orange',
-    cap: 'round',
+    color: 'blue',
+    cap: 'square',
     width: { pencil: 1, eraser: 3 },
     state: Tool.Pencil,
 };
 
-export const fakeLines: Line = {
+export const fakeLine: Line = {
     initCoord: { x: 0, y: 0 },
     finalCoord: { x: 0, y: 0 },
 };
@@ -42,7 +39,7 @@ export const fakeStroke: Stroke = {
 export const fakeCurrentCommand: Command = {
     canvasType: CanvasType.None,
     name: 'test',
-    strokes: [],
+    strokes: [fakeStroke],
     style: {} as StrokeStyle,
 };
 

@@ -501,4 +501,32 @@ describe('DrawServiceService', () => {
         expect(spyClearRect).toHaveBeenCalled();
         expect(spyUpdateImages).toHaveBeenCalled();
     });
+
+    it('pasteExternalForegroundOn(...) should paste an external canvas on the focused canvas', () => {});
+
+    it('pasteImageDataOn(...) should replace the image data of a context for a new one', () => {});
+
+    it('clearAllLayers(...) should call functions to clear background and foreground', () => {});
+
+    it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {});
+
+    it('undo(...) should iterate over all of the commands and change the index for the correct one', () => {});
 });
+
+/*
+    pasteExternalForegroundOn(canvasType: CanvasType) {
+        this.setCurrentCommand('pasteExternalForegroundOn', canvasType);
+
+        const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
+        const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
+
+        if (leftCanvas && rightCanvas) {
+            if (canvasType === CanvasType.Left) {
+                this.addCurrentCommand(new PasteExternalForegroundOnCommand(leftCanvas, rightCanvas, this));
+            }
+            if (canvasType === CanvasType.Right) {
+                this.addCurrentCommand(new PasteExternalForegroundOnCommand(rightCanvas, leftCanvas, this));
+            }
+        }
+    }
+    */

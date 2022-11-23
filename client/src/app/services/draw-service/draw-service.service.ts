@@ -146,7 +146,7 @@ export class DrawService {
     updateImages() {
         const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
         this.canvasStateService.states.forEach((state) => {
-            const ctx: CanvasRenderingContext2D = state?.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
+            const ctx: CanvasRenderingContext2D = state.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
             ctx.drawImage(state.background.nativeElement, 0, 0);
             ctx.globalCompositeOperation = 'source-over';
             ctx.drawImage(state.foreground.nativeElement, 0, 0);
@@ -228,7 +228,8 @@ export class DrawService {
 
     private createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
         const focusedCanvas = canvasType ? this.canvasStateService.getCanvasState(canvasType) : this.canvasStateService.getFocusedCanvas();
-        const ctx: CanvasRenderingContext2D = focusedCanvas?.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        if (focusedCanvas === undefined) return;
+        const ctx: CanvasRenderingContext2D = focusedCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.beginPath();
         ctx.globalCompositeOperation = strokeStyle.destination;
         ctx.lineWidth = strokeStyle.width;

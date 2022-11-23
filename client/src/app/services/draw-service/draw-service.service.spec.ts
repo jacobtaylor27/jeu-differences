@@ -239,9 +239,23 @@ describe('DrawServiceService', () => {
         expect(service['currentCommand'].style).toEqual(expectedStyle);
     });
 
+    it('createStroke(...) should return undefined when the focus canvas is undefined', () => {
+        const drawingBoard: DrawingBoardState = {
+            canvasType: CanvasType.Left,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return drawingBoard;
+        });
+        service['createStroke'](fakeLine, fakeStrokeStyle, CanvasType.Right);
+        expect(canvasStateServiceSpyObj.getCanvasState).toHaveBeenCalled();
+    });
+
     it('createStroke(...) should create a stroke with a given canvas', () => {
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
-            return drawingBoardStub;
+            return undefined;
         });
         service['createStroke'](fakeLine, fakeStrokeStyle, CanvasType.Right);
         expect(canvasStateServiceSpyObj.getCanvasState).toHaveBeenCalled();
@@ -402,7 +416,6 @@ describe('DrawServiceService', () => {
             background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
             temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
         };
-
         const secondCanvasState: DrawingBoardState = {
             canvasType: CanvasType.Right,
             foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,

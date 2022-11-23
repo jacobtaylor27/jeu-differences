@@ -242,8 +242,8 @@ describe('DrawServiceService', () => {
             return drawingBoardStub;
         });
         service['isClick'] = true;
-        service['pencil'] = fakePencil;
-        service['currentCommand'] = fakeCurrentCommand;
+        service['pencil'] = Object.create(fakePencil);
+        service['currentCommand'] = Object.create(fakeCurrentCommand);
         service['updateCurrentCommand'](fakeLine);
         const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
         const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');

@@ -344,6 +344,20 @@ describe('DrawServiceService', () => {
         expect(spyStopDrawing).not.toHaveBeenCalled();
     });
 
+    it('enterCanvas(...) should call startDrawing when mouse is clicked', () => {
+        const spyStartDrawing = spyOn(service, 'startDrawing');
+        const fakeMouseButtonEvent = { buttons: 1 } as MouseEvent;
+        service.enterCanvas(fakeMouseButtonEvent);
+        expect(spyStartDrawing).toHaveBeenCalledWith(fakeMouseButtonEvent);
+    });
+
+    it('enterCanvas(...) should not call startDrawing when mouse is not clicked', () => {
+        const spyStartDrawing = spyOn(service, 'startDrawing');
+        const fakeMouseButtonEvent = { buttons: 0 } as MouseEvent;
+        service.enterCanvas(fakeMouseButtonEvent);
+        expect(spyStartDrawing).not.toHaveBeenCalled();
+    });
+
     it('executeAllCommands(...) should iterate through all commands', () => {
         const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
         // eslint-disable-next-line @typescript-eslint/no-empty-function

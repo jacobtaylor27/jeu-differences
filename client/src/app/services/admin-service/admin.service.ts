@@ -22,6 +22,10 @@ export class AdminService {
         return this.gameCarouselService.hasCards();
     }
 
+    refreshAllGames() {
+        this.communicationService.refreshAllGames().subscribe();
+    }
+
     deleteAllGames(): void {
         this.socketService.send(SocketEvent.GamesDeleted);
         this.communicationService.deleteAllGameCards().subscribe();

@@ -1,6 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Command } from '@app/interfaces/command';
+import { Line } from '@app/interfaces/line';
+import { Pencil } from '@app/interfaces/pencil';
+import { Stroke } from '@app/interfaces/stroke';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
@@ -191,8 +195,27 @@ describe('DrawServiceService', () => {
     });
 
     it('updateCurrentCommand(...) should update the current command', () => {
-        service['pencil'] = fakePencil;
-        service['currentCommand'] = fakeCurrentCommand;
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newPencil: Pencil = {
+            color: 'blue',
+            cap: 'square',
+            width: { pencil: 1, eraser: 3 },
+            state: Tool.Pencil,
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        service['pencil'] = newPencil;
+        service['currentCommand'] = newCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
             color: fakePencil.color,
@@ -200,7 +223,7 @@ describe('DrawServiceService', () => {
             width: fakePencil.width.pencil,
             destination: 'source-over',
         };
-        expect(service['currentCommand'].strokes[0].lines[0]).toBe(fakeLine);
+        expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
         expect(service['currentCommand'].style).toEqual(expectedStyle);
     });
 
@@ -256,10 +279,23 @@ describe('DrawServiceService', () => {
 
     it('redraw(...) should iterate over all the drawing lines', () => {
         const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
-        service.redraw(fakeCurrentCommand);
-        const line = fakeCurrentCommand.strokes[0].lines[0];
-        const style = fakeCurrentCommand.style;
-        const canvasType = fakeCurrentCommand.canvasType;
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        service.redraw(newCurrentCommand);
+        const line = newCurrentCommand.strokes[0].lines[0];
+        const style = newCurrentCommand.style;
+        const canvasType = newCurrentCommand.canvasType;
         expect(spyCreateStroke).toHaveBeenCalledWith(line, style, canvasType);
     });
 

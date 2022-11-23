@@ -1,14 +1,14 @@
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
-import { PublicGameInformation } from '@common/game-information';
 import { Coordinate } from '@common/coordinate';
+import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
+import * as LZString from 'lz-string';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
-import * as LZString from 'lz-string';
 
 @Service()
 export class SocketManagerService {
@@ -55,6 +55,11 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.FetchDifferences, (gameId: string) => {
                 socket.emit(SocketEvent.FetchDifferences, this.gameManager.getNbDifferenceNotFound(gameId));
+            });
+
+            socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
+                console.log(clueIndex);
+                console.log(gameId);
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {

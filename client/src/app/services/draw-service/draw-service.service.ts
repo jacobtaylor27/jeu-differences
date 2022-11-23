@@ -184,16 +184,6 @@ export class DrawService {
         return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
     }
 
-    updateMouseCoordinates(event: MouseEvent): Line {
-        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        const focusedCanvas = this.canvasStateService.getFocusedCanvas();
-        if (focusedCanvas) {
-            this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
-        }
-        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        return { initCoord, finalCoord };
-    }
-
     switchForegrounds() {
         this.setCurrentCommand('switchForegrounds', CanvasType.Both);
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
@@ -265,6 +255,16 @@ export class DrawService {
         }
         this.indexOfCommand--;
         this.executeAllCommand();
+    }
+
+    private updateMouseCoordinates(event: MouseEvent): Line {
+        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        const focusedCanvas = this.canvasStateService.getFocusedCanvas();
+        if (focusedCanvas) {
+            this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
+        }
+        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        return { initCoord, finalCoord };
     }
 
     private executeAllCommand() {

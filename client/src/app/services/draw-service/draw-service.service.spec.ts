@@ -613,22 +613,45 @@ describe('DrawServiceService', () => {
         expect(spyClearBackground).toHaveBeenCalledWith(drawingBoardStub.background.nativeElement.getContext('2d') as CanvasRenderingContext2D);
     });
 
-    it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {});
+    it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        service.commands = [newCommand, newCommand];
+        service['indexOfCommand'] = 0;
+        service.redo();
+        expect(service['indexOfCommand']).toEqual(1);
+        expect(spyExecuteAllCommands).toHaveBeenCalled();
+    });
+
+    it('redo(...) should not iterate over elements if its index is greated than the commands lenght', () => {
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand');
+        service['indexOfCommand'] = 0;
+        service.redo();
+        expect(service['indexOfCommand']).toEqual(0);
+        expect(spyExecuteAllCommands).not.toHaveBeenCalled();
+    });
 
     it('undo(...) should iterate over all of the commands and change the index for the correct one', () => {});
 });
 
 /*
-    clearAllLayers(canvasType: CanvasType) {
-        if (canvasType === CanvasType.None || canvasType === CanvasType.Both) return;
-        const canvasState = this.canvasStateService.getCanvasState(canvasType);
-
-        if (canvasState) {
-            const background = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            const foreground = canvasState.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            this.clearBackground(background);
-            this.clearForeground(foreground);
+    redo() {
+        if (this.indexOfCommand >= this.commands.length - 1) {
+            return;
         }
-        this.updateImages();
+        this.indexOfCommand++;
+        this.executeAllCommand();
     }
+
+    undo() {
+        // same justification as before
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        if (this.indexOfCommand <= -1) {
+            return;
+        }
+        this.indexOfCommand--;
+        this.executeAllCommand();
+    }
+
 */

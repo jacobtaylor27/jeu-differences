@@ -54,16 +54,8 @@ export class DrawService {
 
     draw(event: MouseEvent) {
         if (!this.isClick) return;
-
         const line = this.updateMouseCoordinates(event);
-        this.currentCommand.strokes[0].lines.push(line);
-
-        this.currentCommand.style = {
-            color: this.pencil.color,
-            cap: this.pencil.cap,
-            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
-            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
-        };
+        this.updateCurrentCommand(line);
         this.createStroke(line, this.currentCommand.style);
         this.updateImages();
     }
@@ -254,6 +246,16 @@ export class DrawService {
         }
         this.indexOfCommand--;
         this.executeAllCommand();
+    }
+
+    private updateCurrentCommand(line: Line) {
+        this.currentCommand.strokes[0].lines.push(line);
+        this.currentCommand.style = {
+            color: this.pencil.color,
+            cap: this.pencil.cap,
+            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
+            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
+        };
     }
 
     private updateMouseCoordinates(event: MouseEvent): Line {

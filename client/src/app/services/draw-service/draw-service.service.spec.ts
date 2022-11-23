@@ -2,8 +2,11 @@ import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Command } from '@app/interfaces/command';
 import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { Line } from '@app/interfaces/line';
+import { Pencil } from '@app/interfaces/pencil';
+import { Stroke } from '@app/interfaces/stroke';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
@@ -232,31 +235,73 @@ describe('DrawServiceService', () => {
     });
 
     it('draw(...) should call updateMouseCoordinates(event)', () => {
-        const spyOnMouseCoordinate = spyOn(Object.getPrototypeOf(service), 'updateMouseCoordinates');
+        service['isClick'] = true;
+        const spyOnMouseCoordinate = spyOn(Object.getPrototypeOf(service), 'updateMouseCoordinates').and.callFake(() => {
+            const newLine: Line = {
+                initCoord: { x: 0, y: 0 },
+                finalCoord: { x: 0, y: 0 },
+            };
+            return newLine;
+        });
+        const stroke: Stroke = {
+            lines: [],
+        };
+        const newCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [stroke],
+            style: {} as StrokeStyle,
+        };
+        service['currentCommand'] = newCommand;
         service.draw({} as MouseEvent);
         expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
     });
 
-    it('draw(...) should update the current command strokes and style', () => {});
+    it('draw(...) should update the current command style', () => {
+        service['isClick'] = true;
+        const newCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [],
+            style: {} as StrokeStyle,
+        };
+        service['currentCommand'] = newCommand;
+        const newPencil: Pencil = {
+            color: 'orange',
+            cap: 'round',
+            width: { pencil: 1, eraser: 3 },
+            state: Tool.Pencil,
+        };
+        service['pencil'] = newPencil;
+        service.draw({} as MouseEvent);
+        expect(service['currentCommand'].style.color).toBe(newPencil.color);
+        expect(service['currentCommand'].style.cap).toBe(newPencil.cap);
+        expect(service['currentCommand'].style.width).toBe(newPencil.width.pencil);
+        expect(service['currentCommand'].style.destination).toBe('source-over');
+    });
+
     it('draw(...) should create a stroke', () => {});
+
     it('draw(...) should update the image', () => {});
 });
 
 /*
     draw(event: MouseEvent) {
-        if (!this.isClick || !this.pencil) {
-            return;
-        }
+        if (!this.isClick) return;
         const line = this.updateMouseCoordinates(event);
-        this.currentCommand.strokes[0].lines.push(line);
+        this.updateCurrentCommand(line);
+        this.createStroke(line, this.currentCommand.style);
+        this.updateImages();
+    }
 
+    private updateCurrentCommand(line: Line) {
+        this.currentCommand.strokes[0].lines.push(line);
         this.currentCommand.style = {
             color: this.pencil.color,
             cap: this.pencil.cap,
             width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
             destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
-        this.createStroke(line, this.currentCommand.style);
-        this.updateImages();
     }
+
     */

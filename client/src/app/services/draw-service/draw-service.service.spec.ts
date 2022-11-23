@@ -476,5 +476,15 @@ describe('DrawServiceService', () => {
         expect(spyBackground).toHaveBeenCalledWith(foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
     });
 
-    it('clearForeground(...) should clear a specific foreground', () => {});
+    it('clearForeground(...) should clear a specific foreground', () => {
+        const foreground = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        const foregroundCtx = foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearRect = spyOn(foregroundCtx, 'clearRect').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImages = spyOn(service, 'updateImages').and.callFake(() => {});
+        service.clearForeground(foregroundCtx);
+        expect(spyClearRect).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
+    });
 });

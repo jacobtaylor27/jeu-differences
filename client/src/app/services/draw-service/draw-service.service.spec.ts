@@ -557,7 +557,25 @@ describe('DrawServiceService', () => {
         expect(spyAddCurrentCommand).toHaveBeenCalledWith(new PasteExternalForegroundOnCommand(drawingBoardStubRight, drawingBoardStubLeft, service));
     });
 
-    it('pasteImageDataOn(...) should replace the image data of a context for a new one', () => {});
+    it('pasteImageDataOn(...) should replace the image data of a context for a new one', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const spyPutImageData = spyOn(drawingBoardStubLeft.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'putImageData');
+        const spyGetImageData = spyOn(drawingBoardStubRight.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'getImageData');
+        service.pasteImageDataOn(drawingBoardStubLeft, drawingBoardStubRight);
+        expect(spyPutImageData).toHaveBeenCalled();
+        expect(spyGetImageData).toHaveBeenCalled();
+    });
 
     it('clearAllLayers(...) should call functions to clear background and foreground', () => {});
 
@@ -567,19 +585,10 @@ describe('DrawServiceService', () => {
 });
 
 /*
-    pasteExternalForegroundOn(canvasType: CanvasType) {
-        this.setCurrentCommand('pasteExternalForegroundOn', canvasType);
-
-        const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
-        const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
-
-        if (leftCanvas && rightCanvas) {
-            if (canvasType === CanvasType.Left) {
-                this.addCurrentCommand(new PasteExternalForegroundOnCommand(leftCanvas, rightCanvas, this));
-            }
-            if (canvasType === CanvasType.Right) {
-                this.addCurrentCommand(new PasteExternalForegroundOnCommand(rightCanvas, leftCanvas, this));
-            }
-        }
+    pasteImageDataOn(targetedForeground: DrawingBoardState, selectedForeground: DrawingBoardState) {
+        const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        targetForeground.putImageData(selectedImageData, 0, 0);
     }
-    */
+*/

@@ -1,11 +1,12 @@
+/* eslint-disable max-lines */
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { Game } from '@app/classes/game/game';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
-import { GameMode } from '@common/game-mode';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { Coordinate } from '@common/coordinate';
+import { GameMode } from '@common/game-mode';
 import { Score } from '@common/score';
 import { User } from '@common/user';
 import { expect } from 'chai';
@@ -29,7 +30,7 @@ describe('Game', () => {
     const expectedPlayer = { player: { name: 'test player', id: 'test' }, isMulti: false };
     const expectedMode = GameMode.Classic;
     beforeEach(() => {
-        game = new Game(expectedMode, expectedPlayer, expectedGameInfo);
+        game = new Game(expectedPlayer, { info: expectedGameInfo, mode: expectedMode });
         clock = useFakeTimers();
     });
 
@@ -39,12 +40,18 @@ describe('Game', () => {
 
     it('should create a game with specific mode, players and game information', () => {
         const expectedGameState = new InitTimerState();
-        const newGame = new Game(expectedMode, expectedPlayer, expectedGameInfo);
+        const newGame = new Game(expectedPlayer, { info: expectedGameInfo, mode: expectedMode });
         expect(newGame.information).to.deep.equal(expectedGameInfo);
         expect(newGame['players'].has(expectedPlayer.player.id)).to.equal(true);
         expect(newGame['isMulti']).to.deep.equal(expectedPlayer.isMulti);
         expect(newGame['context'].gameMode).to.equal(expectedMode as GameMode);
         expect(newGame['context'].gameState()).to.equal(expectedGameState.status());
+    });
+
+    it('should initialize the timer game constant', () => {
+        const expectedConstant = { gameTime: 60, successTime: 5, penaltyTime: 0 };
+        const newGame = new Game(expectedPlayer, { info: expectedGameInfo, mode: GameMode.LimitedTime, timerConstant: expectedConstant });
+        expect(newGame['timerConstant']).to.deep.equal(expectedConstant);
     });
 
     it('should get the id of the game', () => {
@@ -75,11 +82,10 @@ describe('Game', () => {
     // Test needs to be changed with admins command
     it('should calculate time in mode Limited', () => {
         game['mode'] = GameMode.LimitedTime;
-        game.setTimer();
-        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
-        clock.tick(2000);
-        expect(game.calculateTime()).to.equal(3);
-        clock.tick(3000);
+        const spyCalculateLimitedTimer = stub(game, 'calculateLimitedGameTimer').callsFake(() => 1);
+        expect(game.calculateTime()).to.equal(1);
+        expect(spyCalculateLimitedTimer.called).to.equal(true);
+        spyCalculateLimitedTimer.callsFake(() => 0);
         expect(game.calculateTime()).to.equal(0);
         expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
     });
@@ -88,6 +94,18 @@ describe('Game', () => {
         const expectGameState = new InitGameState();
         stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
         expect(game.status).to.equal(expectGameState.status());
+    });
+
+    it('should set info', () => {
+        const gameInfo = { id: '1' } as PrivateGameInformation;
+        game.setInfo(gameInfo);
+        expect(game.information).to.equal(gameInfo);
+    });
+
+    it('should increment index', () => {
+        expect(game.currentIndex).to.equal(0);
+        game.nextIndex();
+        expect(game.currentIndex).to.equal(1);
     });
 
     it('should set timer', () => {
@@ -322,5 +340,39 @@ describe('Game', () => {
 
         game.information.differences.length = 5;
         expect(game.getNbDifferencesThreshold()).to.equal(3);
+    });
+
+    it('should find all difference not found', () => {
+        const expectedDifferences = [
+            [
+                { x: 0, y: 0 },
+                { x: 1, y: 1 },
+            ],
+            [{ x: 3, y: 2 }],
+        ];
+        game['info'].differences = expectedDifferences;
+        expect(game.getAllDifferencesNotFound()).to.deep.equal(expectedDifferences);
+        game['getNbDifferencesTotalFound'].add(expectedDifferences[0]);
+        expect(game.getAllDifferencesNotFound()).to.deep.equal([expectedDifferences[1]]);
+    });
+
+    it('should calculate the time for limited timer game mode', () => {
+        game['initialTime'] = new Date(0);
+        game['timerConstant'] = { gameTime: 60, successTime: 0, penaltyTime: 0 };
+        expect(game.calculateLimitedGameTimer()).to.equal(60);
+    });
+
+    it('should add time if difference is found for limited timer game mode', () => {
+        game['initialTime'] = new Date(0);
+        game['timerConstant'] = { gameTime: 60, successTime: 5, penaltyTime: 0 };
+        game['getNbDifferencesTotalFound'] = { size: 2 } as Set<Coordinate[]>;
+        expect(game.calculateLimitedGameTimer()).to.equal(70);
+    });
+
+    it('should reset the timer to 2min if the timer is greater for limited timer game mode', () => {
+        game['initialTime'] = new Date(0);
+        game['timerConstant'] = { gameTime: 120, successTime: 5, penaltyTime: 0 };
+        game['getNbDifferencesTotalFound'] = { size: 2 } as Set<Coordinate[]>;
+        expect(game.calculateLimitedGameTimer()).to.equal(120);
     });
 });

@@ -2,6 +2,8 @@ import { Game } from '@app/classes/game/game';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { GameMode } from '@common/game-mode';
@@ -13,13 +15,48 @@ import { Service } from 'typedi';
 @Service()
 export class GameManagerService {
     games: Map<string, Game> = new Map();
-    constructor(private gameInfo: GameInfoService, public differenceService: BmpDifferenceInterpreter) {}
+    // eslint-disable-next-line max-params
+    constructor(
+        private gameInfo: GameInfoService,
+        public differenceService: BmpDifferenceInterpreter,
+        private readonly limitedTimeGame: LimitedTimeGame,
+        private timeConstant: GameTimeConstantService,
+    ) {}
 
     async createGame(playerInfo: { player: User; isMulti: boolean }, mode: GameMode, gameCardId: string) {
-        const gameCard: PrivateGameInformation = await this.gameInfo.getGameInfoById(gameCardId);
-        const game = new Game(mode, playerInfo, gameCard);
+        let gameCard: PrivateGameInformation;
+        let game: Game;
+        if (mode === GameMode.LimitedTime) {
+            const gamesRandomized = await this.limitedTimeGame.generateGames();
+            gameCard = gamesRandomized[0];
+            game = new Game(playerInfo, { info: gameCard, mode, timerConstant: await this.timeConstant.getGameTimeConstant() });
+            this.limitedTimeGame.gamesShuffled.set(game.identifier, gamesRandomized);
+        } else {
+            gameCard = await this.gameInfo.getGameInfoById(gameCardId);
+            game = new Game(playerInfo, { info: gameCard, mode });
+        }
         this.games.set(game.identifier, game);
         return game.identifier;
+    }
+
+    getGameInfo(gameId: string) {
+        return this.findGame(gameId)?.information;
+    }
+
+    setNextGame(gameId: string) {
+        const game = this.findGame(gameId);
+        if (game) {
+            game.nextIndex();
+            const gamesToPlay = this.limitedTimeGame.getGamesToPlay(gameId);
+            if (!gamesToPlay) {
+                return;
+            } else if (gamesToPlay.length === game.currentIndex) {
+                game.next();
+                return;
+            } else {
+                game.setInfo(gamesToPlay[game.currentIndex]);
+            }
+        }
     }
 
     setTimer(gameId: string) {
@@ -35,7 +72,7 @@ export class GameManagerService {
         game.timerId = setInterval(() => {
             if (game.gameMode === GameMode.LimitedTime && this.isGameOver(gameId)) {
                 // high scores to handle here
-                sio.sockets.to(gameId).emit(SocketEvent.Lose);
+                sio.sockets.to(gameId).emit(SocketEvent.Win);
                 this.leaveGame(playerId, gameId);
                 this.deleteTimer(gameId);
             } else {
@@ -85,6 +122,10 @@ export class GameManagerService {
         game?.addPlayer(player);
     }
 
+    getNbDifferenceNotFound(gameId: string) {
+        return this.findGame(gameId)?.getAllDifferencesNotFound();
+    }
+
     hasSameName(roomId: string, playersName: string) {
         const game = this.findGame(roomId);
         if (game) {
@@ -126,6 +167,10 @@ export class GameManagerService {
 
     findPlayer(gameId: string, playerId: string) {
         return this.findGame(gameId)?.findPlayer(playerId);
+    }
+
+    findGameMode(gameId: string) {
+        return this.findGame(gameId)?.gameMode;
     }
 
     private findGame(gameId: string): Game | undefined {

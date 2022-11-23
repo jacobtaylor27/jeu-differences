@@ -9,6 +9,8 @@ import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { GameTimeConstants } from '@common/game-time-constants';
+import { Score } from '@common/score';
 
 @Injectable({
     providedIn: 'root',
@@ -107,6 +109,36 @@ export class CommunicationService {
 
     getGamesInfoByPage(page: number = 1): Observable<HttpResponse<CarouselResponse>> {
         return this.http.get<CarouselResponse>(`${this.baseUrl}/game/cards/?page=${page}`, { observe: 'response' }).pipe();
+    }
+
+    getGameTimeConstants(): Observable<HttpResponse<GameTimeConstants>> {
+        return this.http
+            .get<GameTimeConstants>(`${this.baseUrl}/game/constants`, { observe: 'response' })
+            .pipe(catchError(this.handleError<HttpResponse<GameTimeConstants>>('get time constants')));
+    }
+
+    setGameTimeConstants(gameTimeConstants: GameTimeConstants): Observable<void> {
+        return this.http
+            .patch<void>(`${this.baseUrl}/game/constants`, gameTimeConstants)
+            .pipe(catchError(this.handleError<void>('set time constants')));
+    }
+
+    refreshAllGames(): Observable<void> {
+        return this.http.patch<void>(`${this.baseUrl}/game/scores/reset`, {}).pipe(catchError(this.handleError<void>('refreshAllGames')));
+    }
+
+    refreshSingleGame(id: string): Observable<void> {
+        return this.http.patch<void>(`${this.baseUrl}/game/scores/${id}/reset`, {}).pipe(catchError(this.handleError<void>('refreshSingleGame')));
+    }
+
+    getGameScores(id: string): Observable<HttpResponse<{ solo: Score[]; multi: Score[] }>> {
+        return this.http.get<{ solo: Score[]; multi: Score[] }>(`${this.baseUrl}/game/scores/${id}`, { observe: 'response' }).pipe();
+    }
+
+    updateGameScores(id: string, soloScores: Score[], multiScores: Score[]): Observable<void> {
+        return this.http
+            .patch<void>(`${this.baseUrl}/game/scores/${id}`, { soloScores, multiScores })
+            .pipe(catchError(this.handleError<void>('updateGameScores')));
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

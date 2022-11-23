@@ -1,12 +1,15 @@
 import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
+import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 import { DifferenceFound } from '@common/difference';
+import { PublicGameInformation } from '@common/game-information';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 @Component({
     selector: 'app-play-area',
@@ -22,7 +25,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     @Input() gameId: string;
 
     buttonPressed = '';
-
+    intervals = [];
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
@@ -30,6 +33,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
         private readonly communicationService: CommunicationService,
         private readonly mouseHandlerService: MouseHandlerService,
         private readonly communicationSocketService: CommunicationSocketService,
+        private cheatMode: CheatModeService,
     ) {
         this.handleSocketDifferenceFound();
     }
@@ -46,32 +50,53 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
     }
+
+    @HostListener('window:keyup', ['$event'])
+    async keyBoardDetected(event: KeyboardEvent) {
+        if ((event.target as HTMLElement).tagName === 'INPUT') {
+            return;
+        }
+        if (event.key === 't') {
+            await this.cheatMode.manageCheatMode(this.getContextOriginal(), this.getContextModified());
+        }
+    }
+
     ngAfterViewInit(): void {
-        this.displayImage(true, this.getContextImgModified());
-        this.displayImage(false, this.getContextDifferences());
-        this.displayImage(false, this.getContextImgOriginal());
+        this.displayImages();
         this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
     }
 
     ngOnDestroy() {
         this.communicationSocketService.off(SocketEvent.DifferenceFound);
+        this.communicationSocketService.off(SocketEvent.NewGameBoard);
     }
 
     onClick($event: MouseEvent, canvas: string) {
         if (!this.isMouseDisabled()) {
             const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
-            this.mouseHandlerService.mouseHitDetect($event, ctx, this.gameId);
+            this.mouseHandlerService.mouseHitDetect($event, ctx, this.gameInfoHandlerService.roomId);
         }
     }
 
     handleSocketDifferenceFound() {
-        this.communicationSocketService.on(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+        this.communicationSocketService.on(SocketEvent.NewGameBoard, (data: PublicGameInformation) => {
+            this.differencesDetectionHandlerService.playCorrectSound();
+            this.gameInfoHandlerService.setGameInformation(data);
+            this.displayImages();
+            this.gameInfoHandlerService.$newGame.next('');
+        });
+        this.communicationSocketService.on<DifferenceFound>(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
             this.differencesDetectionHandlerService.setNumberDifferencesFound(
                 !data.isPlayerFoundDifference,
                 this.gameInfoHandlerService.getNbTotalDifferences(),
             );
-            this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
-            this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
+            if (this.cheatMode.isCheatModeActivated) {
+                this.cheatMode.stopCheatModeDifference(this.getContextOriginal(), this.getContextModified(), data.coords);
+            }
+            if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
+                this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
+                this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
+            }
         });
     }
 
@@ -114,6 +139,12 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
 
             ctx.putImageData(image, 0, 0);
         });
+    }
+
+    private displayImages() {
+        this.displayImage(true, this.getContextImgModified());
+        this.displayImage(false, this.getContextDifferences());
+        this.displayImage(false, this.getContextImgOriginal());
     }
 
     private isMouseDisabled() {

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameConstantsSettingsComponent } from '@app/components/game-constants-settings/game-constants-settings.component';
-import { GameConstants } from '@app/interfaces/game-constants';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { SocketEvent } from '@common/socket-event';
@@ -11,8 +10,6 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
     providedIn: 'root',
 })
 export class AdminService {
-    gameConstants: GameConstants;
-
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly matDialog: MatDialog,
@@ -23,6 +20,10 @@ export class AdminService {
 
     hasCards(): boolean {
         return this.gameCarouselService.hasCards();
+    }
+
+    refreshAllGames() {
+        this.communicationService.refreshAllGames().subscribe();
     }
 
     deleteAllGames(): void {

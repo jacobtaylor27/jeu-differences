@@ -427,7 +427,23 @@ describe('DrawServiceService', () => {
         expect(spyAddCurrentCommand).toHaveBeenCalled();
     });
 
-    it('clearAllBackground(...) should iterate through all backgrounds and clear them all', () => {});
+    it('clearAllBackground(...) should iterate through all backgrounds and clear them all', () => {
+        const background = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        const newBoard: DrawingBoardState = {
+            canvasType: CanvasType.None,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.states = [newBoard];
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImage = spyOn(service, 'updateImages').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyBackground = spyOn(service, 'clearBackground').and.callFake(() => {});
+        service.clearAllBackground();
+        expect(spyUpdateImage).toHaveBeenCalled();
+        expect(spyBackground).toHaveBeenCalledWith(background.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+    });
 
     it('clearBackground(...) should clear a specific background', () => {});
 

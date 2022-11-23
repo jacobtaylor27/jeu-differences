@@ -2,7 +2,7 @@ import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
-import { CanvasState } from '@app/interfaces/canvas-state';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { Line } from '@app/interfaces/line';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
@@ -208,7 +208,7 @@ describe('DrawServiceService', () => {
         const respositionSpy = spyOn(service, 'reposition');
         const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
-            const canvasState: CanvasState = {
+            const canvasState: DrawingBoardState = {
                 canvasType: CanvasType.Right,
                 foreground: {} as ElementRef<HTMLCanvasElement>,
                 background: {} as ElementRef<HTMLCanvasElement>,

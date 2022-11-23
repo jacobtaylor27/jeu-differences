@@ -1,6 +1,6 @@
 import { ElementRef } from '@angular/core';
 import { CanvasType } from '@app/enums/canvas-type';
-import { CanvasState } from '@app/interfaces/canvas-state';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { PasteExternalForegroundOnCommand } from './paste-external-foreground-on-command';
 
@@ -12,14 +12,14 @@ describe('clearForegroundCommand', () => {
     });
 
     it('pasteForeground should be called', () => {
-        const firstCanvasState: CanvasState = {
+        const firstCanvasState: DrawingBoardState = {
             canvasType: CanvasType.Right,
             foreground: {} as ElementRef<HTMLCanvasElement>,
             background: {} as ElementRef<HTMLCanvasElement>,
             temporary: {} as ElementRef<HTMLCanvasElement>,
         };
 
-        const secondCanvasState: CanvasState = {
+        const secondCanvasState: DrawingBoardState = {
             canvasType: CanvasType.Right,
             foreground: {} as ElementRef<HTMLCanvasElement>,
             background: {} as ElementRef<HTMLCanvasElement>,

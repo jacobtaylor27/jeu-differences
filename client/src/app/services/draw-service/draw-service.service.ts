@@ -7,8 +7,8 @@ import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZ
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
-import { CanvasState } from '@app/interfaces/canvas-state';
 import { Command } from '@app/interfaces/command';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
@@ -193,7 +193,7 @@ export class DrawService {
         }
     }
 
-    switchForegroundImageData(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
+    switchForegroundImageData(primaryCanvasState: DrawingBoardState, secondCanvasState: DrawingBoardState) {
         const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
@@ -218,7 +218,7 @@ export class DrawService {
         }
     }
 
-    pasteImageDataOn(targetedForeground: CanvasState, selectedForeground: CanvasState) {
+    pasteImageDataOn(targetedForeground: DrawingBoardState, selectedForeground: DrawingBoardState) {
         const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);

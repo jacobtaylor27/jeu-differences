@@ -1,12 +1,12 @@
-import { CanvasState } from '@app/interfaces/canvas-state';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 
 export class SwitchForegroundCommand implements DrawingCommand {
-    private leftCanvas: CanvasState;
-    private rightCanvas: CanvasState;
+    private leftCanvas: DrawingBoardState;
+    private rightCanvas: DrawingBoardState;
 
-    constructor(leftCanvas: CanvasState, rightCanvas: CanvasState, private readonly drawService: DrawService) {
+    constructor(leftCanvas: DrawingBoardState, rightCanvas: DrawingBoardState, private readonly drawService: DrawService) {
         this.leftCanvas = leftCanvas;
         this.rightCanvas = rightCanvas;
     }

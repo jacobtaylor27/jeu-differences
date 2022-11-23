@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { DEFAULT_PENCIL, SIZE } from '@app/constants/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
-import { CanvasState } from '@app/interfaces/canvas-state';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { Pencil } from '@app/interfaces/pencil';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
@@ -31,7 +31,7 @@ export class DrawCanvasComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        const currentState: CanvasState = {
+        const currentState: DrawingBoardState = {
             canvasType: this.canvasType,
             foreground: this.foreground,
             background: this.background,

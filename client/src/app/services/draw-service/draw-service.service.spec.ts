@@ -246,30 +246,25 @@ describe('DrawServiceService', () => {
         service['currentCommand'] = fakeCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
         const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
+        const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
+        const spyUpdateImages = spyOn(service, 'updateImages');
         service.draw(fakeMouseEvent);
         expect(spyUpdateCurrentCommand).toHaveBeenCalled();
+        expect(spyCreateStroke).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
     });
 
-    /*
-    draw(event: MouseEvent) {
-        if (!this.isClick) return;
-        const line = this.updateMouseCoordinates(event);
-        this.updateCurrentCommand(line);
-        this.createStroke(line, this.currentCommand.style);
-        this.updateImages();
-    }
-
-    */
-
-    it('draw(...) should call update current command, create a stroke and update image', () => {});
-
-    it('draw(...) should update the current command style', () => {});
-
-    it('draw(...) should create a stroke', () => {});
-
-    it('draw(...) should update the image', () => {});
-
     it('redraw(...) should iterate over all the drawing lines', () => {});
+
+    /*
+    redraw(command: Command) {
+        command.strokes.forEach((stroke) => {
+            stroke.lines.forEach((line) => {
+                this.createStroke(line, command.style, command.canvasType);
+            });
+        });
+    }
+    */
 
     it('stopDrawing(...) should stop the drawing', () => {});
 

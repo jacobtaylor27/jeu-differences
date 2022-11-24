@@ -61,9 +61,8 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
                 const pixelResult = this.cluesService.findRandomPixel(gameId);
-                if (clueIndex === 1) {
-                    socket.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
-                }
+                this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
+                this.sio.to(gameId).emit(SocketEvent.EventMessage, this.eventMessageService.usingClueMessage());
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {

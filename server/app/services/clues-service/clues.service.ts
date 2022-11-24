@@ -1,6 +1,7 @@
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { Coordinate } from '@common/coordinate';
-
+import { Service } from 'typedi';
+@Service()
 export class CluesService {
     constructor(private readonly gameManager: GameManagerService) {}
 

@@ -41,8 +41,8 @@ export class CluesService {
         ];
     }
 
-    isDifferenceFound(difference: Coordinate[]) {
-        return;
+    secondCluePosition(coord: Coordinate) {
+        return coord;
     }
 
     private findRandomIndex(length: number) {

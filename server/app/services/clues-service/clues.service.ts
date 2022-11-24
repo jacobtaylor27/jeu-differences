@@ -1,17 +1,14 @@
-import { PrivateGameInformation } from '@app/interface/game-info';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { Coordinate } from '@common/coordinate';
 import { DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@common/image-size';
 import { Service } from 'typedi';
 @Service()
 export class CluesService {
-    laurie: boolean = true;
     constructor(private readonly gameManager: GameManagerService) {}
 
     findRandomDifference(gameId: string): Coordinate[] | undefined {
-        const info = this.gameManager.getGameInfo(gameId) as PrivateGameInformation;
-        const gameDifferences = info.differences as Coordinate[][];
-        return gameDifferences[this.findRandomIndex(gameDifferences.length)];
+        const gameDifferencesLeft: Coordinate[][] = this.gameManager.getNbDifferenceNotFound(gameId) as Coordinate[][];
+        return gameDifferencesLeft[this.findRandomIndex(gameDifferencesLeft.length)];
     }
 
     findRandomPixel(gameId: string): Coordinate {
@@ -42,6 +39,10 @@ export class CluesService {
             { x: 320, y: 240 },
             { x: 640, y: 480 },
         ];
+    }
+
+    isDifferenceFound(difference: Coordinate[]) {
+        return;
     }
 
     private findRandomIndex(length: number) {

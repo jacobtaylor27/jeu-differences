@@ -61,12 +61,9 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
                 const pixelResult = this.cluesService.findRandomPixel(gameId);
-                const result: Coordinate[] = this.cluesService.firstCluePosition(pixelResult);
-                console.log(pixelResult);
-                console.log(result);
-                // this.cluesService.laurie = false;
-                // console.log(gameId);
-                // console.log(this.gameManager.getGameInfo(gameId)?.differences);
+                if (clueIndex === 1) {
+                    socket.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
+                }
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {

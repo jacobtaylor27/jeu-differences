@@ -28,7 +28,7 @@ export class CluesAreaComponent implements OnInit {
         if (this.clueAskedCounter === this.numberOfClues) {
             this.isDisabled = true;
         }
-        this.communicationSocket.send(SocketEvent.Clue, { clueIndex: this.clueAskedCounter, gameId: this.gameInformation.getId() });
+        this.communicationSocket.send(SocketEvent.Clue, { clueIndex: this.clueAskedCounter, gameId: this.gameInformation.roomId });
     }
 
     // @HostListener('window: keydown', ['$event'])

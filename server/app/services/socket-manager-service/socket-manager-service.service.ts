@@ -60,7 +60,10 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
-                console.log(this.cluesService.findRandomDifference(gameId));
+                // this.cluesService.laurie = false;
+                // console.log(gameId);
+                // console.log(this.gameManager.getGameInfo(gameId)?.differences);
+                console.log(this.cluesService.findRandomPixel(gameId));
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {

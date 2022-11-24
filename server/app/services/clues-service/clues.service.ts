@@ -19,6 +19,31 @@ export class CluesService {
         return difference[this.findRandomIndex(difference.length)];
     }
 
+    firstCluePosition(coord: Coordinate): Coordinate[] {
+        if (this.isInFirstQuadrant(coord)) {
+            return [
+                { x: 320, y: 0 },
+                { x: 640, y: 240 },
+            ];
+        }
+        if (this.isInSecondQuadrant(coord)) {
+            return [
+                { x: 0, y: 0 },
+                { x: 320, y: 240 },
+            ];
+        }
+        if (this.isInThirdQuadrant(coord)) {
+            return [
+                { x: 0, y: 240 },
+                { x: 320, y: 480 },
+            ];
+        }
+        return [
+            { x: 320, y: 240 },
+            { x: 640, y: 480 },
+        ];
+    }
+
     private findRandomIndex(length: number) {
         return Math.floor(Math.random() * length);
     }
@@ -43,7 +68,7 @@ export class CluesService {
         return !this.isToTheRight(coord, 0, DEFAULT_IMAGE_WIDTH) && !this.isOnTop(coord, 0, DEFAULT_IMAGE_HEIGHT);
     }
 
-    private isInFourthQuadrant(coord: Coordinate) {
-        return this.isToTheRight(coord, 0, DEFAULT_IMAGE_WIDTH) && !this.isOnTop(coord, 0, DEFAULT_IMAGE_HEIGHT);
-    }
+    // private isInFourthQuadrant(coord: Coordinate) {
+    //     return this.isToTheRight(coord, 0, DEFAULT_IMAGE_WIDTH) && !this.isOnTop(coord, 0, DEFAULT_IMAGE_HEIGHT);
+    // }
 }

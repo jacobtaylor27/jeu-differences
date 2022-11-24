@@ -1,21 +1,32 @@
+/* eslint-disable max-lines */
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-command';
+import { PasteExternalForegroundOnCommand } from '@app/classes/commands/paste-external-foreground-on-command';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
+import { Command } from '@app/interfaces/command';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { Line } from '@app/interfaces/line';
+import { Pencil } from '@app/interfaces/pencil';
+import { Stroke } from '@app/interfaces/stroke';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
+import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 
 import { DrawService } from './draw-service.service';
+import { drawingBoardStub, fakeCurrentCommand, fakeLine, fakeMouseEvent, fakePencil, fakeStrokeStyle } from './draw-service.service.spec.constants';
 
 describe('DrawServiceService', () => {
     let service: DrawService;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
     let canvasStateServiceSpyObj: jasmine.SpyObj<CanvasStateService>;
+
     beforeEach(() => {
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $resetBackground: new Map(), $resetForeground: new Map() });
         canvasStateServiceSpyObj = jasmine.createSpyObj('CanvasStateService', ['getCanvasState', 'getFocusedCanvas']);
+
         TestBed.configureTestingModule({
             providers: [
                 { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
@@ -31,7 +42,7 @@ describe('DrawServiceService', () => {
 
     it('reposition should return a position', () => {
         const expectedReposition = { x: 10, y: 10 };
-        expect(service.reposition({ offsetLeft: 0, offsetTop: 0 } as HTMLCanvasElement, { clientX: 10, clientY: 10 } as MouseEvent)).toEqual(
+        expect(service['reposition']({ offsetLeft: 0, offsetTop: 0 } as HTMLCanvasElement, { clientX: 10, clientY: 10 } as MouseEvent)).toEqual(
             expectedReposition,
         );
     });
@@ -51,16 +62,9 @@ describe('DrawServiceService', () => {
         spyOn(service, 'updateImages').and.callFake(() => {});
         const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
-            return {
-                canvasType: CanvasType.Left,
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                background: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-                temporary: {} as ElementRef<HTMLCanvasElement>,
-            };
+            drawingBoardStub.canvasType = CanvasType.Left;
+            return drawingBoardStub;
         });
         service.resetBackground(CanvasType.Left);
         expect(spyResetAllBackground).not.toHaveBeenCalled();
@@ -73,14 +77,8 @@ describe('DrawServiceService', () => {
         const spyResetAllBackground = spyOn(service, 'clearAllBackground');
         const spyClearBackground = spyOn(service, 'clearBackground');
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
-            return {
-                canvasType: CanvasType.Right,
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                background: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-                temporary: {} as ElementRef<HTMLCanvasElement>,
-            };
+            drawingBoardStub.canvasType = CanvasType.Right;
+            return drawingBoardStub;
         });
         service.resetBackground(CanvasType.Right);
         expect(spyResetAllBackground).not.toHaveBeenCalled();
@@ -102,13 +100,7 @@ describe('DrawServiceService', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         spyOn(service, 'updateImages').and.callFake(() => {});
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
-            return {
-                canvasType: CanvasType.Left,
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-                background: {} as ElementRef<HTMLCanvasElement>,
-                temporary: {} as ElementRef<HTMLCanvasElement>,
-            };
+            return drawingBoardStub;
         });
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyClearForeground = spyOn(service, 'clearForeground').and.callFake(() => {});
@@ -120,13 +112,8 @@ describe('DrawServiceService', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         spyOn(service, 'updateImages').and.callFake(() => {});
         canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
-            return {
-                canvasType: CanvasType.Right,
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-                background: {} as ElementRef<HTMLCanvasElement>,
-                temporary: {} as ElementRef<HTMLCanvasElement>,
-            };
+            drawingBoardStub.canvasType = CanvasType.Right;
+            return drawingBoardStub;
         });
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyClearForeground = spyOn(service, 'clearForeground').and.callFake(() => {});
@@ -138,40 +125,30 @@ describe('DrawServiceService', () => {
         const expectedFinalCoord = { x: 1, y: 1 };
         const expectedInitCoord = { x: 0, y: 0 };
         service.coordDraw = expectedInitCoord;
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
-            return {
-                canvasType: CanvasType.Right,
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                foreground: { nativeElement: { getContext: () => {} } } as unknown as ElementRef<HTMLCanvasElement>,
-                background: {} as ElementRef<HTMLCanvasElement>,
-                temporary: {} as ElementRef<HTMLCanvasElement>,
-            };
+            drawingBoardStub.canvasType = CanvasType.Right;
+            return drawingBoardStub;
         });
-        spyOn(service, 'reposition').and.callFake(() => expectedFinalCoord);
-        expect(service.updateMouseCoordinates({} as MouseEvent)).toEqual({ initCoord: expectedInitCoord, finalCoord: expectedFinalCoord });
+        spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => expectedFinalCoord);
+        expect(service['updateMouseCoordinates']({} as MouseEvent)).toEqual({ initCoord: expectedInitCoord, finalCoord: expectedFinalCoord });
     });
 
     it('drawPoint should set the style of the pencil and create the point', () => {
         service.coordDraw = { x: 0, y: 0 };
-        const expectedCanvasState = {
-            canvasType: CanvasType.Left,
-            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
-            background: {} as ElementRef<HTMLCanvasElement>,
-            temporary: {} as ElementRef<HTMLCanvasElement>,
-        };
-        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => expectedCanvasState);
+        drawingBoardStub.canvasType = CanvasType.Left;
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => drawingBoardStub);
         service.pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
-        spyOn(service, 'reposition').and.returnValue({ x: 0, y: 0 });
-        const ctx = expectedCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(Object.getPrototypeOf(service), 'reposition').and.returnValue({ x: 0, y: 0 });
+        const ctx = drawingBoardStub.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
         const moveToSpy = spyOn(ctx, 'moveTo');
         const lineToSpy = spyOn(ctx, 'lineTo');
         const stokeSpy = spyOn(ctx, 'stroke');
-        service.createStroke(
-            { initCoord: { x: 0, y: 0 }, finalCoord: { x: 0, y: 0 } } as Line,
-            { width: service.pencil.width.pencil, cap: service.pencil.cap, color: service.pencil.color } as StrokeStyle,
-        );
+        service['createStroke'](fakeLine, {
+            width: service.pencil.width.pencil,
+            cap: service.pencil.cap,
+            color: service.pencil.color,
+        } as StrokeStyle);
         expect(beginPathSpy).toHaveBeenCalled();
         expect(moveToSpy).toHaveBeenCalled();
         expect(lineToSpy).toHaveBeenCalled();
@@ -179,5 +156,521 @@ describe('DrawServiceService', () => {
         expect(ctx.lineWidth).toEqual(service.pencil.width.pencil);
         expect(ctx.lineCap).toEqual(service.pencil.cap);
         expect(ctx.strokeStyle).toEqual(service.pencil.color);
+    });
+
+    it('startDrawing should handle mouse event and return undefined if no canvas is in focus', () => {
+        service['isClick'] = false;
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return undefined;
+        });
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(service.isClick).toBeTruthy();
+    });
+
+    it('startDrawing should handle mouse event if no canvas is in focus', () => {
+        service['isClick'] = false;
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return undefined;
+        });
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).not.toHaveBeenCalled();
+        expect(service.isClick).toBeTruthy();
+    });
+
+    it('startDrawing should handle mouse event if a canvas is in focus', () => {
+        service['isClick'] = false;
+        const newCoord: Vec2 = { x: 0, y: 0 };
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => {
+            return newCoord;
+        });
+        const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).toHaveBeenCalled();
+        expect(setCurrentCommandSpy).toHaveBeenCalled();
+        expect(service.isClick).toBeTruthy();
+        expect(service.coordDraw).toBe(newCoord);
+    });
+
+    it('updateMouseCoordinate(...) should update return a line according to the given coordinates', () => {
+        const line = service['updateMouseCoordinates'](fakeMouseEvent);
+        const expectedLine = { x: 0, y: 0 };
+        expect(line.finalCoord).toEqual(expectedLine);
+        expect(line.finalCoord).toEqual(expectedLine);
+    });
+
+    it('updateCurrentCommand(...) should update the current command', () => {
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newPencil: Pencil = {
+            color: 'blue',
+            cap: 'square',
+            width: { pencil: 1, eraser: 3 },
+            state: Tool.Pencil,
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        service['pencil'] = newPencil;
+        service['currentCommand'] = newCurrentCommand;
+        service['updateCurrentCommand'](fakeLine);
+        const expectedStyle: StrokeStyle = {
+            color: fakePencil.color,
+            cap: fakePencil.cap,
+            width: fakePencil.width.pencil,
+            destination: 'source-over',
+        };
+        expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
+        expect(service['currentCommand'].style).toEqual(expectedStyle);
+    });
+
+    it('createStroke(...) should return undefined when the focus canvas is undefined', () => {
+        const drawingBoard: DrawingBoardState = {
+            canvasType: CanvasType.Left,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return drawingBoard;
+        });
+        service['createStroke'](fakeLine, fakeStrokeStyle, CanvasType.Right);
+        expect(canvasStateServiceSpyObj.getCanvasState).toHaveBeenCalled();
+    });
+
+    it('createStroke(...) should create a stroke with a given canvas', () => {
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return undefined;
+        });
+        service['createStroke'](fakeLine, fakeStrokeStyle, CanvasType.Right);
+        expect(canvasStateServiceSpyObj.getCanvasState).toHaveBeenCalled();
+    });
+
+    it('createStroke(...) should create a stroke without a canvas passed in parameter', () => {
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        service['createStroke'](fakeLine, fakeStrokeStyle);
+        expect(canvasStateServiceSpyObj.getFocusedCanvas).toHaveBeenCalled();
+    });
+
+    it('updateImages(...) should update the context according to the background and the foreground', () => {
+        canvasStateServiceSpyObj.states = [drawingBoardStub];
+        const states = canvasStateServiceSpyObj.states;
+        const spyContextDrawImage = spyOn(states[0].temporary.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'drawImage');
+        service.updateImages();
+        expect(spyContextDrawImage).toHaveBeenCalled();
+        expect((states[0].temporary.nativeElement.getContext('2d') as CanvasRenderingContext2D).globalCompositeOperation).toEqual('source-over');
+    });
+
+    it('draw(...) should return undefined if the pencil is not clicked', () => {
+        service['isClick'] = false;
+        const spyOnMouseCoordinate = spyOn(Object.getPrototypeOf(service), 'updateMouseCoordinates');
+        service.draw({} as MouseEvent);
+        expect(spyOnMouseCoordinate).not.toHaveBeenCalled();
+    });
+
+    it('draw(...) should call update current command, create a stroke and update image', () => {
+        canvasStateServiceSpyObj.states = [drawingBoardStub];
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        service['isClick'] = true;
+        service['pencil'] = Object.create(fakePencil);
+        service['currentCommand'] = Object.create(fakeCurrentCommand);
+        service['updateCurrentCommand'](fakeLine);
+        const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
+        const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
+        const spyUpdateImages = spyOn(service, 'updateImages');
+        service.draw(fakeMouseEvent);
+        expect(spyUpdateCurrentCommand).toHaveBeenCalled();
+        expect(spyCreateStroke).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
+    });
+
+    it('redraw(...) should iterate over all the drawing lines', () => {
+        const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        service.redraw(newCurrentCommand);
+        const line = newCurrentCommand.strokes[0].lines[0];
+        const style = newCurrentCommand.style;
+        const canvasType = newCurrentCommand.canvasType;
+        expect(spyCreateStroke).toHaveBeenCalledWith(line, style, canvasType);
+    });
+
+    it('stopDrawing(...) should stop the drawing', () => {
+        service['isClick'] = true;
+        service.pencil = fakePencil;
+        service.pencil.state = Tool.Pencil;
+        service['currentCommand'] = fakeCurrentCommand;
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
+        service.stopDrawing();
+        expect(service['isClick']).toBeFalsy();
+        expect(service['currentCommand'].name).toEqual('draw');
+        expect(spyAddCurrentCommand).toHaveBeenCalled();
+        expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+    });
+
+    it('stopDrawing(...) should stop the erasing', () => {
+        service['isClick'] = true;
+        service.pencil = fakePencil;
+        service.pencil.state = Tool.Eraser;
+        service['currentCommand'] = fakeCurrentCommand;
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
+        service.stopDrawing();
+        expect(service['isClick']).toBeFalsy();
+        expect(service['currentCommand'].name).toEqual('erase');
+        expect(spyAddCurrentCommand).toHaveBeenCalled();
+        expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+    });
+
+    it('leaveCanvas(...) should stop drawing if already drawing', () => {
+        const spyStopDrawing = spyOn(service, 'stopDrawing');
+        const fakeMouseButtonEvent = { buttons: 1 } as MouseEvent;
+        service.leaveCanvas(fakeMouseButtonEvent);
+        expect(spyStopDrawing).toHaveBeenCalled();
+    });
+
+    it('leaveCanvas(...) shouldnt do anything if not drawing', () => {
+        const spyStopDrawing = spyOn(service, 'stopDrawing');
+        const fakeMouseButtonEvent = { buttons: 0 } as MouseEvent;
+        service.leaveCanvas(fakeMouseButtonEvent);
+        expect(spyStopDrawing).not.toHaveBeenCalled();
+    });
+
+    it('enterCanvas(...) should call startDrawing when mouse is clicked', () => {
+        const spyStartDrawing = spyOn(service, 'startDrawing');
+        const fakeMouseButtonEvent = { buttons: 1 } as MouseEvent;
+        service.enterCanvas(fakeMouseButtonEvent);
+        expect(spyStartDrawing).toHaveBeenCalledWith(fakeMouseButtonEvent);
+    });
+
+    it('enterCanvas(...) should not call startDrawing when mouse is not clicked', () => {
+        const spyStartDrawing = spyOn(service, 'startDrawing');
+        const fakeMouseButtonEvent = { buttons: 0 } as MouseEvent;
+        service.enterCanvas(fakeMouseButtonEvent);
+        expect(spyStartDrawing).not.toHaveBeenCalled();
+    });
+
+    it('executeAllCommands(...) should iterate through all commands', () => {
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecute = spyOn(newCommand, 'execute').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearAllForegrounds = spyOn(service, 'clearAllForegrounds').and.callFake(() => {});
+        service.commands = [newCommand];
+        service['indexOfCommand'] = 0;
+        service['executeAllCommand']();
+        expect(spyExecute).toHaveBeenCalled();
+        expect(spyClearAllForegrounds).toHaveBeenCalled();
+    });
+
+    it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        service.commands = [newCommand, newCommand];
+        service['indexOfCommand'] = 0;
+        service['removeCommandsPastIndex']();
+        expect(service.commands.length).toEqual(1);
+    });
+
+    it('removeCommandsPastIndex(...) should remove all elements past certain index', () => {
+        service.commands = [];
+        service['indexOfCommand'] = -1;
+        service['removeCommandsPastIndex']();
+        expect(service.commands.length).toEqual(0);
+    });
+
+    it('switchForegroundImageData should switch the data from two foreground', () => {
+        const firstCanvasState: DrawingBoardState = {
+            canvasType: CanvasType.Left,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const secondCanvasState: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+
+        const firstPutImageSpy = spyOn(firstCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'putImageData');
+        const firstGetImageSpy = spyOn(firstCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'getImageData');
+        const secondPutImageSpy = spyOn(secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'putImageData');
+        const secondGetImageSpy = spyOn(secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'getImageData');
+
+        service.switchForegroundImageData(firstCanvasState, secondCanvasState);
+
+        expect(firstGetImageSpy).toHaveBeenCalled();
+        expect(firstPutImageSpy).toHaveBeenCalled();
+        expect(secondGetImageSpy).toHaveBeenCalled();
+        expect(secondPutImageSpy).toHaveBeenCalled();
+    });
+
+    it('switchForegrounds(...) should make the right verification before adding command', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake((canvasType) => {
+            if (canvasType === CanvasType.Right) {
+                return drawingBoardStubRight;
+            } else {
+                return drawingBoardStubLeft;
+            }
+        });
+        const spySetCurrentCommand = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        service.switchForegrounds();
+        expect(spySetCurrentCommand).toHaveBeenCalledWith('switchForegrounds', CanvasType.Both);
+        expect(spyAddCurrentCommand).toHaveBeenCalled();
+    });
+
+    it('clearAllBackground(...) should iterate through all backgrounds and clear them all', () => {
+        const background = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        const newBoard: DrawingBoardState = {
+            canvasType: CanvasType.None,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.states = [newBoard];
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImage = spyOn(service, 'updateImages').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyBackground = spyOn(service, 'clearBackground').and.callFake(() => {});
+        service.clearAllBackground();
+        expect(spyUpdateImage).toHaveBeenCalled();
+        expect(spyBackground).toHaveBeenCalledWith(background.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+    });
+
+    it('clearBackground(...) should clear a specific background', () => {
+        const background = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        const backgroundCtx = background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyCtxRect = spyOn(backgroundCtx, 'rect').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyCtxFill = spyOn(backgroundCtx, 'fill').and.callFake(() => {});
+        service.clearBackground(backgroundCtx);
+        expect(spyCtxFill).toHaveBeenCalled();
+        expect(spyCtxRect).toHaveBeenCalled();
+        expect(backgroundCtx.fillStyle).toEqual('#ffffff');
+    });
+
+    it('clearAllForegrounds(...) should iterate through all foreground and clear them all', () => {
+        const foreground = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        const newBoard: DrawingBoardState = {
+            canvasType: CanvasType.None,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            foreground,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.states = [newBoard];
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImage = spyOn(service, 'updateImages').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyBackground = spyOn(service, 'clearForeground').and.callFake(() => {});
+        service.clearAllForegrounds();
+        expect(spyUpdateImage).toHaveBeenCalled();
+        expect(spyBackground).toHaveBeenCalledWith(foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+    });
+
+    it('clearForeground(...) should clear a specific foreground', () => {
+        const foreground = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
+        const foregroundCtx = foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearRect = spyOn(foregroundCtx, 'clearRect').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImages = spyOn(service, 'updateImages').and.callFake(() => {});
+        service.clearForeground(foregroundCtx);
+        expect(spyClearRect).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
+    });
+
+    it('pasteExternalForegroundOn(...) should paste an external canvas on the focused canvas', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake((canvasType) => {
+            if (canvasType === CanvasType.Right) {
+                return drawingBoardStubRight;
+            } else {
+                return drawingBoardStubLeft;
+            }
+        });
+        const spySetCurrentCommand = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        service.pasteExternalForegroundOn(CanvasType.Left);
+        expect(spySetCurrentCommand).toHaveBeenCalledWith('pasteExternalForegroundOn', CanvasType.Left);
+        expect(spyAddCurrentCommand).toHaveBeenCalledWith(new PasteExternalForegroundOnCommand(drawingBoardStubLeft, drawingBoardStubRight, service));
+    });
+
+    it('pasteExternalForegroundOn(...) should paste an external canvas on the focused canvas', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake((canvasType) => {
+            if (canvasType === CanvasType.Right) {
+                return drawingBoardStubRight;
+            } else {
+                return drawingBoardStubLeft;
+            }
+        });
+        const spySetCurrentCommand = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
+        service.pasteExternalForegroundOn(CanvasType.Right);
+        expect(spySetCurrentCommand).toHaveBeenCalledWith('pasteExternalForegroundOn', CanvasType.Right);
+        expect(spyAddCurrentCommand).toHaveBeenCalledWith(new PasteExternalForegroundOnCommand(drawingBoardStubRight, drawingBoardStubLeft, service));
+    });
+
+    it('pasteImageDataOn(...) should replace the image data of a context for a new one', () => {
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const drawingBoardStubLeft: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        const spyPutImageData = spyOn(drawingBoardStubLeft.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'putImageData');
+        const spyGetImageData = spyOn(drawingBoardStubRight.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'getImageData');
+        service.pasteImageDataOn(drawingBoardStubLeft, drawingBoardStubRight);
+        expect(spyPutImageData).toHaveBeenCalled();
+        expect(spyGetImageData).toHaveBeenCalled();
+    });
+
+    it('clearAllLayers(...) should return if CanvasType is None', () => {
+        const spyUpdateImage = spyOn(service, 'updateImages');
+        service.clearAllLayers(CanvasType.None);
+        expect(canvasStateServiceSpyObj.getCanvasState).not.toHaveBeenCalled();
+        expect(spyUpdateImage).not.toHaveBeenCalled();
+    });
+
+    it('clearAllLayers(...) should return if CanvasType is Both', () => {
+        const spyUpdateImage = spyOn(service, 'updateImages');
+        service.clearAllLayers(CanvasType.Both);
+        expect(canvasStateServiceSpyObj.getCanvasState).not.toHaveBeenCalled();
+        expect(spyUpdateImage).not.toHaveBeenCalled();
+    });
+
+    it('clearAllLayers(...) should call functions to clear background and foreground', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImage = spyOn(service, 'updateImages').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearForeground = spyOn(service, 'clearForeground').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyClearBackground = spyOn(service, 'clearBackground').and.callFake(() => {});
+        const drawingBoardStubRight: DrawingBoardState = {
+            canvasType: CanvasType.Right,
+            foreground: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            background: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+            temporary: { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>,
+        };
+        canvasStateServiceSpyObj.getCanvasState.and.callFake(() => {
+            return drawingBoardStubRight;
+        });
+        service.clearAllLayers(CanvasType.Right);
+        expect(spyUpdateImage).toHaveBeenCalled();
+        expect(spyClearForeground).toHaveBeenCalledWith(drawingBoardStub.background.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+        expect(spyClearBackground).toHaveBeenCalledWith(drawingBoardStub.background.nativeElement.getContext('2d') as CanvasRenderingContext2D);
+    });
+
+    it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        service.commands = [newCommand, newCommand];
+        service['indexOfCommand'] = 0;
+        service.redo();
+        expect(service['indexOfCommand']).toEqual(1);
+        expect(spyExecuteAllCommands).toHaveBeenCalled();
+    });
+
+    it('redo(...) should not iterate over elements if its index is greated than the commands lenght', () => {
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand');
+        service['indexOfCommand'] = 0;
+        service.redo();
+        expect(service['indexOfCommand']).toEqual(0);
+        expect(spyExecuteAllCommands).not.toHaveBeenCalled();
+    });
+
+    it('undo(...) should iterate over all of the commands and change the index for the correct one', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
+        const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
+        service.commands = [newCommand];
+        service['indexOfCommand'] = 0;
+        service.undo();
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(service['indexOfCommand']).toEqual(-1);
+        expect(spyExecuteAllCommands).toHaveBeenCalled();
+    });
+
+    it('undo(...) should not iterate over commands if the index is less than 0', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
+        service['indexOfCommand'] = -1;
+        service.undo();
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(service['indexOfCommand']).toEqual(-1);
+        expect(spyExecuteAllCommands).not.toHaveBeenCalled();
     });
 });

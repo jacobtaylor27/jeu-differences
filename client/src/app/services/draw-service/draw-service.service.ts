@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
+import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-command';
+import { DrawCommand } from '@app/classes/commands/draw-command';
+import { PasteExternalForegroundOnCommand } from '@app/classes/commands/paste-external-foreground-on-command';
+import { SwitchForegroundCommand } from '@app/classes/commands/switch-foreground-command';
 import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
-import { CanvasState } from '@app/interfaces/canvas-state';
 import { Command } from '@app/interfaces/command';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
+import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { Line } from '@app/interfaces/line';
 import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
@@ -22,7 +27,7 @@ export class DrawService {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     indexOfCommand: number = -1;
     strokeIndex: number = 0;
-    commands: Command[] = [];
+    commands: DrawingCommand[] = [];
     currentCommand: Command = {
         canvasType: CanvasType.None,
         name: '',
@@ -43,35 +48,30 @@ export class DrawService {
         const focusedCanvas = this.canvasStateService.getFocusedCanvas();
         if (focusedCanvas === undefined) return;
 
-        this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
-        this.setcurrentCommand('', focusedCanvas.canvasType);
+        this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
+        this.setCurrentCommand('', focusedCanvas.canvasType);
     }
 
     draw(event: MouseEvent) {
-        if (!this.isClick || !this.pencil) {
-            return;
-        }
+        if (!this.isClick) return;
         const line = this.updateMouseCoordinates(event);
-        this.currentCommand.strokes[0].lines.push(line);
-
-        this.currentCommand.style = {
-            color: this.pencil.color,
-            cap: this.pencil.cap,
-            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
-            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
-        };
+        this.updateCurrentCommand(line);
         this.createStroke(line, this.currentCommand.style);
         this.updateImages();
     }
 
+    redraw(command: Command) {
+        command.strokes.forEach((stroke) => {
+            stroke.lines.forEach((line) => {
+                this.createStroke(line, command.style, command.canvasType);
+            });
+        });
+    }
+
     stopDrawing() {
         this.isClick = false;
-        if (this.pencil.state === 'Pencil') {
-            this.currentCommand.name = 'draw';
-        } else {
-            this.currentCommand.name = 'erase';
-        }
-        this.addCurrentCommand();
+        this.currentCommand.name = this.pencil.state === 'Pencil' ? 'draw' : 'erase';
+        this.addCurrentCommand(new DrawCommand(this.currentCommand, this), false);
         this.removeCommandsPastIndex();
     }
 
@@ -130,12 +130,11 @@ export class DrawService {
     }
 
     resetForeground(canvasType: CanvasType) {
-        this.setcurrentCommand('clearForeground', canvasType);
+        this.setCurrentCommand('clearForeground', canvasType);
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
         if (canvasState) {
             const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            this.clearForeground(foreground);
-            this.addCurrentCommand();
+            this.addCurrentCommand(new ClearForegroundCommand(foreground, this));
         }
         this.updateImages();
     }
@@ -147,7 +146,7 @@ export class DrawService {
     updateImages() {
         const settings: CanvasRenderingContext2DSettings = { willReadFrequently: true };
         this.canvasStateService.states.forEach((state) => {
-            const ctx: CanvasRenderingContext2D = state?.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
+            const ctx: CanvasRenderingContext2D = state.temporary.nativeElement.getContext('2d', settings) as CanvasRenderingContext2D;
             ctx.drawImage(state.background.nativeElement, 0, 0);
             ctx.globalCompositeOperation = 'source-over';
             ctx.drawImage(state.foreground.nativeElement, 0, 0);
@@ -155,63 +154,40 @@ export class DrawService {
         });
     }
 
-    createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
-        const focusedCanvas = canvasType ? this.canvasStateService.getCanvasState(canvasType) : this.canvasStateService.getFocusedCanvas();
-        const ctx: CanvasRenderingContext2D = focusedCanvas?.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        ctx.beginPath();
-        ctx.globalCompositeOperation = strokeStyle.destination;
-        ctx.lineWidth = strokeStyle.width;
-        ctx.lineCap = strokeStyle.cap;
-        ctx.strokeStyle = strokeStyle.color;
-        ctx.moveTo(line.initCoord.x, line.initCoord.y);
-        ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
-        ctx.stroke();
-    }
-
-    reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {
-        return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
-    }
-
-    updateMouseCoordinates(event: MouseEvent): Line {
-        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        const focusedCanvas = this.canvasStateService.getFocusedCanvas();
-        if (focusedCanvas) {
-            this.coordDraw = this.reposition(focusedCanvas.foreground?.nativeElement, event);
-        }
-        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
-        return { initCoord, finalCoord };
-    }
-
     switchForegrounds() {
-        this.setcurrentCommand('switchForegrounds', CanvasType.Both);
+        this.setCurrentCommand('switchForegrounds', CanvasType.Both);
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
-            this.switchForegroundImageData(leftCanvas, rightCanvas);
-            this.addCurrentCommand();
+            this.addCurrentCommand(new SwitchForegroundCommand(leftCanvas, rightCanvas, this));
         }
     }
 
     pasteExternalForegroundOn(canvasType: CanvasType) {
-        this.setcurrentCommand('pasteExternalForegroundOn', canvasType);
+        this.setCurrentCommand('pasteExternalForegroundOn', canvasType);
 
         const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
         const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
 
         if (leftCanvas && rightCanvas) {
             if (canvasType === CanvasType.Left) {
-                this.pasteImageDataOn(leftCanvas, rightCanvas);
+                this.addCurrentCommand(new PasteExternalForegroundOnCommand(leftCanvas, rightCanvas, this));
+            } else if (canvasType === CanvasType.Right) {
+                this.addCurrentCommand(new PasteExternalForegroundOnCommand(rightCanvas, leftCanvas, this));
             }
-            if (canvasType === CanvasType.Right) {
-                this.pasteImageDataOn(rightCanvas, leftCanvas);
-            }
-            this.addCurrentCommand();
         }
     }
 
+    pasteImageDataOn(targetedForeground: DrawingBoardState, selectedForeground: DrawingBoardState) {
+        const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        targetForeground.putImageData(selectedImageData, 0, 0);
+    }
+
     clearAllLayers(canvasType: CanvasType) {
-        if (canvasType === CanvasType.None || canvasType === CanvasType.Both) return;
+        if (!(canvasType === CanvasType.Right || canvasType === CanvasType.Left)) return;
         const canvasState = this.canvasStateService.getCanvasState(canvasType);
 
         if (canvasState) {
@@ -241,83 +217,75 @@ export class DrawService {
         this.executeAllCommand();
     }
 
-    private executeAllCommand() {
-        this.clearAllForegrounds();
-
-        for (let i = 0; i < this.indexOfCommand + 1; i++) {
-            const command: Command = this.commands[i];
-            switch (command.name) {
-                case 'draw': {
-                    this.redraw(command);
-                    break;
-                }
-                case 'erase': {
-                    this.redraw(command);
-                    break;
-                }
-                case 'clearForeground': {
-                    const canvasState = this.canvasStateService.getCanvasState(command.canvasType);
-                    if (canvasState) {
-                        const foreground = canvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-                        this.clearForeground(foreground);
-                    }
-                    break;
-                }
-                case 'switchForegrounds': {
-                    const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
-                    const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
-
-                    if (leftCanvas && rightCanvas) {
-                        this.switchForegroundImageData(leftCanvas, rightCanvas);
-                    }
-                    break;
-                }
-                case 'pasteExternalForegroundOn': {
-                    const leftCanvas = this.canvasStateService.getCanvasState(CanvasType.Left);
-                    const rightCanvas = this.canvasStateService.getCanvasState(CanvasType.Right);
-
-                    if (leftCanvas && rightCanvas) {
-                        if (command.canvasType === CanvasType.Left) {
-                            this.pasteImageDataOn(leftCanvas, rightCanvas);
-                        }
-                        if (command.canvasType === CanvasType.Right) {
-                            this.pasteImageDataOn(rightCanvas, leftCanvas);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    private addCurrentCommand() {
-        this.indexOfCommand++;
-        this.commands[this.indexOfCommand] = this.currentCommand;
-    }
-
-    private setcurrentCommand(name: string, canvasType: CanvasType) {
-        this.currentCommand = {
-            canvasType,
-            name,
-            strokes: [{ lines: [] }],
-            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
-        };
-    }
-
-    private pasteImageDataOn(targetedForeground: CanvasState, selectedForeground: CanvasState) {
-        const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        targetForeground.putImageData(selectedImageData, 0, 0);
-    }
-
-    private switchForegroundImageData(primaryCanvasState: CanvasState, secondCanvasState: CanvasState) {
+    switchForegroundImageData(primaryCanvasState: DrawingBoardState, secondCanvasState: DrawingBoardState) {
         const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         primaryForeground.putImageData(rightImageData, 0, 0);
         secondForeground.putImageData(leftImageData, 0, 0);
+    }
+
+    private createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
+        const focusedCanvas = canvasType ? this.canvasStateService.getCanvasState(canvasType) : this.canvasStateService.getFocusedCanvas();
+        if (focusedCanvas === undefined) return;
+        const ctx: CanvasRenderingContext2D = focusedCanvas.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        ctx.beginPath();
+        ctx.globalCompositeOperation = strokeStyle.destination;
+        ctx.lineWidth = strokeStyle.width;
+        ctx.lineCap = strokeStyle.cap;
+        ctx.strokeStyle = strokeStyle.color;
+        ctx.moveTo(line.initCoord.x, line.initCoord.y);
+        ctx.lineTo(line.finalCoord.x, line.finalCoord.y);
+        ctx.stroke();
+    }
+
+    private reposition(canvas: HTMLCanvasElement, event: MouseEvent): Vec2 {
+        return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
+    }
+
+    private updateCurrentCommand(line: Line) {
+        this.currentCommand.strokes[0].lines.push(line);
+        this.currentCommand.style = {
+            color: this.pencil.color,
+            cap: this.pencil.cap,
+            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
+            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
+        };
+    }
+
+    private updateMouseCoordinates(event: MouseEvent): Line {
+        const initCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        const focusedCanvas = this.canvasStateService.getFocusedCanvas();
+        if (focusedCanvas) {
+            this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
+        }
+        const finalCoord: Vec2 = { x: this.coordDraw.x, y: this.coordDraw.y };
+        return { initCoord, finalCoord };
+    }
+
+    private executeAllCommand() {
+        this.clearAllForegrounds();
+        for (let i = 0; i < this.indexOfCommand + 1; i++) {
+            this.commands[i].execute();
+        }
+    }
+
+    private addCurrentCommand(drawingCommand: DrawingCommand, needsToBeExecuted?: boolean) {
+        this.indexOfCommand++;
+        this.commands[this.indexOfCommand] = drawingCommand;
+        if (needsToBeExecuted !== false) {
+            drawingCommand.execute();
+        }
+    }
+
+    private setCurrentCommand(name: string, canvasType: CanvasType) {
+        this.currentCommand = {
+            canvasType,
+            name,
+            strokes: [{ lines: [] }],
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
     }
 
     private removeCommandsPastIndex() {
@@ -327,13 +295,5 @@ export class DrawService {
                 this.commands.pop();
             }
         }
-    }
-
-    private redraw(command: Command) {
-        command.strokes.forEach((stroke) => {
-            stroke.lines.forEach((line) => {
-                this.createStroke(line, command.style, command.canvasType);
-            });
-        });
     }
 }

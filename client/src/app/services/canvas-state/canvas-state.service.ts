@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { CanvasType } from '@app/enums/canvas-type';
-import { CanvasState } from '@app/interfaces/canvas-state';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 
 @Injectable({
     providedIn: 'root',
 })
 export class CanvasStateService {
-    states: CanvasState[] = [];
+    states: DrawingBoardState[] = [];
     private focusedCanvas: CanvasType = CanvasType.None;
 
-    getCanvasState(canvasType: CanvasType): CanvasState | undefined {
+    getCanvasState(canvasType: CanvasType): DrawingBoardState | undefined {
         return this.states.find((state) => state.canvasType === canvasType);
     }
 
-    getFocusedCanvas(): CanvasState | undefined {
+    getFocusedCanvas(): DrawingBoardState | undefined {
         return this.getCanvasState(this.focusedCanvas);
     }
 

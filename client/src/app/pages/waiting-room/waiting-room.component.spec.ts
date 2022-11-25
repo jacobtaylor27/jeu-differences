@@ -92,6 +92,11 @@ describe('WaitingRoomComponent', () => {
         component.ngOnDestroy();
         expect(spySend).toHaveBeenCalled();
     });
+
+    it('should send leaveWaiting on ng on destroy', () => {
+        const spySend = spyOn(component.socketService, 'send');
+        spyGameInfoService.gameInformation = {} as PublicGameInformation;
+        component.ngOnDestroy();
         expect(spySend).toHaveBeenCalled();
     });
 });

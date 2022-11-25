@@ -194,6 +194,11 @@ export class SocketManagerService {
                         ),
                     );
                 if (this.gameManager.isGameOver(gameId)) {
+                    this.scoresHandlerService.verifyScore(
+                        this.gameManager.getGameInfo(gameId)?.id as string,
+                        { playerName: this.gameManager.findPlayer(gameId, socket.id) as string, time: this.gameManager.getTime(gameId) as number },
+                        this.gameManager.isGameMultiplayer(gameId) as boolean,
+                    );
                     this.gameManager.leaveGame(socket.id, gameId);
                     socket.emit(SocketEvent.Win);
                 }

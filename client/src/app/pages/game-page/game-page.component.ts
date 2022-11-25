@@ -49,7 +49,7 @@ export class GamePageComponent implements OnDestroy {
                 win: isWin,
                 winner: undefined,
                 isClassic: false,
-                nbPoints: this.gameInfoHandlerService.getNbDifferences(this.gameInfoHandlerService.getPlayer().name)?.toString(),
+                nbPoints: this.findNbDifferences(),
             };
         }
         this.dialog.open(DialogGameOverComponent, dialogConfig);

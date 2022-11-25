@@ -219,33 +219,31 @@ export class SocketManagerService {
                         this.gameManager.leaveGame(socket.id, gameId);
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
-                    //socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
-                    // socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
 
                     // return;
                 }
-                
-                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
-                    if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
-                        this.gameManager.setNextGame(gameId);
-                        const nextGameCard = this.gameManager.getGameInfo(gameId);
-                        let gameCardInfo: PublicGameInformation;
-                        if (nextGameCard) {
-                            gameCardInfo = {
-                                id: nextGameCard.id,
-                                name: nextGameCard.name,
-                                thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(nextGameCard.thumbnail),
-                                nbDifferences: nextGameCard.differences.length,
-                                idEditedBmp: nextGameCard.idEditedBmp,
-                                idOriginalBmp: nextGameCard.idOriginalBmp,
-                                multiplayerScore: nextGameCard.multiplayerScore,
-                                soloScore: nextGameCard.soloScore,
-                                isMulti: false,
-                            };
-                            this.sio.to(gameId).emit(SocketEvent.NewGameBoard, gameCardInfo);
-                        }
+
+                socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
+                if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
+                    this.gameManager.setNextGame(gameId);
+                    const nextGameCard = this.gameManager.getGameInfo(gameId);
+                    let gameCardInfo: PublicGameInformation;
+                    if (nextGameCard) {
+                        gameCardInfo = {
+                            id: nextGameCard.id,
+                            name: nextGameCard.name,
+                            thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(nextGameCard.thumbnail),
+                            nbDifferences: nextGameCard.differences.length,
+                            idEditedBmp: nextGameCard.idEditedBmp,
+                            idOriginalBmp: nextGameCard.idOriginalBmp,
+                            multiplayerScore: nextGameCard.multiplayerScore,
+                            soloScore: nextGameCard.soloScore,
+                            isMulti: false,
+                        };
+                        this.sio.to(gameId).emit(SocketEvent.NewGameBoard, gameCardInfo);
                     }
-                
+                }
             });
         });
     }

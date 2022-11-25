@@ -57,19 +57,15 @@ export class CluesService {
         return coord.y > minValue && coord.y < maxValue / 2;
     }
 
-    private isInFirstQuadrant(coord: Coordinate) {
-        return this.isToTheRight(coord, 0, DEFAULT_IMAGE_WIDTH) && this.isOnTop(coord, 0, DEFAULT_IMAGE_HEIGHT);
+    private isInFirstQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {
+        return this.isToTheRight(coord, leftUpperCoord.x, rightBottomCoord.x) && this.isOnTop(coord, leftUpperCoord.y, rightBottomCoord.y);
     }
 
-    private isInSecondQuadrant(coord: Coordinate) {
-        return !this.isToTheRight(coord, 0, DEFAULT_IMAGE_WIDTH) && this.isOnTop(coord, 0, DEFAULT_IMAGE_HEIGHT);
+    private isInSecondQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightButtomCoord: Coordinate) {
+        return !this.isToTheRight(coord, leftUpperCoord.x, rightButtomCoord.x) && this.isOnTop(coord, leftUpperCoord.y, rightButtomCoord.y);
     }
 
-    private isInThirdQuadrant(coord: Coordinate) {
-        return !this.isToTheRight(coord, 0, DEFAULT_IMAGE_WIDTH) && !this.isOnTop(coord, 0, DEFAULT_IMAGE_HEIGHT);
+    private isInThirdQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {
+        return !this.isToTheRight(coord, leftUpperCoord.x, rightBottomCoord.x) && !this.isOnTop(coord, leftUpperCoord.y, rightBottomCoord.y);
     }
-
-    // private isInFourthQuadrant(coord: Coordinate) {
-    //     return this.isToTheRight(coord, 0, DEFAULT_IMAGE_WIDTH) && !this.isOnTop(coord, 0, DEFAULT_IMAGE_HEIGHT);
-    // }
 }

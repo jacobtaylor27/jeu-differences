@@ -162,6 +162,16 @@ describe('GamePageComponent', () => {
         expect(spyOpenGameOverDialog).toHaveBeenCalled();
     });
 
+    it('should return nb of differences', () => {
+        gameInformationHandlerServiceSpy.players = [{ name: 'test', nbDifferences: 2 }];
+        expect(component['findNbDifferences']()).toEqual('2');
+        gameInformationHandlerServiceSpy.players = [
+            { name: 'test', nbDifferences: 2 },
+            { name: 'test', nbDifferences: 3 },
+        ];
+        expect(component['findNbDifferences']()).toEqual('5');
+    });
+
     it('should emit LeaveGame when the player quit the page', () => {
         const spyEmit = spyOn(socketHelper, 'emit');
         component.ngOnDestroy();

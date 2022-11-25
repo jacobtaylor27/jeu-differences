@@ -10,15 +10,19 @@ import * as http from 'http';
 import * as LZString from 'lz-string';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
+import * as LZString from 'lz-string';
+import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
+
 @Service()
 export class SocketManagerService {
     private sio: Server;
 
-    // eslint-disable-next-line max-params
+    // eslint-disable-next-line max-params -- all services are needed
     constructor(
         private gameManager: GameManagerService,
         private readonly multiplayerGameManager: MultiplayerGameManager,
         private eventMessageService: EventMessageService,
+        private readonly scoresHandlerService: ScoresHandlerService,
         private cluesService: CluesService,
     ) {}
 
@@ -199,6 +203,11 @@ export class SocketManagerService {
                         ),
                     );
                 if (this.gameManager.isGameOver(gameId)) {
+                    this.scoresHandlerService.verifyScore(
+                        this.gameManager.getGameInfo(gameId)?.id as string,
+                        { playerName: this.gameManager.findPlayer(gameId, socket.id) as string, time: this.gameManager.getTime(gameId) as number },
+                        this.gameManager.isGameMultiplayer(gameId) as boolean,
+                    );
                     this.gameManager.leaveGame(socket.id, gameId);
                     socket.emit(SocketEvent.Win);
                 }

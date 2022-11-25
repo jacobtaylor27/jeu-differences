@@ -4,6 +4,9 @@ import { DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@common/image-size';
 import { Service } from 'typedi';
 @Service()
 export class CluesService {
+    defaultLeftUpperCoord: Coordinate = { x: 0, y: 0 };
+    defaultRightBottomCoord: Coordinate = { x: DEFAULT_IMAGE_WIDTH, y: DEFAULT_IMAGE_HEIGHT };
+
     constructor(private readonly gameManager: GameManagerService) {}
 
     findRandomDifference(gameId: string): Coordinate[] | undefined {

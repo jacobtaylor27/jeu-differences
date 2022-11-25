@@ -15,10 +15,12 @@ import { ScoresHandlerService } from '@app/services/scores-handler-service/score
 export class SocketManagerService {
     private sio: Server;
 
+    // eslint-disable-next-line max-params -- all services are needed
     constructor(
         private gameManager: GameManagerService,
         private readonly multiplayerGameManager: MultiplayerGameManager,
         private eventMessageService: EventMessageService,
+        private readonly scoresHandlerService: ScoresHandlerService,
     ) {}
 
     set server(server: http.Server) {

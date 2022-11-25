@@ -45,7 +45,32 @@ export class CluesService {
     }
 
     secondCluePosition(coord: Coordinate) {
-        return coord;
+        const firstQuadrant: Coordinate[] = this.firstCluePosition(coord);
+        const defaultLeftUpperCoord: Coordinate = firstQuadrant[0];
+        const defaultRightBottomCoord: Coordinate = firstQuadrant[1];
+
+        if (this.isInFirstQuadrant(coord, defaultLeftUpperCoord, defaultRightBottomCoord)) {
+            return [
+                { x: defaultRightBottomCoord.x / 2, y: defaultLeftUpperCoord.y },
+                { x: defaultRightBottomCoord.x, y: defaultRightBottomCoord.y / 2 },
+            ];
+        }
+        if (this.isInSecondQuadrant(coord, defaultLeftUpperCoord, defaultRightBottomCoord)) {
+            return [
+                { x: defaultLeftUpperCoord.x, y: defaultLeftUpperCoord.y },
+                { x: defaultRightBottomCoord.x / 2, y: defaultRightBottomCoord.y / 2 },
+            ];
+        }
+        if (this.isInThirdQuadrant(coord, defaultLeftUpperCoord, defaultRightBottomCoord)) {
+            return [
+                { x: defaultLeftUpperCoord.x, y: defaultRightBottomCoord.y / 2 },
+                { x: defaultRightBottomCoord.x / 2, y: defaultRightBottomCoord.y },
+            ];
+        }
+        return [
+            { x: defaultRightBottomCoord.x / 2, y: defaultRightBottomCoord.y / 2 },
+            { x: defaultRightBottomCoord.x, y: defaultRightBottomCoord.y },
+        ];
     }
 
     private findRandomIndex(length: number) {

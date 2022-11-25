@@ -73,7 +73,7 @@ describe('Game', () => {
 
     it('should set end game', () => {
         game.setEndgame();
-        expect(game['context']).to.equal(GameStatus.EndGame);
+        expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
     });
 
     it('should calculate time in mode Classic', () => {

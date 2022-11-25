@@ -20,27 +20,27 @@ export class CluesService {
     }
 
     firstCluePosition(coord: Coordinate): Coordinate[] {
-        if (this.isInFirstQuadrant(coord)) {
+        if (this.isInFirstQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord)) {
             return [
-                { x: DEFAULT_IMAGE_WIDTH / 2, y: 0 },
-                { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT / 2 },
+                { x: this.defaultRightBottomCoord.x / 2, y: this.defaultLeftUpperCoord.y },
+                { x: this.defaultRightBottomCoord.x, y: this.defaultRightBottomCoord.y / 2 },
             ];
         }
-        if (this.isInSecondQuadrant(coord)) {
+        if (this.isInSecondQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord)) {
             return [
-                { x: 0, y: 0 },
-                { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT / 2 },
+                { x: this.defaultLeftUpperCoord.x, y: this.defaultLeftUpperCoord.y },
+                { x: this.defaultRightBottomCoord.x / 2, y: this.defaultRightBottomCoord.y / 2 },
             ];
         }
-        if (this.isInThirdQuadrant(coord)) {
+        if (this.isInThirdQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord)) {
             return [
-                { x: 0, y: DEFAULT_IMAGE_HEIGHT / 2 },
-                { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT },
+                { x: this.defaultLeftUpperCoord.x, y: this.defaultRightBottomCoord.y / 2 },
+                { x: this.defaultRightBottomCoord.x / 2, y: this.defaultRightBottomCoord.y },
             ];
         }
         return [
-            { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT / 2 },
-            { x: DEFAULT_IMAGE_WIDTH, y: DEFAULT_IMAGE_HEIGHT },
+            { x: this.defaultRightBottomCoord.x / 2, y: this.defaultRightBottomCoord.y / 2 },
+            { x: this.defaultRightBottomCoord.x, y: this.defaultRightBottomCoord.y },
         ];
     }
 

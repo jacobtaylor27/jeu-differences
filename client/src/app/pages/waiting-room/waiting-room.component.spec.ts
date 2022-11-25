@@ -84,4 +84,14 @@ describe('WaitingRoomComponent', () => {
         socketHelper.peerSideEmit(SocketEvent.RequestToJoin, 'name');
         expect(spyMatDialog.open).toHaveBeenCalled();
     });
+
+    it('should send leaveWaiting on ng on destroy', () => {
+        const spySend = spyOn(component.socketService, 'send');
+        spyGameInfoService.roomId = 'room id';
+        spyGameInfoService.gameInformation = {} as PublicGameInformation;
+        component.ngOnDestroy();
+        expect(spySend).toHaveBeenCalled();
+    });
+        expect(spySend).toHaveBeenCalled();
+    });
 });

@@ -120,6 +120,7 @@ describe('GamePageComponent', () => {
     });
 
     it('should open the game over dialog when game mode is Limited time', () => {
+        spyOn(Object.getPrototypeOf(component), 'findNbDifferences').and.callFake(() => 1);
         gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
         component.openGameOverDialog(false);
         expect(dialogSpyObj.open).toHaveBeenCalled();
@@ -130,6 +131,7 @@ describe('GamePageComponent', () => {
     });
 
     it('should open the game over dialog when game mode is Limited time', () => {
+        spyOn(Object.getPrototypeOf(component), 'findNbDifferences').and.callFake(() => 1);
         gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
         gameInformationHandlerServiceSpy.getNbDifferences.and.callFake(() => undefined);
         component.openGameOverDialog(true);

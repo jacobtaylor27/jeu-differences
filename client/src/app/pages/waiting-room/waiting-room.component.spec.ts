@@ -70,6 +70,16 @@ describe('WaitingRoomComponent', () => {
         socketHelper.peerSideEmit(SocketEvent.Play);
     });
 
+    it('should send JoinGame when accepted and navigate to game when game mode is Classic', () => {
+        spyGameInfoService.getPlayer.and.returnValue({ name: '', nbDifferences: 7 });
+        spyGameInfoService.gameMode = GameMode.Classic;
+        const spySend = spyOn(component.socketService, 'send');
+        socketHelper.peerSideEmit(SocketEvent.JoinGame, 'id');
+        socketHelper.peerSideEmit(SocketEvent.Play, 'id');
+        expect(spySend).toHaveBeenCalled();
+        expect(spyRouter.navigate).toHaveBeenCalled();
+    });
+
     it('should open dialog to approve a player when a request is heard', () => {
         socketHelper.peerSideEmit(SocketEvent.RequestToJoin, 'name');
         expect(spyMatDialog.open).toHaveBeenCalled();

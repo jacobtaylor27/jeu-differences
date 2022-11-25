@@ -9,6 +9,7 @@ import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
 import * as LZString from 'lz-string';
+import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
 
 @Service()
 export class SocketManagerService {

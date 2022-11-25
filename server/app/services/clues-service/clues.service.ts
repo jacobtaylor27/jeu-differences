@@ -13,63 +13,44 @@ export class CluesService {
         const gameDifferencesLeft: Coordinate[][] = this.gameManager.getNbDifferenceNotFound(gameId) as Coordinate[][];
         return gameDifferencesLeft[this.findRandomIndex(gameDifferencesLeft.length)];
     }
-
     findRandomPixel(gameId: string): Coordinate {
         const difference: Coordinate[] = this.findRandomDifference(gameId) as Coordinate[];
         return difference[this.findRandomIndex(difference.length)];
     }
 
     firstCluePosition(coord: Coordinate): Coordinate[] {
-        if (this.isInFirstQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord)) {
-            return [
-                { x: this.defaultRightBottomCoord.x / 2, y: this.defaultLeftUpperCoord.y },
-                { x: this.defaultRightBottomCoord.x, y: this.defaultRightBottomCoord.y / 2 },
-            ];
-        }
-        if (this.isInSecondQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord)) {
-            return [
-                { x: this.defaultLeftUpperCoord.x, y: this.defaultLeftUpperCoord.y },
-                { x: this.defaultRightBottomCoord.x / 2, y: this.defaultRightBottomCoord.y / 2 },
-            ];
-        }
-        if (this.isInThirdQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord)) {
-            return [
-                { x: this.defaultLeftUpperCoord.x, y: this.defaultRightBottomCoord.y / 2 },
-                { x: this.defaultRightBottomCoord.x / 2, y: this.defaultRightBottomCoord.y },
-            ];
-        }
-        return [
-            { x: this.defaultRightBottomCoord.x / 2, y: this.defaultRightBottomCoord.y / 2 },
-            { x: this.defaultRightBottomCoord.x, y: this.defaultRightBottomCoord.y },
-        ];
+        return this.findQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord);
     }
 
     secondCluePosition(coord: Coordinate) {
         const firstQuadrant: Coordinate[] = this.firstCluePosition(coord);
-        const defaultLeftUpperCoord: Coordinate = firstQuadrant[0];
-        const defaultRightBottomCoord: Coordinate = firstQuadrant[1];
+        const leftUpperCoord: Coordinate = firstQuadrant[0];
+        const rightBottomCoord: Coordinate = firstQuadrant[1];
+        return this.findQuadrant(coord, leftUpperCoord, rightBottomCoord);
+    }
 
-        if (this.isInFirstQuadrant(coord, defaultLeftUpperCoord, defaultRightBottomCoord)) {
+    private findQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {
+        if (this.isInFirstQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
             return [
-                { x: defaultRightBottomCoord.x / 2, y: defaultLeftUpperCoord.y },
-                { x: defaultRightBottomCoord.x, y: defaultRightBottomCoord.y / 2 },
+                { x: rightBottomCoord.x / 2, y: leftUpperCoord.y },
+                { x: rightBottomCoord.x, y: rightBottomCoord.y / 2 },
             ];
         }
-        if (this.isInSecondQuadrant(coord, defaultLeftUpperCoord, defaultRightBottomCoord)) {
+        if (this.isInSecondQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
             return [
-                { x: defaultLeftUpperCoord.x, y: defaultLeftUpperCoord.y },
-                { x: defaultRightBottomCoord.x / 2, y: defaultRightBottomCoord.y / 2 },
+                { x: leftUpperCoord.x, y: leftUpperCoord.y },
+                { x: rightBottomCoord.x / 2, y: rightBottomCoord.y / 2 },
             ];
         }
-        if (this.isInThirdQuadrant(coord, defaultLeftUpperCoord, defaultRightBottomCoord)) {
+        if (this.isInThirdQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
             return [
-                { x: defaultLeftUpperCoord.x, y: defaultRightBottomCoord.y / 2 },
-                { x: defaultRightBottomCoord.x / 2, y: defaultRightBottomCoord.y },
+                { x: leftUpperCoord.x, y: rightBottomCoord.y / 2 },
+                { x: rightBottomCoord.x / 2, y: rightBottomCoord.y },
             ];
         }
         return [
-            { x: defaultRightBottomCoord.x / 2, y: defaultRightBottomCoord.y / 2 },
-            { x: defaultRightBottomCoord.x, y: defaultRightBottomCoord.y },
+            { x: rightBottomCoord.x / 2, y: rightBottomCoord.y / 2 },
+            { x: rightBottomCoord.x, y: rightBottomCoord.y },
         ];
     }
 

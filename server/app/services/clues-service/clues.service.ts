@@ -19,25 +19,25 @@ export class CluesService {
     firstCluePosition(coord: Coordinate): Coordinate[] {
         if (this.isInFirstQuadrant(coord)) {
             return [
-                { x: 320, y: 0 },
-                { x: 640, y: 240 },
+                { x: DEFAULT_IMAGE_WIDTH / 2, y: 0 },
+                { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT / 2 },
             ];
         }
         if (this.isInSecondQuadrant(coord)) {
             return [
                 { x: 0, y: 0 },
-                { x: 320, y: 240 },
+                { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT / 2 },
             ];
         }
         if (this.isInThirdQuadrant(coord)) {
             return [
-                { x: 0, y: 240 },
-                { x: 320, y: 480 },
+                { x: 0, y: DEFAULT_IMAGE_HEIGHT / 2 },
+                { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT },
             ];
         }
         return [
-            { x: 320, y: 240 },
-            { x: 640, y: 480 },
+            { x: DEFAULT_IMAGE_WIDTH / 2, y: DEFAULT_IMAGE_HEIGHT / 2 },
+            { x: DEFAULT_IMAGE_WIDTH, y: DEFAULT_IMAGE_HEIGHT },
         ];
     }
 

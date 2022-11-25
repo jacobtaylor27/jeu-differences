@@ -212,17 +212,19 @@ export class SocketManagerService {
                 if (this.gameManager.isGameOver(gameId)) {
                     this.gameManager.leaveGame(socket.id, gameId);
                     socket.emit(SocketEvent.Win);
+                    return;
                 }
                 if (this.gameManager.isGameMultiplayer(gameId)) {
                     if (this.gameManager.isGameOver(gameId)) {
                         this.gameManager.leaveGame(socket.id, gameId);
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
-                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
-                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+                    //socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
+                    // socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
 
-                    return;
-                } else {
+                    // return;
+                }
+                
                     socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
                     if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
                         this.gameManager.setNextGame(gameId);
@@ -240,10 +242,10 @@ export class SocketManagerService {
                                 soloScore: nextGameCard.soloScore,
                                 isMulti: false,
                             };
-                            socket.emit(SocketEvent.NewGameBoard, gameCardInfo);
+                            socket.to(gameId).emit(SocketEvent.NewGameBoard, gameCardInfo);
                         }
                     }
-                }
+                
             });
         });
     }

@@ -58,7 +58,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.socketService.off(SocketEvent.RequestToJoin);
         this.socketService.off(SocketEvent.RejectPlayer);
-        if (this.gameInformationHandlerService.roomId) {
+        if (!this.gameInformationHandlerService.gameInformation) {
+            this.socketService.send(SocketEvent.LeaveWaiting, {
+                roomId: this.gameInformationHandlerService.roomId,
+                gameCard: undefined,
+            });
+        } else if (this.gameInformationHandlerService.roomId) {
             this.socketService.send(SocketEvent.LeaveWaiting, {
                 roomId: this.gameInformationHandlerService.roomId,
                 gameCard: this.gameInformationHandlerService.getId(),

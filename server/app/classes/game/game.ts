@@ -5,6 +5,7 @@ import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { Coordinate } from '@common/coordinate';
 import { GameMode } from '@common/game-mode';
+import { GameTimeConstants } from '@common/game-time-constants';
 import { User } from '@common/user';
 import { v4 } from 'uuid';
 
@@ -15,21 +16,28 @@ export class Game {
     private id: string;
     private mode: GameMode;
     private isMulti: boolean;
+    private timerConstant: GameTimeConstants;
     private info: PrivateGameInformation;
     private getNbDifferencesFound: Map<string, Set<Coordinate[]>>;
     private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
     private initialTime: Date;
 
-    constructor(mode: GameMode, playerInfo: { player: User; isMulti: boolean }, info: PrivateGameInformation) {
-        this.info = info;
-        this.mode = mode;
+    constructor(
+        player: { player: User; isMulti: boolean },
+        game: { info: PrivateGameInformation; mode: GameMode; timerConstant?: GameTimeConstants },
+    ) {
+        if (game.mode === GameMode.LimitedTime) {
+            this.timerConstant = game.timerConstant as GameTimeConstants;
+        }
+        this.info = game.info;
+        this.mode = game.mode;
         this.players = new Map();
-        this.isMulti = playerInfo.isMulti;
+        this.isMulti = player.isMulti;
         this.getNbDifferencesFound = new Map();
         this.getNbDifferencesTotalFound = new Set();
-        this.addPlayer(playerInfo.player);
-        this.context = new GameContext(mode as GameMode, new InitGameState(), playerInfo.isMulti);
+        this.addPlayer(player.player);
+        this.context = new GameContext(game.mode as GameMode, new InitGameState(), player.isMulti);
         this.id = v4();
         this.context.next();
     }
@@ -71,6 +79,22 @@ export class Game {
         this.context.next();
     }
 
+    calculateLimitedGameTimer(): number {
+        const presentTime = new Date();
+        let timer =
+            this.timerConstant.gameTime -
+            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
+            Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000) +
+            this.timerConstant.successTime * this.getNbDifferencesTotalFound.size -
+            this.timerConstant.penaltyTime * 0; // TO DO : multiply by the nb of clue activate
+        if (timer > 120) {
+            const differenceLimitTime = timer - 120;
+            this.initialTime.setTime(this.initialTime.getTime() - differenceLimitTime * 1000);
+            timer -= differenceLimitTime;
+        }
+        return timer;
+    }
+
     calculateTime(): number {
         const presentTime = new Date();
         if (this.mode === GameMode.Classic) {
@@ -78,8 +102,7 @@ export class Game {
             return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
         } else {
             // TO DO : ADD ADMINS TIME
-            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            const time = 60 - Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
+            const time = this.calculateLimitedGameTimer();
             if (time === 0) {
                 this.context.end();
             }

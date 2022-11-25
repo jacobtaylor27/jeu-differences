@@ -14,6 +14,7 @@ export class GameInformationHandlerService {
     players: { name: string; nbDifferences: number }[] = [];
     roomId: string;
     $differenceFound: Subject<string> = new Subject();
+    $newGame: Subject<string> = new Subject();
     gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
     isReadyToAccept: boolean = true;

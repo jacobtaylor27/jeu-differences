@@ -96,7 +96,26 @@ export class SocketManagerService {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
                 socket.broadcast.to(gameId).emit(SocketEvent.JoinGame, { roomId: gameId, playerName: player });
-                this.sio.to(gameId).emit(SocketEvent.Play, gameId);
+                if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                    this.sio.to(gameId).emit(SocketEvent.Play, gameId);
+                } else {
+                    const gameCard = this.gameManager.getGameInfo(gameId);
+                    let gameCardInfo: PublicGameInformation;
+                    if (gameCard) {
+                        gameCardInfo = {
+                            id: gameCard.id,
+                            name: gameCard.name,
+                            thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(gameCard.thumbnail),
+                            nbDifferences: gameCard.differences.length,
+                            idEditedBmp: gameCard.idEditedBmp,
+                            idOriginalBmp: gameCard.idOriginalBmp,
+                            multiplayerScore: gameCard.multiplayerScore,
+                            soloScore: gameCard.soloScore,
+                            isMulti: false,
+                        };
+                        socket.emit(SocketEvent.Play, { gameId, gameCard: gameCardInfo });
+                    }
+                }
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {

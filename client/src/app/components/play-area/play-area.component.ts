@@ -7,10 +7,12 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
+
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -97,6 +99,14 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
             }
+        });
+    }
+
+    handleSocketClue() {
+        this.communicationSocketService.on(SocketEvent.Clue, (quadrantCoordinate: Coordinate[]) => {
+            // display clue area ;
+            // this.differenceDetectionHandler
+            console.log(quadrantCoordinate);
         });
     }
 

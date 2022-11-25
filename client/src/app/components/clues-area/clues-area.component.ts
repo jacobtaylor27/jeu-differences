@@ -2,7 +2,6 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { CluesService } from '@app/services/clues-service/clues.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
 @Component({
     selector: 'app-clues-area',
@@ -31,9 +30,6 @@ export class CluesAreaComponent implements OnInit {
 
     ngOnInit(): void {
         this.isDisabled = this.gameInformation.isMulti;
-        this.communicationSocket.on(SocketEvent.Clue, (quadrantCoordinate: Coordinate[]) => {
-            console.log(quadrantCoordinate);
-        });
     }
 
     getClue() {

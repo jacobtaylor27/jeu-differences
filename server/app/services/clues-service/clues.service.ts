@@ -13,6 +13,7 @@ export class CluesService {
         const gameDifferencesLeft: Coordinate[][] = this.gameManager.getNbDifferenceNotFound(gameId) as Coordinate[][];
         return gameDifferencesLeft[this.findRandomIndex(gameDifferencesLeft.length)];
     }
+
     findRandomPixel(gameId: string): Coordinate {
         const difference: Coordinate[] = this.findRandomDifference(gameId) as Coordinate[];
         return difference[this.findRandomIndex(difference.length)];

@@ -242,7 +242,7 @@ export class SocketManagerService {
                                 soloScore: nextGameCard.soloScore,
                                 isMulti: false,
                             };
-                            socket.to(gameId).emit(SocketEvent.NewGameBoard, gameCardInfo);
+                            this.sio.to(gameId).emit(SocketEvent.NewGameBoard, gameCardInfo);
                         }
                     }
                 

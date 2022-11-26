@@ -2,6 +2,7 @@ import { EventMessageService } from '@app/services//message-event-service/messag
 import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
+import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
 import { Coordinate } from '@common/coordinate';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
@@ -10,8 +11,6 @@ import * as http from 'http';
 import * as LZString from 'lz-string';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
-import * as LZString from 'lz-string';
-import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
 
 @Service()
 export class SocketManagerService {
@@ -64,8 +63,12 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
+                console.log('jello');
                 const pixelResult = this.cluesService.findRandomPixel(gameId);
-                this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
+                if (clueIndex === 1) this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
+                else {
+                    this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.secondCluePosition(pixelResult));
+                }
                 this.sio.to(gameId).emit(SocketEvent.EventMessage, this.eventMessageService.usingClueMessage());
             });
 

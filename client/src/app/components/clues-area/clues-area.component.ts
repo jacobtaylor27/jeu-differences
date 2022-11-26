@@ -30,9 +30,8 @@ export class CluesAreaComponent implements OnInit {
 
     ngOnInit(): void {
         this.isDisabled = this.gameInformation.isMulti;
-        // this.communicationSocket.on(SocketEvent.Clue, (quadrantCoordinate: Coordinate[]) => {
-        // });
     }
+
     getClue() {
         this.clueAskedCounter++;
         if (this.clueAskedCounter === this.numberOfClues) {

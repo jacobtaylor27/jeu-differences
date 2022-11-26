@@ -30,6 +30,10 @@ export class CluesService {
         return this.findQuadrant(coord, leftUpperCoord, rightBottomCoord);
     }
 
+    thirdCluePosition(coord: Coordinate) {
+        return [coord, coord];
+    }
+
     private findQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {
         if (this.isInFirstQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
             return [

@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { SocketEvent } from '@common/socket-event';
+const NUMBER_CLUES = 3;
 @Component({
     selector: 'app-clues-area',
     templateUrl: './clues-area.component.html',
@@ -10,7 +11,6 @@ import { SocketEvent } from '@common/socket-event';
 export class CluesAreaComponent implements OnInit {
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
-    private numberOfClues: number = 3;
 
     constructor(public communicationSocket: CommunicationSocketService, public gameInformation: GameInformationHandlerService) {}
 
@@ -29,7 +29,7 @@ export class CluesAreaComponent implements OnInit {
 
     getClue() {
         this.clueAskedCounter++;
-        if (this.clueAskedCounter === this.numberOfClues) {
+        if (this.clueAskedCounter === NUMBER_CLUES) {
             this.isDisabled = true;
         }
         this.communicationSocket.send(SocketEvent.Clue, { clueIndex: this.clueAskedCounter, gameId: this.gameInformation.roomId });

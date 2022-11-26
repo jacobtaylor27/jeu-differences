@@ -19,6 +19,15 @@ describe.only('Clues Service', () => {
         expect(cluesService.firstCluePosition(pixelCoordinate)).to.deep.equal(expectedResult);
     });
 
+    it('Should return the quadrant corners coordinates where the pixel is in the image on a scale of 1/16', () => {
+        const pixelCoordinate = { x: 120, y: 400 };
+        const expectedResult = [
+            { x: 0, y: 360 },
+            { x: 160, y: 480 },
+        ];
+        expect(cluesService.secondCluePosition(pixelCoordinate)).to.deep.equal(expectedResult);
+    });
+
     it('Should return the coordinate value if the user is using the third clue', () => {
         const pixelCoordinate = { x: 120, y: 400 };
         const expectedResult = [pixelCoordinate, { x: -1, y: -1 }];

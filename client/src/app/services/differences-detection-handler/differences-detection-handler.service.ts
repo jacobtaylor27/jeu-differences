@@ -119,6 +119,7 @@ export class DifferencesDetectionHandlerService {
         ctx.font = '40px serif';
         let counter = 0;
         const interval = setInterval(() => {
+            ctx.fillStyle = 'black';
             ctx.clearRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, 100, -100);
 
             if (counter === 5) {

@@ -1,13 +1,17 @@
 import { CluesService } from '@app/services/clues-service/clues.service';
+import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { expect } from 'chai';
 import { describe } from 'mocha';
+import { stub } from 'sinon';
 import { Container } from 'typedi';
 
 describe.only('Clues Service', () => {
     let cluesService: CluesService;
+    let gameManager: GameManagerService;
 
     beforeEach(() => {
         cluesService = Container.get(CluesService);
+        gameManager = Container.get(GameManagerService);
     });
 
     it('Should return the quadrant corners coordinates where the pixel is in the image on a scale of 1/4', () => {
@@ -38,4 +42,25 @@ describe.only('Clues Service', () => {
         const length = 10;
         expect(cluesService['findRandomIndex'](length)).to.be.greaterThanOrEqual(0).and.to.be.lessThan(length);
     });
+
+    it('Should find a random difference in the left differences array', () => {
+        const gameId = '';
+        const spyLeftDifferences = stub(gameManager, 'getNbDifferenceNotFound').callsFake(() => {
+            return [
+                [
+                    { x: 1, y: 1 },
+                    { x: 2, y: 2 },
+                ],
+            ];
+        });
+        const expectedResult = [
+            { x: 1, y: 1 },
+            { x: 2, y: 2 },
+        ];
+        const differenceResult = cluesService.findRandomDifference(gameId);
+        expect(spyLeftDifferences.called);
+        expect(differenceResult).to.deep.equal(expectedResult);
+    });
+
+    
 });

@@ -33,8 +33,8 @@ export class CluesService {
     private findQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {
         if (this.isInFirstQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
             return [
-                { x: rightBottomCoord.x / 2, y: leftUpperCoord.y },
-                { x: rightBottomCoord.x, y: rightBottomCoord.y / 2 },
+                { x: leftUpperCoord.x + (rightBottomCoord.x - leftUpperCoord.x) / 2, y: leftUpperCoord.y },
+                { x: rightBottomCoord.x, y: leftUpperCoord.y + (rightBottomCoord.y - leftUpperCoord.y) / 2 },
             ];
         }
         if (this.isInSecondQuadrant(coord, leftUpperCoord, rightBottomCoord)) {

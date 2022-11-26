@@ -40,7 +40,10 @@ export class CluesService {
         if (this.isInSecondQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
             return [
                 { x: leftUpperCoord.x, y: leftUpperCoord.y },
-                { x: rightBottomCoord.x / 2, y: rightBottomCoord.y / 2 },
+                {
+                    x: leftUpperCoord.x + (rightBottomCoord.x - leftUpperCoord.x) / 2,
+                    y: leftUpperCoord.y + (rightBottomCoord.y - leftUpperCoord.y) / 2,
+                },
             ];
         }
         if (this.isInThirdQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
@@ -57,14 +60,6 @@ export class CluesService {
 
     private findRandomIndex(length: number) {
         return Math.floor(Math.random() * length);
-    }
-
-    private isToTheRight(coord: Coordinate, minValue: number, maxValue: number): boolean {
-        return coord.x > minValue && coord.x > maxValue / 2;
-    }
-
-    private isOnTop(coord: Coordinate, minValue: number, maxValue: number) {
-        return coord.y > minValue && coord.y < maxValue / 2;
     }
 
     private isInFirstQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {

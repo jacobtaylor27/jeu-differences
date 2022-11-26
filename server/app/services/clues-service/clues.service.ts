@@ -23,14 +23,14 @@ export class CluesService {
         return this.findQuadrant(coord, this.defaultLeftUpperCoord, this.defaultRightBottomCoord);
     }
 
-    secondCluePosition(coord: Coordinate) {
+    secondCluePosition(coord: Coordinate): Coordinate[] {
         const firstQuadrant: Coordinate[] = this.firstCluePosition(coord);
         const leftUpperCoord: Coordinate = firstQuadrant[0];
         const rightBottomCoord: Coordinate = firstQuadrant[1];
         return this.findQuadrant(coord, leftUpperCoord, rightBottomCoord);
     }
 
-    thirdCluePosition(coord: Coordinate) {
+    thirdCluePosition(coord: Coordinate): Coordinate[] {
         return [coord, { x: -1, y: -1 }];
     }
 

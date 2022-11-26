@@ -107,6 +107,11 @@ export class DifferencesDetectionHandlerService {
         return interval;
     }
 
+    async drawQuadrant(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
+        ctx.rect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, quadrantCoordinate[1].x, quadrantCoordinate[1].y);
+        ctx.stroke();
+    }
+
     private clearDifference(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {
         for (const coordinate of coords) {
             ctx.clearRect(coordinate.x, coordinate.y, 1, 1);

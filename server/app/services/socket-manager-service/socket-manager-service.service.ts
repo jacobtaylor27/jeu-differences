@@ -63,7 +63,6 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
-                console.log('jello');
                 const pixelResult = this.cluesService.findRandomPixel(gameId);
                 if (clueIndex === 1) this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
                 else {

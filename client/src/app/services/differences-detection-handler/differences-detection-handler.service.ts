@@ -114,11 +114,22 @@ export class DifferencesDetectionHandlerService {
             ctx.font = '50px serif';
             ctx.fillText(`(${quadrantCoordinate[0].x},${quadrantCoordinate[0].y})`, quadrantCoordinate[0].x, quadrantCoordinate[0].y);
         } else {
-            const width = Math.abs(quadrantCoordinate[1].x - quadrantCoordinate[0].x);
-            const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);
-            ctx.rect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
-            ctx.stroke();
-        }
+    private drawRect(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
+        const width = Math.abs(quadrantCoordinate[1].x - quadrantCoordinate[0].x);
+        const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);
+        let counter = 0;
+        const interval = setInterval(() => {
+            ctx.clearRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
+
+            if (counter === 5) {
+                clearInterval(interval);
+            }
+            if (counter % 2 === 0) {
+                ctx.rect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
+                ctx.stroke();
+            }
+            counter++;
+        }, FlashTimer.Classic) as unknown as number;
     }
 
     private clearDifference(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {

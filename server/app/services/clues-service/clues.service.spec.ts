@@ -33,4 +33,9 @@ describe.only('Clues Service', () => {
         const expectedResult = [pixelCoordinate, { x: -1, y: -1 }];
         expect(cluesService.thirdCluePosition(pixelCoordinate)).to.deep.equal(expectedResult);
     });
+
+    it('Should return a random index for a specific length', () => {
+        const length = 10;
+        expect(cluesService['findRandomIndex'](length)).to.be.greaterThanOrEqual(0).and.to.be.lessThan(length);
+    });
 });

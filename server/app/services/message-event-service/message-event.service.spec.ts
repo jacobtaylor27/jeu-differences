@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
 
-describe.only('EventMessage Service', () => {
+describe('EventMessage Service', () => {
     let eventMessageService: EventMessageService;
 
     beforeEach(() => {

@@ -28,4 +28,11 @@ describe.only('EventMessage Service', () => {
         expect(findQuadrantService['isOnTop'](bottomPixelCoordinate, leftUpperCoord.x, rightBottomCoord.x)).to.equal(false);
     });
 
+    it('Should return if the pixel is in the first quadrant ', () => {
+        const leftUpperCoord = { x: 320, y: 240 };
+        const rightBottomCoord = { x: 640, y: 480 };
+        const pixelCoordinate = { x: 500, y: 250 };
+        expect(findQuadrantService['isInFirstQuadrant'](pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.equal(true);
+    });
+
 });

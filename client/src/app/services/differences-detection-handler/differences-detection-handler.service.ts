@@ -107,12 +107,16 @@ export class DifferencesDetectionHandlerService {
         return interval;
     }
 
-    async drawQuadrant(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
-        if (quadrantCoordinate[1].y === -1) {
+    async showClue(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
+        if (this.isThirdClue(quadrantCoordinate)) {
             this.fillText(ctx, quadrantCoordinate);
-        } else {
-            this.drawRect(ctx, quadrantCoordinate);
+            return;
         }
+        this.drawRect(ctx, quadrantCoordinate);
+    }
+
+    private isThirdClue(quadrantCoordinate: Coordinate[]): boolean {
+        return quadrantCoordinate[1].y === -1;
     }
 
     private fillText(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {

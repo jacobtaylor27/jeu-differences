@@ -108,7 +108,9 @@ export class DifferencesDetectionHandlerService {
     }
 
     async drawQuadrant(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
-        ctx.rect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, quadrantCoordinate[1].x, quadrantCoordinate[1].y);
+        const width = Math.abs(quadrantCoordinate[1].x - quadrantCoordinate[0].x);
+        const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);
+        ctx.rect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
         ctx.stroke();
     }
 

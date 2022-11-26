@@ -44,9 +44,8 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.pencil = newPencil;
         });
 
-        const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-
-        this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
+        this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe((newImage: ImageBitmap) => {
+            const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             background.drawImage(newImage, 0, 0);
             this.drawService.updateImages();
         });

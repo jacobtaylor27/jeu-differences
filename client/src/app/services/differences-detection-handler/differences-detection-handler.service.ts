@@ -108,12 +108,29 @@ export class DifferencesDetectionHandlerService {
     }
 
     async drawQuadrant(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
-        console.log(quadrantCoordinate);
         if (quadrantCoordinate[1].y === -1) {
-            console.log('yellowww');
-            ctx.font = '50px serif';
-            ctx.fillText(`(${quadrantCoordinate[0].x},${quadrantCoordinate[0].y})`, quadrantCoordinate[0].x, quadrantCoordinate[0].y);
+            this.fillText(ctx, quadrantCoordinate);
         } else {
+            this.drawRect(ctx, quadrantCoordinate);
+        }
+    }
+
+    private fillText(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
+        ctx.font = '40px serif';
+        let counter = 0;
+        const interval = setInterval(() => {
+            ctx.clearRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, 100, -100);
+
+            if (counter === 5) {
+                clearInterval(interval);
+            }
+            if (counter % 2 === 0) {
+                ctx.fillText(`(${quadrantCoordinate[0].x},${quadrantCoordinate[0].y})`, quadrantCoordinate[0].x, quadrantCoordinate[0].y, 100);
+            }
+            counter++;
+        }, FlashTimer.Classic) as unknown as number;
+    }
+
     private drawRect(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
         const width = Math.abs(quadrantCoordinate[1].x - quadrantCoordinate[0].x);
         const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);

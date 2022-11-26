@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
 
-describe('EventMessage Service', () => {
+describe('Find Quadrant service', () => {
     let findQuadrantService: FindQuadrantService;
 
     beforeEach(() => {

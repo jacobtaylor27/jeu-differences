@@ -41,4 +41,11 @@ describe.only('EventMessage Service', () => {
         const pixelCoordinate = { x: 350, y: 250 };
         expect(findQuadrantService['isInSecondQuadrant'](pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.equal(true);
     });
+
+    it('Should return if the pixel is in the third quadrant ', () => {
+        const leftUpperCoord = { x: 320, y: 240 };
+        const rightBottomCoord = { x: 640, y: 480 };
+        const pixelCoordinate = { x: 350, y: 400 };
+        expect(findQuadrantService['isInThirdQuadrant'](pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.equal(true);
+    });
 });

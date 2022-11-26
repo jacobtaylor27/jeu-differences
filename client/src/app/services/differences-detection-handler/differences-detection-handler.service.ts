@@ -119,8 +119,8 @@ export class DifferencesDetectionHandlerService {
         ctx.font = '40px serif';
         let counter = 0;
         const interval = setInterval(() => {
-            ctx.fillStyle = 'black';
-            ctx.clearRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, 100, -100);
+            ctx.fillStyle = 'grey';
+            ctx.clearRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y + 10, 100, -200);
 
             if (counter === 5) {
                 clearInterval(interval);
@@ -137,13 +137,14 @@ export class DifferencesDetectionHandlerService {
         const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);
         let counter = 0;
         const interval = setInterval(() => {
-            ctx.clearRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
+            ctx.clearRect(quadrantCoordinate[0].x - 5, quadrantCoordinate[0].y - 5, width + 10, height + 10);
 
             if (counter === 5) {
                 clearInterval(interval);
             }
             if (counter % 2 === 0) {
                 ctx.rect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
+                ctx.fillStyle = 'grey';
                 ctx.stroke();
             }
             counter++;

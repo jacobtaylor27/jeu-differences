@@ -65,7 +65,6 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     ngOnInit(): void {
         this.communicationSocketService.on(SocketEvent.Clue, (quadrantCoordinate: Coordinate[]) => {
-            console.log(quadrantCoordinate);
             this.differencesDetectionHandlerService.drawQuadrant(this.getContextImgOriginal(), quadrantCoordinate);
             this.differencesDetectionHandlerService.drawQuadrant(this.getContextModified(), quadrantCoordinate);
         });

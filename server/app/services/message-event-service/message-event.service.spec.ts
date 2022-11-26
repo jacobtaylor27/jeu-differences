@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
 
-describe('EventMessage Service', () => {
+describe.only('EventMessage Service', () => {
     let eventMessageService: EventMessageService;
 
     beforeEach(() => {
@@ -55,5 +55,10 @@ describe('EventMessage Service', () => {
     it('Should return null  if username is undefined while sending a leaving event message ', () => {
         const userName = undefined;
         expect(eventMessageService.leavingGameMessage(userName)).to.be.equal(null);
+    });
+
+    it('Should return a clue used message if user wants to have a hint ', () => {
+        const expectedResult = `${new Date().toLocaleTimeString('en-US')} - Indice Utilisé`;
+        expect(eventMessageService.usingClueMessage()).to.be.equal(expectedResult);
     });
 });

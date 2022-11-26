@@ -81,4 +81,15 @@ describe.only('EventMessage Service', () => {
         const pixelCoordinate = { x: 350, y: 400 };
         expect(findQuadrantService.findQuadrant(pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.deep.equal(expectedResult);
     });
+
+    it('Should return the fourth quadrant corners coordinates if the pixel is in the fourth quadrant ', () => {
+        const leftUpperCoord = { x: 320, y: 240 };
+        const rightBottomCoord = { x: 640, y: 480 };
+        const expectedResult = [
+            { x: 480, y: 360 },
+            { x: 640, y: 480 },
+        ];
+        const pixelCoordinate = { x: 500, y: 400 };
+        expect(findQuadrantService.findQuadrant(pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.deep.equal(expectedResult);
+    });
 });

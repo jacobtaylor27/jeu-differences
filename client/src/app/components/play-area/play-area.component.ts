@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
@@ -18,7 +18,7 @@ import { SocketEvent } from '@common/socket-event';
     templateUrl: './play-area.component.html',
     styleUrls: ['./play-area.component.scss'],
 })
-export class PlayAreaComponent implements AfterViewInit, OnDestroy {
+export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild('actionsGameOriginal') canvasOriginal: ElementRef<HTMLCanvasElement>;
     @ViewChild('actionsGameModified') canvasModified: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgOriginal') canvasImgOriginal: ElementRef<HTMLCanvasElement>;
@@ -63,6 +63,20 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    ngOnInit(): void {
+        this.communicationSocketService.on(SocketEvent.Clue, (quadrantCoordinate: Coordinate[]) => {
+            console.log(quadrantCoordinate);
+            // const quad: Coordinate[] = [
+            //     { x: 320, y: 0 },
+            //     // eslint-disable-next-line @typescript-eslint/naming-convention
+            //     { x: 500, y: 240 },
+            // ];
+            // this.differencesDetectionHandlerService.drawQuadrant(this.getContextModified(), quad);
+            this.differencesDetectionHandlerService.drawQuadrant(this.getContextImgOriginal(), quadrantCoordinate);
+            this.differencesDetectionHandlerService.drawQuadrant(this.getContextModified(), quadrantCoordinate);
+        });
+    }
+
     ngAfterViewInit(): void {
         this.displayImages();
         this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
@@ -99,14 +113,6 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
             }
-        });
-    }
-
-    handleSocketClue() {
-        this.communicationSocketService.on(SocketEvent.Clue, (quadrantCoordinate: Coordinate[]) => {
-            // display clue area ;
-            // this.differenceDetectionHandler
-            console.log(quadrantCoordinate);
         });
     }
 

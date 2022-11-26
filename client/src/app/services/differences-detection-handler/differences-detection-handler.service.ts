@@ -138,7 +138,6 @@ export class DifferencesDetectionHandlerService {
         let counter = 0;
         const interval = setInterval(() => {
             ctx.clearRect(quadrantCoordinate[0].x - 5, quadrantCoordinate[0].y - 5, width + 10, height + 10);
-
             if (counter === 5) {
                 clearInterval(interval);
             }

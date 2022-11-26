@@ -64,10 +64,15 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
                 const pixelResult = this.cluesService.findRandomPixel(gameId);
-                if (clueIndex === 1) this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
-                if (clueIndex === 2) this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.secondCluePosition(pixelResult));
-                else {
-                    this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.thirdCluePosition(pixelResult));
+                switch (clueIndex) {
+                    case 1:
+                        this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
+                        break;
+                    case 2:
+                        this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.secondCluePosition(pixelResult));
+                        break;
+                    case 3:
+                        this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.thirdCluePosition(pixelResult));
                 }
                 this.sio.to(gameId).emit(SocketEvent.EventMessage, this.eventMessageService.usingClueMessage());
             });

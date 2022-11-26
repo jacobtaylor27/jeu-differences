@@ -31,7 +31,7 @@ export class CluesService {
     }
 
     thirdCluePosition(coord: Coordinate) {
-        return [coord, coord];
+        return [coord, { x: -1, y: -1 }];
     }
 
     private findQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {

@@ -48,12 +48,12 @@ export class CluesService {
         }
         if (this.isInThirdQuadrant(coord, leftUpperCoord, rightBottomCoord)) {
             return [
-                { x: leftUpperCoord.x, y: rightBottomCoord.y / 2 },
-                { x: rightBottomCoord.x / 2, y: rightBottomCoord.y },
+                { x: leftUpperCoord.x, y: leftUpperCoord.y + (rightBottomCoord.y - leftUpperCoord.y) / 2 },
+                { x: leftUpperCoord.x + (rightBottomCoord.x - leftUpperCoord.x) / 2, y: rightBottomCoord.y },
             ];
         }
         return [
-            { x: rightBottomCoord.x / 2, y: rightBottomCoord.y / 2 },
+            { x: leftUpperCoord.x + (rightBottomCoord.x - leftUpperCoord.x) / 2, y: leftUpperCoord.y + (rightBottomCoord.y - leftUpperCoord.y) / 2 },
             { x: rightBottomCoord.x, y: rightBottomCoord.y },
         ];
     }

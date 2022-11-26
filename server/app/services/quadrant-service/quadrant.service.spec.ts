@@ -28,24 +28,35 @@ describe.only('EventMessage Service', () => {
         expect(findQuadrantService['isOnTop'](bottomPixelCoordinate, leftUpperCoord.x, rightBottomCoord.x)).to.equal(false);
     });
 
-    it('Should return if the pixel is in the first quadrant ', () => {
+    it('Should return true if the pixel is in the first quadrant ', () => {
         const leftUpperCoord = { x: 320, y: 240 };
         const rightBottomCoord = { x: 640, y: 480 };
         const pixelCoordinate = { x: 500, y: 250 };
         expect(findQuadrantService['isInFirstQuadrant'](pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.equal(true);
     });
 
-    it('Should return if the pixel is in the second quadrant ', () => {
+    it('Should return true if the pixel is in the second quadrant ', () => {
         const leftUpperCoord = { x: 320, y: 240 };
         const rightBottomCoord = { x: 640, y: 480 };
         const pixelCoordinate = { x: 350, y: 250 };
         expect(findQuadrantService['isInSecondQuadrant'](pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.equal(true);
     });
 
-    it('Should return if the pixel is in the third quadrant ', () => {
+    it('Should return true if the pixel is in the third quadrant ', () => {
         const leftUpperCoord = { x: 320, y: 240 };
         const rightBottomCoord = { x: 640, y: 480 };
         const pixelCoordinate = { x: 350, y: 400 };
         expect(findQuadrantService['isInThirdQuadrant'](pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.equal(true);
+    });
+
+    it('Should return the first quadrant corners coordinates if the pixel is in the first quadrant ', () => {
+        const leftUpperCoord = { x: 320, y: 240 };
+        const rightBottomCoord = { x: 640, y: 480 };
+        const expectedResult = [
+            { x: 480, y: 240 },
+            { x: 640, y: 360 },
+        ];
+        const pixelCoordinate = { x: 500, y: 250 };
+        expect(findQuadrantService.findQuadrant(pixelCoordinate, leftUpperCoord, rightBottomCoord)).to.deep.equal(expectedResult);
     });
 });

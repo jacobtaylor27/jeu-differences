@@ -111,6 +111,15 @@ describe('DrawCanvasComponent', () => {
         expect(drawServiceSpyObj.leaveCanvas).toHaveBeenCalled();
     });
 
+    it('should change pencil', () => {
+        const newPencil = {} as Pencil;
+        toolBoxServiceSpyObj.$pencil.get(CanvasType.Left)?.subscribe(() => {
+            expect(component.pencil).toEqual(newPencil);
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$pencil.get(CanvasType.Left)?.next(newPencil);
+    });
+
     it('should upload image', () => {
         const newPencil = {} as Pencil;
         toolBoxServiceSpyObj.$pencil.get(CanvasType.Left)?.subscribe(() => {

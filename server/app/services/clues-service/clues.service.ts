@@ -78,4 +78,12 @@ export class CluesService {
     private isInThirdQuadrant(coord: Coordinate, leftUpperCoord: Coordinate, rightBottomCoord: Coordinate) {
         return !this.isToTheRight(coord, leftUpperCoord.x, rightBottomCoord.x) && !this.isOnTop(coord, leftUpperCoord.y, rightBottomCoord.y);
     }
+
+    private isToTheRight(coord: Coordinate, minValue: number, maxValue: number): boolean {
+        return coord.x > minValue && coord.x > minValue + (maxValue - minValue) / 2;
+    }
+
+    private isOnTop(coord: Coordinate, minValue: number, maxValue: number) {
+        return coord.y > minValue && coord.y < minValue + (maxValue - minValue) / 2;
+    }
 }

@@ -18,4 +18,14 @@ describe.only('EventMessage Service', () => {
         expect(findQuadrantService['isToTheRight'](rightPixelCoordinate, leftUpperCoord.x, rightBottomCoord.x)).to.equal(true);
         expect(findQuadrantService['isToTheRight'](leftPixelCoordinate, leftUpperCoord.x, rightBottomCoord.x)).to.equal(false);
     });
+
+    it('Should return the position of a pixel if its to the top or to the bottom ', () => {
+        const leftUpperCoord = { x: 320, y: 240 };
+        const rightBottomCoord = { x: 640, y: 480 };
+        const topPixelCoordinate = { x: 500, y: 400 };
+        const bottomPixelCoordinate = { x: 350, y: 300 };
+        expect(findQuadrantService['isOnTop'](topPixelCoordinate, leftUpperCoord.x, rightBottomCoord.x)).to.equal(true);
+        expect(findQuadrantService['isOnTop'](bottomPixelCoordinate, leftUpperCoord.x, rightBottomCoord.x)).to.equal(false);
+    });
+
 });

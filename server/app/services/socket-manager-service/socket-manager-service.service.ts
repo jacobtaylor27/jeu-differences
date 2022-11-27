@@ -212,6 +212,9 @@ export class SocketManagerService {
                             this.gameManager.isGameMultiplayer(gameId),
                         ),
                     );
+                socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
+
                 if (this.gameManager.isGameOver(gameId)) {
                     this.scoresHandlerService.verifyScore(
                         this.gameManager.getGameInfo(gameId)?.id as string,
@@ -219,20 +222,15 @@ export class SocketManagerService {
                         this.gameManager.isGameMultiplayer(gameId) as boolean,
                     );
                     this.gameManager.leaveGame(socket.id, gameId);
-                    socket.emit(SocketEvent.Win);
-                    return;
-                }
-                if (this.gameManager.isGameMultiplayer(gameId)) {
-                    if (this.gameManager.isGameOver(gameId)) {
-                        this.gameManager.leaveGame(socket.id, gameId);
+
+                    if (this.gameManager.isGameMultiplayer(gameId)) {
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
 
-                    // return;
+                    socket.emit(SocketEvent.Win);
+                    return;
                 }
 
-                socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
-                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
                 if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
                     this.gameManager.setNextGame(gameId);
                     const nextGameCard = this.gameManager.getGameInfo(gameId);

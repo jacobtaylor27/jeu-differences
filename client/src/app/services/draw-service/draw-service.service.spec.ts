@@ -234,7 +234,7 @@ describe('DrawServiceService', () => {
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
             color: fakePencil.color,
-            cap: fakePencil.cap,
+            cap: 'round',
             width: fakePencil.width.pencil,
             destination: 'source-over',
         };
@@ -333,6 +333,8 @@ describe('DrawServiceService', () => {
         service.pencil = fakePencil;
         service.pencil.state = Tool.Pencil;
         service['currentCommand'] = fakeCurrentCommand;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
         const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
         const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
         service.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
@@ -340,6 +342,7 @@ describe('DrawServiceService', () => {
         expect(service['currentCommand'].name).toEqual('draw');
         expect(spyAddCurrentCommand).toHaveBeenCalled();
         expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
     });
 
     it('stopDrawing(...) should stop the erasing', () => {
@@ -347,6 +350,8 @@ describe('DrawServiceService', () => {
         service.pencil = fakePencil;
         service.pencil.state = Tool.Eraser;
         service['currentCommand'] = fakeCurrentCommand;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
         const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
         const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
         service.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
@@ -354,6 +359,7 @@ describe('DrawServiceService', () => {
         expect(service['currentCommand'].name).toEqual('erase');
         expect(spyAddCurrentCommand).toHaveBeenCalled();
         expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
     });
 
     it('leaveCanvas(...) should stop drawing if already drawing', () => {

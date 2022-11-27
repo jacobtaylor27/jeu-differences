@@ -112,7 +112,6 @@ describe('GameManagerService', () => {
         expect(expectedGame.setInfo.called).to.equal(true);
         expectedGame.currentIndex = 2;
         gameManager.setNextGame('1');
-        expect(expectedGame.next.called).to.equal(true);
         expect(expectedGame.setInfo.called).to.equal(true);
     });
 

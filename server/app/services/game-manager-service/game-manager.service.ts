@@ -51,7 +51,7 @@ export class GameManagerService {
             if (!gamesToPlay) {
                 return;
             } else if (gamesToPlay.length === game.currentIndex) {
-                game.next();
+                game.setEndgame();
                 return;
             } else {
                 game.setInfo(gamesToPlay[game.currentIndex]);

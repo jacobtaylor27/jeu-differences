@@ -1,16 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
-
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { SocketEvent } from '@common/socket-event';
 import { CluesAreaComponent } from './clues-area.component';
+class SocketClientServiceMock extends CommunicationSocketService {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
+    override connect() {}
+}
 
 describe('CluesAreaComponent', () => {
     let component: CluesAreaComponent;
     let fixture: ComponentFixture<CluesAreaComponent>;
+    let spyRouter: jasmine.SpyObj<Router>;
+    let socketServiceMock: SocketClientServiceMock;
+    let socketHelper: SocketTestHelper;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [CluesAreaComponent],
             imports: [AppMaterialModule],
+            providers: [
+                { provide: CommunicationSocketService, useValue: socketServiceMock },
+                { provide: Router, useValue: spyRouter },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CluesAreaComponent);

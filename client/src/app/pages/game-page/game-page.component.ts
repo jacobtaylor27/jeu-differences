@@ -1,6 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogGameOverComponent } from '@app/components/dialog-game-over/dialog-game-over.component';
+import { PlayerLeftSnackbarComponent } from '@app/components/player-left-snackbar/player-left-snackbar.component';
 import { Theme } from '@app/enums/theme';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
@@ -24,6 +26,7 @@ export class GamePageComponent implements OnDestroy {
         public gameInfoHandlerService: GameInformationHandlerService,
         exitButtonService: ExitButtonHandlerService,
         private socket: CommunicationSocketService,
+        private readonly snackBar: MatSnackBar,
     ) {
         exitButtonService.setGamePage();
         this.title = 'Mode ' + this.gameInfoHandlerService.gameMode + ' ' + (this.gameInfoHandlerService.isMulti ? 'Multijoueur' : 'Solo');
@@ -67,5 +70,9 @@ export class GamePageComponent implements OnDestroy {
         }
 
         return this.gameInfoHandlerService.players[0].nbDifferences.toString();
+    }
+
+    private openSnackBar() {
+        this.snackBar.openFromComponent(PlayerLeftSnackbarComponent, { duration: 5000 });
     }
 }

@@ -256,7 +256,7 @@ describe('DrawServiceService', () => {
         expect(line.finalCoord).toEqual(expectedLine);
     });
 
-    it('updateCurrentCommand(...) should update the current command', () => {
+    it('updateCurrentCommand(...) should update the current command with squared cap', () => {
         const newLine: Line = {
             initCoord: { x: 0, y: 0 },
             finalCoord: { x: 0, y: 0 },
@@ -296,7 +296,7 @@ describe('DrawServiceService', () => {
         };
         const newPencil: Pencil = {
             color: 'blue',
-            cap: 'square',
+            cap: 'round',
             width: { pencil: 1, eraser: 3 },
             state: Tool.Pencil,
         };
@@ -347,7 +347,7 @@ describe('DrawServiceService', () => {
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
             color: fakePencil.color,
-            cap: fakePencil.cap,
+            cap: 'round',
             width: fakePencil.width.eraser,
             destination: 'destination-out',
         };

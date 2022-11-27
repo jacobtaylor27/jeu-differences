@@ -215,6 +215,29 @@ describe('DrawServiceService', () => {
 
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
+        service.pencil.state = Tool.Pencil;
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).toHaveBeenCalled();
+        expect(setCurrentCommandSpy).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
+        expect(service.isClick).toBeTruthy();
+        expect(service.coordDraw).toBe(newCoord);
+    });
+
+    it('startDrawing should handle mouse event if a canvas is in focus', () => {
+        service['isClick'] = false;
+        const newCoord: Vec2 = { x: 0, y: 0 };
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => {
+            return newCoord;
+        });
+        const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
         service.pencil.state = Tool.Eraser;
         const returnedValue = service.startDrawing({} as MouseEvent);
         expect(returnedValue).toBe(undefined);
@@ -258,6 +281,39 @@ describe('DrawServiceService', () => {
         const expectedStyle: StrokeStyle = {
             color: fakePencil.color,
             cap: 'round',
+            width: fakePencil.width.pencil,
+            destination: 'source-over',
+        };
+        expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
+        expect(service['currentCommand'].style).toEqual(expectedStyle);
+    });
+
+    it('updateCurrentCommand(...) should update the current command', () => {
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newPencil: Pencil = {
+            color: 'blue',
+            cap: 'square',
+            width: { pencil: 1, eraser: 3 },
+            state: Tool.Pencil,
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        service['pencil'] = newPencil;
+        service['currentCommand'] = newCurrentCommand;
+        service['updateCurrentCommand'](fakeLine, true);
+        const expectedStyle: StrokeStyle = {
+            color: fakePencil.color,
+            cap: 'square',
             width: fakePencil.width.pencil,
             destination: 'source-over',
         };

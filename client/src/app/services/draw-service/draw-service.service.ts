@@ -78,11 +78,7 @@ export class DrawService {
     }
 
     stopDrawing(event: MouseEvent) {
-        if (this.pencil.state === Tool.Pencil) {
-            this.draw(event);
-        } else {
-            this.draw(event, true);
-        }
+        this.draw(event, this.pencil.state === Tool.Pencil ? undefined : true);
         this.isClick = false;
         this.currentCommand.name = this.pencil.state === 'Pencil' ? 'draw' : 'erase';
         this.addCurrentCommand(new DrawCommand(this.currentCommand, this), false);

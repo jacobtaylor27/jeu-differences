@@ -83,7 +83,11 @@ describe('CluesAreaComponent', () => {
 
     it('should disable clue function on third clue asked', () => {
         component.clueAskedCounter = 2;
+        const spySend = spyOn(component.communicationSocket, 'send');
         component.getClue();
+        socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
+        socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
+        expect(spySend).toHaveBeenCalled();
         expect(component.isDisabled).toBeTrue();
     });
 });

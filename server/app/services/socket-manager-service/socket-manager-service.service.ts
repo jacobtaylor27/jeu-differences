@@ -116,7 +116,26 @@ export class SocketManagerService {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
                 socket.broadcast.to(gameId).emit(SocketEvent.JoinGame, { roomId: gameId, playerName: player });
-                this.sio.to(gameId).emit(SocketEvent.Play, gameId);
+                if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                    this.sio.to(gameId).emit(SocketEvent.Play, gameId);
+                } else {
+                    const gameCard = this.gameManager.getGameInfo(gameId);
+                    let gameCardInfo: PublicGameInformation;
+                    if (gameCard) {
+                        gameCardInfo = {
+                            id: gameCard.id,
+                            name: gameCard.name,
+                            thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(gameCard.thumbnail),
+                            nbDifferences: gameCard.differences.length,
+                            idEditedBmp: gameCard.idEditedBmp,
+                            idOriginalBmp: gameCard.idOriginalBmp,
+                            multiplayerScore: gameCard.multiplayerScore,
+                            soloScore: gameCard.soloScore,
+                            isMulti: false,
+                        };
+                        socket.emit(SocketEvent.Play, { gameId, gameCard: gameCardInfo });
+                    }
+                }
             });
 
             socket.on(SocketEvent.LeaveGame, (gameId: string) => {
@@ -210,6 +229,9 @@ export class SocketManagerService {
                             this.gameManager.isGameMultiplayer(gameId),
                         ),
                     );
+                socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
+                socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
+
                 if (this.gameManager.isGameOver(gameId)) {
                     this.scoresHandlerService.verifyScore(
                         this.gameManager.getGameInfo(gameId)?.id as string,
@@ -217,37 +239,32 @@ export class SocketManagerService {
                         this.gameManager.isGameMultiplayer(gameId) as boolean,
                     );
                     this.gameManager.leaveGame(socket.id, gameId);
-                    socket.emit(SocketEvent.Win);
-                }
-                if (this.gameManager.isGameMultiplayer(gameId)) {
-                    if (this.gameManager.isGameOver(gameId)) {
-                        this.gameManager.leaveGame(socket.id, gameId);
+
+                    if (this.gameManager.isGameMultiplayer(gameId)) {
                         socket.broadcast.to(gameId).emit(SocketEvent.Lose);
                     }
-                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, false));
-                    socket.broadcast.to(gameId).emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId, true));
 
+                    socket.emit(SocketEvent.Win);
                     return;
-                } else {
-                    socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
-                    if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
-                        this.gameManager.setNextGame(gameId);
-                        const nextGameCard = this.gameManager.getGameInfo(gameId);
-                        let gameCardInfo: PublicGameInformation;
-                        if (nextGameCard) {
-                            gameCardInfo = {
-                                id: nextGameCard.id,
-                                name: nextGameCard.name,
-                                thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(nextGameCard.thumbnail),
-                                nbDifferences: nextGameCard.differences.length,
-                                idEditedBmp: nextGameCard.idEditedBmp,
-                                idOriginalBmp: nextGameCard.idOriginalBmp,
-                                multiplayerScore: nextGameCard.multiplayerScore,
-                                soloScore: nextGameCard.soloScore,
-                                isMulti: false,
-                            };
-                            socket.emit(SocketEvent.NewGameBoard, gameCardInfo);
-                        }
+                }
+
+                if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
+                    this.gameManager.setNextGame(gameId);
+                    const nextGameCard = this.gameManager.getGameInfo(gameId);
+                    let gameCardInfo: PublicGameInformation;
+                    if (nextGameCard) {
+                        gameCardInfo = {
+                            id: nextGameCard.id,
+                            name: nextGameCard.name,
+                            thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(nextGameCard.thumbnail),
+                            nbDifferences: nextGameCard.differences.length,
+                            idEditedBmp: nextGameCard.idEditedBmp,
+                            idOriginalBmp: nextGameCard.idOriginalBmp,
+                            multiplayerScore: nextGameCard.multiplayerScore,
+                            soloScore: nextGameCard.soloScore,
+                            isMulti: false,
+                        };
+                        this.sio.to(gameId).emit(SocketEvent.NewGameBoard, gameCardInfo);
                     }
                 }
             });

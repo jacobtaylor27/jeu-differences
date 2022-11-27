@@ -292,6 +292,18 @@ describe('SocketManager', () => {
             join: (id: string) => {
                 return;
             },
+            to: (id: string) => {
+                return { emit: (eventName: string, message: unknown) => {} };
+            },
+            broadcast: {
+                to: () => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                        },
+                    };
+                },
+            },
         };
 
         service['sio'] = {
@@ -300,7 +312,7 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-            to: () => fakeSocket,
+            to: (gameId: string) => fakeSocket,
         } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
@@ -327,6 +339,15 @@ describe('SocketManager', () => {
             },
             join: (id: string) => {
                 return;
+            },
+            broadcast: {
+                to: () => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                        },
+                    };
+                },
             },
         };
 

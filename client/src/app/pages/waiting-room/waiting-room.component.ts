@@ -7,6 +7,7 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
+import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 @Component({
@@ -45,17 +46,24 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
             this.gameInformationHandlerService.roomId = data.roomId;
 
-            this.socketService.on(SocketEvent.Play, (id: string) => {
-                this.gameInformationHandlerService.roomId = id;
-                this.routerService.navigateTo('game');
-            });
+            if (this.gameInformationHandlerService.gameMode === GameMode.Classic) {
+                this.socketService.on(SocketEvent.Play, (id: string) => {
+                    this.gameInformationHandlerService.roomId = id;
+                    this.routerService.navigateTo('game');
+                });
+            }
         });
     }
 
     ngOnDestroy() {
         this.socketService.off(SocketEvent.RequestToJoin);
         this.socketService.off(SocketEvent.RejectPlayer);
-        if (this.gameInformationHandlerService.roomId) {
+        if (!this.gameInformationHandlerService.gameInformation) {
+            this.socketService.send(SocketEvent.LeaveWaiting, {
+                roomId: this.gameInformationHandlerService.roomId,
+                gameCard: undefined,
+            });
+        } else if (this.gameInformationHandlerService.roomId) {
             this.socketService.send(SocketEvent.LeaveWaiting, {
                 roomId: this.gameInformationHandlerService.roomId,
                 gameCard: this.gameInformationHandlerService.getId(),

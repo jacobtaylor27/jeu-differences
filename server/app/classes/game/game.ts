@@ -66,6 +66,10 @@ export class Game {
         return this.calculateTime();
     }
 
+    setEndgame() {
+        this.context.end();
+    }
+
     setInfo(gameInfo: PrivateGameInformation) {
         this.info = gameInfo;
     }

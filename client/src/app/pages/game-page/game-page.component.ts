@@ -49,7 +49,7 @@ export class GamePageComponent implements OnDestroy {
                 win: isWin,
                 winner: undefined,
                 isClassic: false,
-                nbPoints: this.gameInfoHandlerService.getNbDifferences(this.gameInfoHandlerService.getPlayer().name)?.toString(),
+                nbPoints: this.findNbDifferences(),
             };
         }
         this.dialog.open(DialogGameOverComponent, dialogConfig);
@@ -59,5 +59,13 @@ export class GamePageComponent implements OnDestroy {
         this.socket.send(SocketEvent.LeaveGame, { gameId: this.gameInfoHandlerService.roomId });
         this.socket.off(SocketEvent.Win);
         this.socket.off(SocketEvent.Lose);
+    }
+
+    private findNbDifferences(): string {
+        if (this.gameInfoHandlerService.players[1]) {
+            return (this.gameInfoHandlerService.players[0].nbDifferences + this.gameInfoHandlerService.players[1].nbDifferences).toString();
+        }
+
+        return this.gameInfoHandlerService.players[0].nbDifferences.toString();
     }
 }

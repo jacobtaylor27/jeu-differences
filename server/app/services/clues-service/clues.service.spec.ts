@@ -5,7 +5,7 @@ import { describe } from 'mocha';
 import { stub } from 'sinon';
 import { Container } from 'typedi';
 
-describe.only('Clues Service', () => {
+describe('Clues Service', () => {
     let cluesService: CluesService;
     let gameManager: GameManagerService;
 
@@ -46,21 +46,18 @@ describe.only('Clues Service', () => {
     it('Should find a random difference in the left differences array', () => {
         const gameId = '';
         const spyLeftDifferences = stub(gameManager, 'getNbDifferenceNotFound').callsFake(() => {
-            return [
-                [
-                    { x: 1, y: 1 },
-                    { x: 2, y: 2 },
-                ],
-            ];
+            return [[{ x: 1, y: 1 }]];
         });
-        const expectedResult = [
-            { x: 1, y: 1 },
-            { x: 2, y: 2 },
-        ];
+        const expectedResult = [{ x: 1, y: 1 }];
         const differenceResult = cluesService.findRandomDifference(gameId);
         expect(spyLeftDifferences.called);
         expect(differenceResult).to.deep.equal(expectedResult);
     });
 
-    
+    it('Should find a random pixel in a random difference in the left differences array', () => {
+        const gameId = '';
+        const result = cluesService.findRandomPixel(gameId);
+        const expectedPixel = { x: 1, y: 1 };
+        expect(result).to.deep.equal(expectedPixel);
+    });
 });

@@ -164,7 +164,7 @@ export class DrawService {
             ctx.drawImage(state.background.nativeElement, 0, 0);
             ctx.globalCompositeOperation = 'source-over';
             ctx.drawImage(state.foreground.nativeElement, 0, 0);
-            this.$drawingImage.get(state.canvasType)?.next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
+            (this.$drawingImage.get(state.canvasType) as Subject<ImageData>).next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
         });
     }
 

@@ -15,6 +15,14 @@ describe('DrawCanvasComponent', () => {
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
+        const drawImage = new Map<CanvasType, Subject<ImageData>>();
+        const foregroundContext = new Map<CanvasType, HTMLCanvasElement>();
+        const pencil = new Map<CanvasType, Subject<Pencil>>();
+        const uploadImage = new Map<CanvasType, Subject<ImageBitmap>>();
+        drawImage.set(CanvasType.Left, new Subject());
+        foregroundContext.set(CanvasType.Left, {} as HTMLCanvasElement);
+        pencil.set(CanvasType.Left, new Subject());
+        uploadImage.set(CanvasType.Left, new Subject());
         drawServiceSpyObj = jasmine.createSpyObj(
             'DrawService',
             [
@@ -30,16 +38,17 @@ describe('DrawCanvasComponent', () => {
                 'clearAllBackground',
                 'leaveCanvas',
                 'enterCanvas',
+                'updateImages',
             ],
             {
-                $drawingImage: new Map<CanvasType, Subject<ImageData>>(),
-                foregroundContext: new Map<CanvasType, HTMLCanvasElement>(),
+                $drawingImage: drawImage,
+                foregroundContext,
             },
         );
 
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', ['addCanvasType'], {
-            $pencil: new Map<CanvasType, Subject<Pencil>>(),
-            $uploadImage: new Map<CanvasType, Subject<ImageBitmap>>(),
+            $pencil: pencil,
+            $uploadImage: uploadImage,
         });
 
         await TestBed.configureTestingModule({
@@ -51,10 +60,8 @@ describe('DrawCanvasComponent', () => {
         }).compileComponents();
         fixture = TestBed.createComponent(DrawCanvasComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
         component.canvasType = CanvasType.Left;
-        toolBoxServiceSpyObj.$pencil.set(component.canvasType, new Subject());
-        toolBoxServiceSpyObj.$uploadImage.set(component.canvasType, new Subject());
+        fixture.detectChanges();
     });
 
     it('should create', () => {
@@ -102,5 +109,37 @@ describe('DrawCanvasComponent', () => {
         drawServiceSpyObj.leaveCanvas.and.callFake((event: MouseEvent) => {});
         component.leaveCanvas({} as MouseEvent);
         expect(drawServiceSpyObj.leaveCanvas).toHaveBeenCalled();
+    });
+
+    it('should change pencil', () => {
+        const newPencil = {} as Pencil;
+        toolBoxServiceSpyObj.$pencil.get(CanvasType.Left)?.subscribe(() => {
+            expect(component.pencil).toEqual(newPencil);
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$pencil.get(CanvasType.Left)?.next(newPencil);
+    });
+
+    it('should upload image', () => {
+        const newPencil = {} as Pencil;
+        toolBoxServiceSpyObj.$pencil.get(CanvasType.Left)?.subscribe(() => {
+            expect(component.pencil).toEqual(newPencil);
+        });
+        component.background = {
+            nativeElement: {
+                getContext: () => {
+                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                    return { drawImage: () => {} } as unknown as CanvasRenderingContext2D;
+                },
+            } as unknown as HTMLCanvasElement,
+        };
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        drawServiceSpyObj.updateImages.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left)?.subscribe(() => {
+            expect(drawServiceSpyObj.updateImages).toHaveBeenCalled();
+        });
+        component.ngAfterViewInit();
+        toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left)?.next({} as ImageBitmap);
     });
 });

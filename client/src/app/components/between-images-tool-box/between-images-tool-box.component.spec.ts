@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppMaterialModule } from '@app/modules/material.module';
 
 import { BetweenImagesToolBoxComponent } from './between-images-tool-box.component';
 
@@ -9,6 +10,7 @@ describe('BetweenImagesToolBoxComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [BetweenImagesToolBoxComponent],
+            imports: [AppMaterialModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(BetweenImagesToolBoxComponent);

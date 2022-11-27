@@ -81,7 +81,7 @@ describe('PlayAreaComponent', () => {
                     provide: DifferencesDetectionHandlerService,
                     useValue: differenceService,
                 },
-                { provide: CommunicationSocketService, usValue: socketServiceMock },
+                { provide: CommunicationSocketService, useValue: socketServiceMock },
             ],
         }).compileComponents();
 

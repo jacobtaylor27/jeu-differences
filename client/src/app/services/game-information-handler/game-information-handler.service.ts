@@ -27,15 +27,13 @@ export class GameInformationHandlerService {
     }
 
     handleSocketEvent() {
-        if (!this.isMulti) {
-            this.socket.once(SocketEvent.Play, (infos: GameId) => {
-                if (infos.gameCard) {
-                    this.setGameInformation(infos.gameCard);
-                }
-                this.roomId = infos.gameId;
-                this.routerService.navigateTo('game');
-            });
-        }
+        this.socket.once(SocketEvent.Play, (infos: GameId) => {
+            if (infos.gameCard) {
+                this.setGameInformation(infos.gameCard);
+            }
+            this.roomId = infos.gameId;
+            this.routerService.navigateTo('game');
+        });
 
         this.socket.on(SocketEvent.WaitPlayer, (roomId: string) => {
             this.roomId = roomId;

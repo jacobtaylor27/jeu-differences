@@ -190,10 +190,14 @@ describe('DrawServiceService', () => {
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             return drawingBoardStub;
         });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
         const returnedValue = service.startDrawing({} as MouseEvent);
         expect(returnedValue).toBe(undefined);
         expect(respositionSpy).toHaveBeenCalled();
         expect(setCurrentCommandSpy).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
         expect(service.isClick).toBeTruthy();
         expect(service.coordDraw).toBe(newCoord);
     });

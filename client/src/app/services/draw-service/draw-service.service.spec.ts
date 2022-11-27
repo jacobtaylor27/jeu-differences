@@ -202,6 +202,29 @@ describe('DrawServiceService', () => {
         expect(service.coordDraw).toBe(newCoord);
     });
 
+    it('startDrawing should handle mouse event if a canvas is in focus', () => {
+        service['isClick'] = false;
+        const newCoord: Vec2 = { x: 0, y: 0 };
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => {
+            return newCoord;
+        });
+        const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
+        service.pencil.state = Tool.Eraser;
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).toHaveBeenCalled();
+        expect(setCurrentCommandSpy).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
+        expect(service.isClick).toBeTruthy();
+        expect(service.coordDraw).toBe(newCoord);
+    });
+
     it('updateMouseCoordinate(...) should update return a line according to the given coordinates', () => {
         const line = service['updateMouseCoordinates'](fakeMouseEvent);
         const expectedLine = { x: 0, y: 0 };
@@ -301,6 +324,24 @@ describe('DrawServiceService', () => {
         const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
         const spyUpdateImages = spyOn(service, 'updateImages');
         service.draw(fakeMouseEvent);
+        expect(spyUpdateCurrentCommand).toHaveBeenCalled();
+        expect(spyCreateStroke).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
+    });
+
+    it('draw(...) should call update current command, create a stroke and update image', () => {
+        canvasStateServiceSpyObj.states = [drawingBoardStub];
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        service['isClick'] = true;
+        service['pencil'] = Object.create(fakePencil);
+        service['currentCommand'] = Object.create(fakeCurrentCommand);
+        service['updateCurrentCommand'](fakeLine);
+        const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
+        const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
+        const spyUpdateImages = spyOn(service, 'updateImages');
+        service.draw(fakeMouseEvent, true);
         expect(spyUpdateCurrentCommand).toHaveBeenCalled();
         expect(spyCreateStroke).toHaveBeenCalled();
         expect(spyUpdateImages).toHaveBeenCalled();

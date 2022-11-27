@@ -60,7 +60,13 @@ describe('CluesAreaComponent', () => {
 
     it('should increment clue counter when clue is asked', () => {
         const expectedCount = 1;
+        const spyUsingClue = spyOn(component, 'getClue');
+        const spySend = spyOn(component.communicationSocket, 'send');
         component.getClue();
+        socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
+        socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
+        expect(spySend).toHaveBeenCalled();
+        expect(spyUsingClue).toHaveBeenCalled();
         expect(component.clueAskedCounter).toEqual(expectedCount);
     });
 

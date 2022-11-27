@@ -35,6 +35,12 @@ export class GamePageComponent implements OnDestroy {
     handleSocket() {
         this.socket.once(SocketEvent.Win, () => this.openGameOverDialog(true));
         this.socket.once(SocketEvent.Lose, () => this.openGameOverDialog(false));
+        this.socket.once(SocketEvent.PlayerLeft, () => {
+            this.gameInfoHandlerService.isMulti = false;
+            this.openSnackBar();
+            this.gameInfoHandlerService.$playerLeft.next();
+            this.title = 'Mode ' + this.gameInfoHandlerService.gameMode + ' Solo';
+        });
     }
 
     openGameOverDialog(isWin: boolean) {

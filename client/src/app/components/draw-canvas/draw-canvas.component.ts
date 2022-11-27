@@ -75,8 +75,8 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
         this.drawService.startDrawing(event);
     }
 
-    stopDrawing() {
-        this.drawService.stopDrawing();
+    stopDrawing(event: MouseEvent) {
+        this.drawService.stopDrawing(event);
     }
 
     draw(event: MouseEvent) {

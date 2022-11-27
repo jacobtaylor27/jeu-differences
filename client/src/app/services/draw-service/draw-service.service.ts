@@ -50,12 +50,17 @@ export class DrawService {
 
         this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
         this.setCurrentCommand('', focusedCanvas.canvasType);
+        if (this.pencil.state === Tool.Pencil) {
+            this.draw(event);
+        } else {
+            this.draw(event, true);
+        }
     }
 
-    draw(event: MouseEvent) {
+    draw(event: MouseEvent, startOrEndErasing?: boolean) {
         if (!this.isClick) return;
         const line = this.updateMouseCoordinates(event);
-        this.updateCurrentCommand(line);
+        this.updateCurrentCommand(line, startOrEndErasing ? true : undefined);
         this.createStroke(line, this.currentCommand.style);
         this.updateImages();
     }
@@ -68,7 +73,8 @@ export class DrawService {
         });
     }
 
-    stopDrawing() {
+    stopDrawing(event: MouseEvent) {
+        this.draw(event, this.pencil.state === Tool.Pencil ? undefined : true);
         this.isClick = false;
         this.currentCommand.name = this.pencil.state === 'Pencil' ? 'draw' : 'erase';
         this.addCurrentCommand(new DrawCommand(this.currentCommand, this), false);
@@ -76,7 +82,7 @@ export class DrawService {
     }
 
     leaveCanvas(event: MouseEvent) {
-        if (event.buttons === 1) this.stopDrawing();
+        if (event.buttons === 1) this.stopDrawing(event);
     }
 
     enterCanvas(event: MouseEvent) {
@@ -244,11 +250,12 @@ export class DrawService {
         return { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
     }
 
-    private updateCurrentCommand(line: Line) {
+    private updateCurrentCommand(line: Line, didStartErasing?: boolean) {
+        const cap = didStartErasing === true ? 'square' : 'round';
         this.currentCommand.strokes[0].lines.push(line);
         this.currentCommand.style = {
             color: this.pencil.color,
-            cap: this.pencil.cap,
+            cap,
             width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
             destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };

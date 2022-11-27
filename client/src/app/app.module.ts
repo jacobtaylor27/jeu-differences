@@ -40,6 +40,7 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
 import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dialog-limited-time.component';
+import { BetweenImagesToolBoxComponent } from './components/between-images-tool-box/between-images-tool-box.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -84,6 +85,7 @@ import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dia
         RejectedDialogComponent,
         RefreshSnackbarComponent,
         DialogLimitedTimeComponent,
+        BetweenImagesToolBoxComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

@@ -14,6 +14,7 @@ import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 import { DrawService } from './draw-service.service';
 import { drawingBoardStub, fakeCurrentCommand, fakeLine, fakeMouseEvent, fakePencil, fakeStrokeStyle } from './draw-service.service.spec.constants';
@@ -238,6 +239,38 @@ describe('DrawServiceService', () => {
         expect(service['currentCommand'].style).toEqual(expectedStyle);
     });
 
+    it('updateCurrentCommand(...) should update the current command with eraser', () => {
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newPencil: Pencil = {
+            color: 'blue',
+            cap: 'square',
+            width: { pencil: 1, eraser: 3 },
+            state: Tool.Eraser,
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        service['pencil'] = newPencil;
+        service['currentCommand'] = newCurrentCommand;
+        service['updateCurrentCommand'](fakeLine);
+        const expectedStyle: StrokeStyle = {
+            color: fakePencil.color,
+            cap: fakePencil.cap,
+            width: fakePencil.width.eraser,
+            destination: 'destination-out',
+        };
+        expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
+        expect(service['currentCommand'].style).toEqual(expectedStyle);
+    });
     it('createStroke(...) should return undefined when the focus canvas is undefined', () => {
         const drawingBoard: DrawingBoardState = {
             canvasType: CanvasType.Left,
@@ -272,6 +305,7 @@ describe('DrawServiceService', () => {
         canvasStateServiceSpyObj.states = [drawingBoardStub];
         const states = canvasStateServiceSpyObj.states;
         const spyContextDrawImage = spyOn(states[0].temporary.nativeElement.getContext('2d') as CanvasRenderingContext2D, 'drawImage');
+        service.$drawingImage.set(drawingBoardStub.canvasType, new Subject());
         service.updateImages();
         expect(spyContextDrawImage).toHaveBeenCalled();
         expect((states[0].temporary.nativeElement.getContext('2d') as CanvasRenderingContext2D).globalCompositeOperation).toEqual('source-over');

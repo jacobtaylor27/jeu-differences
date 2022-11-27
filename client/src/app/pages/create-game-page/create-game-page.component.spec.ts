@@ -34,6 +34,8 @@ describe('CreateGamePageComponent', () => {
     let canvasEventHandlerSpyObj: jasmine.SpyObj<CanvasEventHandlerService>;
 
     beforeEach(async () => {
+        const drawImageSubjects = new Map();
+        drawImageSubjects.set(CanvasType.Left, new Subject());
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
         communicationSpyObject = jasmine.createSpyObj('CommunicationService', ['validateGame']);
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', ['addCanvasType'], {
@@ -45,7 +47,7 @@ describe('CreateGamePageComponent', () => {
         });
         canvasEventHandlerSpyObj = jasmine.createSpyObj('CanvasEventHandlerService', ['handleCtrlShiftZ', 'handleCtrlZ']);
         drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['addDrawingCanvas', 'resetAllLayers', 'clearAllLayers', 'clearAllBackground'], {
-            $drawingImage: new Map(),
+            $drawingImage: drawImageSubjects,
             foregroundContext: new Map(),
         });
         await TestBed.configureTestingModule({
@@ -166,11 +168,12 @@ describe('CreateGamePageComponent', () => {
         expect(validateFormSpy).not.toHaveBeenCalled();
     });
 
-    // it('should add new image ', () => {
-    //     const spySetDrawingImage = spyOn(component.drawingImage as Map<CanvasType, ImageData>, 'set');
-    //     drawServiceSpyObj.$drawingImage.get(CanvasType.Left)?.next({} as ImageData);
-    //     expect(spySetDrawingImage).toHaveBeenCalled();
-    // });
+    it('should add new image ', () => {
+        const spySetDrawingImage = spyOn(component.drawingImage as Map<CanvasType, ImageData>, 'set');
+        drawServiceSpyObj.$drawingImage.get(CanvasType.Left)?.next({} as ImageData);
+        expect(spySetDrawingImage).toHaveBeenCalled();
+    });
+
     it('should handleCtrlShiftZ if key down', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         canvasEventHandlerSpyObj.handleCtrlShiftZ.and.callFake(() => {});

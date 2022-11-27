@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
     templateUrl: './create-game-page.component.html',
     styleUrls: ['./create-game-page.component.scss'],
 })
-export class CreateGamePageComponent implements OnDestroy {
+export class CreateGamePageComponent {
     form: FormGroup;
     theme: typeof Theme = Theme;
     drawingImage: Map<CanvasType, ImageData> = new Map();
@@ -61,12 +61,6 @@ export class CreateGamePageComponent implements OnDestroy {
         } else {
             this.canvasEventHandler.handleCtrlZ();
         }
-    }
-
-    ngOnDestroy(): void {
-        this.drawService.$drawingImage.forEach((event: Subject<ImageData>) => {
-            event.unsubscribe();
-        });
     }
 
     manageErrorInForm(validationImageErrors: string) {

@@ -60,7 +60,7 @@ export class DrawService {
     draw(event: MouseEvent, startOrEndErasing?: boolean) {
         if (!this.isClick) return;
         const line = this.updateMouseCoordinates(event);
-            this.updateCurrentCommand(line, startOrEndErasing ? true: undefined);
+        this.updateCurrentCommand(line, startOrEndErasing ? true : undefined);
         this.createStroke(line, this.currentCommand.style);
         this.updateImages();
     }

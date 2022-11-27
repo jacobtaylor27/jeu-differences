@@ -50,6 +50,7 @@ export class DrawService {
 
         this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
         this.setCurrentCommand('', focusedCanvas.canvasType);
+        this.draw(event);
     }
 
     draw(event: MouseEvent) {

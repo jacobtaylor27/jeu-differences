@@ -65,7 +65,7 @@ describe('GamePageComponent', () => {
                 'getNbTotalDifferences',
                 'setGameMode',
             ],
-            { $differenceFound: new Subject<string>(), $newGame: new Subject<string>() },
+            { $differenceFound: new Subject<string>(), $newGame: new Subject<string>(), $playerLeft: new Subject() },
         );
         gameInformationHandlerServiceSpy.getPlayer.and.callFake(() => {
             return { name: 'test', nbDifferences: 0 };

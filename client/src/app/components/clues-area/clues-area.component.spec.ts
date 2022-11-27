@@ -5,6 +5,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { SocketEvent } from '@common/socket-event';
 import { CluesAreaComponent } from './clues-area.component';
+import { Socket } from 'socket.io-client';
 class SocketClientServiceMock extends CommunicationSocketService {
     // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
@@ -13,11 +14,16 @@ class SocketClientServiceMock extends CommunicationSocketService {
 describe('CluesAreaComponent', () => {
     let component: CluesAreaComponent;
     let fixture: ComponentFixture<CluesAreaComponent>;
-    let spyRouter: jasmine.SpyObj<Router>;
     let socketServiceMock: SocketClientServiceMock;
     let socketHelper: SocketTestHelper;
+    let spyRouter: jasmine.SpyObj<Router>;
 
     beforeEach(async () => {
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new SocketClientServiceMock();
+        socketServiceMock.socket = socketHelper as unknown as Socket;
+        spyRouter = jasmine.createSpyObj('Router', ['navigate']);
+
         await TestBed.configureTestingModule({
             declarations: [CluesAreaComponent],
             imports: [AppMaterialModule],
@@ -60,13 +66,11 @@ describe('CluesAreaComponent', () => {
 
     it('should increment clue counter when clue is asked', () => {
         const expectedCount = 1;
-        const spyUsingClue = spyOn(component, 'getClue');
         const spySend = spyOn(component.communicationSocket, 'send');
         component.getClue();
         socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
         socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
         expect(spySend).toHaveBeenCalled();
-        expect(spyUsingClue).toHaveBeenCalled();
         expect(component.clueAskedCounter).toEqual(expectedCount);
     });
 

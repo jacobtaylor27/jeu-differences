@@ -335,7 +335,7 @@ describe('DrawServiceService', () => {
         service['currentCommand'] = fakeCurrentCommand;
         const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
         const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
-        service.stopDrawing();
+        service.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
         expect(service['isClick']).toBeFalsy();
         expect(service['currentCommand'].name).toEqual('draw');
         expect(spyAddCurrentCommand).toHaveBeenCalled();
@@ -349,7 +349,7 @@ describe('DrawServiceService', () => {
         service['currentCommand'] = fakeCurrentCommand;
         const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
         const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
-        service.stopDrawing();
+        service.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
         expect(service['isClick']).toBeFalsy();
         expect(service['currentCommand'].name).toEqual('erase');
         expect(spyAddCurrentCommand).toHaveBeenCalled();

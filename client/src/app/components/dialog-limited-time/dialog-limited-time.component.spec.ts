@@ -81,4 +81,10 @@ describe('DialogLimitedTimeComponent', () => {
         expect(spyOpenSnackBar).toHaveBeenCalled();
     });
 
+    it('should open snackbar', () => {
+        const spySnackBar = spyOn(component['snackBar'], 'openFromComponent').and.resolveTo();
+
+        component.openSnackBar();
+        expect(spySnackBar).toHaveBeenCalled();
+    });
 });

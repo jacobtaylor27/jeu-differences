@@ -12,6 +12,8 @@ import { SocketEvent } from '@common/socket-event';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { GameMode } from '@common/game-mode';
+import { PublicGameInformation } from '@common/game-information';
 
 /* eslint-disable @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example) */
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -33,7 +35,7 @@ describe('WaitingRoomComponent', () => {
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
-        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['roomId', 'getId', 'setPlayerName', 'getPlayer']);
+        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['getId', 'setPlayerName', 'getPlayer']);
 
         await TestBed.configureTestingModule({
             declarations: [WaitingRoomComponent, PageHeaderComponent, ExitGameButtonComponent],
@@ -68,8 +70,33 @@ describe('WaitingRoomComponent', () => {
         socketHelper.peerSideEmit(SocketEvent.Play);
     });
 
+    it('should send JoinGame when accepted and navigate to game when game mode is Classic', () => {
+        spyGameInfoService.getPlayer.and.returnValue({ name: '', nbDifferences: 7 });
+        spyGameInfoService.gameMode = GameMode.Classic;
+        const spySend = spyOn(component.socketService, 'send');
+        socketHelper.peerSideEmit(SocketEvent.JoinGame, 'id');
+        socketHelper.peerSideEmit(SocketEvent.Play, 'id');
+        expect(spySend).toHaveBeenCalled();
+        expect(spyRouter.navigate).toHaveBeenCalled();
+    });
+
     it('should open dialog to approve a player when a request is heard', () => {
         socketHelper.peerSideEmit(SocketEvent.RequestToJoin, 'name');
         expect(spyMatDialog.open).toHaveBeenCalled();
+    });
+
+    it('should send leaveWaiting on ng on destroy', () => {
+        const spySend = spyOn(component.socketService, 'send');
+        spyGameInfoService.roomId = 'room id';
+        spyGameInfoService.gameInformation = {} as PublicGameInformation;
+        component.ngOnDestroy();
+        expect(spySend).toHaveBeenCalled();
+    });
+
+    it('should send leaveWaiting on ng on destroy', () => {
+        const spySend = spyOn(component.socketService, 'send');
+        spyGameInfoService.gameInformation = {} as PublicGameInformation;
+        component.ngOnDestroy();
+        expect(spySend).toHaveBeenCalled();
     });
 });

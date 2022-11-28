@@ -120,6 +120,7 @@ describe('GamePageComponent', () => {
     });
 
     it('should open the game over dialog when game mode is Limited time', () => {
+        spyOn(Object.getPrototypeOf(component), 'findNbDifferences').and.callFake(() => 1);
         gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
         component.openGameOverDialog(false);
         expect(dialogSpyObj.open).toHaveBeenCalled();
@@ -130,6 +131,7 @@ describe('GamePageComponent', () => {
     });
 
     it('should open the game over dialog when game mode is Limited time', () => {
+        spyOn(Object.getPrototypeOf(component), 'findNbDifferences').and.callFake(() => 1);
         gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
         gameInformationHandlerServiceSpy.getNbDifferences.and.callFake(() => undefined);
         component.openGameOverDialog(true);
@@ -158,6 +160,16 @@ describe('GamePageComponent', () => {
         const spyOpenGameOverDialog = spyOn(component, 'openGameOverDialog');
         socketHelper.peerSideEmit(SocketEvent.Lose);
         expect(spyOpenGameOverDialog).toHaveBeenCalled();
+    });
+
+    it('should return nb of differences', () => {
+        gameInformationHandlerServiceSpy.players = [{ name: 'test', nbDifferences: 2 }];
+        expect(component['findNbDifferences']()).toEqual('2');
+        gameInformationHandlerServiceSpy.players = [
+            { name: 'test', nbDifferences: 2 },
+            { name: 'test', nbDifferences: 3 },
+        ];
+        expect(component['findNbDifferences']()).toEqual('5');
     });
 
     it('should emit LeaveGame when the player quit the page', () => {

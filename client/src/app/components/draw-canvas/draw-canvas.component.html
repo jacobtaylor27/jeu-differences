@@ -8,7 +8,7 @@
         (mouseenter)="enterCanvas($event)"
         (mousedown)="startDrawing($event)"
         (mousemove)="draw($event)"
-        (mouseup)="stopDrawing()"
+        (mouseup)="stopDrawing($event)"
         [width]="this.width"
         [height]="this.height"
     ></canvas>

@@ -1,1 +1,9 @@
-<p>no-game-snackbar works!</p>
+
+<div [ngClass]="theme.ClassName" class="container">
+    <p>Aucun jeu disponible ! </p>
+    <div class="'buttons">
+        <button mat-raised-button color="accent">Créer un jeu </button>
+        <button  mat-raised-button color="primary" (click)="snackBarRef.dismiss()">OK</button>
+    </div>
+    
+</div>

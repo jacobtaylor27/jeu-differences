@@ -15,6 +15,7 @@ import { NoGameSnackbarComponent } from '@app/components/no-game-snackbar/no-gam
 export class DialogLimitedTimeComponent {
     favoriteTheme: string = Theme.ClassName;
 
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly communicationSocketService: CommunicationSocketService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,

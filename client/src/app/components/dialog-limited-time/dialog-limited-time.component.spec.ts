@@ -58,4 +58,9 @@ describe('DialogLimitedTimeComponent', () => {
         expect(spySocket).toHaveBeenCalled();
         expect(gameInformationHandlerService.handleSocketEvent).toHaveBeenCalled();
     });
+    it('should return false if game are available ', () => {
+        spyOn(component['gameCarouselService'], 'getNumberOfCards').and.callFake(() => 1);
+        expect(component.noGameAvailable()).toEqual(false);
+    });
+
 });

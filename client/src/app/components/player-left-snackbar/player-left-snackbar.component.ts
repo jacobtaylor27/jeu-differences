@@ -16,8 +16,7 @@ export class PlayerLeftSnackbarComponent {
     messageSnackBar() {
         if (this.gameInfoHandlerService.gameMode === GameMode.LimitedTime) {
             return 'Le joueur a quitté la partie. Vous jouez maintenant en solo.';
-        } else {
-            return 'Le joueur a quitté la partie.';
         }
+        return 'Le joueur a quitté la partie.';
     }
 }

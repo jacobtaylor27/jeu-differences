@@ -73,4 +73,12 @@ describe('DialogLimitedTimeComponent', () => {
         expect(component.noGameAvailable()).toEqual(false);
     });
 
+    it('should return true if no game are available ', () => {
+        spyOn(component['gameCarouselService'], 'getNumberOfCards').and.callFake(() => 0);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spyOpenSnackBar = spyOn(component, 'openSnackBar').and.callFake(() => {});
+        expect(component.noGameAvailable()).toEqual(true);
+        expect(spyOpenSnackBar).toHaveBeenCalled();
+    });
+
 });

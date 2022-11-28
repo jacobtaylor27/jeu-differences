@@ -33,6 +33,7 @@ describe('DialogLimitedTimeComponent', () => {
     });
 
     it('should send Socket Event and handle socket on click solo', () => {
+        spyOn(component, 'noGameAvailable').and.callFake(() => false);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spySocket = spyOn(component['communicationSocketService'], 'send').and.callFake(() => {});
         component.onClickSolo();
@@ -41,6 +42,7 @@ describe('DialogLimitedTimeComponent', () => {
     });
 
     it('should send Socket Event and handle socket on click coop', () => {
+        spyOn(component, 'noGameAvailable').and.callFake(() => false);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spySocket = spyOn(component['communicationSocketService'], 'send').and.callFake(() => {});
         component.onClickCoop();

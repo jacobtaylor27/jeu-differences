@@ -39,6 +39,16 @@ export class DialogLimitedTimeComponent {
         });
         this.gameInformationHandlerService.handleSocketEvent();
     }
+
+    noGameAvailable(): boolean {
+        if (this.gameCarouselService.getNumberOfCards() === 0) {
+            this.openSnackBar();
+
+            return true;
+        }
+        return false;
+    }
+
     openSnackBar() {
         this.snackBar.openFromComponent(NoGameSnackbarComponent);
     }

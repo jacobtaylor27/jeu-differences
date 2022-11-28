@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Theme } from '@app/enums/theme';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { SocketEvent } from '@common/socket-event';
@@ -15,6 +16,7 @@ export class DialogLimitedTimeComponent {
     constructor(
         private readonly communicationSocketService: CommunicationSocketService,
         private readonly gameInformationHandlerService: GameInformationHandlerService,
+        private readonly gameCarouselService: GameCarouselService,
     ) {}
 
     onClickSolo() {

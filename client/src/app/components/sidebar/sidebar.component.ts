@@ -9,10 +9,12 @@ import { GameMode } from '@common/game-mode';
 export class SidebarComponent {
     gameMode: GameMode;
     gameName: string;
+    isMulti: boolean;
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
         this.gameMode = this.gameInformationHandlerService.getGameMode();
         this.gameName = this.gameInformationHandlerService.getGameName();
+        this.isMulti = this.gameInformationHandlerService.isMulti;
         this.gameInformationHandlerService.$newGame.subscribe(() => {
             this.gameMode = this.gameInformationHandlerService.getGameMode();
             this.gameName = this.gameInformationHandlerService.getGameName();

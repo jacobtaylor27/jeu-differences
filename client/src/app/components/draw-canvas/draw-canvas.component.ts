@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { DEFAULT_PENCIL, SIZE } from '@app/constants/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
@@ -12,7 +12,7 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     templateUrl: './draw-canvas.component.html',
     styleUrls: ['./draw-canvas.component.scss'],
 })
-export class DrawCanvasComponent implements AfterViewInit {
+export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
     @ViewChild('background', { static: false }) background!: ElementRef<HTMLCanvasElement>;
     @ViewChild('foreground', { static: false }) foreground!: ElementRef<HTMLCanvasElement>;
     @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
@@ -44,9 +44,8 @@ export class DrawCanvasComponent implements AfterViewInit {
             this.pencil = newPencil;
         });
 
-        const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-
-        this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe(async (newImage: ImageBitmap) => {
+        this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe((newImage: ImageBitmap) => {
+            const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             background.drawImage(newImage, 0, 0);
             this.drawService.updateImages();
         });
@@ -57,6 +56,10 @@ export class DrawCanvasComponent implements AfterViewInit {
 
         this.drawService.clearAllLayers(this.canvasType);
         this.drawService.clearAllBackground();
+    }
+
+    ngOnDestroy(): void {
+        this.canvasStateService.states.pop();
     }
 
     enterCanvas(event: MouseEvent) {
@@ -72,8 +75,8 @@ export class DrawCanvasComponent implements AfterViewInit {
         this.drawService.startDrawing(event);
     }
 
-    stopDrawing() {
-        this.drawService.stopDrawing();
+    stopDrawing(event: MouseEvent) {
+        this.drawService.stopDrawing(event);
     }
 
     draw(event: MouseEvent) {

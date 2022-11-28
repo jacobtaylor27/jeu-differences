@@ -47,6 +47,7 @@ export class CreateGamePageComponent {
             });
         });
     }
+
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
         if (!event.ctrlKey) {

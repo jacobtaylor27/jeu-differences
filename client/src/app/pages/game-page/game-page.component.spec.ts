@@ -162,6 +162,12 @@ describe('GamePageComponent', () => {
         expect(spyOpenGameOverDialog).toHaveBeenCalled();
     });
 
+    it('should open the snack bar with when player leaves time limited', () => {
+        const spyOpenGameOverDialog = spyOn(component, 'openSnackBar');
+        socketHelper.peerSideEmit(SocketEvent.PlayerLeft);
+        expect(spyOpenGameOverDialog).toHaveBeenCalled();
+    });
+
     it('should return nb of differences', () => {
         gameInformationHandlerServiceSpy.players = [{ name: 'test', nbDifferences: 2 }];
         expect(component['findNbDifferences']()).toEqual('2');

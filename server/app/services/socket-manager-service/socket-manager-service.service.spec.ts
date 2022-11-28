@@ -187,9 +187,7 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'findPlayer').callsFake(() => 'test');
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
-        const spyLeaveGame = stub(service['gameManager'], 'leaveGame').callsFake(() => {});
         service.handleSockets();
-        expect(spyLeaveGame.called).to.equal(true);
     });
 
     it('should not bradcast leaving message when the player is in solo', () => {
@@ -215,10 +213,8 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => false);
-        const spyLeaveGame = stub(service['gameManager'], 'leaveGame').callsFake(() => {});
         const spyEmit = stub(fakeSockets, 'emit');
         service.handleSockets();
-        expect(spyLeaveGame.called).to.equal(true);
         expect(spyEmit.called).to.equal(false);
     });
 

@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { Component } from '@angular/core';
+import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { GameMode } from '@common/game-mode';
@@ -11,11 +11,7 @@ import { GameMode } from '@common/game-mode';
 })
 export class PlayerLeftSnackbarComponent {
     theme: typeof Theme = Theme;
-    constructor(
-        public snackBarRef: MatSnackBarRef<PlayerLeftSnackbarComponent>,
-        @Inject(MAT_SNACK_BAR_DATA) public data: unknown,
-        public gameInfoHandlerService: GameInformationHandlerService,
-    ) {}
+    constructor(public snackBarRef: MatSnackBarRef<PlayerLeftSnackbarComponent>, public gameInfoHandlerService: GameInformationHandlerService) {}
 
     messageSnackBar() {
         if (this.gameInfoHandlerService.gameMode === GameMode.LimitedTime) {

@@ -41,6 +41,15 @@ describe('DialogLimitedTimeComponent', () => {
         expect(gameInformationHandlerService.handleSocketEvent).toHaveBeenCalled();
     });
 
+    it('should not send Socket Event and handle socket on click solo if no game available', () => {
+        spyOn(component, 'noGameAvailable').and.callFake(() => true);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spySocket = spyOn(component['communicationSocketService'], 'send').and.callFake(() => {});
+        component.onClickSolo();
+        expect(spySocket).not.toHaveBeenCalled();
+        expect(gameInformationHandlerService.handleSocketEvent).not.toHaveBeenCalled();
+    });
+
     it('should send Socket Event and handle socket on click coop', () => {
         spyOn(component, 'noGameAvailable').and.callFake(() => false);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}

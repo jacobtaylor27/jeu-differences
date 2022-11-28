@@ -43,6 +43,10 @@ export class GamePageComponent implements OnDestroy {
         });
     }
 
+    openSnackBar() {
+        this.snackBar.openFromComponent(PlayerLeftSnackbarComponent, { duration: 5000 });
+    }
+
     openGameOverDialog(isWin: boolean) {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
@@ -76,9 +80,5 @@ export class GamePageComponent implements OnDestroy {
         }
 
         return this.gameInfoHandlerService.players[0].nbDifferences.toString();
-    }
-
-    private openSnackBar() {
-        this.snackBar.openFromComponent(PlayerLeftSnackbarComponent, { duration: 5000 });
     }
 }

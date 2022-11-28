@@ -57,6 +57,6 @@ export class DialogLimitedTimeComponent {
     }
 
     openSnackBar() {
-        this.snackBar.openFromComponent(NoGameSnackbarComponent);
+        this.snackBar.openFromComponent(NoGameSnackbarComponent, { duration: 3000 });
     }
 }

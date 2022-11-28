@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
 
 @Component({
@@ -8,7 +9,6 @@ import { Theme } from '@app/enums/theme';
 })
 export class NoGameSnackbarComponent {
     theme: typeof Theme = Theme;
-  constructor() { }
 
-
+    constructor(public snackBarRef: MatSnackBarRef<NoGameSnackbarComponent>) {}
 }

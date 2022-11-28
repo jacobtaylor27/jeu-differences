@@ -23,6 +23,9 @@ export class DialogLimitedTimeComponent {
     ) {}
 
     onClickSolo() {
+        if (this.noGameAvailable()) {
+            return;
+        }
         this.communicationSocketService.send(SocketEvent.CreateGame, {
             player: this.gameInformationHandlerService.players[0].name,
             mode: this.gameInformationHandlerService.gameMode,
@@ -32,6 +35,9 @@ export class DialogLimitedTimeComponent {
     }
 
     onClickCoop() {
+        if (this.noGameAvailable()) {
+            return;
+        }
         this.communicationSocketService.send(SocketEvent.CreateGameMulti, {
             player: this.gameInformationHandlerService.players[0].name,
             mode: this.gameInformationHandlerService.gameMode,

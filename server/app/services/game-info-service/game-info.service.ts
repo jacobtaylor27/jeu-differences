@@ -104,6 +104,9 @@ export class GameInfoService {
                 soloScore: [],
                 multiplayerScore: [],
             });
+        } catch (err) {
+            return null;
+        }
     }
 
     async addGameInfo(game: PrivateGameInformation): Promise<void | null> {

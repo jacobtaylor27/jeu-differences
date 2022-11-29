@@ -145,7 +145,7 @@ export class DifferencesDetectionHandlerService {
         ctx.shadowColor = 'yellow';
         ctx.strokeStyle = 'red';
         const interval = setInterval(() => {
-            ctx.clearRect(quadrantCoordinate[0].x - 5, quadrantCoordinate[0].y - 5, width + 10, height + 10);
+            ctx.clearRect(quadrantCoordinate[0].x - 20, quadrantCoordinate[0].y - 20, width + 30, height + 30);
             if (counter === 5) {
                 clearInterval(interval);
                 ctx.restore();

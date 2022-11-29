@@ -189,7 +189,11 @@ export class GameController {
             );
             this.gameInfo
                 .addGameInfoWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     this.socketManager.refreshGames();
                     res.status(StatusCodes.CREATED).send();
                 })

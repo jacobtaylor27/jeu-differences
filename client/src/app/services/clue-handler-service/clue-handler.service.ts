@@ -17,7 +17,7 @@ export class ClueHandlerService {
 
     getClue() {
         this.clueAskedCounter++;
-        this.communicationSocket.send(SocketEvent.Clue, { clueIndex: this.clueAskedCounter, gameId: this.gameInformation.roomId });
+        this.communicationSocket.send(SocketEvent.Clue, { gameId: this.gameInformation.roomId });
     }
 
     resetNbClue() {

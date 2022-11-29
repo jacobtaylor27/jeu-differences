@@ -152,12 +152,12 @@ export class SocketManagerService {
                             this.eventMessageService.leavingGameMessage(this.gameManager.findPlayer(gameId, socket.id) as string),
                         );
                     if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
-                        socket.broadcast.to(gameId).emit(SocketEvent.Win);
                         socket.leave(gameId);
                         this.gameManager.leaveGame(socket.id, gameId);
-                    } else {
-                        socket.broadcast.to(gameId).emit(SocketEvent.PlayerLeft);
                     }
+                    socket.broadcast
+                        .to(gameId)
+                        .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
                 }
             });
 

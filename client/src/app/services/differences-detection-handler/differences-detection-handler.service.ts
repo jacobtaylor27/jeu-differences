@@ -108,32 +108,7 @@ export class DifferencesDetectionHandlerService {
     }
 
     async showClue(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
-        if (this.isThirdClue(quadrantCoordinate)) {
-            this.fillText(ctx, quadrantCoordinate);
-            return;
-        }
         this.drawRect(ctx, quadrantCoordinate);
-    }
-
-    private isThirdClue(quadrantCoordinate: Coordinate[]): boolean {
-        return quadrantCoordinate[1].y === -1;
-    }
-
-    private fillText(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
-        ctx.font = '40px serif';
-        let counter = 0;
-        const interval = setInterval(() => {
-            ctx.fillStyle = 'grey';
-            ctx.clearRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y + 10, 100, -200);
-
-            if (counter === 5) {
-                clearInterval(interval);
-            }
-            if (counter % 2 === 0) {
-                ctx.fillText(`(${quadrantCoordinate[0].x},${quadrantCoordinate[0].y})`, quadrantCoordinate[0].x, quadrantCoordinate[0].y, 100);
-            }
-            counter++;
-        }, FlashTimer.Classic) as unknown as number;
     }
 
     private drawRect(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {

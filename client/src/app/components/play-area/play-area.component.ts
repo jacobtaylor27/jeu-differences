@@ -67,7 +67,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     ngOnInit(): void {
         this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
-            this.isThirdClue = this.clueHandlerService.isThirdClue();
+            console.log(data.nbClues);
             if (data.nbClues === 3) {
                 this.isThirdClue = true;
                 this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';

@@ -118,15 +118,19 @@ export class GameInfoService {
     }
 
     async deleteGameInfoById(gameId: string): Promise<boolean | null> {
-        const filter = { id: { $eq: gameId } };
-        const deletedGame = (await this.collection.findOneAndDelete(filter)).value;
+        try {
+            const filter = { id: { $eq: gameId } };
+            const deletedGame = (await this.collection.findOneAndDelete(filter)).value;
 
-        if (deletedGame) {
-            const imageIds = [deletedGame.idOriginalBmp, deletedGame.idEditedBmp, deletedGame.idDifferenceBmp];
-            await this.bmpService.deleteGameImages(imageIds, this.srcPath);
+            if (deletedGame) {
+                const imageIds = [deletedGame.idOriginalBmp, deletedGame.idEditedBmp, deletedGame.idDifferenceBmp];
+                await this.bmpService.deleteGameImages(imageIds, this.srcPath);
+            }
+
+            return deletedGame !== null;
+        } catch (err) {
+            return null;
         }
-
-        return deletedGame !== null;
     }
 
     async deleteAllGamesInfo(): Promise<void | null> {

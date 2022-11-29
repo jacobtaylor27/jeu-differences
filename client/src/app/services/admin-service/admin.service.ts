@@ -17,19 +17,34 @@ export class AdminService {
         private readonly gameCarouselService: GameCarouselService,
         private readonly communicationService: CommunicationService,
         private readonly socketService: CommunicationSocketService,
+        private readonly router: RouterService,
     ) {}
 
     hasCards(): boolean {
         return this.gameCarouselService.hasCards();
     }
 
-    refreshAllGames() {
-        this.communicationService.refreshAllGames().subscribe();
+    refreshAllGames(): void {
+        this.communicationService.refreshAllGames().subscribe({
+            next: () => {
+                this.router.reloadPage('admin');
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
+        });
     }
 
     deleteAllGames(): void {
         this.socketService.send(SocketEvent.GamesDeleted);
-        this.communicationService.deleteAllGameCards().subscribe();
+        this.communicationService.deleteAllGameCards().subscribe({
+            next: () => {
+                this.router.reloadPage('admin');
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
+        });
     }
 
     openSettings(): void {

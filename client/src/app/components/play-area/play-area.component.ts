@@ -2,6 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
+import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
@@ -38,6 +39,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         private readonly mouseHandlerService: MouseHandlerService,
         private readonly communicationSocketService: CommunicationSocketService,
         private cheatMode: CheatModeService,
+        private readonly clueHandlerService: ClueHandlerService,
     ) {
         this.handleSocketDifferenceFound();
     }
@@ -67,6 +69,14 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     ngOnInit(): void {
         this.communicationSocketService.on(SocketEvent.Clue, (quadrantCoordinate: Coordinate[]) => {
+            this.isThirdClue = this.clueHandlerService.isThirdClue();
+            if (this.isThirdClue) {
+                this.clue = '(' + quadrantCoordinate[0].x.toString() + ', ' + quadrantCoordinate[0].y.toString() + ')';
+                return;
+            }
+            setInterval(() => {
+                this.isThirdClue = false;
+            }, 5000);
             this.differencesDetectionHandlerService.showClue(this.getContextOriginal(), quadrantCoordinate);
             this.differencesDetectionHandlerService.showClue(this.getContextModified(), quadrantCoordinate);
         });

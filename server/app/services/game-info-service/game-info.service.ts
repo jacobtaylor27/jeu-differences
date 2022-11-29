@@ -65,6 +65,9 @@ export class GameInfoService {
     async getAllGameInfos(): Promise<PrivateGameInformation[] | null> {
         try {
             return await this.collection.find({}).toArray();
+        } catch (err) {
+            return null;
+        }
     }
 
     async getGameInfoById(gameId: string): Promise<PrivateGameInformation | null> {

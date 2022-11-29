@@ -77,7 +77,7 @@ describe('GameInfo Service', async () => {
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
-        const expectedGames = await gameInfoService.getAllGameInfos();
+        const expectedGames = (await gameInfoService.getAllGameInfos()) as PrivateGameInformation[];
         expect(expectedGames.length).to.equal(DEFAULT_GAMES.length);
         for (let i = 0; i < DEFAULT_GAMES.length; i++) {
             expect(expectedGames[i]).to.deep.equal(DEFAULT_GAMES[i]);

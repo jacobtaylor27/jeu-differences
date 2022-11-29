@@ -26,6 +26,8 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild('imgModifiedWODifference') canvasImgDifference: ElementRef<HTMLCanvasElement>;
     @Input() gameId: string;
 
+    isThirdClue: boolean = false;
+    clue: string;
     buttonPressed = '';
     intervals = [];
     // eslint-disable-next-line max-params -- absolutely need all the imported services

@@ -74,6 +74,9 @@ export class GameInfoService {
         try {
             const filter = { id: gameId };
             return (await this.collection.find(filter).toArray())[0];
+        } catch (err) {
+            return null;
+        }
     }
 
     async addGameInfoWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void | null> {

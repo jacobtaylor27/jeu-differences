@@ -64,7 +64,7 @@ export class GameController {
             isGameDeleted
                 .then((isDeleted) => {
                     if (isDeleted === null) {
-                        res.send(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
                         return;
                     }
                     const status = isDeleted ? StatusCodes.ACCEPTED : StatusCodes.NOT_FOUND;

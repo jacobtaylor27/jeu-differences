@@ -6,6 +6,6 @@ import { DrawService } from '@app/services/draw-service/draw-service.service';
     templateUrl: './central-tool-box.component.html',
     styleUrls: ['./central-tool-box.component.scss'],
 })
-export class BetweenImagesToolBoxComponent {
+export class CentralBoxComponent {
     constructor(readonly drawService: DrawService) {}
 }

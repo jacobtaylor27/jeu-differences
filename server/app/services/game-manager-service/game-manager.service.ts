@@ -165,13 +165,14 @@ export class GameManagerService {
               };
     }
 
-    increaseNbClueAsked(gameId : string){
+    increaseNbClueAsked(gameId: string) {
         const game = this.findGame(gameId);
-        if(game){
-            game.nbCluesAsked++;}
+        if (game) {
+            game.nbCluesAsked++;
+        }
     }
 
-    getNbClues(gameId : string){
+    getNbClues(gameId: string) {
         return this.findGame(gameId)?.nbCluesAsked;
     }
 

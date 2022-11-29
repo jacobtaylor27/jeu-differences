@@ -130,8 +130,12 @@ export class GameInfoService {
     }
 
     async deleteAllGamesInfo(): Promise<void | null> {
-        await this.bmpService.deleteAllSourceImages(this.srcPath);
-        await this.collection.deleteMany({});
+        try {
+            await this.bmpService.deleteAllSourceImages(this.srcPath);
+            await this.collection.deleteMany({});
+        } catch (err) {
+            return null;
+        }
     }
 
     async resetAllHighScores(): Promise<void | null> {

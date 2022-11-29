@@ -32,7 +32,11 @@ export class GameController {
             const id = req.params.id;
             this.gameInfo
                 .resetHighScores(id)
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     res.sendStatus(StatusCodes.OK);
                 })
                 .catch(() => {

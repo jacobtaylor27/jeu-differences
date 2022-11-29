@@ -69,11 +69,11 @@ export class GameController {
                     }
                     const status = isDeleted ? StatusCodes.ACCEPTED : StatusCodes.NOT_FOUND;
                     res.status(status).send();
+                    this.socketManager.refreshGames();
                 })
                 .catch(() => {
                     res.status(StatusCodes.BAD_REQUEST).send();
                 });
-            this.socketManager.refreshGames();
         });
 
         this.router.delete('/cards', (req: Request, res: Response) => {

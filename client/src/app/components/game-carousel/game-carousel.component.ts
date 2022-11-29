@@ -11,6 +11,7 @@ import { CarouselInformation } from '@common/carousel-information';
 import { PublicGameInformation } from '@common/game-information';
 import { SocketEvent } from '@common/socket-event';
 import { RefreshSnackbarComponent } from '@app/components/refresh-snackbar/refresh-snackbar.component';
+import { RouterService } from '@app/services/router-service/router.service';
 
 @Component({
     selector: 'app-game-carousel',

@@ -102,10 +102,6 @@ export class CommunicationService {
         return this.http.get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' }).pipe();
     }
 
-    getAllGameInfos(): Observable<HttpResponse<{ games: PublicGameInformation[] }>> {
-        return this.http.get<{ games: PublicGameInformation[] }>(`${this.baseUrl}/game/cards`, { observe: 'response' }).pipe();
-    }
-
     getGamesInfoByPage(page: number = 1): Observable<HttpResponse<CarouselResponse>> {
         return this.http.get<CarouselResponse>(`${this.baseUrl}/game/cards/?page=${page}`, { observe: 'response' }).pipe();
     }

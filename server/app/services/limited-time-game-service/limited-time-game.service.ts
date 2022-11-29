@@ -13,7 +13,7 @@ export class LimitedTimeGame {
     }
 
     async generateGames() {
-        const allGames = await this.gameInfoService.getAllGameInfos();
+        const allGames = (await this.gameInfoService.getAllGameInfos()) as PrivateGameInformation[];
         return this.shuffle(allGames);
     }
 

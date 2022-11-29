@@ -10,7 +10,7 @@ import { AdminService } from '@app/services/admin-service/admin.service';
 export class AdminCommandsComponent {
     favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly adminService: AdminService, private readonly router: RouterService) {}
+    constructor(private readonly adminService: AdminService) {}
 
     hasCards(): boolean {
         return this.adminService.hasCards();

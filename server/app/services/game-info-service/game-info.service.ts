@@ -67,7 +67,7 @@ export class GameInfoService {
         return (await this.collection.find(filter).toArray())[0];
     }
 
-    async addGameInfoWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void> {
+    async addGameInfoWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void | null> {
         const idOriginalBmp = await this.bmpService.addBmp(await images.original.toImageData(), DEFAULT_BMP_ASSET_PATH);
         const idEditedBmp = await this.bmpService.addBmp(await images.modify.toImageData(), DEFAULT_BMP_ASSET_PATH);
         const differences = await this.bmpDifferenceInterpreter.getCoordinates(

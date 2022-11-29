@@ -294,31 +294,4 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(`${baseUrl}/game/scores/1/reset`);
         expect(req.request.method).toBe('PATCH');
     });
-
-    it('should get the game scores for a specific game', () => {
-        service.getGameScores('1').subscribe({
-            next: (response: HttpResponse<{ solo: Score[]; multi: Score[] }>) => {
-                expect(response.body).toEqual({
-                    solo: [],
-                    multi: [],
-                });
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game/scores/1`);
-        expect(req.request.method).toBe('GET');
-    });
-
-    it('should update the scores of a single game', () => {
-        service.updateGameScores('1', [], []).subscribe({
-            next: (response: void) => {
-                expect(response).toBeUndefined();
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game/scores/1`);
-        expect(req.request.method).toBe('PATCH');
-    });
 });

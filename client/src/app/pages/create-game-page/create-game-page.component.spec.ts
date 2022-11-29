@@ -46,10 +46,14 @@ describe('CreateGamePageComponent', () => {
             $resetForeground: new Map<CanvasType, Subject<void>>(),
         });
         canvasEventHandlerSpyObj = jasmine.createSpyObj('CanvasEventHandlerService', ['handleCtrlShiftZ', 'handleCtrlZ']);
-        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['addDrawingCanvas', 'resetAllLayers', 'clearAllLayers', 'clearAllBackground'], {
-            $drawingImage: drawImageSubjects,
-            foregroundContext: new Map(),
-        });
+        drawServiceSpyObj = jasmine.createSpyObj(
+            'DrawService',
+            ['addDrawingCanvas', 'resetAllLayers', 'clearAllLayers', 'clearAllBackground', 'initialize'],
+            {
+                $drawingImage: drawImageSubjects,
+                foregroundContext: new Map(),
+            },
+        );
         await TestBed.configureTestingModule({
             declarations: [
                 CreateGamePageComponent,

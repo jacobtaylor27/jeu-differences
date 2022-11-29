@@ -43,6 +43,19 @@ export class DrawService {
         this.$drawingImage = new Map();
     }
 
+    initialize() {
+        // same reason as before
+        this.indexOfCommand = -1;
+        this.strokeIndex = 0;
+        this.commands = [];
+        this.currentCommand = {
+            canvasType: CanvasType.None,
+            name: '',
+            strokes: [{ lines: [] }],
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
+    }
+
     startDrawing(event: MouseEvent) {
         this.isClick = true;
         const focusedCanvas = this.canvasStateService.getFocusedCanvas();

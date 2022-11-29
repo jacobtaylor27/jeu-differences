@@ -43,7 +43,11 @@ export class GameController {
         this.router.patch('/scores/reset', (req: Request, res: Response) => {
             this.gameInfo
                 .resetAllHighScores()
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     res.sendStatus(StatusCodes.OK);
                 })
                 .catch(() => {

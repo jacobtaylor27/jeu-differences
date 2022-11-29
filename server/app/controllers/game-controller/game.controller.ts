@@ -97,7 +97,11 @@ export class GameController {
         this.router.delete('/cards', (req: Request, res: Response) => {
             this.gameInfo
                 .deleteAllGamesInfo()
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     res.status(StatusCodes.ACCEPTED).send();
                 })
                 .catch(() => {

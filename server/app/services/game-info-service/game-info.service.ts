@@ -53,6 +53,9 @@ export class GameInfoService {
                     hasPrevious: currentPage > 1,
                 },
             };
+        } catch (err) {
+            return null;
+        }
     }
 
     validatePageNumber(pageNb: number, total: number): number {

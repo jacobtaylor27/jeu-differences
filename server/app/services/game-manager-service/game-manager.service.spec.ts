@@ -296,9 +296,12 @@ describe('GameManagerService', () => {
         expect(spyLeaveGame.called).to.equal(true);
     });
 
-    it.only('should increase number of clues ', () => {
+    it('should increase number of clues ', () => {
         const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
+        spyFindGame.callsFake(() => undefined);
+        gameManager.increaseNbClueAsked('');
+        expect(game.nbCluesAsked).to.equal(0);
         spyFindGame.callsFake(() => game);
         gameManager.increaseNbClueAsked('');
         expect(game.nbCluesAsked).to.equal(1);

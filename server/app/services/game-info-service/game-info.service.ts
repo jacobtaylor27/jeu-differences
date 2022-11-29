@@ -114,7 +114,7 @@ export class GameInfoService {
         await this.collection.deleteMany({});
     }
 
-    async resetAllHighScores(): Promise<void> {
+    async resetAllHighScores(): Promise<void | null> {
         await this.collection.updateMany({}, { $set: { soloScore: [], multiplayerScore: [] } });
     }
 

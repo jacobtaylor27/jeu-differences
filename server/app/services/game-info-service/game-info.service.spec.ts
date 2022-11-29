@@ -108,7 +108,7 @@ describe('GameInfo Service', async () => {
         expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(0);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         await expect(gameInfoService.addGameInfo(DEFAULT_GAMES[0])).to.eventually.be.rejectedWith(Error);
-        expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(1);
         expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
     });
 
@@ -146,7 +146,7 @@ describe('GameInfo Service', async () => {
     });
 
     it('should get the games information based on a page number', async () => {
-        const value = await gameInfoService.getGamesInfo(1);
+        const value = (await gameInfoService.getGamesInfo(1)) as GameCarousel;
         expect(value.games).to.deep.equal([]);
     });
 

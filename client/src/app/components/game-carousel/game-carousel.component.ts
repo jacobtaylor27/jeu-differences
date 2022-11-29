@@ -65,12 +65,17 @@ export class GameCarouselComponent implements OnInit, OnDestroy {
 
     getPage(pageNb: number): void {
         this.isLoaded = false;
-        this.communicationService.getGamesInfoByPage(pageNb).subscribe((response: HttpResponse<CarouselResponse>) => {
-            if (response && response.body) {
-                this.setCarouselInformation(response.body.carouselInfo);
-                this.setGameCards(response.body.games);
-                this.isLoaded = true;
-            }
+        this.communicationService.getGamesInfoByPage(pageNb).subscribe({
+            next: (response) => {
+                if (response && response.body) {
+                    this.setCarouselInformation(response.body.carouselInfo);
+                    this.setGameCards(response.body.games);
+                    this.isLoaded = true;
+                }
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
         });
     }
 

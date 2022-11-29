@@ -61,18 +61,6 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('GET');
     });
 
-    it('should get games info when select or admin page is loaded', () => {
-        service.getAllGameInfos().subscribe({
-            next: (response: HttpResponse<{ games: PublicGameInformation[] }>) => {
-                expect(response.body).toEqual({ games: [] });
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game/cards`);
-        expect(req.request.method).toBe('GET');
-    });
-
     it('should not return any message when sending a POST request (HttpClient called once)', () => {
         const sentMessage: Message = { body: 'Hello', title: 'World' };
         // subscribe to the mocked call

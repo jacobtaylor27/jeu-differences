@@ -67,13 +67,13 @@ export class SocketManagerService {
                 const pixelResult = this.cluesService.findRandomPixel(gameId);
                 switch (this.gameManager.getNbClues(gameId)) {
                     case 1:
-                        this.sio.to(gameId).emit(SocketEvent.Clue, {clue : this.cluesService.firstCluePosition(pixelResult), nbClues : 1});
+                        this.sio.to(gameId).emit(SocketEvent.Clue, { clue: this.cluesService.firstCluePosition(pixelResult), nbClues: 1 });
                         break;
                     case 2:
-                        this.sio.to(gameId).emit(SocketEvent.Clue, {clue : this.cluesService.secondCluePosition(pixelResult), nbClues : 2});
+                        this.sio.to(gameId).emit(SocketEvent.Clue, { clue: this.cluesService.secondCluePosition(pixelResult), nbClues: 2 });
                         break;
                     case 3:
-                        this.sio.to(gameId).emit(SocketEvent.Clue, {clue : this.cluesService.thirdCluePosition(pixelResult), nbClues : 3});
+                        this.sio.to(gameId).emit(SocketEvent.Clue, { clue: this.cluesService.thirdCluePosition(pixelResult), nbClues: 3 });
                 }
                 this.sio.to(gameId).emit(SocketEvent.EventMessage, this.eventMessageService.usingClueMessage());
             });

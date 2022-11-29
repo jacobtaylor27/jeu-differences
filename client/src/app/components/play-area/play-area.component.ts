@@ -67,12 +67,12 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     ngOnInit(): void {
         this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
-            console.log(data.nbClues);
             if (data.nbClues === 3) {
                 this.isThirdClue = true;
                 this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
                 setInterval(() => {
                     this.isThirdClue = false;
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
                 }, 5000);
                 return;
             }

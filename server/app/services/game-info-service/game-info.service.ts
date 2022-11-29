@@ -71,8 +71,9 @@ export class GameInfoService {
     }
 
     async getGameInfoById(gameId: string): Promise<PrivateGameInformation | null> {
-        const filter = { id: gameId };
-        return (await this.collection.find(filter).toArray())[0];
+        try {
+            const filter = { id: gameId };
+            return (await this.collection.find(filter).toArray())[0];
     }
 
     async addGameInfoWrapper(images: { original: Bmp; modify: Bmp }, name: string, radius: number): Promise<void | null> {

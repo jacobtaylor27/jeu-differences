@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { CREATE_GAME, CREATE_GAME_ROOM, DELETE_GAMES, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { GameTimeConstants } from '@common/game-time-constants';
 import { Message } from '@common/message';

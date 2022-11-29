@@ -35,4 +35,12 @@ describe('LimitedTimeGameService', () => {
 
         expect(arrayEnd).to.not.equal([{ id: '1' }, { id: '2' }, { id: '3' }] as PrivateGameInformation[]);
     });
-});
+
+    it('should delete a game', () => {
+        const arrayStart = [{ id: '1' }, { id: '2' }, { id: '3' }] as PrivateGameInformation[];
+        limitedTimeGameService.gamesShuffled = new Map();
+        limitedTimeGameService.gamesShuffled.set('1', arrayStart);
+
+        limitedTimeGameService.deleteGame('1');
+        expect(limitedTimeGameService.gamesShuffled.get('1')?.length).to.equal(2);
+    });

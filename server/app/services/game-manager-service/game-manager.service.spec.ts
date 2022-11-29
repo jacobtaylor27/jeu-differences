@@ -310,6 +310,9 @@ describe('GameManagerService', () => {
     it('should return the number of clues  ', () => {
         const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
+        spyFindGame.callsFake(() => undefined);
+        const numberOfCluesForUndefinedGame = gameManager.getNbClues('');
+        expect(numberOfCluesForUndefinedGame).to.equal(undefined);
         spyFindGame.callsFake(() => game);
         const numberOfClues = gameManager.getNbClues('');
         expect(numberOfClues).to.equal(0);

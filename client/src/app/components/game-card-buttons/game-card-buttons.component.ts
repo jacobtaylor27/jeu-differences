@@ -53,8 +53,13 @@ export class GameCardButtonsComponent {
     }
 
     onClickRefreshGame(): void {
-        this.communicationService.refreshSingleGame(this.gameCard.gameInformation.id).subscribe(() => {
-            this.router.reloadPage('admin');
+        this.communicationService.refreshSingleGame(this.gameCard.gameInformation.id).subscribe({
+            next: () => {
+                this.router.reloadPage('admin');
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
         });
     }
 

@@ -13,6 +13,7 @@ export class Game {
     players: Map<string, string>;
     timerId: NodeJS.Timer;
     currentIndex: number = 0;
+    nbCluesAsked : number = 0;
     private id: string;
     private mode: GameMode;
     private isMulti: boolean;

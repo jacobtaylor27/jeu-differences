@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppMaterialModule } from '@app/modules/material.module';
 
-import { BetweenImagesToolBoxComponent } from './between-images-tool-box.component';
+import { BetweenImagesToolBoxComponent } from './central-tool-box.component';
 
 describe('BetweenImagesToolBoxComponent', () => {
     let component: BetweenImagesToolBoxComponent;

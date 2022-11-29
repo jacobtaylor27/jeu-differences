@@ -19,6 +19,7 @@ describe('DifferencesAreaComponent', () => {
             ['setGameInformation', 'getPlayer', 'getOpponent', 'getNbTotalDifferences', 'getNbDifferences'],
             {
                 $differenceFound: new Subject<string>(),
+                $playerLeft: new Subject<string>(),
             },
         );
         differenceDetectionHandlerSpy = jasmine.createSpyObj('DifferencesDetectionHandlerService', [

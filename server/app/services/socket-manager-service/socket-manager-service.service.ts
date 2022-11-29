@@ -150,10 +150,14 @@ export class SocketManagerService {
                             SocketEvent.EventMessage,
                             this.eventMessageService.leavingGameMessage(this.gameManager.findPlayer(gameId, socket.id) as string),
                         );
-                    socket.broadcast.to(gameId).emit(SocketEvent.Win);
+                    if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                        socket.broadcast.to(gameId).emit(SocketEvent.Win);
+                        socket.leave(gameId);
+                        this.gameManager.leaveGame(socket.id, gameId);
+                    } else {
+                        socket.broadcast.to(gameId).emit(SocketEvent.PlayerLeft);
+                    }
                 }
-                this.gameManager.leaveGame(socket.id, gameId);
-                socket.leave(gameId);
             });
 
             socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {

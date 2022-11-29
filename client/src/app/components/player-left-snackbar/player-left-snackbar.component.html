@@ -1,5 +1,5 @@
 
 <div [ngClass]="theme.ClassName">
-    <span>Le joueur a quitté la partie.</span>
+    <span>{{messageSnackBar()}}</span>
     <button  mat-raised-button color="primary" (click)="snackBarRef.dismiss()">OK</button>
 </div>

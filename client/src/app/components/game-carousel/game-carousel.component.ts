@@ -1,8 +1,6 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
-import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';

@@ -4,6 +4,21 @@
             <span class="game-number">{{ getCardsCount() }} jeu<span *ngIf="hasMoreThanOneCard()">x</span></span>
         </div>
 
+        <div *ngIf="!hasCards()" class="no-game-container">
+            <mat-card class="no-game-card">
+                <mat-card-header class="no-game-center">
+                  <mat-card-title><b>Aucun jeu disponible !</b></mat-card-title>
+                </mat-card-header>
+                
+                <mat-card-actions class="no-game-center">
+                  <button mat-raised-button color="primary" routerLink="/create">Créer un jeu</button>
+                </mat-card-actions>
+                <mat-card-footer>
+                  <mat-progress-bar class="progess-bar" mode="buffer" color="primary"></mat-progress-bar>
+                </mat-card-footer>
+              </mat-card>
+        </div>
+
         <div class="game-cards-container">
             <div class="game-card-container" *ngFor="let gameCard of games">
                 <app-game-card [gameCard]="gameCard"></app-game-card>

@@ -93,7 +93,7 @@ describe('DrawCanvasComponent', () => {
     it('should have the current command to eraser', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         drawServiceSpyObj.stopDrawing.and.callFake(() => {});
-        component.stopDrawing();
+        component.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
         expect(drawServiceSpyObj.stopDrawing).toHaveBeenCalled();
     });
 

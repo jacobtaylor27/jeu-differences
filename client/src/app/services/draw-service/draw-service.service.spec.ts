@@ -191,10 +191,60 @@ describe('DrawServiceService', () => {
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
             return drawingBoardStub;
         });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
         const returnedValue = service.startDrawing({} as MouseEvent);
         expect(returnedValue).toBe(undefined);
         expect(respositionSpy).toHaveBeenCalled();
         expect(setCurrentCommandSpy).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
+        expect(service.isClick).toBeTruthy();
+        expect(service.coordDraw).toBe(newCoord);
+    });
+
+    it('startDrawing should handle mouse event if a canvas is in focus', () => {
+        service['isClick'] = false;
+        const newCoord: Vec2 = { x: 0, y: 0 };
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => {
+            return newCoord;
+        });
+        const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
+        service.pencil.state = Tool.Pencil;
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).toHaveBeenCalled();
+        expect(setCurrentCommandSpy).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
+        expect(service.isClick).toBeTruthy();
+        expect(service.coordDraw).toBe(newCoord);
+    });
+
+    it('startDrawing should handle mouse event if a canvas is in focus', () => {
+        service['isClick'] = false;
+        const newCoord: Vec2 = { x: 0, y: 0 };
+        const respositionSpy = spyOn(Object.getPrototypeOf(service), 'reposition').and.callFake(() => {
+            return newCoord;
+        });
+        const setCurrentCommandSpy = spyOn(Object.getPrototypeOf(service), 'setCurrentCommand');
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
+        service.pencil.state = Tool.Eraser;
+        const returnedValue = service.startDrawing({} as MouseEvent);
+        expect(returnedValue).toBe(undefined);
+        expect(respositionSpy).toHaveBeenCalled();
+        expect(setCurrentCommandSpy).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
         expect(service.isClick).toBeTruthy();
         expect(service.coordDraw).toBe(newCoord);
     });
@@ -206,7 +256,7 @@ describe('DrawServiceService', () => {
         expect(line.finalCoord).toEqual(expectedLine);
     });
 
-    it('updateCurrentCommand(...) should update the current command', () => {
+    it('updateCurrentCommand(...) should update the current command with squared cap', () => {
         const newLine: Line = {
             initCoord: { x: 0, y: 0 },
             finalCoord: { x: 0, y: 0 },
@@ -231,7 +281,40 @@ describe('DrawServiceService', () => {
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
             color: fakePencil.color,
-            cap: fakePencil.cap,
+            cap: 'round',
+            width: fakePencil.width.pencil,
+            destination: 'source-over',
+        };
+        expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
+        expect(service['currentCommand'].style).toEqual(expectedStyle);
+    });
+
+    it('updateCurrentCommand(...) should update the current command', () => {
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newPencil: Pencil = {
+            color: 'blue',
+            cap: 'round',
+            width: { pencil: 1, eraser: 3 },
+            state: Tool.Pencil,
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        service['pencil'] = newPencil;
+        service['currentCommand'] = newCurrentCommand;
+        service['updateCurrentCommand'](fakeLine, true);
+        const expectedStyle: StrokeStyle = {
+            color: fakePencil.color,
+            cap: 'square',
             width: fakePencil.width.pencil,
             destination: 'source-over',
         };
@@ -264,7 +347,7 @@ describe('DrawServiceService', () => {
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
             color: fakePencil.color,
-            cap: fakePencil.cap,
+            cap: 'round',
             width: fakePencil.width.eraser,
             destination: 'destination-out',
         };
@@ -336,6 +419,24 @@ describe('DrawServiceService', () => {
         expect(spyUpdateImages).toHaveBeenCalled();
     });
 
+    it('draw(...) should call update current command, create a stroke and update image', () => {
+        canvasStateServiceSpyObj.states = [drawingBoardStub];
+        canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => {
+            return drawingBoardStub;
+        });
+        service['isClick'] = true;
+        service['pencil'] = Object.create(fakePencil);
+        service['currentCommand'] = Object.create(fakeCurrentCommand);
+        service['updateCurrentCommand'](fakeLine);
+        const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
+        const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
+        const spyUpdateImages = spyOn(service, 'updateImages');
+        service.draw(fakeMouseEvent, true);
+        expect(spyUpdateCurrentCommand).toHaveBeenCalled();
+        expect(spyCreateStroke).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
+    });
+
     it('redraw(...) should iterate over all the drawing lines', () => {
         const spyCreateStroke = spyOn(Object.getPrototypeOf(service), 'createStroke');
         const newLine: Line = {
@@ -363,13 +464,16 @@ describe('DrawServiceService', () => {
         service.pencil = fakePencil;
         service.pencil.state = Tool.Pencil;
         service['currentCommand'] = fakeCurrentCommand;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
         const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
         const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
-        service.stopDrawing();
+        service.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
         expect(service['isClick']).toBeFalsy();
         expect(service['currentCommand'].name).toEqual('draw');
         expect(spyAddCurrentCommand).toHaveBeenCalled();
         expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
     });
 
     it('stopDrawing(...) should stop the erasing', () => {
@@ -377,13 +481,16 @@ describe('DrawServiceService', () => {
         service.pencil = fakePencil;
         service.pencil.state = Tool.Eraser;
         service['currentCommand'] = fakeCurrentCommand;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
         const spyAddCurrentCommand = spyOn(Object.getPrototypeOf(service), 'addCurrentCommand');
         const spyRemoveCommandsPastIndex = spyOn(Object.getPrototypeOf(service), 'removeCommandsPastIndex');
-        service.stopDrawing();
+        service.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
         expect(service['isClick']).toBeFalsy();
         expect(service['currentCommand'].name).toEqual('erase');
         expect(spyAddCurrentCommand).toHaveBeenCalled();
         expect(spyRemoveCommandsPastIndex).toHaveBeenCalled();
+        expect(drawSpy).toHaveBeenCalled();
     });
 
     it('leaveCanvas(...) should stop drawing if already drawing', () => {

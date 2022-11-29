@@ -64,6 +64,10 @@ describe('GameCarouselComponent', () => {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
                 },
+                {
+                    provide: RouterService,
+                    useValue: spyRouterService,
+                },
             ],
         }).compileComponents();
 

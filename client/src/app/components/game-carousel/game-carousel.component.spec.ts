@@ -28,6 +28,7 @@ describe('GameCarouselComponent', () => {
     let fixture: ComponentFixture<GameCarouselComponent>;
     let spyGameCarouselService: GameCarouselService;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyRouterService: jasmine.SpyObj<RouterService>;
     let socketServiceMock: SocketClientServiceMock;
     let socketHelper: SocketTestHelper;
 

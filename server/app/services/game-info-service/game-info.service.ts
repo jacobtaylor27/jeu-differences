@@ -58,7 +58,7 @@ export class GameInfoService {
         return pageNb < 1 ? 1 : pageNb > total ? 1 : pageNb;
     }
 
-    async getAllGameInfos(): Promise<PrivateGameInformation[]> {
+    async getAllGameInfos(): Promise<PrivateGameInformation[] | null> {
         return await this.collection.find({}).toArray();
     }
 

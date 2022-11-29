@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
-import { SocketEvent } from '@common/socket-event';
+// import { SocketEvent } from '@common/socket-event';
 import { CluesAreaComponent } from './clues-area.component';
 import { Socket } from 'socket.io-client';
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -64,15 +64,15 @@ describe('CluesAreaComponent', () => {
         expect(getClueSpy).not.toHaveBeenCalled();
     });
 
-    it('should increment clue counter when clue is asked', () => {
-        const expectedCount = 1;
-        const spySend = spyOn(component.communicationSocket, 'send');
-        component.getClue();
-        socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
-        socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
-        expect(spySend).toHaveBeenCalled();
-        expect(component.clueAskedCounter).toEqual(expectedCount);
-    });
+    // it('should increment clue counter when clue is asked', () => {
+    //     const expectedCount = 1;
+    //     const spySend = spyOn(component.communicationSocket, 'send');
+    //     component.getClue();
+    //     socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
+    //     socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
+    //     expect(spySend).toHaveBeenCalled();
+    //     expect(component.clueAskedCounter).toEqual(expectedCount);
+    // });
 
     it('should not increment clue counter when 3 clues have been asked', () => {
         const expectedCount = 3;
@@ -85,13 +85,13 @@ describe('CluesAreaComponent', () => {
         expect(component.clueAskedCounter).toEqual(expectedCount);
     });
 
-    it('should disable clue function on third clue asked', () => {
-        component.clueAskedCounter = 2;
-        const spySend = spyOn(component.communicationSocket, 'send');
-        component.getClue();
-        socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
-        socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
-        expect(spySend).toHaveBeenCalled();
-        expect(component.isDisabled).toBeTrue();
-    });
+    // it('should disable clue function on third clue asked', () => {
+    //     component.clueAskedCounter = 2;
+    //     const spySend = spyOn(component.communicationSocket, 'send');
+    //     component.getClue();
+    //     socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
+    //     socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
+    //     expect(spySend).toHaveBeenCalled();
+    //     expect(component.isDisabled).toBeTrue();
+    // });
 });

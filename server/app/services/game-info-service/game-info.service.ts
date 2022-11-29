@@ -62,7 +62,7 @@ export class GameInfoService {
         return await this.collection.find({}).toArray();
     }
 
-    async getGameInfoById(gameId: string): Promise<PrivateGameInformation> {
+    async getGameInfoById(gameId: string): Promise<PrivateGameInformation | null> {
         const filter = { id: gameId };
         return (await this.collection.find(filter).toArray())[0];
     }

@@ -46,6 +46,7 @@ describe('GameCarouselComponent', () => {
             'getNumberOfCards',
             'setCarouselInformation',
         ]);
+        spyRouterService = jasmine.createSpyObj('RouterService', ['navigate']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
         socketHelper = new SocketTestHelper();
         socketServiceMock = new SocketClientServiceMock();

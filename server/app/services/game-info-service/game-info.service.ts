@@ -97,7 +97,7 @@ export class GameInfoService {
         await this.collection.insertOne(game);
     }
 
-    async deleteGameInfoById(gameId: string): Promise<boolean> {
+    async deleteGameInfoById(gameId: string): Promise<boolean | null> {
         const filter = { id: { $eq: gameId } };
         const deletedGame = (await this.collection.findOneAndDelete(filter)).value;
 

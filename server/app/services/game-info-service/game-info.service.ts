@@ -33,7 +33,7 @@ export class GameInfoService {
         return this.databaseService.database.collection(DB_GAME_COLLECTION);
     }
 
-    async getGamesInfo(pageNb: number): Promise<GameCarousel> {
+    async getGamesInfo(pageNb: number): Promise<GameCarousel | null> {
         const nbOfGames = await this.collection.countDocuments();
         const nbOfPages = Math.ceil(nbOfGames / NB_TO_RETRIEVE);
         const currentPage = this.validatePageNumber(pageNb, nbOfPages);

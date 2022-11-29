@@ -146,7 +146,7 @@ export class DifferencesDetectionHandlerService {
                 clearInterval(interval);
             }
             if (counter % 2 === 0) {
-                ctx.rect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
+                ctx.strokeRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
                 ctx.fillStyle = 'grey';
                 ctx.stroke();
             }

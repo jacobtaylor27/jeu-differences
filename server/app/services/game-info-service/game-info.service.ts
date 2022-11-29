@@ -118,7 +118,7 @@ export class GameInfoService {
         await this.collection.updateMany({}, { $set: { soloScore: [], multiplayerScore: [] } });
     }
 
-    async resetHighScores(gameId: string): Promise<void> {
+    async resetHighScores(gameId: string): Promise<void | null> {
         await this.collection.updateOne({ id: gameId }, { $set: { soloScore: [], multiplayerScore: [] } });
     }
 

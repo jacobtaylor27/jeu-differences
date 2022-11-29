@@ -124,6 +124,10 @@ export class GameController {
                                 hasPrevious: boolean;
                             };
                         }) => {
+                            if (gameCarousel === null) {
+                                res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                                return;
+                            }
                             res.status(StatusCodes.OK).send({
                                 carouselInfo: gameCarousel.information,
                                 games: gameCarousel.games.map((game: PrivateGameInformation) => {

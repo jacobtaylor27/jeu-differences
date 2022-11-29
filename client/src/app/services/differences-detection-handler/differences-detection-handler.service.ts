@@ -140,10 +140,12 @@ export class DifferencesDetectionHandlerService {
         const width = Math.abs(quadrantCoordinate[1].x - quadrantCoordinate[0].x);
         const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);
         let counter = 0;
+        ctx.save();
         const interval = setInterval(() => {
             ctx.clearRect(quadrantCoordinate[0].x - 5, quadrantCoordinate[0].y - 5, width + 10, height + 10);
             if (counter === 5) {
                 clearInterval(interval);
+                ctx.restore();
             }
             if (counter % 2 === 0) {
                 ctx.strokeRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);

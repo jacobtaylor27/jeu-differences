@@ -62,17 +62,18 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.FetchDifferences, this.gameManager.getNbDifferenceNotFound(gameId));
             });
 
-            socket.on(SocketEvent.Clue, (clueIndex: number, gameId: string) => {
+            socket.on(SocketEvent.Clue, (gameId: string) => {
+                this.gameManager.increaseNbClueAsked(gameId);
                 const pixelResult = this.cluesService.findRandomPixel(gameId);
-                switch (clueIndex) {
+                switch (this.gameManager.getNbClues(gameId)) {
                     case 1:
-                        this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.firstCluePosition(pixelResult));
+                        this.sio.to(gameId).emit(SocketEvent.Clue, {clue : this.cluesService.firstCluePosition(pixelResult), nbClues : 1});
                         break;
                     case 2:
-                        this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.secondCluePosition(pixelResult));
+                        this.sio.to(gameId).emit(SocketEvent.Clue, {clue : this.cluesService.secondCluePosition(pixelResult), nbClues : 2});
                         break;
                     case 3:
-                        this.sio.to(gameId).emit(SocketEvent.Clue, this.cluesService.thirdCluePosition(pixelResult));
+                        this.sio.to(gameId).emit(SocketEvent.Clue, {clue : this.cluesService.thirdCluePosition(pixelResult), nbClues : 3});
                 }
                 this.sio.to(gameId).emit(SocketEvent.EventMessage, this.eventMessageService.usingClueMessage());
             });

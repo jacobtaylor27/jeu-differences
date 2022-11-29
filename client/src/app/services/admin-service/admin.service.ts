@@ -5,6 +5,7 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { SocketEvent } from '@common/socket-event';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { RouterService } from '@app/services/router-service/router.service';
 
 @Injectable({
     providedIn: 'root',

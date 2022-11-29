@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Theme } from '@app/enums/theme';
 import { AdminService } from '@app/services/admin-service/admin.service';
-import { RouterService } from '@app/services/router-service/router.service';
 
 @Component({
     selector: 'app-admin-commands',

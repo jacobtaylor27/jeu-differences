@@ -17,6 +17,17 @@ export class LimitedTimeGame {
         return this.shuffle(allGames);
     }
 
+    deleteGame(gameId: string) {
+        this.gamesShuffled.forEach((value, key) => {
+            for (let i = 0; i < value.length; i++) {
+                if (value[i].id === gameId) {
+                    value.splice(i, 1);
+                }
+            }
+            this.gamesShuffled.set(key, value);
+        });
+    }
+
     private shuffle(array: PrivateGameInformation[]) {
         let currentIndex = array.length;
         let randomIndex;

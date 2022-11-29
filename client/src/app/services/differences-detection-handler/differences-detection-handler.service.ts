@@ -141,6 +141,9 @@ export class DifferencesDetectionHandlerService {
         const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);
         let counter = 0;
         ctx.save();
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = 'yellow';
+        ctx.strokeStyle = 'red';
         const interval = setInterval(() => {
             ctx.clearRect(quadrantCoordinate[0].x - 5, quadrantCoordinate[0].y - 5, width + 10, height + 10);
             if (counter === 5) {
@@ -149,8 +152,6 @@ export class DifferencesDetectionHandlerService {
             }
             if (counter % 2 === 0) {
                 ctx.strokeRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
-                ctx.fillStyle = 'grey';
-                ctx.stroke();
             }
             counter++;
         }, FlashTimer.Classic) as unknown as number;

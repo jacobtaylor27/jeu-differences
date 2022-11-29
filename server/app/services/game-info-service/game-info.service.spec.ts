@@ -101,7 +101,7 @@ describe('GameInfo Service', async () => {
         expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(0);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(1);
     });
 
     it("addGameInfo(gameInfo) shouldn't add a game twice", async () => {

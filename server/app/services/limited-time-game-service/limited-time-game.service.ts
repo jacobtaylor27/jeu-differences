@@ -28,6 +28,11 @@ export class LimitedTimeGame {
         });
     }
 
+    deleteAllGames() {
+        this.gamesShuffled.forEach((value, key) => {
+            this.gamesShuffled.set(key, [] as PrivateGameInformation[]);
+        });
+    }
     private shuffle(array: PrivateGameInformation[]) {
         let currentIndex = array.length;
         let randomIndex;

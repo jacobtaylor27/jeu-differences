@@ -70,7 +70,11 @@ export class GameController {
             if (id && scoresSolo && scoresMulti) {
                 this.gameInfo
                     .updateHighScores(id, scoresSolo, scoresMulti)
-                    .then(() => {
+                    .then((value) => {
+                        if (value === null) {
+                            res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                            return;
+                        }
                         res.sendStatus(StatusCodes.OK);
                     })
                     .catch(() => {

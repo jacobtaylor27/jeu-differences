@@ -93,7 +93,7 @@ export class GameInfoService {
         });
     }
 
-    async addGameInfo(game: PrivateGameInformation): Promise<void> {
+    async addGameInfo(game: PrivateGameInformation): Promise<void | null> {
         await this.collection.insertOne(game);
     }
 

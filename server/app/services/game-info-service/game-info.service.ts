@@ -109,7 +109,7 @@ export class GameInfoService {
         return deletedGame !== null;
     }
 
-    async deleteAllGamesInfo(): Promise<void> {
+    async deleteAllGamesInfo(): Promise<void | null> {
         await this.bmpService.deleteAllSourceImages(this.srcPath);
         await this.collection.deleteMany({});
     }

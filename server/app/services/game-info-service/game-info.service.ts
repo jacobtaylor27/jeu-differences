@@ -139,12 +139,20 @@ export class GameInfoService {
     }
 
     async resetHighScores(gameId: string): Promise<void | null> {
-        await this.collection.updateOne({ id: gameId }, { $set: { soloScore: [], multiplayerScore: [] } });
+        try {
+            await this.collection.updateOne({ id: gameId }, { $set: { soloScore: [], multiplayerScore: [] } });
+        } catch (err) {
+            return null;
+        }
     }
 
     async getHighScores(gameId: string): Promise<{ soloScore: Score[]; multiplayerScore: Score[] } | null> {
-        const game = await this.getGameInfoById(gameId);
-        return { soloScore: game.soloScore, multiplayerScore: game.multiplayerScore };
+        try {
+            const game = (await this.getGameInfoById(gameId)) as PrivateGameInformation;
+            return { soloScore: game.soloScore, multiplayerScore: game.multiplayerScore };
+        } catch (err) {
+            return null;
+        }
     }
 
     async updateHighScores(gameId: string, soloScore: Score[], multiplayerScore: Score[]): Promise<void | null> {

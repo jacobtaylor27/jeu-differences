@@ -29,6 +29,7 @@ export class GameCarouselComponent implements OnInit, OnDestroy {
         readonly communicationService: CommunicationService,
         private readonly socketService: CommunicationSocketService,
         private readonly snackBar: MatSnackBar,
+        private readonly router: RouterService,
     ) {}
 
     ngOnInit(): void {

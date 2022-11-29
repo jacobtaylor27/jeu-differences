@@ -1,7 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { SocketEvent } from '@common/socket-event';
 const NUMBER_CLUES = 3;
 @Component({
     selector: 'app-clues-area',
@@ -12,7 +11,7 @@ export class CluesAreaComponent implements OnInit {
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
 
-    constructor(public communicationSocket: CommunicationSocketService, public gameInformation: GameInformationHandlerService) {}
+    constructor(public gameInformation: GameInformationHandlerService, private readonly clueHandlerService: ClueHandlerService) {}
 
     @HostListener('window: keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
@@ -28,10 +27,10 @@ export class CluesAreaComponent implements OnInit {
     }
 
     getClue() {
-        this.clueAskedCounter++;
+        this.clueHandlerService.getClue();
+        this.clueAskedCounter = this.clueHandlerService.getNbCluesAsked();
         if (this.clueAskedCounter === NUMBER_CLUES) {
             this.isDisabled = true;
         }
-        this.communicationSocket.send(SocketEvent.Clue, { clueIndex: this.clueAskedCounter, gameId: this.gameInformation.roomId });
     }
 }

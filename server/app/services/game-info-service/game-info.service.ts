@@ -10,8 +10,7 @@ import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
 import { GameCarousel } from '@app/interface/game-carousel';
-// can't import this otherwise
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- can't import this otherwise
 import LZString = require('lz-string');
 import { Score } from '@common/score';
 

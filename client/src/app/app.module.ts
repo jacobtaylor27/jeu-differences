@@ -41,6 +41,7 @@ import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.componen
 import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
 import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dialog-limited-time.component';
 import { MongodbErrorPageComponent } from './pages/mongodb-error-page/mongodb-error-page.component';
+import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-snackbar/no-game-snackbar.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -86,6 +87,7 @@ import { MongodbErrorPageComponent } from './pages/mongodb-error-page/mongodb-er
         RefreshSnackbarComponent,
         DialogLimitedTimeComponent,
         MongodbErrorPageComponent,
+        NoGameSnackbarComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

@@ -133,10 +133,14 @@ export class SocketManagerService {
                             SocketEvent.EventMessage,
                             this.eventMessageService.leavingGameMessage(this.gameManager.findPlayer(gameId, socket.id) as string),
                         );
-                    socket.broadcast.to(gameId).emit(SocketEvent.Win);
+                    if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                        socket.leave(gameId);
+                        this.gameManager.leaveGame(socket.id, gameId);
+                    }
+                    socket.broadcast
+                        .to(gameId)
+                        .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
                 }
-                this.gameManager.leaveGame(socket.id, gameId);
-                socket.leave(gameId);
             });
 
             socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {

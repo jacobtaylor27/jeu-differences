@@ -32,7 +32,7 @@ export class GameManagerService {
             game = new Game(playerInfo, { info: gameCard, mode, timerConstant: await this.timeConstant.getGameTimeConstant() });
             this.limitedTimeGame.gamesShuffled.set(game.identifier, gamesRandomized);
         } else {
-            gameCard = await this.gameInfo.getGameInfoById(gameCardId);
+            gameCard = (await this.gameInfo.getGameInfoById(gameCardId)) as PrivateGameInformation;
             game = new Game(playerInfo, { info: gameCard, mode });
         }
         this.games.set(game.identifier, game);

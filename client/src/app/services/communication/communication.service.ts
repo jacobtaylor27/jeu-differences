@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
-import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';

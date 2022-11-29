@@ -1,5 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { DB_URL } from '@app/constants/database';
+import { GameCarousel } from '@app/interface/game-carousel';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';

@@ -10,6 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
 import * as LZString from 'lz-string';
 import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 @Service()
 export class SocketManagerService {
@@ -21,6 +22,7 @@ export class SocketManagerService {
         private readonly multiplayerGameManager: MultiplayerGameManager,
         private eventMessageService: EventMessageService,
         private readonly scoresHandlerService: ScoresHandlerService,
+        private limitedTimeService: LimitedTimeGame,
     ) {}
 
     set server(server: http.Server) {
@@ -133,11 +135,13 @@ export class SocketManagerService {
                             SocketEvent.EventMessage,
                             this.eventMessageService.leavingGameMessage(this.gameManager.findPlayer(gameId, socket.id) as string),
                         );
-                    if (this.gameManager.findGameMode(gameId) === GameMode.Classic){
+                    if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
                         socket.leave(gameId);
                         this.gameManager.leaveGame(socket.id, gameId);
                     }
-                    socket.broadcast.to(gameId).emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
+                    socket.broadcast
+                        .to(gameId)
+                        .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
                 }
             });
 
@@ -161,6 +165,7 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.GameDeleted, (gameId: string) => {
+                this.limitedTimeService.deleteGame(gameId);
                 if (this.multiplayerGameManager.isGameWaiting(gameId, undefined)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
                     this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
@@ -174,6 +179,7 @@ export class SocketManagerService {
             });
 
             socket.on(SocketEvent.GamesDeleted, () => {
+                this.limitedTimeService.deleteAllGames();
                 for (const gameId of this.multiplayerGameManager.getGamesWaiting(GameMode.Classic)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
                     this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);

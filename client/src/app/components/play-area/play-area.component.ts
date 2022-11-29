@@ -78,6 +78,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     ngOnDestroy() {
         this.communicationSocketService.off(SocketEvent.DifferenceFound);
         this.communicationSocketService.off(SocketEvent.NewGameBoard);
+        this.communicationSocketService.off(SocketEvent.Clue);
     }
 
     onClick($event: MouseEvent, canvas: string) {

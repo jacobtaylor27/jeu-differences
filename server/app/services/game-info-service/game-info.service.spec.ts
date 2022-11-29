@@ -98,7 +98,7 @@ describe('GameInfo Service', async () => {
     });
 
     it('addGameInfo(gameInfo) should add a game to the game collection, getAllGames() should return them', async () => {
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(0);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
         expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);

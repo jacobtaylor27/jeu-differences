@@ -122,7 +122,7 @@ export class GameInfoService {
         await this.collection.updateOne({ id: gameId }, { $set: { soloScore: [], multiplayerScore: [] } });
     }
 
-    async getHighScores(gameId: string): Promise<{ soloScore: Score[]; multiplayerScore: Score[] }> {
+    async getHighScores(gameId: string): Promise<{ soloScore: Score[]; multiplayerScore: Score[] } | null> {
         const game = await this.getGameInfoById(gameId);
         return { soloScore: game.soloScore, multiplayerScore: game.multiplayerScore };
     }

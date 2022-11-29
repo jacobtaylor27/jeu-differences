@@ -13,6 +13,7 @@ import { GameId } from '@common/game-id';
 export class GameInformationHandlerService {
     players: { name: string; nbDifferences: number }[] = [];
     roomId: string;
+    $playerLeft: Subject<void> = new Subject();
     $differenceFound: Subject<string> = new Subject();
     $newGame: Subject<string> = new Subject();
     gameInformation: PublicGameInformation;

@@ -4,8 +4,8 @@ import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 // import { SocketEvent } from '@common/socket-event';
-import { CluesAreaComponent } from './clues-area.component';
 import { Socket } from 'socket.io-client';
+import { CluesAreaComponent } from './clues-area.component';
 class SocketClientServiceMock extends CommunicationSocketService {
     // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
     override connect() {}
@@ -63,16 +63,6 @@ describe('CluesAreaComponent', () => {
         componentInstance.buttonDetect(buttonEvent);
         expect(getClueSpy).not.toHaveBeenCalled();
     });
-
-    // it('should increment clue counter when clue is asked', () => {
-    //     const expectedCount = 1;
-    //     const spySend = spyOn(component.communicationSocket, 'send');
-    //     component.getClue();
-    //     socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
-    //     socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
-    //     expect(spySend).toHaveBeenCalled();
-    //     expect(component.clueAskedCounter).toEqual(expectedCount);
-    // });
 
     it('should not increment clue counter when 3 clues have been asked', () => {
         const expectedCount = 3;

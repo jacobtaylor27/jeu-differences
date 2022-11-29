@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
 import { ClueHandlerService } from './clue-handler.service';
 
@@ -30,5 +31,15 @@ describe('ClueHandlerService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it('should increment clue counter when clue is asked', () => {
+        const expectedCount = 1;
+        const spySend = spyOn(service.communicationSocket, 'send');
+        service.getClue();
+        socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
+        socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
+        expect(spySend).toHaveBeenCalled();
+        expect(service.clueAskedCounter).toEqual(expectedCount);
     });
 });

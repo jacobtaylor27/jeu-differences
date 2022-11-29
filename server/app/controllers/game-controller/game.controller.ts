@@ -56,6 +56,10 @@ export class GameController {
             this.gameInfo
                 .getHighScores(id)
                 .then((scores) => {
+                    if (scores === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     res.status(StatusCodes.OK).send(scores);
                 })
                 .catch(() => {

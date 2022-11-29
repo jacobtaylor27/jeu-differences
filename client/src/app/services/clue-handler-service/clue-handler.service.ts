@@ -20,7 +20,7 @@ export class ClueHandlerService {
         this.communicationSocket.send(SocketEvent.Clue, { clueIndex: this.clueAskedCounter, gameId: this.gameInformation.roomId });
     }
 
-    isThirdClue() {
-        return this.clueAskedCounter === 3;
+    resetNbClue() {
+        this.clueAskedCounter = 0;
     }
 }

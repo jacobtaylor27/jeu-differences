@@ -109,12 +109,11 @@ describe('GameInfo Service', async () => {
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         await expect(gameInfoService.addGameInfo(DEFAULT_GAMES[0])).to.eventually.be.rejectedWith(Error);
         expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(1);
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
     });
 
     it('resetAllGameInfo() should reset all of the games', async () => {
         await gameInfoService.deleteAllGamesInfo();
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(0);
     });
 
     it('should create a game from Bmp', async () => {

@@ -50,10 +50,8 @@ export class DialogLimitedTimeComponent {
     noGameAvailable(): boolean {
         if (this.gameCarouselService.getNumberOfCards() === 0) {
             this.openSnackBar();
-
-            return true;
         }
-        return false;
+        return this.gameCarouselService.getNumberOfCards() === 0;
     }
 
     openSnackBar() {

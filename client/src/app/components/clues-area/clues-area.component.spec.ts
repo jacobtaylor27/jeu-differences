@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
-// import { SocketEvent } from '@common/socket-event';
 import { Socket } from 'socket.io-client';
 import { CluesAreaComponent } from './clues-area.component';
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -11,13 +11,13 @@ class SocketClientServiceMock extends CommunicationSocketService {
     override connect() {}
 }
 
-describe('CluesAreaComponent', () => {
+fdescribe('CluesAreaComponent', () => {
     let component: CluesAreaComponent;
     let fixture: ComponentFixture<CluesAreaComponent>;
     let socketServiceMock: SocketClientServiceMock;
     let socketHelper: SocketTestHelper;
     let spyRouter: jasmine.SpyObj<Router>;
-
+    let spyClueHandler: jasmine.SpyObj<ClueHandlerService>;
     beforeEach(async () => {
         socketHelper = new SocketTestHelper();
         socketServiceMock = new SocketClientServiceMock();
@@ -75,13 +75,16 @@ describe('CluesAreaComponent', () => {
         expect(component.clueAskedCounter).toEqual(expectedCount);
     });
 
-    // it('should disable clue function on third clue asked', () => {
-    //     component.clueAskedCounter = 2;
-    //     const spySend = spyOn(component.communicationSocket, 'send');
-    //     component.getClue();
-    //     socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
-    //     socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
-    //     expect(spySend).toHaveBeenCalled();
-    //     expect(component.isDisabled).toBeTrue();
-    // });
+    it('should return the clue number ', () => {
+        component.getClue();
+        expect(component.clueAskedCounter).toEqual(1);
+        expect(component.isDisabled).toEqual(false);
+        spyClueHandler.getNbCluesAsked.and.callFake(() => {
+            return 3;
+        });
+        expect(spyClueHandler).toHaveBeenCalled();
+        component.getClue();
+        expect(component.clueAskedCounter).toEqual(3);
+        expect(component.isDisabled).toEqual(true);
+    });
 });

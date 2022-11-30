@@ -1,7 +1,11 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
 import { Theme } from '@app/enums/theme';
+import { CarouselResponse } from '@app/interfaces/carousel-response';
+import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { MainPageService } from '@app/services/main-page/main-page.service';
 import { GameMode } from '@common/game-mode';
 
@@ -14,13 +18,24 @@ export class MainPageComponent {
     readonly title: string = 'Jeu de différences';
     favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly mainPageService: MainPageService, private readonly matDialog: MatDialog) {}
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
+    constructor(
+        private readonly mainPageService: MainPageService,
+        private readonly matDialog: MatDialog,
+        private readonly communicationService: CommunicationService,
+        private readonly carouselService: GameCarouselService,
+    ) {}
 
     onClickPlayClassic(): void {
         this.mainPageService.setGameMode(GameMode.Classic);
     }
 
     onClickPlayLimited(): void {
+        this.communicationService.getGamesInfoByPage(1).subscribe((response: HttpResponse<CarouselResponse>) => {
+            if (response && response.body) {
+                this.carouselService.setCarouselInformation(response.body.carouselInfo);
+            }
+        });
         this.mainPageService.setGameMode(GameMode.LimitedTime);
         this.openNameDialog();
     }

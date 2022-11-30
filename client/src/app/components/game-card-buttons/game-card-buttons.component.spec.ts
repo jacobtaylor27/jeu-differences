@@ -20,7 +20,7 @@ describe('GameCardButtonsComponent', () => {
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
 
     beforeEach(async () => {
-        spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
+        spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage', 'redirectToErrorPage']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteGame', 'refreshSingleGame']);
         spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameInformation']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);

@@ -17,23 +17,15 @@ export class Game {
     private info: PrivateGameInformation;
     private context: GameContext;
 
-    constructor(
-        player: { player: User; isMulti: boolean },
-        game: { info: PrivateGameInformation; mode: GameMode; timerConstant?: GameTimeConstants },
-    ) {
-        if (game.mode === GameMode.LimitedTime) {
-            this.timerConstant = game.timerConstant as GameTimeConstants;
-        }
+    constructor(player: { player: User; isMulti: boolean }, game: { info: PrivateGameInformation; mode: GameMode }) {
         this.info = game.info;
         this.mode = game.mode;
         this.players = new Map();
         this.isMulti = player.isMulti;
-        this.getNbDifferencesFound = new Map();
-        this.getNbDifferencesTotalFound = new Set();
-        this.addPlayer(player.player);
         this.context = new GameContext(game.mode as GameMode, new InitGameState(), player.isMulti);
         this.id = v4();
         this.context.next();
+        this.addPlayer(player.player);
     }
 
     get identifier() {
@@ -76,14 +68,6 @@ export class Game {
         return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }
 
-    getAllDifferencesNotFound() {
-        return this.info.differences.filter((difference: Coordinate[]) => !this.getNbDifferencesTotalFound.has(difference));
-    }
-
-    isEven(number: number) {
-        return number % 2 === 0;
-    }
-
     isGameOver() {
         return this.context.gameState() === GameStatus.EndGame;
     }
@@ -97,7 +81,6 @@ export class Game {
             return;
         }
         this.players.set(player.id, player.name);
-        this.getNbDifferencesFound.set(player.id, new Set());
     }
 
     findPlayer(playerId: string) {

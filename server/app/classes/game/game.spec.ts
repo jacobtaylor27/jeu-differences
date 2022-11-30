@@ -177,23 +177,4 @@ describe('Game', () => {
         game.players = new Map();
         expect(game.hasNoPlayer()).to.equal(true);
     });
-
-    it('should return true is the nb of differences is even', () => {
-        expect(game.isEven(2)).to.equal(true);
-        expect(game.isEven(3)).to.equal(false);
-    });
-
-    it('should find all difference not found', () => {
-        const expectedDifferences = [
-            [
-                { x: 0, y: 0 },
-                { x: 1, y: 1 },
-            ],
-            [{ x: 3, y: 2 }],
-        ];
-        game['info'].differences = expectedDifferences;
-        expect(game.getAllDifferencesNotFound()).to.deep.equal(expectedDifferences);
-        game['getNbDifferencesTotalFound'].add(expectedDifferences[0]);
-        expect(game.getAllDifferencesNotFound()).to.deep.equal([expectedDifferences[1]]);
-    });
 });

@@ -10,7 +10,7 @@ import { GameMode } from '@common/game-mode';
 import { Score } from '@common/score';
 import { User } from '@common/user';
 import { expect } from 'chai';
-import { SinonFakeTimers, spy, stub, useFakeTimers } from 'sinon';
+import { SinonFakeTimers, stub, useFakeTimers } from 'sinon';
 
 describe('Game', () => {
     let game: Game;
@@ -46,12 +46,6 @@ describe('Game', () => {
         expect(newGame['isMulti']).to.deep.equal(expectedPlayer.isMulti);
         expect(newGame['context'].gameMode).to.equal(expectedMode as GameMode);
         expect(newGame['context'].gameState()).to.equal(expectedGameState.status());
-    });
-
-    it('should initialize the timer game constant', () => {
-        const expectedConstant = { gameTime: 60, successTime: 5, penaltyTime: 0 };
-        const newGame = new Game(expectedPlayer, { info: expectedGameInfo, mode: GameMode.LimitedTime, timerConstant: expectedConstant });
-        expect(newGame['timerConstant']).to.deep.equal(expectedConstant);
     });
 
     it('should get the id of the game', () => {

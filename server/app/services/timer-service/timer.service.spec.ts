@@ -80,6 +80,24 @@ describe('TimerService', () => {
         expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(70);
     });
 
+    it('should reset the timer to 2min if the timer is greater for limited timer game mode', () => {
+        timer['initialTime'].set(game.identifier, new Date(0));
+        timer['timerConstant'].set(game.identifier, { gameTime: 120, successTime: 5, penaltyTime: 0 });
+        difference['gamesDifferencesTotalFound'].set(game.identifier, { size: 2 } as Set<Coordinate[]>);
+        expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(120);
+    });
+
+    it('should time not found or total difference found not found', () => {
+        const gameTime = stub(timer, 'gameTime').callsFake(() => null);
+        expect(timer.calculateLimitedGameTimer('')).to.equal(0);
+        gameTime.callsFake(() => {
+            return { constant: {} as GameTimeConstants, init: new Date() };
+        });
+        stub(difference, 'totalDifferenceFound').callsFake(() => undefined);
+        expect(timer.calculateLimitedGameTimer('')).to.equal(0);
+        gameTime.callsFake(() => null);
+        expect(timer.calculateLimitedGameTimer('')).to.equal(0);
+    });
 
     it('should return 0 if no timer found', () => {
         game['id'] = 'idNotFound';

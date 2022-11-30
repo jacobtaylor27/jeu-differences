@@ -30,6 +30,12 @@ export class TimerService {
         game.next();
     }
 
+    gameTime(gameId: string) {
+        const constant = this.timerConstant.get(gameId);
+        const init = this.initialTime.get(gameId);
+        return !constant || !init ? null : { constant, init };
+    }
+
     calculateLimitedGameTimer(gameId: string): number {
         const presentTime = new Date();
         const time = this.gameTime(gameId);

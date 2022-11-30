@@ -191,17 +191,17 @@ describe('GameManagerService', () => {
     it('should check if the difference left', () => {
         const findGameSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
         expect(gameManager.nbDifferencesLeft('')).to.equal(null);
-        expect(findGameSpy.called).to.equal(true);
 
         findGameSpy.callsFake(() => true);
-        const findSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
-            return { nbDifferencesLeft: () => true };
-        });
-        expect(gameManager.nbDifferencesLeft('')).equal(true);
-        findSpy.callsFake(() => {
-            return { nbDifferencesLeft: () => false };
-        });
-        expect(gameManager.nbDifferencesLeft('')).equal(false);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(
+            () =>
+                new Game(
+                    { player: {} as User, isMulti: false },
+                    { info: { differences: [] as Coordinate[][] } as PrivateGameInformation, mode: GameMode.Classic },
+                ),
+        );
+        stub(difference, 'nbDifferencesLeft').callsFake(() => 0);
+        expect(gameManager.nbDifferencesLeft('')).equal(0);
     });
 
     it('should find a game', () => {
@@ -215,17 +215,18 @@ describe('GameManagerService', () => {
     it('should check if the game is found and the difference is not null', () => {
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => undefined);
         expect(gameManager.isDifference('', '', { x: 0, y: 0 })).to.deep.equal(null);
-        const game = { isDifferenceFound: () => null } as unknown as Game;
+        const game = {} as unknown as Game;
+        stub(difference, 'isDifferenceFound').callsFake(() => null);
         findGameSpy.callsFake(() => game);
         expect(gameManager.isDifference('', '', { x: 0, y: 0 })).to.deep.equal(null);
     });
 
     it('should return the difference within a specific coord', () => {
         const expectedDifferences = [{} as Coordinate];
-        const game = { isDifferenceFound: () => expectedDifferences } as unknown as Game;
-        const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
+        stub(difference, 'isDifferenceFound').callsFake(() => expectedDifferences);
+        const game = {} as unknown as Game;
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => game);
         expect(gameManager.isDifference('', '', { x: 0, y: 0 })).to.deep.equal(expectedDifferences);
-        expect(findGameSpy.called).to.equal(true);
     });
 
     it('should check if the game is full', () => {
@@ -430,7 +431,7 @@ describe('GameManagerService', () => {
         const expectedGame = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         const expectedDifferenceNotFound = [[{ x: 0, y: 0 }]];
         const spyFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
-        stub(expectedGame, 'getAllDifferencesNotFound').callsFake(() => expectedDifferenceNotFound);
+        stub(difference, 'getAllDifferencesNotFound').callsFake(() => expectedDifferenceNotFound);
         expect(gameManager.getNbDifferenceNotFound('')).to.deep.equal(expectedDifferenceNotFound);
         spyFindGame.callsFake(() => undefined);
         expect(gameManager.getNbDifferenceNotFound('')).to.equal(undefined);

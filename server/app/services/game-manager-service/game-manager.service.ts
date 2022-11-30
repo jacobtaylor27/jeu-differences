@@ -37,6 +37,8 @@ export class GameManagerService {
             game = new Game(playerInfo, { info: gameCard, mode });
         }
         this.games.set(game.identifier, game);
+        this.difference.setGameDifferences(game.identifier);
+        this.difference.setPlayerDifferences(game.identifier, playerInfo.player.id);
         return game.identifier;
     }
 
@@ -110,7 +112,8 @@ export class GameManagerService {
     }
 
     nbDifferencesLeft(gameId: string) {
-        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).nbDifferencesLeft() : null;
+        const game = this.findGame(gameId);
+        return this.isGameFound(gameId) ? this.difference.nbDifferencesLeft((game as Game).information.differences, gameId) : null;
     }
 
     isGameAlreadyFull(gameId: string) {
@@ -120,12 +123,16 @@ export class GameManagerService {
 
     addPlayer(player: User, gameId: string) {
         const game = this.findGame(gameId);
-
-        game?.addPlayer(player);
+        if (!game) {
+            return;
+        }
+        this.difference.setPlayerDifferences(game.identifier, player.id);
+        game.addPlayer(player);
     }
 
     getNbDifferenceNotFound(gameId: string) {
-        return this.findGame(gameId)?.getAllDifferencesNotFound();
+        const game = this.findGame(gameId);
+        return !game ? undefined : this.difference.getAllDifferencesNotFound(game.information.differences, gameId);
     }
 
     hasSameName(roomId: string, playersName: string) {

@@ -161,6 +161,17 @@ describe('GameInfo Service', async () => {
         expect(value).to.deep.equal(null);
     });
 
+    it('should return null when ad game info wrapper fails', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.addGameInfoWrapper(
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- for testing purposes
+            { original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp },
+            '',
+            0,
+        );
+        expect(value).to.deep.equal(null);
+    });
+
     it('should get the scores', async () => {
         gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         const value = await gameInfoService.getHighScores('0');

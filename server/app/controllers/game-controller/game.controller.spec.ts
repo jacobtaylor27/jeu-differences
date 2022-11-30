@@ -216,6 +216,11 @@ describe('GameController', () => {
         return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.OK);
     });
 
+    it('should send 503 when resetting the scores fails', async () => {
+        gameInfo.resetAllHighScores.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
     it('should reset scores for all games when invalid', async () => {
         gameInfo.resetAllHighScores.rejects();
         return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.BAD_REQUEST);

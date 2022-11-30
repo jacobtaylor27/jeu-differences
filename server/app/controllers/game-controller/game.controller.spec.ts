@@ -241,6 +241,17 @@ describe('GameController', () => {
         return supertest(expressApp).get('/api/game/cards?page=1').expect(StatusCodes.SERVICE_UNAVAILABLE);
     });
 
+    it('should return 503 when there is an error posting a new game', async () => {
+        gameInfo.addGameInfoWrapper.resolves().returns(Promise.resolve(null));
+        const expectedBody = {
+            original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            differenceRadius: 0,
+            name: 'test',
+        };
+        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
     it('should return Not Acceptable if the game creation has a problem', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);

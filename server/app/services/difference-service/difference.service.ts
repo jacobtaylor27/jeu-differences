@@ -17,6 +17,11 @@ export class DifferenceService {
         return this.gamesDifferencesTotalFound.get(gameId);
     }
 
+    setGameDifferences(gameId: string) {
+        this.gamesDifferencesFound.set(gameId, new Map());
+        this.gamesDifferencesTotalFound.set(gameId, new Set());
+    }
+
     findDifference(differenceCoords: Coordinate, differencesRef: Coordinate[][]): Coordinate[] | undefined {
         return differencesRef.find((difference: Coordinate[]) =>
             difference.find((coord: Coordinate) => coord.x === differenceCoords.x && coord.y === differenceCoords.y),

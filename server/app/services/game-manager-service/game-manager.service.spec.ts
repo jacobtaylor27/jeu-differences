@@ -162,14 +162,14 @@ describe('GameManagerService', () => {
             { player: { name: 'test', id: '' }, isMulti: false },
             { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
         );
-        expectedGame.setTimer();
+        timer.setTimer(expectedGame);
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);
-        expectedGame.calculateTime();
+        timer.calculateTime(expectedGame);
         expect(gameManager.getTime('1')).to.equal(null);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
 
-        expect(gameManager.getTime('1')).to.equal(expectedGame.seconds);
+        expect(gameManager.getTime('1')).to.equal(timer.seconds(expectedGame));
     });
 
     it('should check if the game is over', () => {

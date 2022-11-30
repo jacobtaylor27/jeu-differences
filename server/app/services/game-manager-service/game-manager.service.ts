@@ -29,7 +29,8 @@ export class GameManagerService {
         if (mode === GameMode.LimitedTime) {
             const gamesRandomized = await this.limitedTimeGame.generateGames();
             gameCard = gamesRandomized[0];
-            game = new Game(playerInfo, { info: gameCard, mode, timerConstant: await this.timeConstant.getGameTimeConstant() });
+            game = new Game(playerInfo, { info: gameCard, mode });
+            await this.timer.setTimerConstant(mode, game.identifier);
             this.limitedTimeGame.gamesShuffled.set(game.identifier, gamesRandomized);
         } else {
             gameCard = await this.gameInfo.getGameInfoById(gameCardId);
@@ -60,7 +61,7 @@ export class GameManagerService {
     }
 
     setTimer(gameId: string) {
-        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).setTimer() : null;
+        return this.isGameFound(gameId) ? this.timer.setTimer(this.findGame(gameId) as Game) : null;
     }
 
     sendTimer(sio: Server, gameId: string, playerId: string) {
@@ -91,12 +92,13 @@ export class GameManagerService {
     }
 
     getTime(gameId: string) {
-        return this.findGame(gameId) ? (this.findGame(gameId) as Game).seconds : null;
+        const game = this.findGame(gameId);
+        return game ? this.timer.seconds(game) : null;
     }
 
     isDifference(gameId: string, playerId: string, coord: Coordinate) {
         const game = this.findGame(gameId);
-        return !game ? null : game.isDifferenceFound(playerId, coord);
+        return !game ? null : this.difference.isDifferenceFound(playerId, coord, game);
     }
 
     isGameFound(gameId: string) {

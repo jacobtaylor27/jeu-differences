@@ -178,6 +178,11 @@ describe('GameInfo Service', async () => {
         expect(value).to.deep.equal(null);
     });
 
+    it('should return null when trying to delete all games info and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.deleteAllGamesInfo();
+        expect(value).to.deep.equal(null);
+    });
 
     it('should return null when trying to reset all scores and failing', async () => {
         await databaseService.close();

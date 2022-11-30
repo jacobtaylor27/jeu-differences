@@ -62,10 +62,6 @@ export class Game {
         return this.context.gameState();
     }
 
-    get seconds() {
-        return this.calculateTime();
-    }
-
     setEndgame() {
         this.context.end();
     }

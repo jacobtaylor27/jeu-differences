@@ -1,5 +1,7 @@
+import { Game } from '@app/classes/game/game';
 import { DifferenceService } from '@app/services/difference-service/difference.service';
 import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
+import { GameMode } from '@common/game-mode';
 import { GameTimeConstants } from '@common/game-time-constants';
 import { Service } from 'typedi';
 
@@ -12,4 +14,9 @@ export class TimerService {
         this.timerConstant = new Map();
         this.initialTime = new Map();
     }
+
+    seconds(game: Game) {
+        return this.calculateTime(game);
+    }
+
 }

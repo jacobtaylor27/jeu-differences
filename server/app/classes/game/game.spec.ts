@@ -66,11 +66,6 @@ describe('Game', () => {
         expect(game.information).to.equal(expectedGameInfo);
     });
 
-    it('should get the seconds of the timer of the game', () => {
-        stub(game, 'calculateTime').callsFake(() => 2);
-        expect(game.seconds).to.equal(2);
-    });
-
     it('should set end game', () => {
         game.setEndgame();
         expect(game['context'].gameState()).to.equal(GameStatus.EndGame);

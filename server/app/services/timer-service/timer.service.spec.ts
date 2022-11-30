@@ -1,11 +1,15 @@
 import { Game } from '@app/classes/game/game';
+import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { DifferenceService } from '@app/services/difference-service/difference.service';
 import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
 import { TimerService } from '@app/services/timer-service/timer.service';
+import { Coordinate } from '@common/coordinate';
 import { GameMode } from '@common/game-mode';
+import { GameTimeConstants } from '@common/game-time-constants';
 import { User } from '@common/user';
-import { restore, SinonFakeTimers, useFakeTimers } from 'sinon';
+import { expect } from 'chai';
+import { restore, SinonFakeTimers, stub, useFakeTimers } from 'sinon';
 import { Container } from 'typedi';
 
 describe('TimerService', () => {
@@ -27,4 +31,11 @@ describe('TimerService', () => {
         restore();
         clock.restore();
     });
+
+
+    it('should get the seconds of the timer of the game', () => {
+        stub(timer, 'calculateTime').callsFake(() => 2);
+        expect(timer.seconds(game)).to.equal(2);
+    });
+
 });

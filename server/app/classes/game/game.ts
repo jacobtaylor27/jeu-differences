@@ -74,22 +74,6 @@ export class Game {
         this.currentIndex++;
     }
 
-    calculateLimitedGameTimer(): number {
-        const presentTime = new Date();
-        let timer =
-            this.timerConstant.gameTime -
-            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000) +
-            this.timerConstant.successTime * this.getNbDifferencesTotalFound.size -
-            this.timerConstant.penaltyTime * 0; // TO DO : multiply by the nb of clue activate
-        if (timer > 120) {
-            const differenceLimitTime = timer - 120;
-            this.initialTime.setTime(this.initialTime.getTime() - differenceLimitTime * 1000);
-            timer -= differenceLimitTime;
-        }
-        return timer;
-    }
-
     calculateTime(): number {
         const presentTime = new Date();
         if (this.mode === GameMode.Classic) {

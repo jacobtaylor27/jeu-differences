@@ -78,18 +78,6 @@ describe('Game', () => {
         clock.tick(5000);
         expect(game.calculateTime()).to.equal(5);
     });
-
-    // Test needs to be changed with admins command
-    it('should calculate time in mode Limited', () => {
-        game['mode'] = GameMode.LimitedTime;
-        const spyCalculateLimitedTimer = stub(game, 'calculateLimitedGameTimer').callsFake(() => 1);
-        expect(game.calculateTime()).to.equal(1);
-        expect(spyCalculateLimitedTimer.called).to.equal(true);
-        spyCalculateLimitedTimer.callsFake(() => 0);
-        expect(game.calculateTime()).to.equal(0);
-        expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
-    });
-
     it('should get the status of the game', () => {
         const expectGameState = new InitGameState();
         stub(game['context'], 'gameState').callsFake(() => expectGameState.status());
@@ -348,25 +336,5 @@ describe('Game', () => {
         expect(game.getAllDifferencesNotFound()).to.deep.equal(expectedDifferences);
         game['getNbDifferencesTotalFound'].add(expectedDifferences[0]);
         expect(game.getAllDifferencesNotFound()).to.deep.equal([expectedDifferences[1]]);
-    });
-
-    it('should calculate the time for limited timer game mode', () => {
-        game['initialTime'] = new Date(0);
-        game['timerConstant'] = { gameTime: 60, successTime: 0, penaltyTime: 0 };
-        expect(game.calculateLimitedGameTimer()).to.equal(60);
-    });
-
-    it('should add time if difference is found for limited timer game mode', () => {
-        game['initialTime'] = new Date(0);
-        game['timerConstant'] = { gameTime: 60, successTime: 5, penaltyTime: 0 };
-        game['getNbDifferencesTotalFound'] = { size: 2 } as Set<Coordinate[]>;
-        expect(game.calculateLimitedGameTimer()).to.equal(70);
-    });
-
-    it('should reset the timer to 2min if the timer is greater for limited timer game mode', () => {
-        game['initialTime'] = new Date(0);
-        game['timerConstant'] = { gameTime: 120, successTime: 5, penaltyTime: 0 };
-        game['getNbDifferencesTotalFound'] = { size: 2 } as Set<Coordinate[]>;
-        expect(game.calculateLimitedGameTimer()).to.equal(120);
     });
 });

@@ -25,4 +25,25 @@ export class TimerService {
         game.next();
     }
 
+    calculateLimitedGameTimer(gameId: string): number {
+        const presentTime = new Date();
+        const time = this.gameTime(gameId);
+        const totalDifferenceFound = this.differences.totalDifferenceFound(gameId);
+        if (!time || !totalDifferenceFound) {
+            return 0;
+        }
+        let timer =
+            time.constant.gameTime -
+            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
+            Math.floor((presentTime.getTime() - time.init.getTime()) / 1000) +
+            time.constant.successTime * totalDifferenceFound.size -
+            time.constant.penaltyTime * 0; // TO DO : multiply by the nb of clue activate
+        if (timer > 120) {
+            const differenceLimitTime = timer - 120;
+            time.init.setTime(time.init.getTime() - differenceLimitTime * 1000);
+            timer -= differenceLimitTime;
+        }
+        return timer;
+    }
+
 }

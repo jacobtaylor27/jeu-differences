@@ -43,4 +43,33 @@ describe('TimerService', () => {
         expect(timer.seconds(game)).to.equal(2);
     });
 
+
+    // Test needs to be changed with admins command
+    it('should calculate time in mode Limited', () => {
+        game['mode'] = GameMode.LimitedTime;
+        timer['initialTime'].set(game.identifier, new Date());
+        const spyCalculateLimitedTimer = stub(timer, 'calculateLimitedGameTimer').callsFake(() => 1);
+        expect(timer.calculateTime(game)).to.equal(1);
+        expect(spyCalculateLimitedTimer.called).to.equal(true);
+        spyCalculateLimitedTimer.callsFake(() => 0);
+        expect(timer.calculateTime(game)).to.equal(0);
+        expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
+    });
+
+    it('should calculate the time for limited timer game mode', () => {
+        timer['initialTime'].set(game.identifier, new Date(0));
+        timer['timerConstant'].set(game.identifier, { gameTime: 60, successTime: 0, penaltyTime: 0 });
+        stub(difference, 'totalDifferenceFound').callsFake(() => new Set());
+        expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(60);
+    });
+
+    it('should add time if difference is found for limited timer game mode', () => {
+        timer['initialTime'].set(game.identifier, new Date(0));
+        timer['timerConstant'].set(game.identifier, { gameTime: 60, successTime: 5, penaltyTime: 0 });
+        stub(difference, 'totalDifferenceFound').callsFake(() => {
+            return { size: 2 } as Set<Coordinate[]>;
+        });
+        difference['gamesDifferencesTotalFound'].set(game.identifier, { size: 2 } as Set<Coordinate[]>);
+        expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(70);
+    });
 });

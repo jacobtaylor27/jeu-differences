@@ -17,6 +17,7 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { AdminCommandsComponent } from './components/admin-commands/admin-commands.component';
 import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
+import { CentralBoxComponent } from './components/central-tool-box/central-tool-box.component';
 import { ChatBoxComponent } from './components/chat-box/chat-box.component';
 import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { CommonToolBoxComponent } from './components/common-tool-box/common-tool-box.component';
@@ -87,6 +88,7 @@ import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.componen
         RejectedDialogComponent,
         RefreshSnackbarComponent,
         DialogLimitedTimeComponent,
+        CentralBoxComponent,
         NoGameSnackbarComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],

@@ -50,7 +50,7 @@ export class GameManagerService {
             const gamesToPlay = this.limitedTimeGame.getGamesToPlay(gameId);
             if (!gamesToPlay) {
                 return;
-            } else if (gamesToPlay.length === game.currentIndex) {
+            } else if (gamesToPlay.length <= game.currentIndex) {
                 game.setEndgame();
                 return;
             } else {

@@ -11,7 +11,7 @@ class SocketClientServiceMock extends CommunicationSocketService {
     override connect() {}
 }
 
-fdescribe('CluesAreaComponent', () => {
+describe('CluesAreaComponent', () => {
     let component: CluesAreaComponent;
     let fixture: ComponentFixture<CluesAreaComponent>;
     let socketServiceMock: SocketClientServiceMock;

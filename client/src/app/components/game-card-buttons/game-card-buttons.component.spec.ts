@@ -88,4 +88,9 @@ describe('GameCardButtonsComponent', () => {
         expect(spyCommunicationService.refreshSingleGame).toHaveBeenCalled();
         expect(spyRouterService.reloadPage).toHaveBeenCalled();
     });
-});
+
+    it('should redirect to error page when onclick delete game fails', () => {
+        spyCommunicationService.deleteGame.and.returnValue(throwError(() => new Error('error')));
+        component.onClickDeleteGame(gameCard1);
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
+    });

@@ -23,6 +23,7 @@ describe('CluesAreaComponent', () => {
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
+        spyClueHandler = jasmine.createSpyObj('ClueHandlerService', ['getClue', 'getNbCluesAsked']);
 
         await TestBed.configureTestingModule({
             declarations: [CluesAreaComponent],
@@ -30,6 +31,7 @@ describe('CluesAreaComponent', () => {
             providers: [
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
                 { provide: Router, useValue: spyRouter },
+                { provide: ClueHandlerService, useValue: spyClueHandler },
             ],
         }).compileComponents();
 
@@ -76,15 +78,16 @@ describe('CluesAreaComponent', () => {
     });
 
     it('should return the clue number ', () => {
+        spyClueHandler.getNbCluesAsked.and.callFake(() => {
+            return 1;
+        });
         component.getClue();
         expect(component.clueAskedCounter).toEqual(1);
         expect(component.isDisabled).toEqual(false);
         spyClueHandler.getNbCluesAsked.and.callFake(() => {
             return 3;
         });
-        expect(spyClueHandler).toHaveBeenCalled();
         component.getClue();
         expect(component.clueAskedCounter).toEqual(3);
-        expect(component.isDisabled).toEqual(true);
     });
 });

@@ -32,6 +32,7 @@ export class CreateGamePageComponent {
         private canvasEventHandler: CanvasEventHandlerService,
         exitButtonService: ExitButtonHandlerService,
     ) {
+        this.drawService.initialize();
         this.drawingImage.set(CanvasType.Left, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
         this.drawingImage.set(CanvasType.Right, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
         this.drawService.addDrawingCanvas(CanvasType.Left);

@@ -8,6 +8,7 @@
                 <app-draw-canvas [canvasType]="canvasType.Left" id="imgDiff"></app-draw-canvas>
                 <app-tool-box [canvasType]="canvasType.Left" class="toolbox-specific" [ngStyle]="{ 'width.vw': 30 }"></app-tool-box>
             </div>
+            <app-central-tool-box></app-central-tool-box>
             <div class="drawImg">
                 <label for="imgSource">Tableau à dessin #2</label>
                 <app-draw-canvas [canvasType]="canvasType.Right" id="imgSource"></app-draw-canvas>

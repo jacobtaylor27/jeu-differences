@@ -18,8 +18,9 @@ label {
 
 .img-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    gap: 2vw;
 }
 
 .toolbox-container {

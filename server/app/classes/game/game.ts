@@ -68,15 +68,6 @@ export class Game {
         this.currentIndex++;
     }
 
-    isDifferenceFound(playerId: string, differenceCoords: Coordinate) {
-        const differences = this.findDifference(differenceCoords);
-        if (!differences || this.isDifferenceAlreadyFound(differences)) {
-            return null;
-        }
-        this.addCoordinatesOnDifferenceFound(playerId, differences);
-        return differences;
-    }
-
     next() {
         this.context.next();
     }

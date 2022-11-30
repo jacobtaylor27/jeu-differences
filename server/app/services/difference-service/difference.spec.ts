@@ -142,4 +142,21 @@ describe('DifferenceService', () => {
         const expectedDifferences = [expectedDifferencesFound];
         expect(difference.findDifference({ x: 0, y: 0 }, expectedDifferences)).to.deep.equal(expectedDifferencesFound);
     });
+
+    it('should return null if no difference is found or already found', () => {
+        const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
+        const findDifferenceSpy = stub(difference, 'findDifference').callsFake(() => undefined);
+        expect(difference.isDifferenceFound('', {} as Coordinate, game)).to.equal(null);
+        expect(findDifferenceSpy.called).to.equal(true);
+        const expectedDifferences = [] as Coordinate[];
+        findDifferenceSpy.callsFake(() => expectedDifferences);
+        const isDifferenceAlreadyFoundSpy = stub(difference, 'isDifferenceAlreadyFound').callsFake(() => true);
+        expect(difference.isDifferenceFound('', {} as Coordinate, game)).to.equal(null);
+        expect(isDifferenceAlreadyFoundSpy.called).to.equal(true);
+        isDifferenceAlreadyFoundSpy.callsFake(() => false);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const addCoordinatesOnDifferenceFoundSpy = stub(difference, 'addCoordinatesOnDifferenceFound').callsFake(() => {});
+        expect(difference.isDifferenceFound('', {} as Coordinate, game)).to.equal(expectedDifferences);
+        expect(addCoordinatesOnDifferenceFoundSpy.called).to.equal(true);
+    });
 });

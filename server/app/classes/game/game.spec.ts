@@ -124,22 +124,6 @@ describe('Game', () => {
         expect(game.nbDifferencesLeft()).to.equal(expectedDifference.length - expectedDifferenceFound.size);
     });
 
-    it('should return null if no difference is found or already found', () => {
-        const findDifferenceSpy = stub(game, 'findDifference').callsFake(() => undefined);
-        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);
-        expect(findDifferenceSpy.called).to.equal(true);
-        const expectedDifferences = [] as Coordinate[];
-        findDifferenceSpy.callsFake(() => expectedDifferences);
-        const isDifferenceAlreadyFoundSpy = stub(game, 'isDifferenceAlreadyFound').callsFake(() => true);
-        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);
-        expect(isDifferenceAlreadyFoundSpy.called).to.equal(true);
-        isDifferenceAlreadyFoundSpy.callsFake(() => false);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
-        const addCoordinatesOnDifferenceFoundSpy = stub(game, 'addCoordinatesOnDifferenceFound').callsFake(() => {});
-        expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(expectedDifferences);
-        expect(addCoordinatesOnDifferenceFoundSpy.called).to.equal(true);
-    });
-
     it('should get if the game is in multi or not', () => {
         expect(game.multi).to.equal(false);
         game['isMulti'] = true;

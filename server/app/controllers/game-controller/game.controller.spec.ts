@@ -236,6 +236,11 @@ describe('GameController', () => {
         return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.SERVICE_UNAVAILABLE);
     });
 
+    it('should return 503 when there is and error getting the cards', async () => {
+        gameInfo.getGamesInfo.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).get('/api/game/cards?page=1').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
     it('should return Not Acceptable if the game creation has a problem', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);

@@ -228,29 +228,4 @@ describe('GameController', () => {
         };
         return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.NOT_ACCEPTABLE);
     });
-
-    it('should return the scores of a specific game when valid', async () => {
-        gameInfo.getHighScores.resolves({ soloScore: [], multiplayerScore: [] });
-        return supertest(expressApp).get('/api/game/scores/0').expect(StatusCodes.OK);
-    });
-
-    it('should get scores and return not found when invalid', async () => {
-        gameInfo.getHighScores.rejects();
-        return supertest(expressApp).get('/api/game/scores/0').expect(StatusCodes.NOT_FOUND);
-    });
-
-    it('should update the scores when valid request', async () => {
-        gameInfo.updateHighScores.resolves();
-        return supertest(expressApp).patch('/api/game/scores/0').send({ scoresSolo: [], scoresMulti: [] }).expect(StatusCodes.OK);
-    });
-
-    it('should return bad request when invalid body request for updating the scores', async () => {
-        gameInfo.updateHighScores.resolves();
-        return supertest(expressApp).patch('/api/game/scores/0').send({ scoresSolo: [] }).expect(StatusCodes.BAD_REQUEST);
-    });
-
-    it('should return bad request when invalid', async () => {
-        gameInfo.updateHighScores.rejects();
-        return supertest(expressApp).patch('/api/game/scores/0').send({ scoresSolo: [], scoresMulti: [] }).expect(StatusCodes.BAD_REQUEST);
-    });
 });

@@ -39,6 +39,7 @@ describe('AdminService', () => {
     });
 
     it('deleteAllGames should call deleteGames from game communication service', () => {
+        spyCommunicationService.deleteAllGameCards.and.returnValue(of(void 0));
         service.deleteAllGames();
         expect(spyCommunicationService.deleteAllGameCards).toHaveBeenCalled();
     });

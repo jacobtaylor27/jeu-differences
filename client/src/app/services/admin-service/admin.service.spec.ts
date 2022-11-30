@@ -26,6 +26,7 @@ describe('AdminService', () => {
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: CommunicationService, useValue: spyCommunicationService },
                 { provide: GameCarouselService, useValue: spyCarouselService },
+                { provide: RouterService, useValue: spyRouterService },
             ],
         });
         service = TestBed.inject(AdminService);

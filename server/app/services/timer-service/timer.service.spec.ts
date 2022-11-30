@@ -32,6 +32,11 @@ describe('TimerService', () => {
         clock.restore();
     });
 
+    it('should set timer', () => {
+        timer.setTimer(game);
+        expect(timer['initialTime'].get(game.identifier)?.getDate()).to.equal(new Date().getDate());
+        expect(game.status).to.equal(GameStatus.FindDifference);
+    });
 
     it('should get the seconds of the timer of the game', () => {
         stub(timer, 'calculateTime').callsFake(() => 2);

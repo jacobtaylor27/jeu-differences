@@ -108,12 +108,6 @@ describe('Game', () => {
         expect(game.currentIndex).to.equal(1);
     });
 
-    it('should set timer', () => {
-        game.setTimer();
-        expect(game['initialTime'].getDate()).to.equal(new Date().getDate());
-        expect(game.status).to.equal(GameStatus.FindDifference);
-    });
-
     it('should go to the next state of the game', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const stateSpyObj = stub(game['context'], 'next').callsFake(() => {});

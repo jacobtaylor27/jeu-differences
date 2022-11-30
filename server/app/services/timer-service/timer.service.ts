@@ -19,4 +19,10 @@ export class TimerService {
         return this.calculateTime(game);
     }
 
+
+    setTimer(game: Game) {
+        this.initialTime.set(game.identifier, new Date());
+        game.next();
+    }
+
 }

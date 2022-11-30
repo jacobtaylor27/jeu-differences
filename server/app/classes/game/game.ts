@@ -74,11 +74,6 @@ export class Game {
         this.currentIndex++;
     }
 
-    setTimer() {
-        this.initialTime = new Date();
-        this.context.next();
-    }
-
     calculateLimitedGameTimer(): number {
         const presentTime = new Date();
         let timer =

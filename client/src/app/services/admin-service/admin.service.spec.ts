@@ -65,3 +65,10 @@ describe('AdminService', () => {
         service.refreshAllGames();
         expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
     });
+
+    it('should redirect to error page when there is an error deleting the games', () => {
+        spyCommunicationService.deleteAllGameCards.and.returnValue(throwError(() => new Error('error')));
+        service.deleteAllGames();
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
+    });
+});

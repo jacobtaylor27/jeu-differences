@@ -59,4 +59,9 @@ describe('AdminService', () => {
         service.refreshAllGames();
         expect(spyCommunicationService.refreshAllGames).toHaveBeenCalled();
     });
-});
+
+    it('should redirect to error page on error', () => {
+        spyCommunicationService.refreshAllGames.and.returnValue(throwError(() => new Error('error')));
+        service.refreshAllGames();
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
+    });

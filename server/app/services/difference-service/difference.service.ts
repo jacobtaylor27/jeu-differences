@@ -1,4 +1,6 @@
+import { Game } from '@app/classes/game/game';
 import { Coordinate } from '@common/coordinate';
+import { GameMode } from '@common/game-mode';
 import { Service } from 'typedi';
 
 @Service()
@@ -54,6 +56,10 @@ export class DifferenceService {
         return game.multi
             ? player.size === this.getNbDifferencesThreshold(game.information.differences)
             : player.size === game.information.differences.length;
+    }
+
+    getNbDifferencesThreshold(differencesRef: Coordinate[][]) {
+        return differencesRef.length % 2 === 0 ? differencesRef.length / 2 : Math.trunc(differencesRef.length / 2) + 1;
     }
 
 }

@@ -76,14 +76,6 @@ export class Game {
         return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }
 
-    getNbDifferencesThreshold() {
-        if (this.isEven(this.info.differences.length)) {
-            return this.info.differences.length / 2;
-        } else {
-            return Math.trunc(this.info.differences.length / 2) + 1;
-        }
-    }
-
     getAllDifferencesNotFound() {
         return this.info.differences.filter((difference: Coordinate[]) => !this.getNbDifferencesTotalFound.has(difference));
     }

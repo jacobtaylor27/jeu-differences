@@ -17,6 +17,14 @@ describe('DifferenceService', () => {
     afterEach(() => {
         restore();
     });
+
+    it('should return the threshold to win a game', () => {
+        const expectedDifferencesRef = [[{} as Coordinate], [{} as Coordinate], [{} as Coordinate], [{} as Coordinate]];
+        expect(difference.getNbDifferencesThreshold(expectedDifferencesRef)).to.equal(2);
+        expectedDifferencesRef.push([{} as Coordinate]);
+        expect(difference.getNbDifferencesThreshold(expectedDifferencesRef)).to.equal(3);
+    });
+
     it('should find all difference not found', () => {
         const expectedDifferences = [
             [

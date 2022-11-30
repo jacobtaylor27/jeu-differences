@@ -128,14 +128,7 @@ export class GameManagerService {
 
     hasSameName(roomId: string, playersName: string) {
         const game = this.findGame(roomId);
-        if (game) {
-            for (const [, value] of game.players.entries()) {
-                if (value === playersName) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return !game ? false : Array.from(game.players.values()).includes(playersName);
     }
 
     isGameMultiplayer(gameId: string) {

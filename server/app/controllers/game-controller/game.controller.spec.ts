@@ -231,6 +231,11 @@ describe('GameController', () => {
         return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.SERVICE_UNAVAILABLE);
     });
 
+    it("should return 503 when there's an error deleting all games", async () => {
+        gameInfo.deleteAllGamesInfo.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
     it('should return Not Acceptable if the game creation has a problem', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);

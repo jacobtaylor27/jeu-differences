@@ -109,12 +109,8 @@ export class GameInfoService {
         }
     }
 
-    async addGameInfo(game: PrivateGameInformation): Promise<void | null> {
-        try {
-            await this.collection.insertOne(game);
-        } catch (err) {
-            return null;
-        }
+    async addGameInfo(game: PrivateGameInformation): Promise<void> {
+        await this.collection.insertOne(game);
     }
 
     async deleteGameInfoById(gameId: string): Promise<boolean | null> {

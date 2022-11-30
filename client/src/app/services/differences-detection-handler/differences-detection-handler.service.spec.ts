@@ -204,4 +204,14 @@ describe('DifferencesDetectionHandlerService', () => {
         socketHelper.peerSideEmit(SocketEvent.DifferenceNotFound);
         expect(spyDifferenceNotDetected).toHaveBeenCalled();
     });
+
+    it('should show a clue', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const coord: Coordinate[] = [{ x: 0, y: 0 }];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
+        const spyDrawRect = spyOn<any>(service, 'drawRect').and.callFake(() => {});
+        service.showClue(ctx, coord);
+        expect(spyDrawRect).toHaveBeenCalled();
+    });
 });

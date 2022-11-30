@@ -107,17 +107,6 @@ export class Game {
         return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }
 
-    isAllDifferenceFound(playerId: string): boolean {
-        const player = this.getNbDifferencesFound.get(playerId);
-
-        // if the game is already over all the differences are found and if the game is not initialize, 0 difference found
-        if (this.isGameInitialize() || this.isGameOver() || !player) {
-            return this.isGameOver();
-        }
-
-        return this.isMulti ? player.size === this.getNbDifferencesThreshold() : player.size === this.info.differences.length;
-    }
-
     getNbDifferencesThreshold() {
         if (this.isEven(this.info.differences.length)) {
             return this.info.differences.length / 2;

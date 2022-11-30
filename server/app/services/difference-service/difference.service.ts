@@ -22,6 +22,15 @@ export class DifferenceService {
         this.gamesDifferencesTotalFound.set(gameId, new Set());
     }
 
+    setPlayerDifferences(gameId: string, playerId: string) {
+        const game = this.gamesDifferencesFound.get(gameId);
+        if (!game) {
+            return null;
+        }
+        game.set(playerId, new Set());
+        return;
+    }
+
     findDifference(differenceCoords: Coordinate, differencesRef: Coordinate[][]): Coordinate[] | undefined {
         return differencesRef.find((difference: Coordinate[]) =>
             difference.find((coord: Coordinate) => coord.x === differenceCoords.x && coord.y === differenceCoords.y),

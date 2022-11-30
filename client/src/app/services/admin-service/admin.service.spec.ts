@@ -18,6 +18,7 @@ describe('AdminService', () => {
     beforeEach(() => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards', 'refreshAllGames']);
         spyCarouselService = jasmine.createSpyObj('GameCarouselService', ['hasCards']);
+        spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage', 'redirectToErrorPage']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule],

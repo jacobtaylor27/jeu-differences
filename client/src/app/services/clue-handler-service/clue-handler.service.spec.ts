@@ -42,4 +42,10 @@ describe('ClueHandlerService', () => {
         expect(spySend).toHaveBeenCalled();
         expect(service.clueAskedCounter).toEqual(expectedCount);
     });
+
+    it('should return the number of clue asked', () => {
+        service.clueAskedCounter = 3;
+        const result = service.getNbCluesAsked();
+        expect(result).toEqual(3);
+    });
 });

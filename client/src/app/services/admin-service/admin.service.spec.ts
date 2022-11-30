@@ -13,6 +13,7 @@ describe('AdminService', () => {
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
     let spyCarouselService: jasmine.SpyObj<GameCarouselService>;
+    let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(() => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards', 'refreshAllGames']);

@@ -172,6 +172,12 @@ describe('GameInfo Service', async () => {
         expect(value).to.deep.equal(null);
     });
 
+    it('should return null when trying to delete game info by id and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.deleteGameInfoById('0');
+        expect(value).to.deep.equal(null);
+    });
+
     it('should get the scores', async () => {
         gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         const value = await gameInfoService.getHighScores('0');

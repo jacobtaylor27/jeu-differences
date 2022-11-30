@@ -8,7 +8,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { GameCardButtonsComponent } from './game-card-buttons.component';
 
 describe('GameCardButtonsComponent', () => {

@@ -149,6 +149,12 @@ describe('GameInfo Service', async () => {
         expect(value.games).to.deep.equal([]);
     });
 
+    it('should return null when getting games info based on page fails', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.getGamesInfo(1);
+        expect(value).to.deep.equal(null);
+    });
+
     it('should get the scores', async () => {
         gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         const value = await gameInfoService.getHighScores('0');

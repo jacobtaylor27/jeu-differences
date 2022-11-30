@@ -55,6 +55,7 @@ describe('AdminService', () => {
     });
 
     it('should call refreshAllGames from communication service', () => {
+        spyCommunicationService.refreshAllGames.and.returnValue(of(void 0));
         service.refreshAllGames();
         expect(spyCommunicationService.refreshAllGames).toHaveBeenCalled();
     });

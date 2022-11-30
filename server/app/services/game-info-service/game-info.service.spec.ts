@@ -179,6 +179,12 @@ describe('GameInfo Service', async () => {
     });
 
 
+    it('should return null when trying to reset all scores and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.resetAllHighScores();
+        expect(value).to.deep.equal(null);
+    });
+
     it('should return null when trying to reset single score and failing', async () => {
         await databaseService.close();
         const value = await gameInfoService.resetHighScores('0');

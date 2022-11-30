@@ -71,13 +71,6 @@ describe('Game', () => {
         expect(game['context'].gameState()).to.equal(GameStatus.EndGame);
     });
 
-    it('should calculate time in mode Classic', () => {
-        game['mode'] = GameMode.Classic;
-        game.setTimer();
-        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
-        clock.tick(5000);
-        expect(game.calculateTime()).to.equal(5);
-    });
     it('should get the status of the game', () => {
         const expectGameState = new InitGameState();
         stub(game['context'], 'gameState').callsFake(() => expectGameState.status());

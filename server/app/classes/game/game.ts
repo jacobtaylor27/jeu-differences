@@ -3,9 +3,7 @@ import { GameContext } from '@app/classes/game-context/game-context';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { Coordinate } from '@common/coordinate';
 import { GameMode } from '@common/game-mode';
-import { GameTimeConstants } from '@common/game-time-constants';
 import { User } from '@common/user';
 import { v4 } from 'uuid';
 
@@ -16,12 +14,8 @@ export class Game {
     private id: string;
     private mode: GameMode;
     private isMulti: boolean;
-    private timerConstant: GameTimeConstants;
     private info: PrivateGameInformation;
-    private getNbDifferencesFound: Map<string, Set<Coordinate[]>>;
-    private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
-    private initialTime: Date;
 
     constructor(
         player: { player: User; isMulti: boolean },
@@ -72,21 +66,6 @@ export class Game {
 
     nextIndex() {
         this.currentIndex++;
-    }
-
-    calculateTime(): number {
-        const presentTime = new Date();
-        if (this.mode === GameMode.Classic) {
-            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
-        } else {
-            // TO DO : ADD ADMINS TIME
-            const time = this.calculateLimitedGameTimer();
-            if (time === 0) {
-                this.context.end();
-            }
-            return time;
-        }
     }
 
     findDifference(differenceCoords: Coordinate): Coordinate[] | undefined {

@@ -46,4 +46,22 @@ export class TimerService {
         return timer;
     }
 
+    calculateTime(game: Game): number {
+        const presentTime = new Date();
+        const time = this.initialTime.get(game.identifier);
+        if (!time) {
+            return 0;
+        }
+        if (game.gameMode === GameMode.Classic) {
+            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
+            return Math.floor((presentTime.getTime() - time.getTime()) / 1000);
+        } else {
+            // TO DO : ADD ADMINS TIME
+            const limitedTime = this.calculateLimitedGameTimer(game.identifier);
+            if (limitedTime === 0) {
+                game.setEndgame();
+            }
+            return limitedTime;
+        }
+    }
 }

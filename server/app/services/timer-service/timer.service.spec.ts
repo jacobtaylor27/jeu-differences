@@ -43,6 +43,13 @@ describe('TimerService', () => {
         expect(timer.seconds(game)).to.equal(2);
     });
 
+    it('should calculate time in mode Classic', () => {
+        game['mode'] = GameMode.Classic;
+        timer.setTimer(game);
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
+        clock.tick(5000);
+        expect(timer.calculateTime(game)).to.equal(5);
+    });
 
     // Test needs to be changed with admins command
     it('should calculate time in mode Limited', () => {
@@ -71,5 +78,11 @@ describe('TimerService', () => {
         });
         difference['gamesDifferencesTotalFound'].set(game.identifier, { size: 2 } as Set<Coordinate[]>);
         expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(70);
+    });
+
+
+    it('should return 0 if no timer found', () => {
+        game['id'] = 'idNotFound';
+        expect(timer.calculateTime(game)).to.equal(0);
     });
 });

@@ -11,6 +11,13 @@ export class DifferenceService {
         this.gamesDifferencesTotalFound = new Map();
     }
 
+
+    findDifference(differenceCoords: Coordinate, differencesRef: Coordinate[][]): Coordinate[] | undefined {
+        return differencesRef.find((difference: Coordinate[]) =>
+            difference.find((coord: Coordinate) => coord.x === differenceCoords.x && coord.y === differenceCoords.y),
+        );
+    }
+
     isAllDifferenceFound(playerId: string, game: Game): boolean {
         const player = this.gamesDifferencesFound.get(game.identifier)?.get(playerId);
 

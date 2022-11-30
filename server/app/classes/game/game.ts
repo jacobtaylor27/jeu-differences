@@ -68,12 +68,6 @@ export class Game {
         this.currentIndex++;
     }
 
-    findDifference(differenceCoords: Coordinate): Coordinate[] | undefined {
-        return this.info.differences.find((difference: Coordinate[]) =>
-            difference.find((coord: Coordinate) => coord.x === differenceCoords.x && coord.y === differenceCoords.y),
-        );
-    }
-
     isDifferenceFound(playerId: string, differenceCoords: Coordinate) {
         const differences = this.findDifference(differenceCoords);
         if (!differences || this.isDifferenceAlreadyFound(differences)) {

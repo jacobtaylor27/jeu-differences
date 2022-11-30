@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+import { Game } from '@app/classes/game/game';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { DifferenceService } from '@app/services/difference-service/difference.service';
-import { restore } from 'sinon';
+import { Coordinate } from '@common/coordinate';
+import { GameMode } from '@common/game-mode';
+import { User } from '@common/user';
+import { expect } from 'chai';
+import { restore, spy, stub } from 'sinon';
 
 describe('DifferenceService', () => {
     let difference: DifferenceService;
@@ -44,4 +50,18 @@ describe('DifferenceService', () => {
         expect(difference.isAllDifferenceFound('', game)).to.equal(true);
     });
 
+
+    it('should return undefined if differences is not found with coordinate', () => {
+        const expectedDifferences = [[{} as Coordinate]];
+        expect(difference.findDifference({ x: 0, y: 0 }, expectedDifferences)).to.equal(undefined);
+    });
+
+    it('should find a difference and return it', () => {
+        const expectedDifferencesFound = [
+            { x: 0, y: 0 },
+            { x: 1, y: -1 },
+        ];
+        const expectedDifferences = [expectedDifferencesFound];
+        expect(difference.findDifference({ x: 0, y: 0 }, expectedDifferences)).to.deep.equal(expectedDifferencesFound);
+    });
 });

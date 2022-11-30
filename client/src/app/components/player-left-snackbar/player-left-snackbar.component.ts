@@ -14,9 +14,8 @@ export class PlayerLeftSnackbarComponent {
     constructor(public snackBarRef: MatSnackBarRef<PlayerLeftSnackbarComponent>, public gameInfoHandlerService: GameInformationHandlerService) {}
 
     messageSnackBar() {
-        if (this.gameInfoHandlerService.gameMode === GameMode.LimitedTime) {
-            return 'Le joueur a quitté la partie. Vous jouez maintenant en solo.';
-        }
-        return 'Le joueur a quitté la partie.';
+        return this.gameInfoHandlerService.gameMode === GameMode.LimitedTime
+            ? 'Le joueur a quitté la partie. Vous jouez maintenant en solo.'
+            : 'Le joueur a quitté la partie.';
     }
 }

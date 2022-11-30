@@ -41,6 +41,21 @@ describe('DrawServiceService', () => {
         expect(service).toBeTruthy();
     });
 
+    it('initialize should reinitialize pen attributs', () => {
+        const expectedCommand: Command = {
+            canvasType: CanvasType.None,
+            name: '',
+            strokes: [{ lines: [] }],
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
+        service.initialize();
+        expect(service.currentCommand).toEqual(expectedCommand);
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        expect(service.indexOfCommand).toEqual(-1);
+        expect(service.strokeIndex).toEqual(0);
+        expect(service.commands).toEqual([]);
+    });
+
     it('reposition should return a position', () => {
         const expectedReposition = { x: 10, y: 10 };
         expect(service['reposition']({ offsetLeft: 0, offsetTop: 0 } as HTMLCanvasElement, { clientX: 10, clientY: 10 } as MouseEvent)).toEqual(

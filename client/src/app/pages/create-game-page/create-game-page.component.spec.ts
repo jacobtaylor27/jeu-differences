@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CentralBoxComponent } from '@app/components/central-tool-box/central-tool-box.component';
 import { CommonToolBoxComponent } from '@app/components/common-tool-box/common-tool-box.component';
 import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
@@ -45,10 +46,14 @@ describe('CreateGamePageComponent', () => {
             $resetForeground: new Map<CanvasType, Subject<void>>(),
         });
         canvasEventHandlerSpyObj = jasmine.createSpyObj('CanvasEventHandlerService', ['handleCtrlShiftZ', 'handleCtrlZ']);
-        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['addDrawingCanvas', 'resetAllLayers', 'clearAllLayers', 'clearAllBackground'], {
-            $drawingImage: drawImageSubjects,
-            foregroundContext: new Map(),
-        });
+        drawServiceSpyObj = jasmine.createSpyObj(
+            'DrawService',
+            ['addDrawingCanvas', 'resetAllLayers', 'clearAllLayers', 'clearAllBackground', 'initialize'],
+            {
+                $drawingImage: drawImageSubjects,
+                foregroundContext: new Map(),
+            },
+        );
         await TestBed.configureTestingModule({
             declarations: [
                 CreateGamePageComponent,
@@ -59,6 +64,7 @@ describe('CreateGamePageComponent', () => {
                 ExitGameButtonComponent,
                 LoadingScreenComponent,
                 CommonToolBoxComponent,
+                CentralBoxComponent,
             ],
             imports: [
                 AppMaterialModule,

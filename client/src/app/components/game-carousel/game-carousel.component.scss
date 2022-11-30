@@ -26,6 +26,24 @@
     font-weight: bold;
     font-size: 1rem;
 }
+
+.no-game-container {
+    justify-content: center;
+    margin-bottom: 2vh;
+    margin-top: 10vh;
+    display: flex;
+    min-width: 300px;
+}
+
+.no-game-card{
+    min-width: 50vh;
+}
+
+.no-game-center{
+    display: flex;
+    justify-content: center;
+}
+
 .loading-screen-container {
     margin-top: 15vh;
 }

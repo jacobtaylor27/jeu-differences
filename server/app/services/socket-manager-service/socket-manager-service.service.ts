@@ -1,6 +1,7 @@
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
 import { Coordinate } from '@common/coordinate';
@@ -11,9 +12,6 @@ import * as http from 'http';
 import * as LZString from 'lz-string';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
-import * as LZString from 'lz-string';
-import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
-import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 @Service()
 export class SocketManagerService {

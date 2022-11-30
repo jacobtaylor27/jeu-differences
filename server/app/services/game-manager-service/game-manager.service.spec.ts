@@ -13,8 +13,9 @@ import { Coordinate } from '@common/coordinate';
 import { User } from '@common/user';
 
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
-import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
+import { DifferenceService } from '@app/services/difference-service/difference.service';
 import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
+import { TimerService } from '@app/services/timer-service/timer.service';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { expect } from 'chai';
@@ -33,13 +34,14 @@ describe('GameManagerService', () => {
     let bmpEncoderService: BmpEncoderService;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
     let limitedTimeService: LimitedTimeGame;
-    let gameTimerConstant: GameTimeConstantService;
+    let difference: DifferenceService;
+    let timer: TimerService;
 
     beforeEach(() => {
         clock = useFakeTimers();
         bmpEncoderService = Container.get(BmpEncoderService);
         bmpService = Container.get(BmpService);
-        gameTimerConstant = Container.get(GameTimeConstantService);
+        timer = Container.get(TimerService);
         bmpSubtractorService = Container.get(BmpSubtractorService);
         bmpDifferenceService = Container.get(BmpDifferenceInterpreter);
         idGeneratorService = sinon.createStubInstance(IdGeneratorService);
@@ -47,10 +49,10 @@ describe('GameManagerService', () => {
             return '5';
         });
         const gameInfo = new GameInfoService({} as DatabaseService, bmpService, bmpSubtractorService, bmpDifferenceService, bmpEncoderService);
-        const differenceService = new BmpDifferenceInterpreter();
+        difference = new DifferenceService();
         limitedTimeService = new LimitedTimeGame(gameInfo);
         gameInfoSpyObj = stub(gameInfo);
-        gameManager = new GameManagerService(gameInfo, differenceService, limitedTimeService, gameTimerConstant);
+        gameManager = new GameManagerService(gameInfo, limitedTimeService, difference, timer);
     });
 
     afterEach(() => {

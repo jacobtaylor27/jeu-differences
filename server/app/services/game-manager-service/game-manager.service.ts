@@ -1,9 +1,9 @@
 import { Game } from '@app/classes/game/game';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
+import { DifferenceService } from '@app/services/difference-service/difference.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
-import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
 import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
+import { TimerService } from '@app/services/timer-service/timer.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { GameMode } from '@common/game-mode';
@@ -18,9 +18,9 @@ export class GameManagerService {
     // eslint-disable-next-line max-params
     constructor(
         private gameInfo: GameInfoService,
-        public differenceService: BmpDifferenceInterpreter,
         private readonly limitedTimeGame: LimitedTimeGame,
-        private timeConstant: GameTimeConstantService,
+        private difference: DifferenceService,
+        private timer: TimerService,
     ) {}
 
     async createGame(playerInfo: { player: User; isMulti: boolean }, mode: GameMode, gameCardId: string) {

@@ -4,8 +4,9 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AdminService } from './admin.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { HttpClientModule } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { RouterService } from '@app/services/router-service/router.service';
 
 describe('AdminService', () => {
     let service: AdminService;

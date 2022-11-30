@@ -13,6 +13,9 @@ export class DifferenceService {
         this.gamesDifferencesTotalFound = new Map();
     }
 
+    totalDifferenceFound(gameId: string) {
+        return this.gamesDifferencesTotalFound.get(gameId);
+    }
 
     findDifference(differenceCoords: Coordinate, differencesRef: Coordinate[][]): Coordinate[] | undefined {
         return differencesRef.find((difference: Coordinate[]) =>

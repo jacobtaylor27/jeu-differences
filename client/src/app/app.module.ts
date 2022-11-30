@@ -33,7 +33,6 @@ import { GameConstantFieldComponent } from './components/game-constant-field/gam
 import { GameConstantsSettingsComponent } from './components/game-constants-settings/game-constants-settings.component';
 import { GameScoreComponent } from './components/game-score/game-score.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
-import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-snackbar/no-game-snackbar.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { PlayerLeftSnackbarComponent } from './components/player-left-snackbar/player-left-snackbar.component';
 import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
@@ -42,8 +41,6 @@ import { TimerStopwatchComponent } from './components/timer-stopwatch/timer-stop
 import { UserNameInputComponent } from './components/user-name-input/user-name-input.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
-import { RefreshSnackbarComponent } from './components/refresh-snackbar/refresh-snackbar.component';
-import { DialogLimitedTimeComponent } from './components/dialog-limited-time/dialog-limited-time.component';
 import { MongodbErrorPageComponent } from './pages/mongodb-error-page/mongodb-error-page.component';
 import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-snackbar/no-game-snackbar.component';
 /**

@@ -18,6 +18,17 @@ export class DifferenceService {
         );
     }
 
+    addCoordinatesOnDifferenceFound(playerId: string, differenceCoords: Coordinate[], game: Game) {
+        const player = this.gamesDifferencesFound.get(game.identifier)?.get(playerId);
+        if (this.isDifferenceAlreadyFound(differenceCoords, game.identifier) || !player) {
+            return;
+        }
+        this.gamesDifferencesTotalFound.get(game.identifier)?.add(differenceCoords);
+        player.add(differenceCoords);
+        if (this.isAllDifferenceFound(playerId, game) && !game.isGameOver() && game.gameMode === GameMode.Classic) {
+            game.setEndgame();
+        }
+    }
 
     isDifferenceAlreadyFound(differenceCoords: Coordinate[], gameId: string) {
         return this.gamesDifferencesTotalFound.get(gameId)?.has(differenceCoords);

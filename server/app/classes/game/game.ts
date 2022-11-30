@@ -77,18 +77,6 @@ export class Game {
         return differences;
     }
 
-    addCoordinatesOnDifferenceFound(playerId: string, differenceCoords: Coordinate[]) {
-        const player = this.getNbDifferencesFound.get(playerId);
-        if (this.isDifferenceAlreadyFound(differenceCoords) || !player) {
-            return;
-        }
-        this.getNbDifferencesTotalFound.add(differenceCoords);
-        player.add(differenceCoords);
-        if (this.isAllDifferenceFound(playerId) && !this.isGameOver() && this.gameMode === GameMode.Classic) {
-            this.context.end();
-        }
-    }
-
     next() {
         this.context.next();
     }

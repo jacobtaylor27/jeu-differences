@@ -39,6 +39,13 @@ describe('DifferenceService', () => {
         expect(difference.getAllDifferencesNotFound(expectedDifferences, '')).to.deep.equal([expectedDifferences[1]]);
     });
 
+    it('should get the number of difference not found', () => {
+        const expectedDifference = { length: 10 } as Coordinate[][];
+        const expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
+        difference['gamesDifferencesTotalFound'].set('', expectedDifferenceFound);
+        expect(difference.nbDifferencesLeft(expectedDifference, '')).to.equal(expectedDifference.length - expectedDifferenceFound.size);
+    });
+
     it('before check if all difference found check if the game is on init or over', () => {
         const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         difference['gamesDifferencesFound'].set(game.identifier, new Map());

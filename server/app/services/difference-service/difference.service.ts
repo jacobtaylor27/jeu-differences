@@ -62,4 +62,8 @@ export class DifferenceService {
         return differencesRef.length % 2 === 0 ? differencesRef.length / 2 : Math.trunc(differencesRef.length / 2) + 1;
     }
 
+
+    nbDifferencesLeft(differencesRef: Coordinate[][], gameId: string): number {
+        return differencesRef.length - (this.gamesDifferencesTotalFound.get(gameId) as Set<Coordinate[]>).size;
+    }
 }

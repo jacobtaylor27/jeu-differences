@@ -116,14 +116,6 @@ describe('Game', () => {
         expect(game.isGameOver()).to.equal(true);
     });
 
-    it('should get the number of difference not found', () => {
-        const expectedDifference = { length: 10 } as Coordinate[][];
-        const expectedDifferenceFound = { size: 5 } as Set<Coordinate[]>;
-        game['info'].differences = expectedDifference;
-        game['getNbDifferencesTotalFound'] = expectedDifferenceFound;
-        expect(game.nbDifferencesLeft()).to.equal(expectedDifference.length - expectedDifferenceFound.size);
-    });
-
     it('should get if the game is in multi or not', () => {
         expect(game.multi).to.equal(false);
         game['isMulti'] = true;

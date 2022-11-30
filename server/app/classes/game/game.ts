@@ -88,10 +88,6 @@ export class Game {
         return this.context.gameState() === GameStatus.EndGame;
     }
 
-    nbDifferencesLeft(): number {
-        return this.info.differences.length - this.getNbDifferencesTotalFound.size;
-    }
-
     isGameFull() {
         return (!this.isMulti && this.players.size === 1) || (this.isMulti && this.players.size === 2);
     }

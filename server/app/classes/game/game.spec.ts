@@ -124,12 +124,6 @@ describe('Game', () => {
         expect(game.nbDifferencesLeft()).to.equal(expectedDifference.length - expectedDifferenceFound.size);
     });
 
-    it('should verify if the difference is already found', () => {
-        const getNbDifferencesFoundSpy = stub(game['getNbDifferencesTotalFound'], 'has').callsFake(() => false);
-        expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(false);
-        getNbDifferencesFoundSpy.callsFake(() => true);
-        expect(game.isDifferenceAlreadyFound([{} as Coordinate])).to.equal(true);
-    });
     it('should return null if no difference is found or already found', () => {
         const findDifferenceSpy = stub(game, 'findDifference').callsFake(() => undefined);
         expect(game.isDifferenceFound('', {} as Coordinate)).to.equal(null);

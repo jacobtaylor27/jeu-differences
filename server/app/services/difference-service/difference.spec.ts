@@ -120,6 +120,15 @@ describe('DifferenceService', () => {
         expect(nextStateSpy.called).to.equal(true);
     });
 
+    it('should verify if the difference is already found', () => {
+        const expectedGameId = '';
+        difference['gamesDifferencesTotalFound'].set('', new Set());
+        const getNbDifferencesFoundSpy = stub(difference['gamesDifferencesTotalFound'].get('') as Set<Coordinate[]>, 'has').callsFake(() => false);
+        expect(difference.isDifferenceAlreadyFound([{} as Coordinate], expectedGameId)).to.equal(false);
+        getNbDifferencesFoundSpy.callsFake(() => true);
+        expect(difference.isDifferenceAlreadyFound([{} as Coordinate], expectedGameId)).to.equal(true);
+    });
+
     it('should return undefined if differences is not found with coordinate', () => {
         const expectedDifferences = [[{} as Coordinate]];
         expect(difference.findDifference({ x: 0, y: 0 }, expectedDifferences)).to.equal(undefined);

@@ -18,6 +18,11 @@ export class DifferenceService {
         );
     }
 
+
+    isDifferenceAlreadyFound(differenceCoords: Coordinate[], gameId: string) {
+        return this.gamesDifferencesTotalFound.get(gameId)?.has(differenceCoords);
+    }
+
     isAllDifferenceFound(playerId: string, game: Game): boolean {
         const player = this.gamesDifferencesFound.get(game.identifier)?.get(playerId);
 

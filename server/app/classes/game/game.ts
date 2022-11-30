@@ -89,10 +89,6 @@ export class Game {
         }
     }
 
-    isDifferenceAlreadyFound(differenceCoords: Coordinate[]) {
-        return this.getNbDifferencesTotalFound.has(differenceCoords);
-    }
-
     next() {
         this.context.next();
     }

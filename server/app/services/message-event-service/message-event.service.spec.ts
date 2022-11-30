@@ -2,12 +2,19 @@ import { EventMessageService } from '@app/services/message-event-service/message
 import { expect } from 'chai';
 import { describe } from 'mocha';
 import { Container } from 'typedi';
+import { SinonFakeTimers, useFakeTimers } from 'sinon';
 
 describe('EventMessage Service', () => {
     let eventMessageService: EventMessageService;
+    let clock: SinonFakeTimers;
 
     beforeEach(() => {
         eventMessageService = Container.get(EventMessageService);
+        clock = useFakeTimers();
+    });
+
+    afterEach(() => {
+        clock.restore();
     });
 
     it('Should return a multiplayer difference found message with the player name if exists and if its a multiplayer game', () => {

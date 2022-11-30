@@ -27,7 +27,6 @@ describe('MainPageComponent', () => {
         spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
 
-
         await TestBed.configureTestingModule({
             declarations: [MainPageComponent],
             imports: [AppMaterialModule, NoopAnimationsModule, RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule, HttpClientModule],

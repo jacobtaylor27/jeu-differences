@@ -1074,4 +1074,14 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'getNbDifferenceNotFound').callsFake(() => []);
         service.handleSockets();
     });
+
+    it('should handle the end game', () => {
+        stub(service['eventMessageService'], 'sendNewHighScoreMessage').callsFake(() => '');
+        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'getTime').callsFake(() => 1);
+        stub(service['gameManager'], 'findPlayer').callsFake(() => '');
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => undefined);
+        // stub(service['scoresHandlerService'], 'verifyScore').callsFake(() => Promise.resolve());
+        // service['handleEndGame']('gameId', fakeSocket);
+    });
 });

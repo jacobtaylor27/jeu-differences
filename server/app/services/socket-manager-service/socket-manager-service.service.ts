@@ -226,12 +226,9 @@ export class SocketManagerService {
                 if (this.gameManager.isGameOver(gameId)) {
                     const time = this.gameManager.getTime(gameId) as number;
                     const playerName = this.gameManager.findPlayer(gameId, socket.id) as string;
+                    const gameInfo = this.gameManager.getGameInfo(gameId);
                     this.scoresHandlerService
-                        .verifyScore(
-                            this.gameManager.getGameInfo(gameId)?.id as string,
-                            { playerName, time },
-                            this.gameManager.isGameMultiplayer(gameId) as boolean,
-                        )
+                        .verifyScore(gameInfo?.id as string, { playerName, time }, this.gameManager.isGameMultiplayer(gameId) as boolean)
                         .then((index) => {
                             this.gameManager.leaveGame(socket.id, gameId);
 
@@ -242,7 +239,15 @@ export class SocketManagerService {
                             // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
                             if (index !== -1) {
                                 socket.emit(SocketEvent.Win, { index, time });
-                                // message all active games
+                                this.sio.sockets.emit(
+                                    SocketEvent.EventMessage,
+                                    this.eventMessageService.sendNewHighScoreMessage({
+                                        record: { index, time },
+                                        playerName,
+                                        gameName: gameInfo?.name as string,
+                                        isMulti: this.gameManager.isGameMultiplayer(gameId) as boolean,
+                                    }),
+                                );
                                 return;
                             }
 

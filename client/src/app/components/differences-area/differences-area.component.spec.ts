@@ -97,10 +97,9 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should set nb of differences on limited and multi mode ', () => {
-        spyGameInfosService.getNbDifferences.and.callFake(() => undefined);
-        expect(component.setNbDifferencesFoundLimitedMulti()).toEqual('');
+        spyGameInfosService.gameMode = GameMode.LimitedTime;
 
         spyGameInfosService.getNbDifferences.and.callFake(() => 1);
-        expect(component.setNbDifferencesFoundLimitedMulti()).toEqual('2');
+        expect(component.setNbDifferencesFoundLimited()).toEqual('1');
     });
 });

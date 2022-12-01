@@ -24,6 +24,7 @@ export class MainPageComponent {
         private readonly matDialog: MatDialog,
         private readonly communicationService: CommunicationService,
         private readonly carouselService: GameCarouselService,
+        private readonly router: RouterService,
     ) {}
 
     onClickPlayClassic(): void {
@@ -31,10 +32,15 @@ export class MainPageComponent {
     }
 
     onClickPlayLimited(): void {
-        this.communicationService.getGamesInfoByPage(1).subscribe((response: HttpResponse<CarouselResponse>) => {
-            if (response && response.body) {
-                this.carouselService.setCarouselInformation(response.body.carouselInfo);
-            }
+        this.communicationService.getGamesInfoByPage(1).subscribe({
+            next: (response: HttpResponse<CarouselResponse>) => {
+                if (response && response.body) {
+                    this.carouselService.setCarouselInformation(response.body.carouselInfo);
+                }
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
         });
         this.mainPageService.setGameMode(GameMode.LimitedTime);
         this.openNameDialog();

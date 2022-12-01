@@ -3,9 +3,7 @@ import { GameContext } from '@app/classes/game-context/game-context';
 import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { GameStatus } from '@app/enum/game-status';
 import { PrivateGameInformation } from '@app/interface/game-info';
-import { Coordinate } from '@common/coordinate';
 import { GameMode } from '@common/game-mode';
-import { GameTimeConstants } from '@common/game-time-constants';
 import { User } from '@common/user';
 import { v4 } from 'uuid';
 
@@ -17,30 +15,18 @@ export class Game {
     private id: string;
     private mode: GameMode;
     private isMulti: boolean;
-    private timerConstant: GameTimeConstants;
     private info: PrivateGameInformation;
-    private getNbDifferencesFound: Map<string, Set<Coordinate[]>>;
-    private getNbDifferencesTotalFound: Set<Coordinate[]>;
     private context: GameContext;
-    private initialTime: Date;
 
-    constructor(
-        player: { player: User; isMulti: boolean },
-        game: { info: PrivateGameInformation; mode: GameMode; timerConstant?: GameTimeConstants },
-    ) {
-        if (game.mode === GameMode.LimitedTime) {
-            this.timerConstant = game.timerConstant as GameTimeConstants;
-        }
+    constructor(player: { player: User; isMulti: boolean }, game: { info: PrivateGameInformation; mode: GameMode }) {
         this.info = game.info;
         this.mode = game.mode;
         this.players = new Map();
         this.isMulti = player.isMulti;
-        this.getNbDifferencesFound = new Map();
-        this.getNbDifferencesTotalFound = new Set();
-        this.addPlayer(player.player);
         this.context = new GameContext(game.mode as GameMode, new InitGameState(), player.isMulti);
         this.id = v4();
         this.context.next();
+        this.addPlayer(player.player);
     }
 
     get identifier() {
@@ -63,10 +49,6 @@ export class Game {
         return this.context.gameState();
     }
 
-    get seconds() {
-        return this.calculateTime();
-    }
-
     setEndgame() {
         this.context.end();
     }
@@ -79,73 +61,6 @@ export class Game {
         this.currentIndex++;
     }
 
-    setTimer() {
-        this.initialTime = new Date();
-        this.context.next();
-    }
-
-    calculateLimitedGameTimer(): number {
-        const presentTime = new Date();
-        let timer =
-            this.timerConstant.gameTime -
-            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000) +
-            this.timerConstant.successTime * this.getNbDifferencesTotalFound.size -
-            this.timerConstant.penaltyTime * 0; // TO DO : multiply by the nb of clue activate
-        if (timer > 120) {
-            const differenceLimitTime = timer - 120;
-            this.initialTime.setTime(this.initialTime.getTime() - differenceLimitTime * 1000);
-            timer -= differenceLimitTime;
-        }
-        return timer;
-    }
-
-    calculateTime(): number {
-        const presentTime = new Date();
-        if (this.mode === GameMode.Classic) {
-            /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            return Math.floor((presentTime.getTime() - this.initialTime.getTime()) / 1000);
-        } else {
-            // TO DO : ADD ADMINS TIME
-            const time = this.calculateLimitedGameTimer();
-            if (time === 0) {
-                this.context.end();
-            }
-            return time;
-        }
-    }
-
-    findDifference(differenceCoords: Coordinate): Coordinate[] | undefined {
-        return this.info.differences.find((difference: Coordinate[]) =>
-            difference.find((coord: Coordinate) => coord.x === differenceCoords.x && coord.y === differenceCoords.y),
-        );
-    }
-
-    isDifferenceFound(playerId: string, differenceCoords: Coordinate) {
-        const differences = this.findDifference(differenceCoords);
-        if (!differences || this.isDifferenceAlreadyFound(differences)) {
-            return null;
-        }
-        this.addCoordinatesOnDifferenceFound(playerId, differences);
-        return differences;
-    }
-
-    addCoordinatesOnDifferenceFound(playerId: string, differenceCoords: Coordinate[]) {
-        const player = this.getNbDifferencesFound.get(playerId);
-        if (this.isDifferenceAlreadyFound(differenceCoords) || !player) {
-            return;
-        }
-        this.getNbDifferencesTotalFound.add(differenceCoords);
-        player.add(differenceCoords);
-        if (this.isAllDifferenceFound(playerId) && !this.isGameOver() && this.gameMode === GameMode.Classic) {
-            this.context.end();
-        }
-    }
-
-    isDifferenceAlreadyFound(differenceCoords: Coordinate[]) {
-        return this.getNbDifferencesTotalFound.has(differenceCoords);
-    }
-
     next() {
         this.context.next();
     }
@@ -154,39 +69,8 @@ export class Game {
         return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }
 
-    isAllDifferenceFound(playerId: string): boolean {
-        const player = this.getNbDifferencesFound.get(playerId);
-
-        // if the game is already over all the differences are found and if the game is not initialize, 0 difference found
-        if (this.isGameInitialize() || this.isGameOver() || !player) {
-            return this.isGameOver();
-        }
-
-        return this.isMulti ? player.size === this.getNbDifferencesThreshold() : player.size === this.info.differences.length;
-    }
-
-    getNbDifferencesThreshold() {
-        if (this.isEven(this.info.differences.length)) {
-            return this.info.differences.length / 2;
-        } else {
-            return Math.trunc(this.info.differences.length / 2) + 1;
-        }
-    }
-
-    getAllDifferencesNotFound() {
-        return this.info.differences.filter((difference: Coordinate[]) => !this.getNbDifferencesTotalFound.has(difference));
-    }
-
-    isEven(number: number) {
-        return number % 2 === 0;
-    }
-
     isGameOver() {
         return this.context.gameState() === GameStatus.EndGame;
-    }
-
-    nbDifferencesLeft(): number {
-        return this.info.differences.length - this.getNbDifferencesTotalFound.size;
     }
 
     isGameFull() {
@@ -198,7 +82,6 @@ export class Game {
             return;
         }
         this.players.set(player.id, player.name);
-        this.getNbDifferencesFound.set(player.id, new Set());
     }
 
     findPlayer(playerId: string) {

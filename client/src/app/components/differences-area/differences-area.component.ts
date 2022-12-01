@@ -34,9 +34,14 @@ export class DifferencesAreaComponent implements OnInit {
                 this.players[this.getPlayerIndex(playerName)].nbDifference = this.setNbDifferencesFound(playerName);
             });
         } else {
-            this.players = [
-                { name: this.mainPlayer.name + ' & ' + this.opponentPlayer.name, nbDifference: this.setNbDifferencesFoundLimitedMulti() as string },
-            ];
+            this.players = !this.opponentPlayer
+                ? [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimitedMulti() as string }]
+                : [
+                      {
+                          name: this.mainPlayer.name + ' & ' + this.opponentPlayer.name,
+                          nbDifference: this.setNbDifferencesFoundLimitedMulti() as string,
+                      },
+                  ];
             this.gameInformationHandlerService.$playerLeft.subscribe(() => {
                 this.players = [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimitedMulti() as string }];
             });

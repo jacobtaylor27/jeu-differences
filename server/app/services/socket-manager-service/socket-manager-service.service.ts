@@ -143,6 +143,9 @@ export class SocketManagerService {
                         .to(gameId)
                         .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
                 }
+                if (!this.gameManager.isGameMultiplayer(gameId)) {
+                    socket.leave(gameId);
+                }
             });
 
             socket.on(SocketEvent.LeaveWaiting, (roomId: string, gameCard: string) => {

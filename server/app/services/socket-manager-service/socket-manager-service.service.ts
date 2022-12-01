@@ -312,4 +312,32 @@ export class SocketManagerService {
     refreshGames() {
         this.sio.emit(SocketEvent.RefreshGames);
     }
+
+    private handleEndGame(gameId: string, socket: Socket): void {
+        const time = this.gameManager.getTime(gameId) as number;
+        const playerName = this.gameManager.findPlayer(gameId, socket.id) as string;
+        this.scoresHandlerService
+            .verifyScore(
+                this.gameManager.getGameInfo(gameId)?.id as string,
+                { playerName, time },
+                this.gameManager.isGameMultiplayer(gameId) as boolean,
+            )
+            .then((index) => {
+                this.gameManager.leaveGame(socket.id, gameId);
+
+                if (this.gameManager.isGameMultiplayer(gameId)) {
+                    socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+                }
+
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
+                if (index !== -1) {
+                    socket.emit(SocketEvent.Win, { index, time });
+                    // message all active games
+                    return;
+                }
+
+                socket.emit(SocketEvent.Win);
+                return;
+            });
+    }
 }

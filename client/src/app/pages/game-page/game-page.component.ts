@@ -48,7 +48,7 @@ export class GamePageComponent implements OnDestroy {
         this.snackBar.openFromComponent(PlayerLeftSnackbarComponent, { duration: 5000 });
     }
 
-    openGameOverDialog(isWin: boolean) {
+    openGameOverDialog(isWin: boolean, record?: GameRecord): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.minWidth = '50%';

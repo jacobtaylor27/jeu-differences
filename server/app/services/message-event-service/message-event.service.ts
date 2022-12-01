@@ -18,4 +18,11 @@ export class EventMessageService {
     leavingGameMessage(userName: string | undefined) {
         return userName ? `${userName} a abandonné la partie a ${new Date().toLocaleTimeString('en-US')}` : null;
     }
+
+    sendNewHighScoreMessage(messageRecord: MessageRecord): string {
+        const gameMode = messageRecord.isMulti ? 'multijoueur' : 'solo';
+        return `${new Date().toLocaleTimeString('en-US')} - 
+        ${messageRecord.playerName} obtient la ${messageRecord.record.index} place dans les meilleurs temps du jeu 
+        ${messageRecord.gameName} en ${gameMode}`;
+    }
 }

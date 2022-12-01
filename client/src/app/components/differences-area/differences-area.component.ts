@@ -77,12 +77,13 @@ export class DifferencesAreaComponent implements OnInit {
     }
 
     setNbDifferencesFoundLimitedMulti() {
-        const nbPlayerDifference = this.gameInformationHandlerService.getNbDifferences(this.mainPlayer.name);
-        const nbOpponentDifference = this.gameInformationHandlerService.getNbDifferences(this.opponentPlayer.name);
+        const nbPlayerDifference = this.gameInformationHandlerService.getNbDifferences(this.mainPlayer.name) as number;
 
-        if (nbPlayerDifference === undefined || nbOpponentDifference === undefined) {
-            return '';
+        if (this.opponentPlayer) {
+            const nbOpponentDifference = this.gameInformationHandlerService.getNbDifferences(this.opponentPlayer.name) as number;
+            return (nbPlayerDifference + nbOpponentDifference).toString();
         }
-        return (nbPlayerDifference + nbOpponentDifference).toString();
+
+        return nbPlayerDifference.toString();
     }
 }

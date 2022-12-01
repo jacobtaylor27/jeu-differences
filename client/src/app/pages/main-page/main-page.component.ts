@@ -7,6 +7,7 @@ import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { MainPageService } from '@app/services/main-page/main-page.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { GameMode } from '@common/game-mode';
 
 @Component({

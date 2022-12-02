@@ -98,14 +98,14 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should set nb of differences on limited and multi mode ', () => {
-        spyGameInfosService.gameMode = GameMode.LimitedTime;
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
 
         spyGameInfosService.getNbDifferences.and.callFake(() => 1);
         expect(component.setNbDifferencesFoundLimited()).toEqual('1');
     });
 
     it('should call setNbDifferencesFoundLimited on $playerLeft.next', () => {
-        spyGameInfosService.gameMode = GameMode.LimitedTime;
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;
         const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
         const spyNbDifferenceFound = spyOn(newComponent, 'setNbDifferencesFoundLimited').and.callFake(() => '1/10');
@@ -117,7 +117,7 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should call setNbDifferencesFoundLimited on $differenceFound.next', () => {
-        spyGameInfosService.gameMode = GameMode.LimitedTime;
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;
         const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
         const spyNbDifferenceFound = spyOn(newComponent, 'setNbDifferencesFoundLimited').and.callFake(() => '1/10');

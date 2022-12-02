@@ -114,7 +114,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             if (this.cheatMode.isCheatModeActivated) {
                 this.cheatMode.stopCheatModeDifference(this.getContextOriginal(), this.getContextModified(), data.coords);
             }
-            if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
+            if (this.gameInfoHandlerService.isClassic()) {
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
             }

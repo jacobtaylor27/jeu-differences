@@ -22,6 +22,15 @@ describe('CanvasStateService', () => {
         expect(service.getCanvasState(CanvasType.Left)).toEqual(undefined);
     });
 
+    it('should return the matching canvas state', () => {
+        service.states = [
+            {
+                canvasType: CanvasType.Left,
+            } as DrawingBoardState,
+        ];
+        expect(service.getCanvasState(CanvasType.Left)).toEqual(service.states[0]);
+    });
+
     it('should set focus canvas', () => {
         const expectedCanvasType = CanvasType.Left;
         service.setFocusedCanvas(expectedCanvasType);

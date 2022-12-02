@@ -17,7 +17,7 @@ describe('DifferencesAreaComponent', () => {
     beforeEach(async () => {
         spyGameInfosService = jasmine.createSpyObj(
             'GameInformationHandlerService',
-            ['setGameInformation', 'getPlayer', 'getOpponent', 'getNbTotalDifferences', 'getNbDifferences'],
+            ['setGameInformation', 'getPlayer', 'getOpponent', 'getNbTotalDifferences', 'getNbDifferences', 'isLimitedTime', 'isClassic'],
             {
                 $differenceFound: new Subject<string>(),
                 $playerLeft: new Subject<string>(),

@@ -68,4 +68,30 @@ describe('EventMessage Service', () => {
         const expectedResult = `${new Date().toLocaleTimeString('en-US')} - Indice Utilisé`;
         expect(eventMessageService.usingClueMessage()).to.be.equal(expectedResult);
     });
+
+    it('should send a message when there is a new high score in multi', () => {
+        const messageRecord = {
+            record: { index: 1, time: 1000 },
+            playerName: 'user',
+            gameName: 'game',
+            isMulti: true,
+        };
+        const expectedResult = `${new Date(0).toLocaleTimeString('en-US')} - 
+        ${messageRecord.playerName} obtient la ${messageRecord.record.index} place dans les meilleurs temps du jeu 
+        ${messageRecord.gameName} en multijoueur`;
+        expect(eventMessageService.sendNewHighScoreMessage(messageRecord)).to.be.equal(expectedResult);
+    });
+
+    it('should send a message when there is a new high score in solo', () => {
+        const messageRecord = {
+            record: { index: 1, time: 1000 },
+            playerName: 'user',
+            gameName: 'game',
+            isMulti: false,
+        };
+        const expectedResult = `${new Date(0).toLocaleTimeString('en-US')} - 
+        ${messageRecord.playerName} obtient la ${messageRecord.record.index} place dans les meilleurs temps du jeu 
+        ${messageRecord.gameName} en solo`;
+        expect(eventMessageService.sendNewHighScoreMessage(messageRecord)).to.be.equal(expectedResult);
+    });
 });

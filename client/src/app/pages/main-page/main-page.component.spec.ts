@@ -21,12 +21,14 @@ describe('MainPageComponent', () => {
     let spyGameInfosHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyRouter: jasmine.SpyObj<RouterService>;
 
     beforeEach(async () => {
         spyMainPageService = jasmine.createSpyObj('GamePageService', ['setGameMode']);
         spyGameInfosHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameMode', 'getGameName', 'getGameMode']);
         spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
+        spyRouter = jasmine.createSpyObj('RouterService', ['redirectToErrorPage']);
 
         await TestBed.configureTestingModule({
             declarations: [MainPageComponent],

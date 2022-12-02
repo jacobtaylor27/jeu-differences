@@ -109,4 +109,19 @@ describe('TimerService', () => {
         game['id'] = 'idNotFound';
         expect(timer.calculateTime(game)).to.equal(0);
     });
+
+    it('should not get the game constant timer', () => {
+        stub(timer['timerConstant'], 'get').callsFake(() => undefined);
+        expect(timer.gameTime('')).to.equal(null);
+    });
+
+    it('should get the game constant timer', () => {
+        const expectedGameTimerConstant = {} as GameTimeConstants;
+        const currentTime = new Date();
+        timer['timerConstant'] = new Map();
+        timer['initialTime'] = new Map();
+        stub(timer['timerConstant'], 'get').callsFake(() => expectedGameTimerConstant);
+        stub(timer['initialTime'], 'get').callsFake(() => currentTime);
+        expect(timer.gameTime('')).to.deep.equal({ constant: expectedGameTimerConstant, init: currentTime });
+    });
 });

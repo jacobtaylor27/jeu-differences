@@ -1,18 +1,18 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { BMP_EXTENSION, DB_GAME_COLLECTION, DEFAULT_BMP_ASSET_PATH, ID_PREFIX } from '@app/constants/database';
+import { GameCarousel } from '@app/interface/game-carousel';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { DatabaseService } from '@app/services/database-service/database.service';
-import { PrivateGameInformation } from '@app/interface/game-info';
+import { Score } from '@common/score';
 import { Collection } from 'mongodb';
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
-import { GameCarousel } from '@app/interface/game-carousel';
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- can't import this otherwise
 import LZString = require('lz-string');
-import { Score } from '@common/score';
 
 const NB_TO_RETRIEVE = 4;
 
@@ -72,8 +72,7 @@ export class GameInfoService {
 
     async getGameInfoById(gameId: string): Promise<PrivateGameInformation | null> {
         try {
-            const filter = { id: gameId };
-            return (await this.collection.find(filter).toArray())[0];
+            return (await this.collection.find({ id: gameId }).toArray())[0];
         } catch (err) {
             return null;
         }

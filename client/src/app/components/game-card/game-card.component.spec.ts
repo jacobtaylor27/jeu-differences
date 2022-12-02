@@ -81,13 +81,13 @@ describe('GameCardComponent', () => {
     it('getMultiplayerScores should return the multiplayer scores for a given game', () => {
         const scores = component.getMultiplayerScores();
         expect(scores).toBeDefined();
-        expect(scores.length).toEqual(2);
+        expect(scores.length).toEqual(3);
     });
 
     it('getSinglePlayerScores should return the single player scores for a given game', () => {
         const scores = component.getSinglePlayerScores();
         expect(scores).toBeDefined();
-        expect(scores.length).toEqual(2);
+        expect(scores.length).toEqual(3);
     });
 
     it('hasMultiplayerScores should return true if the game has a multiplayer score', () => {

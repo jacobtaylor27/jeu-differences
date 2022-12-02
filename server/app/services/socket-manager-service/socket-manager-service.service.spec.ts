@@ -601,6 +601,20 @@ describe('SocketManager', () => {
             to: (id: string) => fakeSocket,
         } as unknown as io.Server;
         stub(service['gameManager'], 'addPlayer').callsFake(() => {});
+        const spyGameMode = stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.Classic);
+        service.handleSockets();
+        spyGameMode.callsFake(() => GameMode.LimitedTime);
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
         service.handleSockets();
     });
 

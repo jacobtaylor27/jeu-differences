@@ -55,10 +55,12 @@ describe('TimerService', () => {
         expect(timer.calculateTime(game)).to.equal(5);
     });
 
-    // Test needs to be changed with admins command
     it('should calculate time in mode Limited', () => {
         game['mode'] = GameMode.LimitedTime;
         timer['initialTime'].set(game.identifier, new Date());
+        stub(timer, 'gameTime').callsFake(() => {
+            return { constant: {} as GameTimeConstants, init: new Date() };
+        });
         const spyCalculateLimitedTimer = stub(timer, 'calculateLimitedGameTimer').callsFake(() => 1);
         expect(timer.calculateTime(game)).to.equal(1);
         expect(spyCalculateLimitedTimer.called).to.equal(true);

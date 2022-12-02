@@ -33,7 +33,7 @@ export class GameManagerService {
             await this.timer.setTimerConstant(mode, game.identifier);
             this.limitedTimeGame.gamesShuffled.set(game.identifier, gamesRandomized);
         } else {
-            gameCard = await this.gameInfo.getGameInfoById(gameCardId);
+            gameCard = (await this.gameInfo.getGameInfoById(gameCardId)) as PrivateGameInformation;
             game = new Game(playerInfo, { info: gameCard, mode });
         }
         this.games.set(game.identifier, game);
@@ -165,6 +165,17 @@ export class GameManagerService {
                   coords: differenceCoords,
                   nbDifferencesLeft: this.nbDifferencesLeft(gameId) as number,
               };
+    }
+
+    increaseNbClueAsked(gameId: string) {
+        const game = this.findGame(gameId);
+        if (game) {
+            game.nbCluesAsked++;
+        }
+    }
+
+    getNbClues(gameId: string) {
+        return this.findGame(gameId)?.nbCluesAsked;
     }
 
     findPlayer(gameId: string, playerId: string) {

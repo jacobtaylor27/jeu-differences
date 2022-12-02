@@ -4,11 +4,9 @@ import { TestBed } from '@angular/core/testing';
 import { CREATE_GAME, CREATE_GAME_ROOM, DELETE_GAMES, VALIDATE_COORD, VALID_GAME } from '@app/constants/server';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { GameTimeConstants } from '@common/game-time-constants';
 import { Message } from '@common/message';
-import { Score } from '@common/score';
 
 describe('CommunicationService', () => {
     let httpMock: HttpTestingController;
@@ -59,18 +57,6 @@ describe('CommunicationService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/bmp/original`);
-        expect(req.request.method).toBe('GET');
-    });
-
-    it('should get games info when select or admin page is loaded', () => {
-        service.getAllGameInfos().subscribe({
-            next: (response: HttpResponse<{ games: PublicGameInformation[] }>) => {
-                expect(response.body).toEqual({ games: [] });
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game/cards`);
         expect(req.request.method).toBe('GET');
     });
 
@@ -306,33 +292,6 @@ describe('CommunicationService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/game/scores/1/reset`);
-        expect(req.request.method).toBe('PATCH');
-    });
-
-    it('should get the game scores for a specific game', () => {
-        service.getGameScores('1').subscribe({
-            next: (response: HttpResponse<{ solo: Score[]; multi: Score[] }>) => {
-                expect(response.body).toEqual({
-                    solo: [],
-                    multi: [],
-                });
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game/scores/1`);
-        expect(req.request.method).toBe('GET');
-    });
-
-    it('should update the scores of a single game', () => {
-        service.updateGameScores('1', [], []).subscribe({
-            next: (response: void) => {
-                expect(response).toBeUndefined();
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game/scores/1`);
         expect(req.request.method).toBe('PATCH');
     });
 });

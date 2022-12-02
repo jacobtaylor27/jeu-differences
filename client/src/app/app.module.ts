@@ -19,6 +19,7 @@ import { AdminCommandsComponent } from './components/admin-commands/admin-comman
 import { ApprovalDialogComponent } from './components/approval-dialog/approval-dialog.component';
 import { CentralBoxComponent } from './components/central-tool-box/central-tool-box.component';
 import { ChatBoxComponent } from './components/chat-box/chat-box.component';
+import { CluesAreaComponent } from './components/clues-area/clues-area.component';
 import { CommonToolBoxComponent } from './components/common-tool-box/common-tool-box.component';
 import { DialogCreateGameComponent } from './components/dialog-create-game/dialog-create-game.component';
 import { DialogGameOverComponent } from './components/dialog-game-over/dialog-game-over.component';
@@ -68,6 +69,7 @@ import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-s
         UserNameInputComponent,
         GameCarouselComponent,
         AdminCommandsComponent,
+        CluesAreaComponent,
         PlayAreaComponent,
         ExitGameButtonComponent,
         TimerStopwatchComponent,

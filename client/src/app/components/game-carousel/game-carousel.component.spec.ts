@@ -16,6 +16,7 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { Socket } from 'socket.io-client';
 import { SocketEvent } from '@common/socket-event';
+import { RouterService } from '@app/services/router-service/router.service';
 
 class SocketClientServiceMock extends CommunicationSocketService {
     // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
@@ -27,6 +28,7 @@ describe('GameCarouselComponent', () => {
     let fixture: ComponentFixture<GameCarouselComponent>;
     let spyGameCarouselService: GameCarouselService;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyRouterService: jasmine.SpyObj<RouterService>;
     let socketServiceMock: SocketClientServiceMock;
     let socketHelper: SocketTestHelper;
 
@@ -44,6 +46,7 @@ describe('GameCarouselComponent', () => {
             'getNumberOfCards',
             'setCarouselInformation',
         ]);
+        spyRouterService = jasmine.createSpyObj('RouterService', ['navigate']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
         socketHelper = new SocketTestHelper();
         socketServiceMock = new SocketClientServiceMock();
@@ -60,6 +63,10 @@ describe('GameCarouselComponent', () => {
                 {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
+                },
+                {
+                    provide: RouterService,
+                    useValue: spyRouterService,
                 },
             ],
         }).compileComponents();

@@ -34,15 +34,20 @@ export class DifferencesAreaComponent implements OnInit {
                 this.players[this.getPlayerIndex(playerName)].nbDifference = this.setNbDifferencesFound(playerName);
             });
         } else {
-            this.players = [
-                { name: this.mainPlayer.name + ' & ' + this.opponentPlayer.name, nbDifference: this.setNbDifferencesFoundLimitedMulti() as string },
-            ];
+            this.players = !this.opponentPlayer
+                ? [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimited() as string }]
+                : [
+                      {
+                          name: this.mainPlayer.name + ' & ' + this.opponentPlayer.name,
+                          nbDifference: this.setNbDifferencesFoundLimited() as string,
+                      },
+                  ];
             this.gameInformationHandlerService.$playerLeft.subscribe(() => {
-                this.players = [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimitedMulti() as string }];
+                this.players = [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimited() as string }];
             });
 
             this.gameInformationHandlerService.$differenceFound.subscribe(() => {
-                this.players[0].nbDifference = this.setNbDifferencesFoundLimitedMulti();
+                this.players[0].nbDifference = this.setNbDifferencesFoundLimited();
             });
         }
     }
@@ -71,13 +76,14 @@ export class DifferencesAreaComponent implements OnInit {
         }
     }
 
-    setNbDifferencesFoundLimitedMulti() {
-        const nbPlayerDifference = this.gameInformationHandlerService.getNbDifferences(this.mainPlayer.name);
-        const nbOpponentDifference = this.gameInformationHandlerService.getNbDifferences(this.opponentPlayer.name);
+    setNbDifferencesFoundLimited() {
+        const nbPlayerDifference = this.gameInformationHandlerService.getNbDifferences(this.mainPlayer.name) as number;
 
-        if (nbPlayerDifference === undefined || nbOpponentDifference === undefined) {
-            return '';
+        if (this.opponentPlayer) {
+            const nbOpponentDifference = this.gameInformationHandlerService.getNbDifferences(this.opponentPlayer.name) as number;
+            return (nbPlayerDifference + nbOpponentDifference).toString();
         }
-        return (nbPlayerDifference + nbOpponentDifference).toString();
+
+        return nbPlayerDifference.toString();
     }
 }

@@ -3,14 +3,12 @@ import { Injectable } from '@angular/core';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
-import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { GameTimeConstants } from '@common/game-time-constants';
-import { Score } from '@common/score';
 
 @Injectable({
     providedIn: 'root',
@@ -103,10 +101,6 @@ export class CommunicationService {
         return this.http.get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' }).pipe();
     }
 
-    getAllGameInfos(): Observable<HttpResponse<{ games: PublicGameInformation[] }>> {
-        return this.http.get<{ games: PublicGameInformation[] }>(`${this.baseUrl}/game/cards`, { observe: 'response' }).pipe();
-    }
-
     getGamesInfoByPage(page: number = 1): Observable<HttpResponse<CarouselResponse>> {
         return this.http.get<CarouselResponse>(`${this.baseUrl}/game/cards/?page=${page}`, { observe: 'response' }).pipe();
     }
@@ -129,16 +123,6 @@ export class CommunicationService {
 
     refreshSingleGame(id: string): Observable<void> {
         return this.http.patch<void>(`${this.baseUrl}/game/scores/${id}/reset`, {}).pipe(catchError(this.handleError<void>('refreshSingleGame')));
-    }
-
-    getGameScores(id: string): Observable<HttpResponse<{ solo: Score[]; multi: Score[] }>> {
-        return this.http.get<{ solo: Score[]; multi: Score[] }>(`${this.baseUrl}/game/scores/${id}`, { observe: 'response' }).pipe();
-    }
-
-    updateGameScores(id: string, soloScores: Score[], multiScores: Score[]): Observable<void> {
-        return this.http
-            .patch<void>(`${this.baseUrl}/game/scores/${id}`, { soloScores, multiScores })
-            .pipe(catchError(this.handleError<void>('updateGameScores')));
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

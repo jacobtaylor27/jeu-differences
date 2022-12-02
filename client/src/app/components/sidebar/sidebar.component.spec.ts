@@ -59,20 +59,24 @@ describe('SidebarComponent', () => {
                 {
                     playerName: 'test2',
                     time: 10,
+                    type: ScoreType.Default,
                 },
                 {
                     playerName: 'test',
                     time: 10,
+                    type: ScoreType.Default,
                 },
             ],
             multiplayerScore: [
                 {
                     playerName: 'test2',
                     time: 10,
+                    type: ScoreType.Default,
                 },
                 {
                     playerName: 'test',
                     time: 10,
+                    type: ScoreType.Default,
                 },
             ],
             nbDifferences: 10,

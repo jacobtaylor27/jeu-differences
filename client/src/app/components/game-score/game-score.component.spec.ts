@@ -1,14 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ScoreType } from '@common/score-type';
 import { GameScoreComponent } from './game-score.component';
 
 const SCORES = [
     {
         playerName: 'player1',
         time: 100,
+        type: ScoreType.Default,
     },
     {
         playerName: 'player2',
         time: 200,
+        type: ScoreType.Default,
     },
 ];
 
@@ -29,12 +32,6 @@ describe('GameScoreComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('should verify if it has scores', () => {
-        expect(component.hasScores()).toBeTruthy();
-        component.scores = [];
-        expect(component.hasScores()).toBeFalsy();
     });
 
     it('should format score time', () => {

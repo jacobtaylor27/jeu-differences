@@ -3,7 +3,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { Theme } from '@app/enums/theme';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { DialogLimitedTimeComponent } from '@app/components/dialog-limited-time/dialog-limited-time.component';
 

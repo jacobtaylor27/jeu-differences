@@ -17,7 +17,7 @@ describe('CanvasStateService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('shuold not found the canvas state if it s not exist', () => {
+    it('should not find the canvas state if it does not exist', () => {
         service.states = [];
         expect(service.getCanvasState(CanvasType.Left)).toEqual(undefined);
     });

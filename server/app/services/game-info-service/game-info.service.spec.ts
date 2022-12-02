@@ -239,8 +239,8 @@ describe('GameInfo Service', async () => {
 
     it('should reset scores from single game', async () => {
         const game1 = DEFAULT_GAMES[0];
-        game1.multiplayerScore = [{ playerName: 'jacob', time: 1 }];
-        game1.soloScore = [{ playerName: 'jacob', time: 1 }];
+        game1.multiplayerScore = [{ playerName: 'jacob', time: 1, type: ScoreType.Default }];
+        game1.soloScore = [{ playerName: 'jacob', time: 1, type: ScoreType.Default }];
         gameInfoService.addGameInfo(game1);
         await gameInfoService.resetHighScores('0');
         expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([]);

@@ -46,7 +46,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
             this.gameInformationHandlerService.roomId = data.roomId;
 
-            if (this.gameInformationHandlerService.gameMode === GameMode.Classic) {
+            if (this.gameInformationHandlerService.isClassic()) {
                 this.socketService.on(SocketEvent.Play, (id: string) => {
                     this.gameInformationHandlerService.roomId = id;
                     this.routerService.navigateTo('game');

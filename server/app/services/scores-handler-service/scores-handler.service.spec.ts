@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { Score } from '@common/score';
 import { stub } from 'sinon';
 import { PrivateGameInformation } from '@app/interface/game-info';
+import { ScoreType } from '@common/score-type';
 
 describe('ScoresHandlerService', () => {
     let service: ScoresHandlerService;

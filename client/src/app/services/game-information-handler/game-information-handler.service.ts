@@ -109,4 +109,12 @@ export class GameInformationHandlerService {
     getOpponent(): { name: string; nbDifferences: number } {
         return this.players[1];
     }
+
+    isClassic() {
+        return this.gameMode === GameMode.Classic;
+    }
+
+    isLimitedTime() {
+        return this.gameMode === GameMode.LimitedTime;
+    }
 }

@@ -4,7 +4,6 @@ import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-s
 import { AppMaterialModule } from '@app/modules/material.module';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 import { Subject } from 'rxjs';
 
 import { DifferencesAreaComponent } from './differences-area.component';
@@ -17,7 +16,7 @@ describe('DifferencesAreaComponent', () => {
     beforeEach(async () => {
         spyGameInfosService = jasmine.createSpyObj(
             'GameInformationHandlerService',
-            ['setGameInformation', 'getPlayer', 'getOpponent', 'getNbTotalDifferences', 'getNbDifferences'],
+            ['setGameInformation', 'getPlayer', 'getOpponent', 'getNbTotalDifferences', 'getNbDifferences', 'isLimitedTime', 'isClassic'],
             {
                 $differenceFound: new Subject<string>(),
                 $playerLeft: new Subject<string>(),
@@ -63,6 +62,7 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should set the nb of differences found during the game', () => {
+        spyGameInfosService.isClassic.and.callFake(() => true);
         component.players = [{ name: 'test', nbDifference: '0/10' }];
         spyOn(Object.getPrototypeOf(component), 'getPlayerIndex').and.callFake(() => 0);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
@@ -92,18 +92,42 @@ describe('DifferencesAreaComponent', () => {
 
     it('should return string empty when player not found', () => {
         spyGameInfosService.getNbDifferences.and.callFake(() => undefined);
+        spyGameInfosService.isClassic.and.callFake(() => true);
         expect(component.setNbDifferencesFound('')).toEqual('');
     });
 
+    it('should return string empty when player not found', () => {
+        spyGameInfosService.getNbDifferences.and.callFake(() => 1);
+        spyGameInfosService.isClassic.and.callFake(() => true);
+        expect(component.setNbDifferencesFound('')).toEqual('1 / 10');
+    });
+
     it('should set nb of differences on limited and multi mode ', () => {
-        spyGameInfosService.gameMode = GameMode.LimitedTime;
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
 
         spyGameInfosService.getNbDifferences.and.callFake(() => 1);
         expect(component.setNbDifferencesFoundLimited()).toEqual('1');
     });
 
+    it('should set nb of differences on limited and multi mode ', () => {
+        spyGameInfosService.getNbDifferences.and.callFake(() => 1);
+
+        expect(component.setNbDifferencesFoundLimited()).toEqual('1');
+    });
+
+    it('should call setNbDifferencesFoundLimited when opponent in the game', () => {
+        spyGameInfosService.getOpponent.and.callFake(() => {
+            return { name: 'test2', nbDifferences: 2 };
+        });
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
+        spyGameInfosService.isMulti = true;
+        const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
+        spyOn(newComponent, 'setNbDifferencesFound').and.callFake(() => '1/10');
+        expect(newComponent.players).toEqual([{ name: 'test & test2', nbDifference: '0' }]);
+    });
+
     it('should call setNbDifferencesFoundLimited on $playerLeft.next', () => {
-        spyGameInfosService.gameMode = GameMode.LimitedTime;
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;
         const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
         const spyNbDifferenceFound = spyOn(newComponent, 'setNbDifferencesFoundLimited').and.callFake(() => '1/10');
@@ -115,7 +139,7 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should call setNbDifferencesFoundLimited on $differenceFound.next', () => {
-        spyGameInfosService.gameMode = GameMode.LimitedTime;
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;
         const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
         const spyNbDifferenceFound = spyOn(newComponent, 'setNbDifferencesFoundLimited').and.callFake(() => '1/10');

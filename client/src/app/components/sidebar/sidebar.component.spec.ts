@@ -9,6 +9,7 @@ import { DifferencesDetectionHandlerService } from '@app/services/differences-de
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { ScoreType } from '@common/score-type';
 import { Subject } from 'rxjs';
+
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
@@ -19,7 +20,7 @@ describe('SidebarComponent', () => {
         const expectedTotalDifference = 10;
         spyGameInfosService = jasmine.createSpyObj(
             'GameInformationHandlerService',
-            ['getGameName', 'getGameMode', 'getPlayer', 'getOpponent', 'getNbDifferences', 'getNbTotalDifferences'],
+            ['getGameName', 'getGameMode', 'getPlayer', 'getOpponent', 'getNbDifferences', 'getNbTotalDifferences', 'isLimitedTime', 'isClassic'],
             { $newGame: new Subject<string>(), $differenceFound: new Subject<string>() },
         );
         spyDifferencesDetection = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['nbDifferencesFound', 'resetNumberDifferencesFound']);

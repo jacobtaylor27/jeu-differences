@@ -89,7 +89,7 @@ export class DifferencesDetectionHandlerService {
         const interval = setInterval(
             () => {
                 for (const coordinate of coords) {
-                    ctx.clearRect(coordinate.x, coordinate.y, 5, 5);
+                    ctx.clearRect(coordinate.x - 4, coordinate.y - 4, 8, 8);
                 }
                 if (counter === 5 && !isCheatMode) {
                     clearInterval(interval);

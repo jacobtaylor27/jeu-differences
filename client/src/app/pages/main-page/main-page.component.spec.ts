@@ -10,8 +10,9 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MainPageService } from '@app/services/main-page/main-page.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { GameMode } from '@common/game-mode';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('MainPageComponent', () => {
     let component: MainPageComponent;
@@ -20,12 +21,14 @@ describe('MainPageComponent', () => {
     let spyGameInfosHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+    let spyRouter: jasmine.SpyObj<RouterService>;
 
     beforeEach(async () => {
         spyMainPageService = jasmine.createSpyObj('GamePageService', ['setGameMode']);
         spyGameInfosHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameMode', 'getGameName', 'getGameMode']);
         spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
+        spyRouter = jasmine.createSpyObj('RouterService', ['redirectToErrorPage']);
 
         await TestBed.configureTestingModule({
             declarations: [MainPageComponent],
@@ -43,6 +46,10 @@ describe('MainPageComponent', () => {
                 {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
+                },
+                {
+                    provide: RouterService,
+                    useValue: spyRouter,
                 },
             ],
         }).compileComponents();
@@ -70,5 +77,11 @@ describe('MainPageComponent', () => {
     it('should set GameMode to Limited when Limited button is clicked', () => {
         component.onClickPlayLimited();
         expect(spyMainPageService.setGameMode).toHaveBeenCalledWith(GameMode.LimitedTime);
+    });
+
+    it('should redirect to error page if there is an error', () => {
+        spyCommunicationService.getGamesInfoByPage.and.returnValue(throwError(() => new Error('Error')));
+        component.onClickPlayLimited();
+        expect(spyRouter.redirectToErrorPage).toHaveBeenCalled();
     });
 });

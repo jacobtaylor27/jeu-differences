@@ -10,7 +10,6 @@ import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.s
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
-import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -114,7 +113,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             if (this.cheatMode.isCheatModeActivated) {
                 this.cheatMode.stopCheatModeDifference(this.getContextOriginal(), this.getContextModified(), data.coords);
             }
-            if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
+            if (this.gameInfoHandlerService.isClassic()) {
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
                 this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
             }

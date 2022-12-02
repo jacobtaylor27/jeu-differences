@@ -1222,12 +1222,43 @@ describe('SocketManager', () => {
     });
 
     it('should handle the end game', () => {
+        const fakeSocket = {
+            emit: (eventName: string, message: unknown) => {
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.EventMessage).to.equal(true);
+            },
+            join: (id: string) => {
+                return;
+            },
+            to: (id: string) => {
+                return { emit: (eventName: string, message: unknown) => {} };
+            },
+            broadcast: {
+                to: () => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.Lose);
+                        },
+                    };
+                },
+            },
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            to: (gameId: string) => fakeSocket,
+        } as unknown as io.Server;
         stub(service['eventMessageService'], 'sendNewHighScoreMessage').callsFake(() => '');
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         stub(service['gameManager'], 'getTime').callsFake(() => 1);
         stub(service['gameManager'], 'findPlayer').callsFake(() => '');
         stub(service['gameManager'], 'getGameInfo').callsFake(() => undefined);
-        // stub(service['scoresHandlerService'], 'verifyScore').callsFake(() => Promise.resolve());
-        // service['handleEndGame']('gameId', fakeSocket);
+        const verifyScore = stub(service['scoresHandlerService'], 'verifyScore')
+            .callsFake(async () => new Promise(() => 1))
+            .resolves(1);
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        //  no score
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        verifyScore.callsFake(async () => new Promise(() => -1)).resolves(-1);
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
     });
 });

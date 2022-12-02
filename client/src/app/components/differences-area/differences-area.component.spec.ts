@@ -102,7 +102,6 @@ describe('DifferencesAreaComponent', () => {
         expect(component.setNbDifferencesFoundLimited()).toEqual('1');
     });
 
-    
     it('should call setNbDifferencesFoundLimited on $playerLeft.next', () => {
         spyGameInfosService.gameMode = GameMode.LimitedTime;
         spyGameInfosService.isMulti = true;

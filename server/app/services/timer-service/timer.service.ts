@@ -34,10 +34,10 @@ export class TimerService {
         return !constant || !init ? null : { constant, init };
     }
 
-    calculateLimitedGameTimer(gameId: string): number {
+    calculateLimitedGameTimer(game: Game): number {
         const presentTime = new Date();
-        const time = this.gameTime(gameId);
-        const totalDifferenceFound = this.differences.totalDifferenceFound(gameId);
+        const time = this.gameTime(game.identifier);
+        const totalDifferenceFound = this.differences.totalDifferenceFound(game.identifier);
         if (!time || !totalDifferenceFound) {
             return 0;
         }
@@ -46,27 +46,27 @@ export class TimerService {
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
             Math.floor((presentTime.getTime() - time.init.getTime()) / 1000) +
             time.constant.successTime * totalDifferenceFound.size -
-            time.constant.penaltyTime * 0; // TO DO : multiply by the nb of clue activate
+            time.constant.penaltyTime * game.nbCluesAsked;
         if (timer > 120) {
             const differenceLimitTime = timer - 120;
             time.init.setTime(time.init.getTime() - differenceLimitTime * 1000);
             timer -= differenceLimitTime;
         }
-        return timer;
+        return timer < 0 ? 0 : timer;
     }
 
     calculateTime(game: Game): number {
         const presentTime = new Date();
         const time = this.initialTime.get(game.identifier);
-        if (!time) {
+        const timer = this.gameTime(game.identifier);
+        if (!time || !timer) {
             return 0;
         }
         if (game.gameMode === GameMode.Classic) {
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            return Math.floor((presentTime.getTime() - time.getTime()) / 1000);
+            return Math.floor((presentTime.getTime() - time.getTime()) / 1000) + timer.constant.penaltyTime * game.nbCluesAsked;
         } else {
-            // TO DO : ADD ADMINS TIME
-            const limitedTime = this.calculateLimitedGameTimer(game.identifier);
+            const limitedTime = this.calculateLimitedGameTimer(game);
             if (limitedTime === 0) {
                 game.setEndgame();
             }

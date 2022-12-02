@@ -45,16 +45,22 @@ describe('TimerService', () => {
 
     it('should calculate time in mode Classic', () => {
         game['mode'] = GameMode.Classic;
+        game['nbCluesAsked'] = 0;
+        stub(timer, 'gameTime').callsFake(() => {
+            return { constant: { penaltyTime: 0 } as GameTimeConstants, init: new Date() };
+        });
         timer.setTimer(game);
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);
         expect(timer.calculateTime(game)).to.equal(5);
     });
 
-    // Test needs to be changed with admins command
     it('should calculate time in mode Limited', () => {
         game['mode'] = GameMode.LimitedTime;
         timer['initialTime'].set(game.identifier, new Date());
+        stub(timer, 'gameTime').callsFake(() => {
+            return { constant: {} as GameTimeConstants, init: new Date() };
+        });
         const spyCalculateLimitedTimer = stub(timer, 'calculateLimitedGameTimer').callsFake(() => 1);
         expect(timer.calculateTime(game)).to.equal(1);
         expect(spyCalculateLimitedTimer.called).to.equal(true);
@@ -67,7 +73,7 @@ describe('TimerService', () => {
         timer['initialTime'].set(game.identifier, new Date(0));
         timer['timerConstant'].set(game.identifier, { gameTime: 60, successTime: 0, penaltyTime: 0 });
         stub(difference, 'totalDifferenceFound').callsFake(() => new Set());
-        expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(60);
+        expect(timer.calculateLimitedGameTimer(game)).to.equal(60);
     });
 
     it('should add time if difference is found for limited timer game mode', () => {
@@ -77,26 +83,26 @@ describe('TimerService', () => {
             return { size: 2 } as Set<Coordinate[]>;
         });
         difference['gamesDifferencesTotalFound'].set(game.identifier, { size: 2 } as Set<Coordinate[]>);
-        expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(70);
+        expect(timer.calculateLimitedGameTimer(game)).to.equal(70);
     });
 
     it('should reset the timer to 2min if the timer is greater for limited timer game mode', () => {
         timer['initialTime'].set(game.identifier, new Date(0));
         timer['timerConstant'].set(game.identifier, { gameTime: 120, successTime: 5, penaltyTime: 0 });
         difference['gamesDifferencesTotalFound'].set(game.identifier, { size: 2 } as Set<Coordinate[]>);
-        expect(timer.calculateLimitedGameTimer(game.identifier)).to.equal(120);
+        expect(timer.calculateLimitedGameTimer(game)).to.equal(120);
     });
 
     it('should time not found or total difference found not found', () => {
         const gameTime = stub(timer, 'gameTime').callsFake(() => null);
-        expect(timer.calculateLimitedGameTimer('')).to.equal(0);
+        expect(timer.calculateLimitedGameTimer({} as Game)).to.equal(0);
         gameTime.callsFake(() => {
             return { constant: {} as GameTimeConstants, init: new Date() };
         });
         stub(difference, 'totalDifferenceFound').callsFake(() => undefined);
-        expect(timer.calculateLimitedGameTimer('')).to.equal(0);
+        expect(timer.calculateLimitedGameTimer({} as Game)).to.equal(0);
         gameTime.callsFake(() => null);
-        expect(timer.calculateLimitedGameTimer('')).to.equal(0);
+        expect(timer.calculateLimitedGameTimer({} as Game)).to.equal(0);
     });
 
     it('should return 0 if no timer found', () => {
@@ -117,5 +123,14 @@ describe('TimerService', () => {
         stub(timer['timerConstant'], 'get').callsFake(() => expectedGameTimerConstant);
         stub(timer['initialTime'], 'get').callsFake(() => currentTime);
         expect(timer.gameTime('')).to.deep.equal({ constant: expectedGameTimerConstant, init: currentTime });
+    });
+
+    it('should return 0 for timer if less than 0', () => {
+        stub(timer, 'gameTime').callsFake(() => {
+            return { constant: { gameTime: 30, successTime: 0, penaltyTime: 60 }, init: new Date() };
+        });
+        game['nbCluesAsked'] = 1;
+        stub(difference, 'totalDifferenceFound').callsFake(() => new Set());
+        expect(timer.calculateLimitedGameTimer(game)).to.equal(0);
     });
 });

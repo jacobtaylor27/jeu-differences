@@ -224,10 +224,10 @@ describe('GameInfo Service', async () => {
     it('should reset all the scores', async () => {
         const game1 = DEFAULT_GAMES[0];
         const game2 = DEFAULT_GAMES[1];
-        game1.multiplayerScore = [{ playerName: 'jacob', time: 1 }];
-        game1.multiplayerScore = [{ playerName: 'jacob', time: 1 }];
-        game2.soloScore = [{ playerName: 'jacob', time: 1 }];
-        game2.soloScore = [{ playerName: 'jacob', time: 1 }];
+        game1.multiplayerScore = [{ playerName: 'jacob', time: 1, type: ScoreType.Default }];
+        game1.multiplayerScore = [{ playerName: 'jacob', time: 1, type: ScoreType.Default }];
+        game2.soloScore = [{ playerName: 'jacob', time: 1, type: ScoreType.Default }];
+        game2.soloScore = [{ playerName: 'jacob', time: 1, type: ScoreType.Default }];
         gameInfoService.addGameInfo(game1);
         gameInfoService.addGameInfo(game2);
         await gameInfoService.resetAllHighScores();

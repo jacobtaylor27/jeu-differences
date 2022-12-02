@@ -124,4 +124,13 @@ describe('TimerService', () => {
         stub(timer['initialTime'], 'get').callsFake(() => currentTime);
         expect(timer.gameTime('')).to.deep.equal({ constant: expectedGameTimerConstant, init: currentTime });
     });
+
+    it('should return 0 for timer if less than 0', () => {
+        stub(timer, 'gameTime').callsFake(() => {
+            return { constant: { gameTime: 30, successTime: 0, penaltyTime: 60 }, init: new Date() };
+        });
+        game['nbCluesAsked'] = 1;
+        stub(difference, 'totalDifferenceFound').callsFake(() => new Set());
+        expect(timer.calculateLimitedGameTimer(game)).to.equal(0);
+    });
 });

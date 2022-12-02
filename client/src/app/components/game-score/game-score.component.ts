@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-// import { defaultSoloScores } from '@app/constants/default-scores';
+import { defaultScores } from '@app/constants/default-scores';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { Score } from '@common/score';
 

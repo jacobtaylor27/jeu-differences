@@ -4,11 +4,11 @@ import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { Vec2 } from '@app/interfaces/vec2';
 import { Coordinate } from '@common/coordinate';
 import { GameMode } from '@common/game-mode';
+import { GameTimeConstants } from '@common/game-time-constants';
 import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { GameTimeConstants } from '@common/game-time-constants';
 
 @Injectable({
     providedIn: 'root',
@@ -97,8 +97,8 @@ export class CommunicationService {
             );
     }
 
-    getImgData(id: string): Observable<HttpResponse<{ width: number; height: number; data: number[] }>> {
-        return this.http.get<{ width: number; height: number; data: number[] }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' }).pipe();
+    getImgData(id: string): Observable<HttpResponse<{ image: string }>> {
+        return this.http.get<{ image: string }>(`${this.baseUrl}/bmp/${id}`, { observe: 'response' }).pipe();
     }
 
     getGamesInfoByPage(page: number = 1): Observable<HttpResponse<CarouselResponse>> {

@@ -150,15 +150,14 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             ? this.getImageData(this.gameInfoHandlerService.getOriginalBmpId())
             : this.getImageData(this.gameInfoHandlerService.getModifiedBmpId());
 
-        originalImageData.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
+        originalImageData.subscribe((response: HttpResponse<{ image: string }> | null) => {
             if (!response || !response.body) {
                 return;
             }
-            const image: ImageData = new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, {
-                colorSpace: 'srgb',
-            });
-
-            ctx.putImageData(image, 0, 0);
+            const imageBase64 = response.body.image;
+            const image = new Image();
+            image.src = 'data:image/png;base64,' + imageBase64;
+            ctx.drawImage(image, 0, 0);
         });
     }
 

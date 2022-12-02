@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
@@ -245,19 +246,7 @@ export class SocketManagerService {
                 socket.emit(SocketEvent.DifferenceFound, this.gameManager.getNbDifferencesFound(differences, gameId));
 
                 if (this.gameManager.isGameOver(gameId)) {
-                    this.scoresHandlerService.verifyScore(
-                        this.gameManager.getGameInfo(gameId)?.id as string,
-                        { playerName: this.gameManager.findPlayer(gameId, socket.id) as string, time: this.gameManager.getTime(gameId) as number },
-                        this.gameManager.isGameMultiplayer(gameId) as boolean,
-                    );
-                    this.gameManager.leaveGame(socket.id, gameId);
-
-                    if (this.gameManager.isGameMultiplayer(gameId)) {
-                        socket.broadcast.to(gameId).emit(SocketEvent.Lose);
-                    }
-
-                    socket.emit(SocketEvent.Win);
-                    return;
+                    this.handleEndGame(gameId, socket);
                 }
 
                 if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
@@ -344,5 +333,33 @@ export class SocketManagerService {
 
     refreshGames() {
         this.sio.emit(SocketEvent.RefreshGames);
+    }
+
+    private handleEndGame(gameId: string, socket: Socket): void {
+        const time = this.gameManager.getTime(gameId) as number;
+        const playerName = this.gameManager.findPlayer(gameId, socket.id) as string;
+        this.scoresHandlerService
+            .verifyScore(
+                this.gameManager.getGameInfo(gameId)?.id as string,
+                { playerName, time },
+                this.gameManager.isGameMultiplayer(gameId) as boolean,
+            )
+            .then((index) => {
+                this.gameManager.leaveGame(socket.id, gameId);
+
+                if (this.gameManager.isGameMultiplayer(gameId)) {
+                    socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+                }
+
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
+                if (index !== -1) {
+                    socket.emit(SocketEvent.Win, { index, time });
+                    // message all active games
+                    return;
+                }
+
+                socket.emit(SocketEvent.Win);
+                return;
+            });
     }
 }

@@ -1,16 +1,17 @@
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
+import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
+import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
-import { PublicGameInformation } from '@common/game-information';
+import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
 import { Coordinate } from '@common/coordinate';
+import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
+import * as LZString from 'lz-string';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
-import * as LZString from 'lz-string';
-import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
-import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 
 @Service()
 export class SocketManagerService {
@@ -23,6 +24,7 @@ export class SocketManagerService {
         private eventMessageService: EventMessageService,
         private readonly scoresHandlerService: ScoresHandlerService,
         private limitedTimeService: LimitedTimeGame,
+        private cluesService: CluesService,
     ) {}
 
     set server(server: http.Server) {
@@ -60,6 +62,22 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.FetchDifferences, (gameId: string) => {
                 socket.emit(SocketEvent.FetchDifferences, this.gameManager.getNbDifferenceNotFound(gameId));
+            });
+
+            socket.on(SocketEvent.Clue, (gameId: string) => {
+                this.gameManager.increaseNbClueAsked(gameId);
+                const pixelResult = this.cluesService.findRandomPixel(gameId);
+                switch (this.gameManager.getNbClues(gameId)) {
+                    case 1:
+                        this.sio.to(gameId).emit(SocketEvent.Clue, { clue: this.cluesService.firstCluePosition(pixelResult), nbClues: 1 });
+                        break;
+                    case 2:
+                        this.sio.to(gameId).emit(SocketEvent.Clue, { clue: this.cluesService.secondCluePosition(pixelResult), nbClues: 2 });
+                        break;
+                    case 3:
+                        this.sio.to(gameId).emit(SocketEvent.Clue, { clue: this.cluesService.thirdCluePosition(pixelResult), nbClues: 3 });
+                }
+                this.sio.to(gameId).emit(SocketEvent.EventMessage, this.eventMessageService.usingClueMessage());
             });
 
             socket.on(SocketEvent.AcceptPlayer, (roomId: string, opponentsRoomId: string, playerName: string) => {
@@ -142,6 +160,9 @@ export class SocketManagerService {
                     socket.broadcast
                         .to(gameId)
                         .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
+                } else if (!this.gameManager.isGameMultiplayer(gameId)) {
+                    socket.leave(gameId);
+                    this.gameManager.leaveGame(socket.id, gameId);
                 }
             });
 

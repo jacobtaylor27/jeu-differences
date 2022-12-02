@@ -48,4 +48,11 @@ describe('Database service', () => {
         expect(databaseService['client']).to.not.equal(undefined);
         expect(databaseService.database.databaseName).to.equal(DB_NAME);
     });
+
+    it('should log the error when failing to start the server', async () => {
+        const logError = sinon.stub(console, 'error');
+        sinon.stub(Object.getPrototypeOf(databaseService), 'initializeCollection').throws();
+        await databaseService.start('invalid uri');
+        expect(logError.calledOnce).to.equal(true);
+    });
 });

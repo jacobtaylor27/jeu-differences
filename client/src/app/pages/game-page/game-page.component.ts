@@ -9,6 +9,7 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { GameMode } from '@common/game-mode';
+import { GameRecord } from '@common/game-record';
 import { SocketEvent } from '@common/socket-event';
 
 @Component({
@@ -35,8 +36,8 @@ export class GamePageComponent implements OnDestroy {
         this.handleSocket();
     }
     handleSocket() {
-        this.socket.once(SocketEvent.Win, () => {
-            this.openGameOverDialog(true);
+        this.socket.once(SocketEvent.Win, (record?: GameRecord) => {
+            this.openGameOverDialog(true, record);
             this.clueHandlerService.resetNbClue();
         });
         this.socket.once(SocketEvent.Lose, () => {
@@ -55,7 +56,7 @@ export class GamePageComponent implements OnDestroy {
         this.snackBar.openFromComponent(PlayerLeftSnackbarComponent, { duration: 5000 });
     }
 
-    openGameOverDialog(isWin: boolean) {
+    openGameOverDialog(isWin: boolean, record?: GameRecord): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.minWidth = '50%';
@@ -64,6 +65,7 @@ export class GamePageComponent implements OnDestroy {
                 win: isWin,
                 winner: isWin ? this.gameInfoHandlerService.getPlayer().name : this.gameInfoHandlerService.getOpponent().name,
                 isClassic: true,
+                record,
             };
         } else {
             dialogConfig.data = {

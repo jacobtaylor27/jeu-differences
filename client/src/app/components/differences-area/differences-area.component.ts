@@ -69,7 +69,7 @@ export class DifferencesAreaComponent implements OnInit {
         if (nbPlayerDifference === undefined) {
             return '';
         }
-        if (this.gameInformationHandlerService.gameMode === GameMode.Classic) {
+        if (this.gameInformationHandlerService.isClassic()) {
             return nbPlayerDifference.toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
         } else {
             return nbPlayerDifference.toString();

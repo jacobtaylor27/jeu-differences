@@ -7,7 +7,6 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
-import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 @Component({

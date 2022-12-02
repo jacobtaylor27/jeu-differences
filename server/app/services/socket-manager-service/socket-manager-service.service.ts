@@ -8,6 +8,7 @@ import { ScoresHandlerService } from '@app/services/scores-handler-service/score
 import { Coordinate } from '@common/coordinate';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
+import { ScoreType } from '@common/score-type';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import * as LZString from 'lz-string';
@@ -341,7 +342,7 @@ export class SocketManagerService {
         const gameInfo = this.gameManager.getGameInfo(gameId);
         const isMulti = this.gameManager.isGameMultiplayer(gameId) as boolean;
 
-        this.scoresHandlerService.verifyScore(gameInfo?.id as string, { playerName, time }, isMulti).then((index) => {
+        this.scoresHandlerService.verifyScore(gameInfo?.id as string, { playerName, time, type: ScoreType.Player }, isMulti).then((index) => {
             this.gameManager.leaveGame(socket.id, gameId);
 
             if (isMulti) {

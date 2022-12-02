@@ -1,4 +1,5 @@
 import { GameCard } from '@app/interfaces/game-card';
+import { ScoreType } from '@common/score-type';
 
 export const gameCard1: GameCard = {
     gameInformation: {
@@ -11,20 +12,24 @@ export const gameCard1: GameCard = {
             {
                 playerName: 'test2',
                 time: 10,
+                type: ScoreType.Player,
             },
             {
                 playerName: 'test',
                 time: 10,
+                type: ScoreType.Player,
             },
         ],
         multiplayerScore: [
             {
                 playerName: 'test2',
                 time: 10,
+                type: ScoreType.Player,
             },
             {
                 playerName: 'test',
                 time: 10,
+                type: ScoreType.Player,
             },
         ],
         nbDifferences: 1,

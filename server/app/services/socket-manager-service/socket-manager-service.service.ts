@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';

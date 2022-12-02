@@ -57,7 +57,7 @@ export class DifferencesAreaComponent implements OnInit {
     }
 
     isMultiLimited(): boolean {
-        return this.gameInformationHandlerService.gameMode === GameMode.LimitedTime && this.gameInformationHandlerService.isMulti;
+        return this.gameInformationHandlerService.isLimitedTime() && this.gameInformationHandlerService.isMulti;
     }
 
     getPlayerIndex(playerName: string) {

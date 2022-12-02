@@ -101,4 +101,17 @@ describe('DifferencesAreaComponent', () => {
         spyGameInfosService.getNbDifferences.and.callFake(() => 1);
         expect(component.setNbDifferencesFoundLimited()).toEqual('1');
     });
+
+    
+    it('should call setNbDifferencesFoundLimited on $playerLeft.next', () => {
+        spyGameInfosService.gameMode = GameMode.LimitedTime;
+        spyGameInfosService.isMulti = true;
+        const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
+        const spyNbDifferenceFound = spyOn(newComponent, 'setNbDifferencesFoundLimited').and.callFake(() => '1/10');
+        spyGameInfosService.$playerLeft.subscribe(() => {
+            expect(spyNbDifferenceFound).toHaveBeenCalled();
+        });
+
+        spyGameInfosService.$playerLeft.next();
+    });
 });

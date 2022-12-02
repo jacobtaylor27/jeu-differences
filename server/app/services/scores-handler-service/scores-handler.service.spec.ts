@@ -106,17 +106,17 @@ describe('ScoresHandlerService', () => {
 
     it('should not add the score in the top 3 array if the score is not the best', () => {
         const expectedSize = 4;
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score, score, score];
-        service['tryAddScore']({ playerName: 'name', time: 2 }, service['soloScores']);
+        service['tryAddScore']({ playerName: 'name', time: 2, type: ScoreType.Default }, service['soloScores']);
         expect(service['soloScores'].length).equal(expectedSize);
     });
 
     it('should add the score in the array if the score is the best', () => {
         const expectedSize = 4;
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score, score, score];
-        service['tryAddScore']({ playerName: 'name', time: 0 }, service['soloScores']);
+        service['tryAddScore']({ playerName: 'name', time: 0, type: ScoreType.Default }, service['soloScores']);
         expect(service['soloScores'].length).equal(expectedSize);
     });
 });

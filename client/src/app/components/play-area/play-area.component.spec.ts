@@ -12,6 +12,7 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
@@ -46,6 +47,7 @@ describe('PlayAreaComponent', () => {
             'setNumberDifferencesFound',
             'differenceDetected',
             'playCorrectSound',
+            'showClue',
         ]);
         cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
         gameInformationHandlerServiceSpy = jasmine.createSpyObj(
@@ -112,6 +114,22 @@ describe('PlayAreaComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should handle clue on ngOnInit', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextOriginal').and.callFake(() => {
+            return ctx;
+        });
+
+        component.ngOnInit();
+        socketHelper.peerSideEmit(SocketEvent.Clue, { clue: [{ x: 1, y: 3 }] as Coordinate[], nbClues: 2 });
+
+        expect(differenceService.showClue).toHaveBeenCalled();
     });
 
     it('should display image afterViewInit', () => {

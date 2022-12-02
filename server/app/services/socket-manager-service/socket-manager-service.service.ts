@@ -342,7 +342,7 @@ export class SocketManagerService {
         const gameInfo = this.gameManager.getGameInfo(gameId);
         const isMulti = this.gameManager.isGameMultiplayer(gameId) as boolean;
 
-        this.scoresHandlerService.verifyScore(gameInfo?.id as string, { playerName, time }, isMulti).then((index) => {
+        this.scoresHandlerService.verifyScore(gameInfo?.id as string, { playerName, time, type: ScoreType.Player }, isMulti).then((index) => {
             this.gameManager.leaveGame(socket.id, gameId);
 
             if (isMulti) {

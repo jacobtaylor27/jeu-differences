@@ -52,21 +52,21 @@ export class TimerService {
             time.init.setTime(time.init.getTime() - differenceLimitTime * 1000);
             timer -= differenceLimitTime;
         }
-        return timer;
+        return timer < 0 ? 0 : timer;
     }
 
     calculateTime(game: Game): number {
         const presentTime = new Date();
         const time = this.initialTime.get(game.identifier);
-        if (!time) {
+        const timer = this.gameTime(game.identifier);
+        if (!time || !timer) {
             return 0;
         }
         if (game.gameMode === GameMode.Classic) {
             /* eslint-disable @typescript-eslint/no-magic-numbers -- 1000 ms in 1 second */
-            return Math.floor((presentTime.getTime() - time.getTime()) / 1000);
+            return Math.floor((presentTime.getTime() - time.getTime()) / 1000) + timer.constant.penaltyTime * game.nbCluesAsked;
         } else {
-            // TO DO : ADD ADMINS TIME
-            const limitedTime = this.calculateLimitedGameTimer(game.identifier);
+            const limitedTime = this.calculateLimitedGameTimer(game);
             if (limitedTime === 0) {
                 game.setEndgame();
             }

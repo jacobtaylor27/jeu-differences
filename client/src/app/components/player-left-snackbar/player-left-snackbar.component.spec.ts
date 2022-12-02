@@ -15,7 +15,7 @@ describe('PlayerLeftSnackbarComponent', () => {
     let spyGameInfoService: jasmine.SpyObj<GameInformationHandlerService>;
 
     beforeEach(async () => {
-        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['gameMode']);
+        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['gameMode', 'isLimitedTime']);
 
         await TestBed.configureTestingModule({
             declarations: [PlayerLeftSnackbarComponent],

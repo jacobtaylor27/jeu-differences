@@ -7,7 +7,6 @@ import { AdminCommandsComponent } from '@app/components/admin-commands/admin-com
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 
 import { UserNameInputComponent } from './user-name-input.component';
 

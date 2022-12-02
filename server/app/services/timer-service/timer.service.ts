@@ -20,9 +20,7 @@ export class TimerService {
     }
 
     async setTimerConstant(mode: GameMode, gameId: string) {
-        if (mode === GameMode.LimitedTime) {
-            this.timerConstant.set(gameId, await this.timeConstant.getGameTimeConstant());
-        }
+        this.timerConstant.set(gameId, await this.timeConstant.getGameTimeConstant());
     }
 
     setTimer(game: Game) {

@@ -105,6 +105,7 @@ describe('DifferenceService', () => {
         const expectedPlayerId = '';
         const game = new Game({ player: {} as User, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic });
         difference['gamesDifferencesFound'].set(game.identifier, new Map());
+        difference['gamesDifferencesTotalFound'].set(game.identifier, new Set());
         difference['gamesDifferencesFound'].get(game.identifier)?.set(expectedPlayerId, new Set());
         const isAlreadyDifferenceFoundSpy = stub(difference, 'isDifferenceAlreadyFound').callsFake(() => true);
         const isAllDifferenceFoundSpy = stub(difference, 'isAllDifferenceFound').callsFake(() => false);

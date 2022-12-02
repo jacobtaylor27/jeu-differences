@@ -248,4 +248,14 @@ describe('GameInfo Service', async () => {
         expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.not.deep.equal(undefined);
         expect((await gameInfoService.getHighScores('0'))?.soloScore).to.not.deep.equal(undefined);
     });
+
+    it('should return null if no game info', async () => {
+        await databaseService.close();
+        expect(await gameInfoService.getGameInfoById('')).to.equal(null);
+    });
+
+    it('should return null if no possible to update high score', async () => {
+        stub(gameInfoService, 'getGameInfoById').throwsException();
+        expect(await gameInfoService.getHighScores('')).to.equal(null);
+    });
 });

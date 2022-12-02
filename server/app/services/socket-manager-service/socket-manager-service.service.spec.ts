@@ -726,6 +726,16 @@ describe('SocketManager', () => {
     });
 
     it('should create a game in solo', async () => {
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
         const fakeSocket = {
             join: () => {},
             emit: () => {},
@@ -739,11 +749,14 @@ describe('SocketManager', () => {
         const spyEmit = stub(fakeSocket, 'emit');
         const spyJoin = stub(fakeSocket, 'join');
         await service.createGameSolo('player', GameMode.Classic, { card: '', isMulti: false }, fakeSocket);
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
         expect(spySetTimer.called).to.equal(true);
         expect(spyCreateGame.called).to.equal(true);
         expect(spySendTimer.called).to.equal(true);
         expect(spyEmit.called).to.equal(true);
         expect(spyJoin.called).to.equal(true);
+        await service.createGameSolo('player', GameMode.Classic, { card: '', isMulti: false }, fakeSocket);
+        expect(spyEmit.calledTwice).to.equal(true);
     });
 
     it('should reject if the players have the same name', async () => {
@@ -841,6 +854,33 @@ describe('SocketManager', () => {
         expect(spyBroadcastEmit.called).to.equal(true);
         expect(spyAddGameToWaiting.called).to.equal(true);
         expect(spyCreateGame.called).to.equal(true);
+    });
+
+    it('should create a game in limited time', async () => {
+        service['sio'] = {
+            to: () => {
+                return { emit: () => {} };
+            },
+        } as unknown as io.Server;
+        const fakeSocket = {
+            join: () => {},
+            emit: () => {},
+            broadcast: {
+                to: () => {
+                    return { emit: () => {} };
+                },
+            },
+        } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+        stub(fakeSocket, 'emit');
+        stub(service['gameManager'], 'hasSameName').callsFake(() => false);
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['gameManager'], 'setTimer').callsFake(() => {});
+        stub(service['gameManager'], 'sendTimer').callsFake(() => {});
+        const spyEmit = stub(fakeSocket.broadcast.to(''), 'emit');
+        const spyJoin = stub(fakeSocket, 'join');
+        await service.createGameMulti('', GameMode.LimitedTime, { card: '', isMulti: true }, fakeSocket);
+        expect(spyEmit.called).to.equal(false);
+        expect(spyJoin.called).to.equal(true);
     });
 
     it('should remove game waiting if the roomId is found', () => {
@@ -1118,6 +1158,66 @@ describe('SocketManager', () => {
         getClues.callsFake(() => 2);
         service.handleSockets();
         getClues.callsFake(() => 3);
+        service.handleSockets();
+    });
+
+    it('should send the new game if the game is in Limited Time', () => {
+        const expectedDifferenceFound = {
+            coords: [],
+            isPlayerFoundDifference: true,
+            isGameOver: false,
+            nbDifferencesLeft: 2,
+        };
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            emit: (eventName: string, message: unknown) => {
+                expect(
+                    eventName === SocketEvent.DifferenceFound || eventName === SocketEvent.EventMessage || eventName === SocketEvent.NewGameBoard,
+                ).to.equal(true);
+            },
+            join: (id: string) => {
+                return;
+            },
+            to: (id: string) => {
+                return { emit: (eventName: string, message: unknown) => {} };
+            },
+            broadcast: {
+                to: () => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                        },
+                    };
+                },
+            },
+        };
+
+        service['sio'] = {
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: (gameId: string) => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => false);
+        stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.LimitedTime);
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
         service.handleSockets();
     });
 });

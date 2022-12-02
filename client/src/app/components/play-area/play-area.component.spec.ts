@@ -63,6 +63,8 @@ describe('PlayAreaComponent', () => {
                 'getGameInformation',
                 'setGameInformation',
                 'getNbTotalDifferences',
+                'isLimitedTime',
+                'isClassic',
             ],
             { $newGame: new Subject<string>() },
         );

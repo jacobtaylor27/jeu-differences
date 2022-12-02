@@ -63,6 +63,7 @@ describe('DifferencesAreaComponent', () => {
     });
 
     it('should set the nb of differences found during the game', () => {
+        spyGameInfosService.isClassic.and.callFake(() => true);
         component.players = [{ name: 'test', nbDifference: '0/10' }];
         spyOn(Object.getPrototypeOf(component), 'getPlayerIndex').and.callFake(() => 0);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
@@ -92,6 +93,7 @@ describe('DifferencesAreaComponent', () => {
 
     it('should return string empty when player not found', () => {
         spyGameInfosService.getNbDifferences.and.callFake(() => undefined);
+        spyGameInfosService.isClassic.and.callFake(() => true);
         expect(component.setNbDifferencesFound('')).toEqual('');
     });
 

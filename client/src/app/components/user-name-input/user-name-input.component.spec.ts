@@ -95,7 +95,7 @@ describe('UserNameInputComponent', () => {
     });
 
     it('should open dialog when GameMode is Limited Time', () => {
-        spyGameInformationService.gameMode = GameMode.LimitedTime;
+        spyGameInformationService.isLimitedTime.and.callFake(() => true);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyDialog = spyOn(component, 'openGameModeDialog').and.callFake(() => {});
         component.playerName = 'test';

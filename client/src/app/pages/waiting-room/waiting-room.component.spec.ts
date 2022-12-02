@@ -72,7 +72,7 @@ describe('WaitingRoomComponent', () => {
 
     it('should send JoinGame when accepted and navigate to game when game mode is Classic', () => {
         spyGameInfoService.getPlayer.and.returnValue({ name: '', nbDifferences: 7 });
-        spyGameInfoService.gameMode = GameMode.Classic;
+        spyGameInfoService.isClassic.and.callFake(() => true);
         const spySend = spyOn(component.socketService, 'send');
         socketHelper.peerSideEmit(SocketEvent.JoinGame, 'id');
         socketHelper.peerSideEmit(SocketEvent.Play, 'id');

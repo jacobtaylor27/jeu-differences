@@ -84,13 +84,13 @@ describe('ScoresHandlerService', () => {
     });
 
     it('should add the score in the array if the array is empty', () => {
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['tryAddScore'](score, service['soloScores']);
         expect(service['soloScores'].length).equal(1);
     });
 
     it('should add the score in the array if the array is not empty', () => {
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score];
         service['tryAddScore'](score, service['soloScores']);
         expect(service['soloScores'].length).equal(2);

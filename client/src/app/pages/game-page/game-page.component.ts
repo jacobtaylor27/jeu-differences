@@ -8,7 +8,6 @@ import { ClueHandlerService } from '@app/services/clue-handler-service/clue-hand
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 import { GameRecord } from '@common/game-record';
 import { SocketEvent } from '@common/socket-event';
 

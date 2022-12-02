@@ -34,7 +34,7 @@ describe('ScoresHandlerService', () => {
         stub(Object.getPrototypeOf(service), 'trimArrayToSize').callsFake((array: Score[]) => array);
         gameInfoService.getHighScores.callsFake(async () => new Promise((resolve) => resolve({ soloScore: [], multiplayerScore: [] }))).resolves();
         gameInfoService.updateHighScores.callsFake(async () => new Promise((resolve) => resolve())).resolves();
-        const index = await service.verifyScore('gameId', { playerName: 'name', time: 1 }, false);
+        const index = await service.verifyScore('gameId', { playerName: 'name', time: 1, type: ScoreType.Default }, false);
         expect(index).equal(expectedIndex);
     });
 

@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
@@ -341,7 +342,7 @@ export class SocketManagerService {
         const gameInfo = this.gameManager.getGameInfo(gameId);
         const isMulti = this.gameManager.isGameMultiplayer(gameId) as boolean;
 
-        this.scoresHandlerService.verifyScore(gameInfo?.id as string, { playerName, time }, isMulti).then((index) => {
+        this.scoresHandlerService.verifyScore((gameInfo as PrivateGameInformation).id as string, { playerName, time }, isMulti).then((index) => {
             this.gameManager.leaveGame(socket.id, gameId);
 
             if (isMulti) {
@@ -356,7 +357,7 @@ export class SocketManagerService {
                     this.eventMessageService.sendNewHighScoreMessage({
                         record: { index, time },
                         playerName,
-                        gameName: gameInfo?.name as string,
+                        gameName: (gameInfo as PrivateGameInformation).name as string,
                         isMulti,
                     }),
                 );

@@ -186,15 +186,22 @@ describe('SocketManager', () => {
                 }
             },
         } as io.Server;
-        stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.Classic);
+        const spyMode = stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.Classic);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        const spyLeave = stub(fakeSocket, 'leave');
         stub(service['gameManager'], 'findPlayer').callsFake(() => 'test');
-        stub(service['gameManager'], 'isGameOver').callsFake(() => false);
+        const spyIsGameOver = stub(service['gameManager'], 'isGameOver').callsFake(() => false);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        service.handleSockets();
+        expect(spyLeave.called).to.equal(true);
+        spyMode.callsFake(() => GameMode.LimitedTime);
+        service.handleSockets();
+        expect(spyLeave.calledTwice).to.equal(false);
+        spyIsGameOver.callsFake(() => true);
         service.handleSockets();
     });
 
-    it('should not bradcast leaving message when the player is in solo', () => {
+    it('should not broadcast leaving message when the player is in solo', () => {
         const fakeSockets = {
             emit: (eventName: string, _message: string) => {},
         };
@@ -462,6 +469,7 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameOver').callsFake(() => true);
+        stub(Object.getPrototypeOf(service), 'handleEndGame').callsFake(() => {});
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         service.handleSockets();
     });
@@ -614,7 +622,9 @@ describe('SocketManager', () => {
             multiplayerScore: [],
             soloScore: [],
         } as unknown as PrivateGameInformation;
-        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        const gameInfo = stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        service.handleSockets();
+        gameInfo.callsFake(() => undefined);
         service.handleSockets();
     });
 
@@ -1217,11 +1227,23 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
         stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.LimitedTime);
-        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        const gameInfo = stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        service.handleSockets();
+        gameInfo.callsFake(() => undefined);
         service.handleSockets();
     });
 
     it('should handle the end game', () => {
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
         const fakeSocket = {
             emit: (eventName: string, message: unknown) => {
                 expect(eventName === SocketEvent.Win || eventName === SocketEvent.EventMessage).to.equal(true);
@@ -1233,7 +1255,7 @@ describe('SocketManager', () => {
                 return { emit: (eventName: string, message: unknown) => {} };
             },
             broadcast: {
-                to: () => {
+                to: (gameId: string) => {
                     return {
                         emit: (eventName: string, _message: unknown) => {
                             expect(eventName).to.equal(SocketEvent.Lose);
@@ -1248,10 +1270,10 @@ describe('SocketManager', () => {
             to: (gameId: string) => fakeSocket,
         } as unknown as io.Server;
         stub(service['eventMessageService'], 'sendNewHighScoreMessage').callsFake(() => '');
-        stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        const gameMulti = stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         stub(service['gameManager'], 'getTime').callsFake(() => 1);
         stub(service['gameManager'], 'findPlayer').callsFake(() => '');
-        stub(service['gameManager'], 'getGameInfo').callsFake(() => undefined);
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
         const verifyScore = stub(service['scoresHandlerService'], 'verifyScore')
             .callsFake(async () => new Promise(() => 1))
             .resolves(1);
@@ -1260,5 +1282,9 @@ describe('SocketManager', () => {
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         verifyScore.callsFake(async () => new Promise(() => -1)).resolves(-1);
         service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        gameMulti.callsFake(() => false);
+        const broadcastEvent = stub(fakeSocket.broadcast.to('gameId'), 'emit');
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        expect(broadcastEvent.called).to.equal(false);
     });
 });

@@ -358,7 +358,7 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should handle socket event difference found', () => {
-        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
+        gameInformationHandlerServiceSpy.isClassic.and.callFake(() => true);
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         spyOn(component, 'getContextImgModified').and.callFake(() => {

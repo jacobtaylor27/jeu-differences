@@ -113,3 +113,8 @@ export class GameInformationHandlerService {
     isClassic() {
         return this.gameMode === GameMode.Classic;
     }
+
+    isLimitedTime() {
+        return this.gameMode === GameMode.LimitedTime;
+    }
+}

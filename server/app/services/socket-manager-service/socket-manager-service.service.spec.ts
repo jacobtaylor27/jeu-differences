@@ -726,6 +726,16 @@ describe('SocketManager', () => {
     });
 
     it('should create a game in solo', async () => {
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
         const fakeSocket = {
             join: () => {},
             emit: () => {},

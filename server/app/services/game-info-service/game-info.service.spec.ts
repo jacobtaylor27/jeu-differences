@@ -212,7 +212,11 @@ describe('GameInfo Service', async () => {
 
     it('should update the highscores', async () => {
         gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
-        await gameInfoService.updateHighScores('0', [{ playerName: 'jacob', time: 1 }], [{ playerName: 'jacob', time: 1 }]);
+        await gameInfoService.updateHighScores(
+            '0',
+            [{ playerName: 'jacob', time: 1, type: ScoreType.Default }],
+            [{ playerName: 'jacob', time: 1, type: ScoreType.Default }],
+        );
         expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([{ playerName: 'jacob', time: 1 }]);
         expect((await gameInfoService.getHighScores('0'))?.soloScore).to.deep.equal([{ playerName: 'jacob', time: 1 }]);
     });

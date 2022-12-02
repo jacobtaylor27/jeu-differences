@@ -244,4 +244,14 @@ describe('GameInformationHandlerService', () => {
         service.players = expectedPlayers;
         expect(service.getOpponent()).toEqual(expectedPlayers[1]);
     });
+
+    it('should return true is is classic', () => {
+        service.gameMode = GameMode.Classic;
+        expect(service.isClassic()).toBeTrue();
+    });
+
+    it('should return true is is temps limite', () => {
+        service.gameMode = GameMode.LimitedTime;
+        expect(service.isLimitedTime()).toBeTrue();
+    });
 });

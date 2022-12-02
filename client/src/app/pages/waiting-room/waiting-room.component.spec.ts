@@ -12,7 +12,6 @@ import { SocketEvent } from '@common/socket-event';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 import { PublicGameInformation } from '@common/game-information';
 
 /* eslint-disable @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example) */
@@ -35,7 +34,7 @@ describe('WaitingRoomComponent', () => {
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
-        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['getId', 'setPlayerName', 'getPlayer']);
+        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['getId', 'setPlayerName', 'getPlayer', 'isClassic']);
 
         await TestBed.configureTestingModule({
             declarations: [WaitingRoomComponent, PageHeaderComponent, ExitGameButtonComponent],
@@ -72,7 +71,7 @@ describe('WaitingRoomComponent', () => {
 
     it('should send JoinGame when accepted and navigate to game when game mode is Classic', () => {
         spyGameInfoService.getPlayer.and.returnValue({ name: '', nbDifferences: 7 });
-        spyGameInfoService.gameMode = GameMode.Classic;
+        spyGameInfoService.isClassic.and.callFake(() => true);
         const spySend = spyOn(component.socketService, 'send');
         socketHelper.peerSideEmit(SocketEvent.JoinGame, 'id');
         socketHelper.peerSideEmit(SocketEvent.Play, 'id');

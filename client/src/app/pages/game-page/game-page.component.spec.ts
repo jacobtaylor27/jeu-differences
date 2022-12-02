@@ -64,6 +64,8 @@ describe('GamePageComponent', () => {
                 'getNbDifferences',
                 'getNbTotalDifferences',
                 'setGameMode',
+                'isLimitedTime',
+                'isClassic',
             ],
             { $differenceFound: new Subject<string>(), $newGame: new Subject<string>(), $playerLeft: new Subject() },
         );
@@ -141,7 +143,7 @@ describe('GamePageComponent', () => {
     });
 
     it('should open the game over dialog when game mode is classic', () => {
-        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
+        gameInformationHandlerServiceSpy.isClassic.and.callFake(() => true);
         component.openGameOverDialog(false);
         expect(dialogSpyObj.open).toHaveBeenCalled();
         expect(gameInformationHandlerServiceSpy.getOpponent).toHaveBeenCalled();

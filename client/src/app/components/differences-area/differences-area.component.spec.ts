@@ -114,6 +114,18 @@ describe('DifferencesAreaComponent', () => {
 
         expect(component.setNbDifferencesFoundLimited()).toEqual('1');
     });
+
+    it('should call setNbDifferencesFoundLimited when opponent in the game', () => {
+        spyGameInfosService.getOpponent.and.callFake(() => {
+            return { name: 'test2', nbDifferences: 2 };
+        });
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
+        spyGameInfosService.isMulti = true;
+        const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
+        spyOn(newComponent, 'setNbDifferencesFound').and.callFake(() => '1/10');
+        expect(newComponent.players).toEqual([{ name: 'test & test2', nbDifference: '0' }]);
+    });
+
     it('should call setNbDifferencesFoundLimited on $playerLeft.next', () => {
         spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;

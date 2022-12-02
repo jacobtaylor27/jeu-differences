@@ -109,6 +109,11 @@ describe('DifferencesAreaComponent', () => {
         expect(component.setNbDifferencesFoundLimited()).toEqual('1');
     });
 
+    it('should set nb of differences on limited and multi mode ', () => {
+        spyGameInfosService.getNbDifferences.and.callFake(() => 1);
+
+        expect(component.setNbDifferencesFoundLimited()).toEqual('1');
+    });
     it('should call setNbDifferencesFoundLimited on $playerLeft.next', () => {
         spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;

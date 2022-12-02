@@ -24,8 +24,9 @@ export class GameScoreComponent implements OnInit {
     }
 
     private validateScores(): void {
-        // if (this.scores.length < 3) {
-        //     this.scores.push(defaultSoloScores);
-        // }
+        if (this.scores.length < 3) {
+            this.scores.push(...defaultScores);
+        }
+        this.scores.splice(3);
     }
 }

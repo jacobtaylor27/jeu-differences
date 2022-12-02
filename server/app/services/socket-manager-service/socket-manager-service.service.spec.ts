@@ -1160,4 +1160,64 @@ describe('SocketManager', () => {
         getClues.callsFake(() => 3);
         service.handleSockets();
     });
+
+    it('should send the new game if the game is in Limited Time', () => {
+        const expectedDifferenceFound = {
+            coords: [],
+            isPlayerFoundDifference: true,
+            isGameOver: false,
+            nbDifferencesLeft: 2,
+        };
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Difference) callback();
+            },
+            emit: (eventName: string, message: unknown) => {
+                expect(
+                    eventName === SocketEvent.DifferenceFound || eventName === SocketEvent.EventMessage || eventName === SocketEvent.NewGameBoard,
+                ).to.equal(true);
+            },
+            join: (id: string) => {
+                return;
+            },
+            to: (id: string) => {
+                return { emit: (eventName: string, message: unknown) => {} };
+            },
+            broadcast: {
+                to: () => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.DifferenceFound);
+                        },
+                    };
+                },
+            },
+        };
+
+        service['sio'] = {
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: (gameId: string) => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
+        stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isGameFound').callsFake(() => true);
+        stub(service['gameManager'], 'isGameOver').callsFake(() => false);
+        stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.LimitedTime);
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        service.handleSockets();
+    });
 });

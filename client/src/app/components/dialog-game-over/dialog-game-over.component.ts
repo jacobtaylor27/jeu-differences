@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Theme } from '@app/enums/theme';
+import { GameRecord } from '@common/game-record';
 
 @Component({
     selector: 'app-dialog-game-over',
@@ -12,11 +13,13 @@ export class DialogGameOverComponent {
     winner: string;
     nbPoints: string;
     isClassic: boolean;
+    record: GameRecord;
     theme = Theme.ClassName;
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string; isClassic: boolean; nbPoints: string }) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string; isClassic: boolean; nbPoints: string; record: GameRecord }) {
         this.isWin = data.win;
         this.winner = data.winner;
         this.isClassic = data.isClassic;
         this.nbPoints = data.nbPoints;
+        this.record = data.record;
     }
 }

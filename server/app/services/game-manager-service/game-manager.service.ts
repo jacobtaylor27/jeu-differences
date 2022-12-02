@@ -167,6 +167,17 @@ export class GameManagerService {
               };
     }
 
+    increaseNbClueAsked(gameId: string) {
+        const game = this.findGame(gameId);
+        if (game) {
+            game.nbCluesAsked++;
+        }
+    }
+
+    getNbClues(gameId: string) {
+        return this.findGame(gameId)?.nbCluesAsked;
+    }
+
     findPlayer(gameId: string, playerId: string) {
         return this.findGame(gameId)?.findPlayer(playerId);
     }

@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+import { MessageRecord } from '@common/message-record';
 
 @Service()
 export class EventMessageService {
@@ -16,5 +17,16 @@ export class EventMessageService {
 
     leavingGameMessage(userName: string | undefined) {
         return userName ? `${userName} a abandonné la partie a ${new Date().toLocaleTimeString('en-US')}` : null;
+    }
+
+    usingClueMessage() {
+        return `${new Date().toLocaleTimeString('en-US')} - Indice Utilisé`;
+    }
+
+    sendNewHighScoreMessage(messageRecord: MessageRecord): string {
+        const gameMode = messageRecord.isMulti ? 'multijoueur' : 'solo';
+        return `${new Date().toLocaleTimeString('en-US')} - 
+        ${messageRecord.playerName} obtient la ${messageRecord.record.index} place dans les meilleurs temps du jeu 
+        ${messageRecord.gameName} en ${gameMode}`;
     }
 }

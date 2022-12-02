@@ -29,4 +29,5 @@ export enum SocketEvent {
     Message = 'message',
     EventMessage = 'eventMessage',
     FetchDifferences = 'fetchDifferences',
+    Clue = 'clue',
 }

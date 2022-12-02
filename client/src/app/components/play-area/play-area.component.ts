@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
@@ -7,16 +7,18 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
+
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
     styleUrls: ['./play-area.component.scss'],
 })
-export class PlayAreaComponent implements AfterViewInit, OnDestroy {
+export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild('actionsGameOriginal') canvasOriginal: ElementRef<HTMLCanvasElement>;
     @ViewChild('actionsGameModified') canvasModified: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgOriginal') canvasImgOriginal: ElementRef<HTMLCanvasElement>;
@@ -24,6 +26,8 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     @ViewChild('imgModifiedWODifference') canvasImgDifference: ElementRef<HTMLCanvasElement>;
     @Input() gameId: string;
 
+    isThirdClue: boolean = false;
+    clue: string;
     buttonPressed = '';
     intervals = [];
     // eslint-disable-next-line max-params -- absolutely need all the imported services
@@ -61,6 +65,22 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    ngOnInit(): void {
+        this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
+            if (data.nbClues === 3) {
+                this.isThirdClue = true;
+                this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
+                setInterval(() => {
+                    this.isThirdClue = false;
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers  -- time to show third clue coordinates
+                }, 5000);
+                return;
+            }
+            this.differencesDetectionHandlerService.showClue(this.getContextOriginal(), data.clue);
+            this.differencesDetectionHandlerService.showClue(this.getContextModified(), data.clue);
+        });
+    }
+
     ngAfterViewInit(): void {
         this.displayImages();
         this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
@@ -69,6 +89,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.communicationSocketService.off(SocketEvent.DifferenceFound);
         this.communicationSocketService.off(SocketEvent.NewGameBoard);
+        this.communicationSocketService.off(SocketEvent.Clue);
     }
 
     onClick($event: MouseEvent, canvas: string) {

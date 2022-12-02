@@ -47,11 +47,11 @@ export class DifferenceService {
     }
 
     addCoordinatesOnDifferenceFound(playerId: string, differenceCoords: Coordinate[], game: Game) {
-        const player = this.gamesDifferencesFound.get(game.identifier)?.get(playerId);
+        const player = (this.gamesDifferencesFound.get(game.identifier) as Map<string, Set<Coordinate[]>>).get(playerId);
         if (this.isDifferenceAlreadyFound(differenceCoords, game.identifier) || !player) {
             return;
         }
-        this.gamesDifferencesTotalFound.get(game.identifier)?.add(differenceCoords);
+        (this.gamesDifferencesTotalFound.get(game.identifier) as Set<Coordinate[]>).add(differenceCoords);
         player.add(differenceCoords);
         if (this.isAllDifferenceFound(playerId, game) && !game.isGameOver() && game.gameMode === GameMode.Classic) {
             game.setEndgame();
@@ -59,11 +59,11 @@ export class DifferenceService {
     }
 
     isDifferenceAlreadyFound(differenceCoords: Coordinate[], gameId: string) {
-        return this.gamesDifferencesTotalFound.get(gameId)?.has(differenceCoords);
+        return (this.gamesDifferencesTotalFound.get(gameId) as Set<Coordinate[]>).has(differenceCoords);
     }
 
     isAllDifferenceFound(playerId: string, game: Game): boolean {
-        const player = this.gamesDifferencesFound.get(game.identifier)?.get(playerId);
+        const player = (this.gamesDifferencesFound.get(game.identifier) as Map<string, Set<Coordinate[]>>).get(playerId);
 
         // if the game is already over all the differences are found and if the game is not initialize, 0 difference found
         if (game.isGameInitialize() || game.isGameOver() || !player) {
@@ -80,7 +80,9 @@ export class DifferenceService {
     }
 
     getAllDifferencesNotFound(differencesRef: Coordinate[][], gameId: string) {
-        return differencesRef.filter((difference: Coordinate[]) => !this.gamesDifferencesTotalFound.get(gameId)?.has(difference));
+        return differencesRef.filter(
+            (difference: Coordinate[]) => !(this.gamesDifferencesTotalFound.get(gameId) as Set<Coordinate[]>).has(difference),
+        );
     }
 
     nbDifferencesLeft(differencesRef: Coordinate[][], gameId: string): number {

@@ -249,3 +249,9 @@ describe('GameInformationHandlerService', () => {
         service.gameMode = GameMode.Classic;
         expect(service.isClassic()).toBeTrue();
     });
+
+    it('should return true is is temps limite', () => {
+        service.gameMode = GameMode.LimitedTime;
+        expect(service.isLimitedTime()).toBeTrue();
+    });
+});

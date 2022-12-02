@@ -13,10 +13,15 @@ export class DatabaseService {
 
     async start(url: string = DB_URL): Promise<void> {
         if (!this.client) {
-            this.client = new MongoClient(url);
-            await this.client.connect();
-            this.db = this.client.db(DB_NAME);
-            await this.initializeCollection();
+            try {
+                this.client = new MongoClient(url);
+                await this.client.connect();
+                this.db = this.client.db(DB_NAME);
+                await this.initializeCollection();
+            } catch (error) {
+                // eslint-disable-next-line no-console -- shows when there is a connection error
+                console.error(error.message);
+            }
         }
     }
 

@@ -77,6 +77,7 @@ export class GamePageComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.clueHandlerService.resetNbClue();
         this.socket.send(SocketEvent.LeaveGame, { gameId: this.gameInfoHandlerService.roomId });
         this.socket.off(SocketEvent.Win);
         this.socket.off(SocketEvent.Lose);

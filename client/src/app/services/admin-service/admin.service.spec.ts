@@ -4,18 +4,21 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AdminService } from './admin.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { HttpClientModule } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
+import { RouterService } from '@app/services/router-service/router.service';
 
 describe('AdminService', () => {
     let service: AdminService;
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
     let spyCarouselService: jasmine.SpyObj<GameCarouselService>;
+    let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(() => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards', 'refreshAllGames']);
         spyCarouselService = jasmine.createSpyObj('GameCarouselService', ['hasCards']);
+        spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage', 'redirectToErrorPage']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
         TestBed.configureTestingModule({
             imports: [AppMaterialModule, HttpClientModule],
@@ -23,6 +26,7 @@ describe('AdminService', () => {
                 { provide: MatDialog, useValue: spyMatDialog },
                 { provide: CommunicationService, useValue: spyCommunicationService },
                 { provide: GameCarouselService, useValue: spyCarouselService },
+                { provide: RouterService, useValue: spyRouterService },
             ],
         });
         service = TestBed.inject(AdminService);
@@ -35,6 +39,7 @@ describe('AdminService', () => {
     });
 
     it('deleteAllGames should call deleteGames from game communication service', () => {
+        spyCommunicationService.deleteAllGameCards.and.returnValue(of(void 0));
         service.deleteAllGames();
         expect(spyCommunicationService.deleteAllGameCards).toHaveBeenCalled();
     });
@@ -50,7 +55,20 @@ describe('AdminService', () => {
     });
 
     it('should call refreshAllGames from communication service', () => {
+        spyCommunicationService.refreshAllGames.and.returnValue(of(void 0));
         service.refreshAllGames();
         expect(spyCommunicationService.refreshAllGames).toHaveBeenCalled();
+    });
+
+    it('should redirect to error page on error', () => {
+        spyCommunicationService.refreshAllGames.and.returnValue(throwError(() => new Error('error')));
+        service.refreshAllGames();
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
+    });
+
+    it('should redirect to error page when there is an error deleting the games', () => {
+        spyCommunicationService.deleteAllGameCards.and.returnValue(throwError(() => new Error('error')));
+        service.deleteAllGames();
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
     });
 });

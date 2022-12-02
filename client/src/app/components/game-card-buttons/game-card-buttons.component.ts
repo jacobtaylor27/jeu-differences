@@ -30,9 +30,14 @@ export class GameCardButtonsComponent {
     }
 
     onClickDeleteGame(game: GameCard): void {
-        this.communicationService.deleteGame(game.gameInformation.id).subscribe(() => {
-            this.socketService.send(SocketEvent.GameDeleted, { gameId: game.gameInformation.id });
-            this.router.reloadPage('admin');
+        this.communicationService.deleteGame(game.gameInformation.id).subscribe({
+            next: () => {
+                this.socketService.send(SocketEvent.GameDeleted, { gameId: game.gameInformation.id });
+                this.router.reloadPage('admin');
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
         });
     }
 
@@ -48,8 +53,13 @@ export class GameCardButtonsComponent {
     }
 
     onClickRefreshGame(): void {
-        this.communicationService.refreshSingleGame(this.gameCard.gameInformation.id).subscribe(() => {
-            this.router.reloadPage('admin');
+        this.communicationService.refreshSingleGame(this.gameCard.gameInformation.id).subscribe({
+            next: () => {
+                this.router.reloadPage('admin');
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
         });
     }
 

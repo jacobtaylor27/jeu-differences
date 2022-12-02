@@ -8,7 +8,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { GameCardButtonsComponent } from './game-card-buttons.component';
 
 describe('GameCardButtonsComponent', () => {
@@ -20,7 +20,7 @@ describe('GameCardButtonsComponent', () => {
     let spyMatDialog: jasmine.SpyObj<MatDialog>;
 
     beforeEach(async () => {
-        spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage']);
+        spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage', 'redirectToErrorPage']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteGame', 'refreshSingleGame']);
         spyGameInfoHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameInformation']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
@@ -87,5 +87,17 @@ describe('GameCardButtonsComponent', () => {
         component.onClickRefreshGame();
         expect(spyCommunicationService.refreshSingleGame).toHaveBeenCalled();
         expect(spyRouterService.reloadPage).toHaveBeenCalled();
+    });
+
+    it('should redirect to error page when onclick delete game fails', () => {
+        spyCommunicationService.deleteGame.and.returnValue(throwError(() => new Error('error')));
+        component.onClickDeleteGame(gameCard1);
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
+    });
+
+    it('should redirect to error page when on click reset fails', () => {
+        spyCommunicationService.refreshSingleGame.and.returnValue(throwError(() => new Error('error')));
+        component.onClickRefreshGame();
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
     });
 });

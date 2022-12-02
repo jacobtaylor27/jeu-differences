@@ -72,7 +72,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
                 this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
                 setInterval(() => {
                     this.isThirdClue = false;
-                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers  -- time to show third clue coordinates
                 }, 5000);
                 return;
             }

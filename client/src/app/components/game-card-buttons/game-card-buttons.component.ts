@@ -38,6 +38,7 @@ export class GameCardButtonsComponent {
 
     onClickPlayGame(): void {
         this.gameInfoHandlerService.setGameInformation(this.gameCard.gameInformation);
+        this.gameInfoHandlerService.isMulti = false;
         this.openNameDialog();
     }
 

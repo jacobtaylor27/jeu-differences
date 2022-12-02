@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { Server } from '@app/server';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
 import { GameMode } from '@common/game-mode';
@@ -185,6 +186,7 @@ describe('SocketManager', () => {
                 }
             },
         } as io.Server;
+        stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.Classic);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'findPlayer').callsFake(() => 'test');
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);

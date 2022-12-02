@@ -96,6 +96,12 @@ describe('DifferencesAreaComponent', () => {
         expect(component.setNbDifferencesFound('')).toEqual('');
     });
 
+    it('should return string empty when player not found', () => {
+        spyGameInfosService.getNbDifferences.and.callFake(() => 1);
+        spyGameInfosService.isClassic.and.callFake(() => true);
+        expect(component.setNbDifferencesFound('')).toEqual('1 / 10');
+    });
+
     it('should set nb of differences on limited and multi mode ', () => {
         spyGameInfosService.isLimitedTime.and.callFake(() => true);
 

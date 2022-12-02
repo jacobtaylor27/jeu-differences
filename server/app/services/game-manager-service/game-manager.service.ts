@@ -30,12 +30,12 @@ export class GameManagerService {
             const gamesRandomized = await this.limitedTimeGame.generateGames();
             gameCard = gamesRandomized[0];
             game = new Game(playerInfo, { info: gameCard, mode });
-            await this.timer.setTimerConstant(mode, game.identifier);
             this.limitedTimeGame.gamesShuffled.set(game.identifier, gamesRandomized);
         } else {
             gameCard = (await this.gameInfo.getGameInfoById(gameCardId)) as PrivateGameInformation;
             game = new Game(playerInfo, { info: gameCard, mode });
         }
+        await this.timer.setTimerConstant(mode, game.identifier);
         this.games.set(game.identifier, game);
         this.difference.setGameDifferences(game.identifier);
         this.difference.setPlayerDifferences(game.identifier, playerInfo.player.id);

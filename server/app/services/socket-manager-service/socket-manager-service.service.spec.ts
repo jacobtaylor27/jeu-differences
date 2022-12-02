@@ -749,11 +749,14 @@ describe('SocketManager', () => {
         const spyEmit = stub(fakeSocket, 'emit');
         const spyJoin = stub(fakeSocket, 'join');
         await service.createGameSolo('player', GameMode.Classic, { card: '', isMulti: false }, fakeSocket);
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
         expect(spySetTimer.called).to.equal(true);
         expect(spyCreateGame.called).to.equal(true);
         expect(spySendTimer.called).to.equal(true);
         expect(spyEmit.called).to.equal(true);
         expect(spyJoin.called).to.equal(true);
+        await service.createGameSolo('player', GameMode.Classic, { card: '', isMulti: false }, fakeSocket);
+        expect(spyEmit.calledTwice).to.equal(true);
     });
 
     it('should reject if the players have the same name', async () => {
@@ -851,6 +854,33 @@ describe('SocketManager', () => {
         expect(spyBroadcastEmit.called).to.equal(true);
         expect(spyAddGameToWaiting.called).to.equal(true);
         expect(spyCreateGame.called).to.equal(true);
+    });
+
+    it('should create a game in limited time', async () => {
+        service['sio'] = {
+            to: () => {
+                return { emit: () => {} };
+            },
+        } as unknown as io.Server;
+        const fakeSocket = {
+            join: () => {},
+            emit: () => {},
+            broadcast: {
+                to: () => {
+                    return { emit: () => {} };
+                },
+            },
+        } as unknown as io.Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+        stub(fakeSocket, 'emit');
+        stub(service['gameManager'], 'hasSameName').callsFake(() => false);
+        stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
+        stub(service['gameManager'], 'setTimer').callsFake(() => {});
+        stub(service['gameManager'], 'sendTimer').callsFake(() => {});
+        const spyEmit = stub(fakeSocket.broadcast.to(''), 'emit');
+        const spyJoin = stub(fakeSocket, 'join');
+        await service.createGameMulti('', GameMode.LimitedTime, { card: '', isMulti: true }, fakeSocket);
+        expect(spyEmit.called).to.equal(false);
+        expect(spyJoin.called).to.equal(true);
     });
 
     it('should remove game waiting if the roomId is found', () => {

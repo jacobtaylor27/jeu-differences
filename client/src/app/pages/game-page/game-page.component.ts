@@ -60,7 +60,7 @@ export class GamePageComponent implements OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.minWidth = '50%';
-        if (this.gameInfoHandlerService.gameMode === GameMode.Classic) {
+        if (this.gameInfoHandlerService.isClassic()) {
             dialogConfig.data = {
                 win: isWin,
                 winner: isWin ? this.gameInfoHandlerService.getPlayer().name : this.gameInfoHandlerService.getOpponent().name,

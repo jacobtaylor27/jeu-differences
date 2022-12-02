@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 
 @Component({
     selector: 'app-player-left-snackbar',

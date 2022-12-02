@@ -2,18 +2,11 @@
     <li class="title-{{ isMultiplayer }}">
         <b>{{ title }}</b>
     </li>
-    <div class="score-content" *ngIf="hasScores(); else noScores">
-        <li *ngFor="let score of scores" class="game-score">
+    <div class="score-content">
+        <li *ngFor="let score of scores" class="{{ score.type === 'default' ? 'empty-score' : 'game-score' }}">
             <span class="player-name">{{ score.playerName.substring(0, 8) }}</span>
             <span class="separation-score">&nbsp;&nbsp;</span>
             <span class="score-time">{{ formatScoreTime(score.time) }}</span>
         </li>
     </div>
-    <ng-template #noScores>
-        <li class="empty-scores" *ngFor="let i of [1, 2, 3]">
-            <em class="player-name">{{ 'Joueur ' + i }}</em>
-            <em class="separation-score">&mdash;</em>
-            <em class="score-time">{{ i.toString() + i + ':' + i + i }}</em>
-        </li>
-    </ng-template>
 </ul>

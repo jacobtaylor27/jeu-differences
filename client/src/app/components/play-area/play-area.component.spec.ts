@@ -12,9 +12,11 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
+import { SocketEvent } from '@common/socket-event';
 
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
 
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -42,19 +44,24 @@ describe('PlayAreaComponent', () => {
             'setContextImgModified',
             'setNumberDifferencesFound',
             'differenceDetected',
+            'playCorrectSound',
         ]);
         cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
-        gameInformationHandlerServiceSpy = jasmine.createSpyObj('GameInformationHandlerService', [
-            'getGameMode',
-            'getGameName',
-            'getPlayerName',
-            'getOriginalBmp',
-            'getOriginalBmpId',
-            'getModifiedBmpId',
-            'getGameInformation',
-            'setGameInformation',
-            'getNbTotalDifferences',
-        ]);
+        gameInformationHandlerServiceSpy = jasmine.createSpyObj(
+            'GameInformationHandlerService',
+            [
+                'getGameMode',
+                'getGameName',
+                'getPlayerName',
+                'getOriginalBmp',
+                'getOriginalBmpId',
+                'getModifiedBmpId',
+                'getGameInformation',
+                'setGameInformation',
+                'getNbTotalDifferences',
+            ],
+            { $newGame: new Subject<string>() },
+        );
 
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],

@@ -157,7 +157,14 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             const imageBase64 = response.body.image;
             const image = new Image();
             image.src = 'data:image/png;base64,' + imageBase64;
-            ctx.drawImage(image, 0, 0);
+            image.onload = () => {
+                ctx.drawImage(image, 0, 0);
+            }
+            image.onerror = () => {
+                // A FAIRE THIERRY :D
+                window.alert("fnrhfrirhinrirnignirignr les exceptions");
+            }
+        
         });
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 
 @Component({
     selector: 'app-differences-area',

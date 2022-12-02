@@ -17,4 +17,8 @@ export class EventMessageService {
     leavingGameMessage(userName: string | undefined) {
         return userName ? `${userName} a abandonné la partie a ${new Date().toLocaleTimeString('en-US')}` : null;
     }
+
+    usingClueMessage() {
+        return `${new Date().toLocaleTimeString('en-US')} - Indice Utilisé`;
+    }
 }

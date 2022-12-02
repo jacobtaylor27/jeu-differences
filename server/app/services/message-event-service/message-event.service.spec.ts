@@ -63,4 +63,9 @@ describe('EventMessage Service', () => {
         const userName = undefined;
         expect(eventMessageService.leavingGameMessage(userName)).to.be.equal(null);
     });
+
+    it('Should return a clue used message if user wants to have a hint ', () => {
+        const expectedResult = `${new Date().toLocaleTimeString('en-US')} - Indice Utilisé`;
+        expect(eventMessageService.usingClueMessage()).to.be.equal(expectedResult);
+    });
 });

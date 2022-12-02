@@ -39,7 +39,7 @@ describe('PlayerLeftSnackbarComponent', () => {
     it('should return correct message', () => {
         spyGameInfoService.gameMode = GameMode.Classic;
         expect(component.messageSnackBar()).toEqual('Le joueur a quitté la partie.');
-        spyGameInfoService.gameMode = GameMode.LimitedTime;
+        spyGameInfoService.isLimitedTime.and.callFake(() => true);
         expect(component.messageSnackBar()).toEqual('Le joueur a quitté la partie. Vous jouez maintenant en solo.');
     });
 });

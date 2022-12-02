@@ -98,7 +98,7 @@ describe('ScoresHandlerService', () => {
 
     it('should not add the score in the array if the array is full', () => {
         const expectedSize = 4;
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score, score, score];
         service['tryAddScore'](score, service['soloScores']);
         expect(service['soloScores'].length).equal(expectedSize);

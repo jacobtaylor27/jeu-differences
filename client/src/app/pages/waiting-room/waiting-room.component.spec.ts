@@ -12,7 +12,6 @@ import { SocketEvent } from '@common/socket-event';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 import { PublicGameInformation } from '@common/game-information';
 
 /* eslint-disable @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example) */

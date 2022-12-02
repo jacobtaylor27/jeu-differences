@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+// import { defaultSoloScores } from '@app/constants/default-scores';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { Score } from '@common/score';
 
@@ -7,18 +8,24 @@ import { Score } from '@common/score';
     templateUrl: './game-score.component.html',
     styleUrls: ['./game-score.component.scss'],
 })
-export class GameScoreComponent {
+export class GameScoreComponent implements OnInit {
     @Input() scores: Score[];
     @Input() title: string;
     @Input() isMultiplayer: boolean;
 
     constructor(private readonly timeFormatter: TimeFormatterService) {}
 
+    ngOnInit(): void {
+        this.validateScores();
+    }
+
     formatScoreTime(scoreTime: number): string {
         return this.timeFormatter.formatTime(scoreTime);
     }
 
-    hasScores(): boolean {
-        return this.scores.length > 0;
+    private validateScores(): void {
+        // if (this.scores.length < 3) {
+        //     this.scores.push(defaultSoloScores);
+        // }
     }
 }

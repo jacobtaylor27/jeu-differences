@@ -45,6 +45,10 @@ describe('TimerService', () => {
 
     it('should calculate time in mode Classic', () => {
         game['mode'] = GameMode.Classic;
+        game['nbCluesAsked'] = 0;
+        stub(timer, 'gameTime').callsFake(() => {
+            return { constant: { penaltyTime: 0 } as GameTimeConstants, init: new Date() };
+        });
         timer.setTimer(game);
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 
 @Component({
     selector: 'app-differences-area',
@@ -57,7 +56,7 @@ export class DifferencesAreaComponent implements OnInit {
     }
 
     isMultiLimited(): boolean {
-        return this.gameInformationHandlerService.gameMode === GameMode.LimitedTime && this.gameInformationHandlerService.isMulti;
+        return this.gameInformationHandlerService.isLimitedTime() && this.gameInformationHandlerService.isMulti;
     }
 
     getPlayerIndex(playerName: string) {
@@ -69,7 +68,7 @@ export class DifferencesAreaComponent implements OnInit {
         if (nbPlayerDifference === undefined) {
             return '';
         }
-        if (this.gameInformationHandlerService.gameMode === GameMode.Classic) {
+        if (this.gameInformationHandlerService.isClassic()) {
             return nbPlayerDifference.toString() + ' / ' + this.gameInformationHandlerService.getNbTotalDifferences().toString();
         } else {
             return nbPlayerDifference.toString();

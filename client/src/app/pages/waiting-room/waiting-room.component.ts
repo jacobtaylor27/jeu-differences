@@ -7,7 +7,6 @@ import { CommunicationSocketService } from '@app/services/communication-socket/c
 import { ExitButtonHandlerService } from '@app/services/exit-button-handler/exit-button-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
-import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { User } from '@common/user';
 @Component({
@@ -46,7 +45,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             this.socketService.send(SocketEvent.JoinGame, { player: this.gameInformationHandlerService.getPlayer().name, room: data.roomId });
             this.gameInformationHandlerService.roomId = data.roomId;
 
-            if (this.gameInformationHandlerService.gameMode === GameMode.Classic) {
+            if (this.gameInformationHandlerService.isClassic()) {
                 this.socketService.on(SocketEvent.Play, (id: string) => {
                     this.gameInformationHandlerService.roomId = id;
                     this.routerService.navigateTo('game');

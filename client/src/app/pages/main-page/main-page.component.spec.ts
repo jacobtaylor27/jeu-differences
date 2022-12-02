@@ -47,6 +47,10 @@ describe('MainPageComponent', () => {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
                 },
+                {
+                    provide: RouterService,
+                    useValue: spyRouter,
+                },
             ],
         }).compileComponents();
         spyCommunicationService.getGamesInfoByPage.and.callFake(() => {

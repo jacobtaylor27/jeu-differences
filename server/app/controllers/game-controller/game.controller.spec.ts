@@ -206,14 +206,50 @@ describe('GameController', () => {
         return supertest(expressApp).patch('/api/game/scores/0/reset').expect(StatusCodes.NOT_FOUND);
     });
 
+    it('should send 503 when reset high scores fails', async () => {
+        gameInfo.resetHighScores.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).patch('/api/game/scores/0/reset').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
     it('should reset scores for all games when valid', async () => {
         gameInfo.resetAllHighScores.resolves();
         return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.OK);
     });
 
+    it('should send 503 when resetting the scores fails', async () => {
+        gameInfo.resetAllHighScores.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
     it('should reset scores for all games when invalid', async () => {
         gameInfo.resetAllHighScores.rejects();
         return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should return 503 when getting an error trying to delete a card', async () => {
+        gameInfo.deleteGameInfoById.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it("should return 503 when there's an error deleting all games", async () => {
+        gameInfo.deleteAllGamesInfo.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it('should return 503 when there is and error getting the cards', async () => {
+        gameInfo.getGamesInfo.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).get('/api/game/cards?page=1').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it('should return 503 when there is an error posting a new game', async () => {
+        gameInfo.addGameInfoWrapper.resolves().returns(Promise.resolve(null));
+        const expectedBody = {
+            original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            differenceRadius: 0,
+            name: 'test',
+        };
+        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.SERVICE_UNAVAILABLE);
     });
 
     it('should return Not Acceptable if the game creation has a problem', async () => {
@@ -227,30 +263,5 @@ describe('GameController', () => {
             name: 'test',
         };
         return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.NOT_ACCEPTABLE);
-    });
-
-    it('should return the scores of a specific game when valid', async () => {
-        gameInfo.getHighScores.resolves({ soloScore: [], multiplayerScore: [] });
-        return supertest(expressApp).get('/api/game/scores/0').expect(StatusCodes.OK);
-    });
-
-    it('should get scores and return not found when invalid', async () => {
-        gameInfo.getHighScores.rejects();
-        return supertest(expressApp).get('/api/game/scores/0').expect(StatusCodes.NOT_FOUND);
-    });
-
-    it('should update the scores when valid request', async () => {
-        gameInfo.updateHighScores.resolves();
-        return supertest(expressApp).patch('/api/game/scores/0').send({ scoresSolo: [], scoresMulti: [] }).expect(StatusCodes.OK);
-    });
-
-    it('should return bad request when invalid body request for updating the scores', async () => {
-        gameInfo.updateHighScores.resolves();
-        return supertest(expressApp).patch('/api/game/scores/0').send({ scoresSolo: [] }).expect(StatusCodes.BAD_REQUEST);
-    });
-
-    it('should return bad request when invalid', async () => {
-        gameInfo.updateHighScores.rejects();
-        return supertest(expressApp).patch('/api/game/scores/0').send({ scoresSolo: [], scoresMulti: [] }).expect(StatusCodes.BAD_REQUEST);
     });
 });

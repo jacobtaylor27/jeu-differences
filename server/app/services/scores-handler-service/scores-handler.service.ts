@@ -22,7 +22,7 @@ export class ScoresHandlerService {
     }
 
     private async getScores(gameId: string): Promise<void> {
-        const scores = await this.gameInfoService.getHighScores(gameId);
+        const scores = (await this.gameInfoService.getHighScores(gameId)) as { soloScore: Score[]; multiplayerScore: Score[] };
         this.soloScores = scores.soloScore;
         this.multiScores = scores.multiplayerScore;
     }

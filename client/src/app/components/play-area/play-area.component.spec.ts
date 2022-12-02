@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
@@ -132,6 +132,27 @@ describe('PlayAreaComponent', () => {
 
         expect(differenceService.showClue).toHaveBeenCalled();
     });
+
+    it('should handle clue when player is on third clue askes on ngOnInit', fakeAsync(() => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextOriginal').and.callFake(() => {
+            return ctx;
+        });
+
+        component.ngOnInit();
+        socketHelper.peerSideEmit(SocketEvent.Clue, { clue: [{ x: 1, y: 3 }] as Coordinate[], nbClues: 3 });
+
+        tick(1500);
+        expect(component.isThirdClue).toEqual(true);
+        tick(5000);
+        expect(component.isThirdClue).toEqual(false);
+        expect(differenceService.showClue).not.toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 
     it('should display image afterViewInit', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}

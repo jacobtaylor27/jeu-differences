@@ -41,7 +41,7 @@ export class UserNameInputComponent {
             this.gameInformationHandlerService.setPlayerName(this.playerName);
             this.dialogRef.close(true);
 
-            if (this.gameInformationHandlerService.gameMode === GameMode.LimitedTime) {
+            if (this.gameInformationHandlerService.isLimitedTime()) {
                 this.openGameModeDialog();
                 return;
             }

@@ -295,4 +295,23 @@ describe('PlayAreaComponent', () => {
         await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 't' } as unknown as KeyboardEvent);
         expect(cheatModeService.manageCheatMode).toHaveBeenCalled();
     });
+
+    it('should display new image on socket event', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextImgModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextDifferences').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextImgOriginal').and.callFake(() => {
+            return ctx;
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spyDisplayImage = spyOn(component, 'displayImage').and.callFake(() => {});
+        component.handleSocketDifferenceFound();
+        socketHelper.peerSideEmit(SocketEvent.NewGameBoard, {} as PublicGameInformation);
+        expect(spyDisplayImage).toHaveBeenCalled();
+    });
 });

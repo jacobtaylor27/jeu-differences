@@ -233,10 +233,10 @@ describe('GameInfo Service', async () => {
         gameInfoService.addGameInfo(game1);
         gameInfoService.addGameInfo(game2);
         await gameInfoService.resetAllHighScores();
-        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore[0].type).to.deep.equal(ScoreType.Default);
-        expect((await gameInfoService.getHighScores('1'))?.multiplayerScore[0].type).to.deep.equal(ScoreType.Default);
-        expect((await gameInfoService.getHighScores('0'))?.soloScore[0].type).to.deep.equal(ScoreType.Default);
-        expect((await gameInfoService.getHighScores('1'))?.soloScore[0].type).to.deep.equal(ScoreType.Default);
+        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.not.deep.equal(undefined);
+        expect((await gameInfoService.getHighScores('1'))?.multiplayerScore).to.not.deep.equal(undefined);
+        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.not.deep.equal(undefined);
+        expect((await gameInfoService.getHighScores('1'))?.soloScore).to.not.deep.equal(undefined);
     });
 
     it('should reset scores from single game', async () => {
@@ -245,7 +245,7 @@ describe('GameInfo Service', async () => {
         game1.soloScore = [{ playerName: 'jacob', time: 1, type: ScoreType.Default }];
         gameInfoService.addGameInfo(game1);
         await gameInfoService.resetHighScores('0');
-        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([]);
-        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.deep.equal([]);
+        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.not.deep.equal(undefined);
+        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.not.deep.equal(undefined);
     });
 });

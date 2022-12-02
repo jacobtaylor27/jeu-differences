@@ -217,8 +217,10 @@ describe('GameInfo Service', async () => {
             [{ playerName: 'jacob', time: 1, type: ScoreType.Default }],
             [{ playerName: 'jacob', time: 1, type: ScoreType.Default }],
         );
-        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([{ playerName: 'jacob', time: 1 }]);
-        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.deep.equal([{ playerName: 'jacob', time: 1 }]);
+        expect((await gameInfoService.getHighScores('0'))?.multiplayerScore).to.deep.equal([
+            { playerName: 'jacob', time: 1, type: ScoreType.Default },
+        ]);
+        expect((await gameInfoService.getHighScores('0'))?.soloScore).to.deep.equal([{ playerName: 'jacob', time: 1, type: ScoreType.Default }]);
     });
 
     it('should reset all the scores', async () => {

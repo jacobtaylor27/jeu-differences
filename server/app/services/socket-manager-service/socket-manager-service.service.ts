@@ -343,30 +343,32 @@ export class SocketManagerService {
         const gameInfo = this.gameManager.getGameInfo(gameId);
         const isMulti = this.gameManager.isGameMultiplayer(gameId) as boolean;
 
-        this.scoresHandlerService.verifyScore(gameInfo?.id as string, { playerName, time, type: ScoreType.Player }, isMulti).then((index) => {
-            this.gameManager.leaveGame(socket.id, gameId);
+        this.scoresHandlerService
+            .verifyScore((gameInfo as PrivateGameInformation).id as string, { playerName, time, type: ScoreType.Player }, isMulti)
+            .then((index) => {
+                this.gameManager.leaveGame(socket.id, gameId);
 
-            if (isMulti) {
-                socket.broadcast.to(gameId).emit(SocketEvent.Lose);
-            }
+                if (isMulti) {
+                    socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+                }
 
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
-            if (index !== -1) {
-                socket.emit(SocketEvent.Win, { index, time });
-                this.sio.sockets.emit(
-                    SocketEvent.EventMessage,
-                    this.eventMessageService.sendNewHighScoreMessage({
-                        record: { index, time },
-                        playerName,
-                        gameName: (gameInfo as PrivateGameInformation).name as string,
-                        isMulti,
-                    }),
-                );
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
+                if (index !== -1) {
+                    socket.emit(SocketEvent.Win, { index, time });
+                    this.sio.sockets.emit(
+                        SocketEvent.EventMessage,
+                        this.eventMessageService.sendNewHighScoreMessage({
+                            record: { index, time },
+                            playerName,
+                            gameName: (gameInfo as PrivateGameInformation).name as string,
+                            isMulti,
+                        }),
+                    );
+                    return;
+                }
+
+                socket.emit(SocketEvent.Win);
                 return;
-            }
-
-            socket.emit(SocketEvent.Win);
-            return;
-        });
+            });
     }
 }

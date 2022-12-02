@@ -78,4 +78,10 @@ describe('MainPageComponent', () => {
         component.onClickPlayLimited();
         expect(spyMainPageService.setGameMode).toHaveBeenCalledWith(GameMode.LimitedTime);
     });
+
+    it('should redirect to error page if there is an error', () => {
+        spyCommunicationService.getGamesInfoByPage.and.returnValue(throwError(() => new Error('Error')));
+        component.onClickPlayLimited();
+        expect(spyRouter.redirectToErrorPage).toHaveBeenCalled();
+    });
 });

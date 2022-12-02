@@ -244,4 +244,8 @@ describe('GameInformationHandlerService', () => {
         service.players = expectedPlayers;
         expect(service.getOpponent()).toEqual(expectedPlayers[1]);
     });
-});
+
+    it('should return true is is classic', () => {
+        service.gameMode = GameMode.Classic;
+        expect(service.isClassic()).toBeTrue();
+    });

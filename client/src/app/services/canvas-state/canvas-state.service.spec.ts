@@ -1,6 +1,7 @@
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CanvasType } from '@app/enums/canvas-type';
+import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 
 import { CanvasStateService } from './canvas-state.service';
 

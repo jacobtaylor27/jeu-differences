@@ -1,5 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
 import { DB_URL } from '@app/constants/database';
+import { GameCarousel } from '@app/interface/game-carousel';
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpDifferenceInterpreter } from '@app/services/bmp-difference-interpreter-service/bmp-difference-interpreter.service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
@@ -75,7 +77,7 @@ describe('GameInfo Service', async () => {
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[1]);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[2]);
-        const expectedGames = await gameInfoService.getAllGameInfos();
+        const expectedGames = (await gameInfoService.getAllGameInfos()) as PrivateGameInformation[];
         expect(expectedGames.length).to.equal(DEFAULT_GAMES.length);
         for (let i = 0; i < DEFAULT_GAMES.length; i++) {
             expect(expectedGames[i]).to.deep.equal(DEFAULT_GAMES[i]);
@@ -96,23 +98,22 @@ describe('GameInfo Service', async () => {
     });
 
     it('addGameInfo(gameInfo) should add a game to the game collection, getAllGames() should return them', async () => {
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(0);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(1);
     });
 
     it("addGameInfo(gameInfo) shouldn't add a game twice", async () => {
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(0);
         await gameInfoService.addGameInfo(DEFAULT_GAMES[0]);
         await expect(gameInfoService.addGameInfo(DEFAULT_GAMES[0])).to.eventually.be.rejectedWith(Error);
-        expect(await gameInfoService.getGameInfoById('0')).to.deep.equal(DEFAULT_GAMES[0]);
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(1);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(1);
     });
 
     it('resetAllGameInfo() should reset all of the games', async () => {
         await gameInfoService.deleteAllGamesInfo();
-        expect((await gameInfoService.getAllGameInfos()).length).to.equal(0);
+        expect(((await gameInfoService.getAllGameInfos()) as PrivateGameInformation[]).length).to.equal(0);
     });
 
     it('should create a game from Bmp', async () => {
@@ -144,8 +145,61 @@ describe('GameInfo Service', async () => {
     });
 
     it('should get the games information based on a page number', async () => {
-        const value = await gameInfoService.getGamesInfo(1);
+        const value = (await gameInfoService.getGamesInfo(1)) as GameCarousel;
         expect(value.games).to.deep.equal([]);
+    });
+
+    it('should return null when getting games info based on page fails', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.getGamesInfo(1);
+        expect(value).to.deep.equal(null);
+    });
+
+    it('should return null when trying to get all games info with an error', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.getAllGameInfos();
+        expect(value).to.deep.equal(null);
+    });
+
+    it('should return null when ad game info wrapper fails', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.addGameInfoWrapper(
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- for testing purposes
+            { original: { toImageData: () => {} } as Bmp, modify: { toImageData: () => {} } as Bmp },
+            '',
+            0,
+        );
+        expect(value).to.deep.equal(null);
+    });
+
+    it('should return null when trying to delete game info by id and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.deleteGameInfoById('0');
+        expect(value).to.deep.equal(null);
+    });
+
+    it('should return null when trying to delete all games info and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.deleteAllGamesInfo();
+        expect(value).to.deep.equal(null);
+    });
+
+    it('should return null when trying to reset all scores and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.resetAllHighScores();
+        expect(value).to.deep.equal(null);
+    });
+
+    it('should return null when trying to reset single score and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.resetHighScores('0');
+        expect(value).to.deep.equal(null);
+    });
+
+    it('should return null when trying to update score and failing', async () => {
+        await databaseService.close();
+        const value = await gameInfoService.updateHighScores('0', [], []);
+        expect(value).to.deep.equal(null);
     });
 
     it('should get the scores', async () => {

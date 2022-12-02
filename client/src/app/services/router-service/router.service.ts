@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
 export class RouterService {
     constructor(private readonly router: Router) {}
 
+    redirectToErrorPage() {
+        this.navigateTo('error');
+    }
     reloadPage(page: string): void {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigate([`/${page}`]);

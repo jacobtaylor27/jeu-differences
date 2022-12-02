@@ -7,6 +7,7 @@ import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { MainPageService } from '@app/services/main-page/main-page.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { GameMode } from '@common/game-mode';
 
 @Component({
@@ -24,6 +25,7 @@ export class MainPageComponent {
         private readonly matDialog: MatDialog,
         private readonly communicationService: CommunicationService,
         private readonly carouselService: GameCarouselService,
+        private readonly router: RouterService,
     ) {}
 
     onClickPlayClassic(): void {
@@ -31,10 +33,15 @@ export class MainPageComponent {
     }
 
     onClickPlayLimited(): void {
-        this.communicationService.getGamesInfoByPage(1).subscribe((response: HttpResponse<CarouselResponse>) => {
-            if (response && response.body) {
-                this.carouselService.setCarouselInformation(response.body.carouselInfo);
-            }
+        this.communicationService.getGamesInfoByPage(1).subscribe({
+            next: (response: HttpResponse<CarouselResponse>) => {
+                if (response && response.body) {
+                    this.carouselService.setCarouselInformation(response.body.carouselInfo);
+                }
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
         });
         this.mainPageService.setGameMode(GameMode.LimitedTime);
         this.openNameDialog();

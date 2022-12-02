@@ -160,6 +160,9 @@ export class SocketManagerService {
                     socket.broadcast
                         .to(gameId)
                         .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
+                } else if (!this.gameManager.isGameMultiplayer(gameId)) {
+                    socket.leave(gameId);
+                    this.gameManager.leaveGame(socket.id, gameId);
                 }
             });
 

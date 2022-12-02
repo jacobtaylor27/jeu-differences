@@ -17,7 +17,7 @@ import { SocketEvent } from '@common/socket-event';
 import { Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
-
+import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { GameMode } from '@common/game-mode';
 
@@ -87,6 +87,7 @@ describe('GamePageComponent', () => {
                 PageHeaderComponent,
                 ChatBoxComponent,
                 TimerStopwatchComponent,
+                CluesAreaComponent,
             ],
             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
             providers: [

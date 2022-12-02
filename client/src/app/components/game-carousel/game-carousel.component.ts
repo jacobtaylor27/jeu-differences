@@ -1,8 +1,6 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
-import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { GameCard } from '@app/interfaces/game-card';
 import { GameCarouselService } from '@app/services/carousel/game-carousel.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
@@ -11,6 +9,7 @@ import { CarouselInformation } from '@common/carousel-information';
 import { PublicGameInformation } from '@common/game-information';
 import { SocketEvent } from '@common/socket-event';
 import { RefreshSnackbarComponent } from '@app/components/refresh-snackbar/refresh-snackbar.component';
+import { RouterService } from '@app/services/router-service/router.service';
 
 @Component({
     selector: 'app-game-carousel',
@@ -29,6 +28,7 @@ export class GameCarouselComponent implements OnInit, OnDestroy {
         readonly communicationService: CommunicationService,
         private readonly socketService: CommunicationSocketService,
         private readonly snackBar: MatSnackBar,
+        private readonly router: RouterService,
     ) {}
 
     ngOnInit(): void {
@@ -65,12 +65,17 @@ export class GameCarouselComponent implements OnInit, OnDestroy {
 
     getPage(pageNb: number): void {
         this.isLoaded = false;
-        this.communicationService.getGamesInfoByPage(pageNb).subscribe((response: HttpResponse<CarouselResponse>) => {
-            if (response && response.body) {
-                this.setCarouselInformation(response.body.carouselInfo);
-                this.setGameCards(response.body.games);
-                this.isLoaded = true;
-            }
+        this.communicationService.getGamesInfoByPage(pageNb).subscribe({
+            next: (response) => {
+                if (response && response.body) {
+                    this.setCarouselInformation(response.body.carouselInfo);
+                    this.setGameCards(response.body.games);
+                    this.isLoaded = true;
+                }
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
         });
     }
 

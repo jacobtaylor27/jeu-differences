@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MongodbErrorPageComponent } from './mongodb-error-page.component';
 
 describe('MongodbErrorPageComponent', () => {

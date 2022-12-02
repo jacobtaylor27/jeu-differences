@@ -1,16 +1,17 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
-
+import { Component, HostListener, OnInit } from '@angular/core';
+import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { NUMBER_CLUES } from '@common/clues';
 @Component({
     selector: 'app-clues-area',
     templateUrl: './clues-area.component.html',
     styleUrls: ['./clues-area.component.scss'],
 })
-export class CluesAreaComponent {
-    @Output() clueCounter = new EventEmitter<number>();
-
+export class CluesAreaComponent implements OnInit {
     clueAskedCounter: number = 0;
     isDisabled: boolean = false;
-    private numberOfClues: number = 3;
+
+    constructor(public gameInformation: GameInformationHandlerService, private readonly clueHandlerService: ClueHandlerService) {}
 
     @HostListener('window: keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
@@ -21,12 +22,15 @@ export class CluesAreaComponent {
         }
     }
 
+    ngOnInit(): void {
+        this.isDisabled = this.gameInformation.isMulti;
+    }
+
     getClue() {
-        this.clueAskedCounter++;
-        this.clueCounter.emit(this.clueAskedCounter);
-        if (this.clueAskedCounter === this.numberOfClues) {
+        this.clueHandlerService.getClue();
+        this.clueAskedCounter = this.clueHandlerService.getNbCluesAsked();
+        if (this.clueAskedCounter === NUMBER_CLUES) {
             this.isDisabled = true;
         }
-        // TODO add logic with service sprint 3
     }
 }

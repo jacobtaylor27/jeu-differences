@@ -32,7 +32,11 @@ export class GameController {
             const id = req.params.id;
             this.gameInfo
                 .resetHighScores(id)
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     res.sendStatus(StatusCodes.OK);
                 })
                 .catch(() => {
@@ -43,7 +47,11 @@ export class GameController {
         this.router.patch('/scores/reset', (req: Request, res: Response) => {
             this.gameInfo
                 .resetAllHighScores()
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     res.sendStatus(StatusCodes.OK);
                 })
                 .catch(() => {
@@ -51,59 +59,37 @@ export class GameController {
                 });
         });
 
-        this.router.get('/scores/:id', (req: Request, res: Response) => {
-            const id = req.params.id;
-            this.gameInfo
-                .getHighScores(id)
-                .then((scores) => {
-                    res.status(StatusCodes.OK).send(scores);
-                })
-                .catch(() => {
-                    res.sendStatus(StatusCodes.NOT_FOUND);
-                });
-        });
-
-        this.router.patch('/scores/:id', (req: Request, res: Response) => {
-            const id = req.params.id;
-            const scoresSolo = req.body.scoresSolo;
-            const scoresMulti = req.body.scoresMulti;
-            if (id && scoresSolo && scoresMulti) {
-                this.gameInfo
-                    .updateHighScores(id, scoresSolo, scoresMulti)
-                    .then(() => {
-                        res.sendStatus(StatusCodes.OK);
-                    })
-                    .catch(() => {
-                        res.sendStatus(StatusCodes.BAD_REQUEST);
-                    });
-            } else {
-                res.sendStatus(StatusCodes.BAD_REQUEST);
-            }
-        });
-
         this.router.delete('/cards/:id', (req: Request, res: Response) => {
             const isGameDeleted = this.gameInfo.deleteGameInfoById(req.params.id.toString());
             isGameDeleted
                 .then((isDeleted) => {
+                    if (isDeleted === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     const status = isDeleted ? StatusCodes.ACCEPTED : StatusCodes.NOT_FOUND;
                     res.status(status).send();
+                    this.socketManager.refreshGames();
                 })
                 .catch(() => {
                     res.status(StatusCodes.BAD_REQUEST).send();
                 });
-            this.socketManager.refreshGames();
         });
 
         this.router.delete('/cards', (req: Request, res: Response) => {
             this.gameInfo
                 .deleteAllGamesInfo()
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     res.status(StatusCodes.ACCEPTED).send();
+                    this.socketManager.refreshGames();
                 })
                 .catch(() => {
                     res.status(StatusCodes.BAD_REQUEST).send();
                 });
-            this.socketManager.refreshGames();
         });
 
         this.router.get('/cards', (req: Request, res: Response) => {
@@ -124,6 +110,10 @@ export class GameController {
                                 hasPrevious: boolean;
                             };
                         }) => {
+                            if (gameCarousel === null) {
+                                res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                                return;
+                            }
                             res.status(StatusCodes.OK).send({
                                 carouselInfo: gameCarousel.information,
                                 games: gameCarousel.games.map((game: PrivateGameInformation) => {
@@ -189,7 +179,11 @@ export class GameController {
             );
             this.gameInfo
                 .addGameInfoWrapper({ original, modify }, req.body.name, req.body.differenceRadius)
-                .then(() => {
+                .then((value) => {
+                    if (value === null) {
+                        res.status(StatusCodes.SERVICE_UNAVAILABLE).send();
+                        return;
+                    }
                     this.socketManager.refreshGames();
                     res.status(StatusCodes.CREATED).send();
                 })

@@ -1074,4 +1074,34 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'getNbDifferenceNotFound').callsFake(() => []);
         service.handleSockets();
     });
+
+    it('should get clues', () => {
+        const fakeSocket = {
+            on: (eventName: string, callback: () => void) => {
+                if (eventName === SocketEvent.Clue) callback();
+            },
+            emit: (eventName: string, message: string) => {
+                expect(eventName === SocketEvent.Clue || eventName === SocketEvent.EventMessage).to.equal(true);
+            },
+        };
+
+        service['sio'] = {
+            on: (eventName: string, callback: (socket: unknown) => void) => {
+                if (eventName === SocketEvent.Connection) {
+                    callback(fakeSocket);
+                }
+            },
+            to: () => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['gameManager'], 'increaseNbClueAsked').callsFake(() => []);
+        stub(service['cluesService'], 'findRandomPixel').callsFake(() => {
+            return { x: 0, y: 0 };
+        });
+        const getClues = stub(service['gameManager'], 'getNbClues').callsFake(() => 1);
+        service.handleSockets();
+        getClues.callsFake(() => 2);
+        service.handleSockets();
+        getClues.callsFake(() => 3);
+        service.handleSockets();
+    });
 });

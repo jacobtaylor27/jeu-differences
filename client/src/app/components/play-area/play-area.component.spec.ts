@@ -1,5 +1,6 @@
+/* eslint-disable max-lines */
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
@@ -12,9 +13,13 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { Coordinate } from '@common/coordinate';
+import { DifferenceFound } from '@common/difference';
+import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
+import { SocketEvent } from '@common/socket-event';
 
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
 
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -42,19 +47,25 @@ describe('PlayAreaComponent', () => {
             'setContextImgModified',
             'setNumberDifferencesFound',
             'differenceDetected',
+            'playCorrectSound',
+            'showClue',
         ]);
         cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
-        gameInformationHandlerServiceSpy = jasmine.createSpyObj('GameInformationHandlerService', [
-            'getGameMode',
-            'getGameName',
-            'getPlayerName',
-            'getOriginalBmp',
-            'getOriginalBmpId',
-            'getModifiedBmpId',
-            'getGameInformation',
-            'setGameInformation',
-            'getNbTotalDifferences',
-        ]);
+        gameInformationHandlerServiceSpy = jasmine.createSpyObj(
+            'GameInformationHandlerService',
+            [
+                'getGameMode',
+                'getGameName',
+                'getPlayerName',
+                'getOriginalBmp',
+                'getOriginalBmpId',
+                'getModifiedBmpId',
+                'getGameInformation',
+                'setGameInformation',
+                'getNbTotalDifferences',
+            ],
+            { $newGame: new Subject<string>() },
+        );
 
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
@@ -105,6 +116,44 @@ describe('PlayAreaComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should handle clue on ngOnInit', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextOriginal').and.callFake(() => {
+            return ctx;
+        });
+
+        component.ngOnInit();
+        socketHelper.peerSideEmit(SocketEvent.Clue, { clue: [{ x: 1, y: 3 }] as Coordinate[], nbClues: 2 });
+
+        expect(differenceService.showClue).toHaveBeenCalled();
+    });
+
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds and 5000 -> 5 seconds */
+    it('should handle clue when player is on third clue askes on ngOnInit', fakeAsync(() => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextOriginal').and.callFake(() => {
+            return ctx;
+        });
+
+        component.ngOnInit();
+        socketHelper.peerSideEmit(SocketEvent.Clue, { clue: [{ x: 1, y: 3 }] as Coordinate[], nbClues: 3 });
+
+        tick(1500);
+        expect(component.isThirdClue).toEqual(true);
+        tick(5000);
+        expect(component.isThirdClue).toEqual(false);
+        expect(differenceService.showClue).not.toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 
     it('should display image afterViewInit', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
@@ -287,5 +336,51 @@ describe('PlayAreaComponent', () => {
         });
         await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 't' } as unknown as KeyboardEvent);
         expect(cheatModeService.manageCheatMode).toHaveBeenCalled();
+    });
+
+    it('should display new image on socket event', () => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextImgModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextDifferences').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextImgOriginal').and.callFake(() => {
+            return ctx;
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const spyDisplayImage = spyOn(component, 'displayImage').and.callFake(() => {});
+        component.handleSocketDifferenceFound();
+        socketHelper.peerSideEmit(SocketEvent.NewGameBoard, {} as PublicGameInformation);
+        expect(spyDisplayImage).toHaveBeenCalled();
+    });
+
+    it('should handle socket event difference found', () => {
+        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextImgModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextModified').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextOriginal').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextDifferences').and.callFake(() => {
+            return ctx;
+        });
+        spyOn(component, 'getContextImgOriginal').and.callFake(() => {
+            return ctx;
+        });
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        spyOn(component, 'displayImage').and.callFake(() => {});
+        component.handleSocketDifferenceFound();
+        socketHelper.peerSideEmit(SocketEvent.DifferenceFound, {} as DifferenceFound);
+        expect(differenceService.setNumberDifferencesFound).toHaveBeenCalled();
+        expect(differenceService.differenceDetected).toHaveBeenCalled();
     });
 });

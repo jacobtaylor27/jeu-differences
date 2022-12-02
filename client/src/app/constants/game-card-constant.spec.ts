@@ -1,4 +1,5 @@
 import { GameCard } from '@app/interfaces/game-card';
+import { ScoreType } from '@common/score-type';
 
 export const gameCard1: GameCard = {
     gameInformation: {

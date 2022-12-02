@@ -64,6 +64,7 @@ describe('GamePageComponent', () => {
                 'getNbDifferences',
                 'getNbTotalDifferences',
                 'setGameMode',
+                'isClassic',
             ],
             { $differenceFound: new Subject<string>(), $newGame: new Subject<string>(), $playerLeft: new Subject() },
         );

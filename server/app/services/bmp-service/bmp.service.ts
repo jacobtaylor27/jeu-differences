@@ -21,8 +21,6 @@ export class BmpService {
         return allBmps;
     }
     async getBmpById(bmpId: string, filepath: string): Promise<string> {
-        console.log(bmpId);
-        console.log(filepath)
         const fullpath: string = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
         if (!fs.existsSync(fullpath)) throw new Error("Couldn't get the bmp by id");
         return await this.bmpEncoderService.base64Encode(fullpath);

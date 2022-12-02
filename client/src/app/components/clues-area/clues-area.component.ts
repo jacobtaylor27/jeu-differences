@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-const NUMBER_CLUES = 3;
+import { NUMBER_CLUES } from '@common/clues';
 @Component({
     selector: 'app-clues-area',
     templateUrl: './clues-area.component.html',

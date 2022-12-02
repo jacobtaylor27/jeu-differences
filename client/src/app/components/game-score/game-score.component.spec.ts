@@ -38,4 +38,13 @@ describe('GameScoreComponent', () => {
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         expect(component.formatScoreTime(70)).toEqual('01:10');
     });
+
+    it('should validate the scores array', () => {
+        expect(component.scores.length).toEqual(3);
+        expect(component.scores[2].playerName).toEqual('joueur');
+        expect(component.scores[2].type).toEqual(ScoreType.Default);
+        component.scores.pop();
+        component['validateScores']();
+        expect(component.scores.length).toEqual(3);
+    });
 });

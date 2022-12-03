@@ -13,7 +13,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     messages: ChatMessage[] = [];
     currentMessage: string;
 
-    constructor(public communicationSocket: CommunicationSocketService, public gameInformation: GameInformationHandlerService) {}
+    constructor(private communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
 
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
@@ -64,5 +64,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
             this.messages.push({ content: message, type: senderType });
         }
         this.scrollDown();
+    }
+
+    isMulti() {
+        return this.gameInformation.isMulti;
     }
 }

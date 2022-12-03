@@ -22,6 +22,7 @@ export class TimerStopwatchComponent implements OnInit {
 
     ngOnInit(): void {
         this.socketService.on(SocketEvent.Clock, (time: number) => {
+            this.time = time;
             this.timerDisplay = this.timeFormatter.formatTime(time);
         });
     }

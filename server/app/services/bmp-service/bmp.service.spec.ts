@@ -74,8 +74,9 @@ describe('Bmp service', async () => {
         const height = 2;
         const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
         const bmpObj = new Bmp({ width, height }, defaultRawData);
+        const converedObj = 'Qk1GAAAAAAAAADYAAAAoAAAAAgAAAP7///8BABgAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAQIDAQIDAAABAgMBAgMAAA==';
         await bmpService.addBmp(await bmpObj.toImageData(), tmpdir());
-        await expect(bmpService.getBmpById('5', tmpdir())).to.eventually.deep.equal(bmpObj);
+        await expect(bmpService.getBmpById('5', tmpdir())).to.eventually.deep.equal(converedObj);
         await bmpService.deleteGameImages(['5'], tmpdir());
     });
 

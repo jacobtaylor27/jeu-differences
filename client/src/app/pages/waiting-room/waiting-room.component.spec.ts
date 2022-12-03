@@ -63,6 +63,7 @@ describe('WaitingRoomComponent', () => {
     });
 
     it('should redirect to select page when rejected', () => {
+        spyGameInfoService.isClassic.and.callFake(() => true);
         socketHelper.peerSideEmit(SocketEvent.RejectPlayer);
         expect(spyRouter.navigate).toHaveBeenCalled();
     });

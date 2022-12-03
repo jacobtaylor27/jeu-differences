@@ -1,0 +1,8 @@
+<div [ngClass]="theme" class="dialog">
+    <h2 mat-title>Êtes-vous certain de vouloir supprimer tous les jeux ?</h2>
+    <mat-card-content>Une fois les jeux supprimés, ils ne peuvent pas être restaurés.</mat-card-content>
+    <mat-dialog-actions>
+        <button  color="primary" mat-button mat-dialog-close>Annuler</button>
+        <button type="button" mat-raised-button mat-dialog-close color="warn" (click)="deleteAllGames()">Supprimer</button>
+    </mat-dialog-actions>
+</div>

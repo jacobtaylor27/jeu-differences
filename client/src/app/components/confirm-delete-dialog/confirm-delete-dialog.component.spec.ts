@@ -44,4 +44,9 @@ describe('ConfirmDeleteDialogComponent', () => {
         component.deleteAllGames();
         expect(spyAdminService.deleteAllGames).toHaveBeenCalled();
     });
+
+    it('should delete a single game', () => {
+        component.deleteSingleGame();
+        expect(spyAdminService.deleteSingleGame).toHaveBeenCalledWith('123');
+    });
 });

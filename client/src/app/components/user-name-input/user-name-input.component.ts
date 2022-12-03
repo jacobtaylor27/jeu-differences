@@ -67,7 +67,8 @@ export class UserNameInputComponent {
 
     isValidName(): boolean {
         this.playerName = this.playerName.trim();
-        return this.playerName !== undefined && this.playerName !== '';
+        this.isValid = this.playerName !== undefined && this.playerName !== '';
+        return this.isValid;
     }
 
     openGameModeDialog() {

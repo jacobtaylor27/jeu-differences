@@ -17,6 +17,7 @@ export class UserNameInputComponent {
     playerName: string;
     form: FormGroup = new FormGroup({ name: new FormControl('', [this.noWhiteSpaceValidator, Validators.required]) });
     favoriteTheme: string = Theme.ClassName;
+    isValid: boolean = false;
 
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(

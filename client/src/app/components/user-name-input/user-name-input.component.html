@@ -1,7 +1,7 @@
 <section [ngClass]="favoriteTheme">
     <form [formGroup]="form">
         <mat-form-field>
-            <input [(ngModel)]="playerName" matInput placeholder="Nom" formControlName="name" maxlength="15"/>
+            <input matInput placeholder="Nom" formControlName="name" maxlength="15"/>
         </mat-form-field>
         <mat-error *ngIf="!form.valid">Entrez un nom valid</mat-error>
     </form>

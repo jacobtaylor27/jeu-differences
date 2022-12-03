@@ -28,6 +28,10 @@ describe('AdminCommandsComponent', () => {
                     provide: AdminService,
                     useValue: spyAdminService,
                 },
+                {
+                    provide: MatDialog,
+                    useValue: spyDialog,
+                },
             ],
         }).compileComponents();
 

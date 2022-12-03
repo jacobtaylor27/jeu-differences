@@ -27,6 +27,7 @@ export class DialogLimitedTimeComponent {
         if (this.noGameAvailable()) {
             return;
         }
+        this.gameInformationHandlerService.isMulti = false;
         this.communicationSocketService.send(SocketEvent.CreateGame, {
             player: this.gameInformationHandlerService.players[0].name,
             mode: this.gameInformationHandlerService.gameMode,
@@ -39,6 +40,7 @@ export class DialogLimitedTimeComponent {
         if (this.noGameAvailable()) {
             return;
         }
+        this.gameInformationHandlerService.isMulti = true;
         this.communicationSocketService.send(SocketEvent.CreateGameMulti, {
             player: this.gameInformationHandlerService.players[0].name,
             mode: this.gameInformationHandlerService.gameMode,

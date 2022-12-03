@@ -36,7 +36,11 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         this.socketService.on(SocketEvent.RejectPlayer, (reason: string) => {
             this.dialog.closeAll();
             this.dialog.open(RejectedDialogComponent, { data: { reason } });
-            this.routerService.navigateTo('select');
+            if (this.gameInformationHandlerService.isClassic()) {
+                this.routerService.navigateTo('/select');
+            } else if (this.gameInformationHandlerService.isLimitedTime()) {
+                this.routerService.navigateTo('/');
+            }
         });
 
         this.socketService.once(SocketEvent.JoinGame, (data: { roomId: string; playerName: string }) => {

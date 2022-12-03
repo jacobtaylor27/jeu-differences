@@ -111,6 +111,7 @@ export class MultiplayerGameManager {
     initializeRejectMessages() {
         this.rejectMessages.deletedGame = 'le jeu a été supprimé';
         this.rejectMessages.wrongName = 'vous devez choisir un autre nom de joueur';
+        this.rejectMessages.allGamesDeleted = 'tous les jeux ont été supprimés';
         this.rejectMessages.playerQuit = 'le joueur a quitté.';
         this.rejectMessages.rejected = 'le joueur a refusé votre demande.';
         this.rejectMessages.gameStarted = 'la partie a déjà commencé.';

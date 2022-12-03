@@ -27,7 +27,6 @@ describe('ChatBoxComponent', () => {
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
-
         await TestBed.configureTestingModule({
             declarations: [ChatBoxComponent],
             imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
@@ -79,7 +78,7 @@ describe('ChatBoxComponent', () => {
 
     it('should send the message onClick', () => {
         const spyAddingMessage = spyOn(component, 'addingMessage');
-        const spySend = spyOn(component.communicationSocket, 'send');
+        const spySend = spyOn(socketServiceMock, 'send');
         component.onClickSend();
         socketHelper.peerSideEmit(SocketEvent.Message, 'message');
         socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');

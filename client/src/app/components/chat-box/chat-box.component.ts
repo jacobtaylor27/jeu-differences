@@ -11,10 +11,9 @@ import { SocketEvent } from '@common/socket-event';
 export class ChatBoxComponent implements OnInit, AfterViewInit {
     @ViewChild('scroll', { static: true }) scroll: ElementRef;
     messages: ChatMessage[] = [];
-    isOpponentConnected: boolean;
     currentMessage: string;
 
-    constructor(public communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
+    constructor(private communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
 
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
@@ -30,7 +29,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.isOpponentConnected = this.gameInformation.isMulti;
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
             this.addingMessage(message, 'opponent');
         });
@@ -66,5 +64,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
             this.messages.push({ content: message, type: senderType });
         }
         this.scrollDown();
+    }
+
+    isMulti() {
+        return this.gameInformation.isMulti;
     }
 }

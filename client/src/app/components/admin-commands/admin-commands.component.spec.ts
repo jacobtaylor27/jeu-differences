@@ -19,6 +19,7 @@ describe('AdminCommandsComponent', () => {
             'hasCards',
             'refreshAllGames',
         ]);
+        spyDialog = jasmine.createSpyObj('MatDialog', ['open']);
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule],
             declarations: [AdminCommandsComponent],

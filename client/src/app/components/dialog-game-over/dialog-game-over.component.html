@@ -1,7 +1,7 @@
 <div [ngClass]="theme">
     <div *ngIf="!this.isClassic">
         <h1 mat-dialog-title>Partie terminée !</h1>
-        <div mat-dialog-content>Félicitations, tu as trouvé <b>{{nbPoints}}</b> différence(s) ! </div>
+        <div mat-dialog-content>Félicitations, vous avez trouvé <b>{{nbPoints}}</b> différence(s) ! </div>
     </div>
     <div *ngIf="this.isWin && this.isClassic">
         <h1 mat-dialog-title>Partie terminée !</h1>

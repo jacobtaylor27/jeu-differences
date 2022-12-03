@@ -7,6 +7,7 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
@@ -37,6 +38,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         private readonly communicationService: CommunicationService,
         private readonly mouseHandlerService: MouseHandlerService,
         private readonly communicationSocketService: CommunicationSocketService,
+        private readonly routerService: RouterService,
         private cheatMode: CheatModeService,
     ) {
         this.handleSocketDifferenceFound();
@@ -159,12 +161,10 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             image.src = 'data:image/png;base64,' + imageBase64;
             image.onload = () => {
                 ctx.drawImage(image, 0, 0);
-            }
+            };
             image.onerror = () => {
-                // A FAIRE THIERRY :D
-                window.alert("fnrhfrirhinrirnignirignr les exceptions");
-            }
-        
+                this.routerService.navigateTo('home');
+            };
         });
     }
 

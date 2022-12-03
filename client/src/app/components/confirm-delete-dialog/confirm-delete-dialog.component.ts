@@ -11,7 +11,7 @@ import { AdminService } from '@app/services/admin-service/admin.service';
 export class ConfirmDeleteDialogComponent {
     theme: string = Theme.ClassName;
 
-    constructor(private readonly adminService: AdminService) {}
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { gameId: string; singleGameDelete: boolean }, private readonly adminService: AdminService) {}
 
     deleteAllGames(): void {
         this.adminService.deleteAllGames();

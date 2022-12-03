@@ -30,11 +30,10 @@ export class UserNameInputComponent {
         this.isMulti = this.data.isMulti;
     }
 
-    @HostListener('window:keyup', ['$event'])
-    onDialogClick(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            this.onClickContinue();
-        }
+    noWhiteSpaceValidator(control: FormControl): { [key: string]: boolean } | null {
+        const isWhitespace = (control.value || '').trim().length === 0;
+        const isValid = !isWhitespace;
+        return isValid ? null : { whitespace: true };
     }
 
     onClickContinue(): void {

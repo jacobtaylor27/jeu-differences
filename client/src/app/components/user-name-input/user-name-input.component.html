@@ -1,7 +1,7 @@
 <section [ngClass]="favoriteTheme">
     <form [formGroup]="form">
         <mat-form-field>
-            <mat-label>Quel est votre nom?</mat-label>
+            <input [(ngModel)]="playerName" matInput placeholder="Nom" formControlName="name" maxlength="15"/>
             <input [(ngModel)]="playerName" matInput/>
         </mat-form-field>
     </div>

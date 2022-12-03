@@ -100,4 +100,10 @@ describe('UserNameInputComponent', () => {
         component.openGameModeDialog();
         expect(spyDialog).toHaveBeenCalled();
     });
+
+    it('should send information when the button is clicked', () => {
+        component.onClickContinue();
+        component.playerName = 'test';
+        expect(spyGameInformationService.setPlayerName).toHaveBeenCalledWith('test');
+    });
 });

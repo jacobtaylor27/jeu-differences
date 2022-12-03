@@ -21,7 +21,7 @@
                     <button mat-button routerLink="/admin" mat-dialog-close color="primary">Quitter</button>
                </div>
                <div *ngIf="exitButtonService.currentPage.waitingRoom; ">
-                <button mat-button routerLink="/select" mat-dialog-close color="primary" (click)="onLeaveWaiting()">Quitter</button>
+                <button mat-button routerLink="/" mat-dialog-close color="primary" (click)="onLeaveWaiting()">Quitter</button>
                 
             </div>
         </div>

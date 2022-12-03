@@ -6,6 +6,7 @@ import { GameManagerService } from '@app/services/game-manager-service/game-mana
 import { LimitedTimeGame } from '@app/services/limited-time-game-service/limited-time-game.service';
 import { MultiplayerGameManager } from '@app/services/multiplayer-game-manager/multiplayer-game-manager.service';
 import { ScoresHandlerService } from '@app/services/scores-handler-service/scores-handler.service';
+import { BASE_64_HEADER } from '@common/base64';
 import { Coordinate } from '@common/coordinate';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
@@ -15,7 +16,6 @@ import * as http from 'http';
 import * as LZString from 'lz-string';
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
-
 @Service()
 export class SocketManagerService {
     private sio: Server;
@@ -131,7 +131,7 @@ export class SocketManagerService {
                         gameCardInfo = {
                             id: gameCard.id,
                             name: gameCard.name,
-                            thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(gameCard.thumbnail),
+                            thumbnail: BASE_64_HEADER + LZString.decompressFromUTF16(gameCard.thumbnail),
                             nbDifferences: gameCard.differences.length,
                             idEditedBmp: gameCard.idEditedBmp,
                             idOriginalBmp: gameCard.idOriginalBmp,
@@ -150,6 +150,7 @@ export class SocketManagerService {
                     return;
                 }
                 if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
+                    socket.leave(gameId);
                     socket.broadcast
                         .to(gameId)
                         .emit(
@@ -204,15 +205,10 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.GamesDeleted, () => {
                 this.limitedTimeService.deleteAllGames();
+                this.sio.emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.allGamesDeleted);
                 for (const gameId of this.multiplayerGameManager.getGamesWaiting(GameMode.Classic)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
-                    this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
-                    const request = this.multiplayerGameManager.getRequest(roomId);
-                    if (request) {
-                        for (const player of request) {
-                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
-                        }
-                    }
+                    this.multiplayerGameManager.deleteAllRequests(roomId);
                 }
             });
 
@@ -259,7 +255,7 @@ export class SocketManagerService {
                         gameCardInfo = {
                             id: nextGameCard.id,
                             name: nextGameCard.name,
-                            thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(nextGameCard.thumbnail),
+                            thumbnail: BASE_64_HEADER + LZString.decompressFromUTF16(nextGameCard.thumbnail),
                             nbDifferences: nextGameCard.differences.length,
                             idEditedBmp: nextGameCard.idEditedBmp,
                             idOriginalBmp: nextGameCard.idOriginalBmp,
@@ -286,7 +282,7 @@ export class SocketManagerService {
             gameCardInfo = {
                 id: gameCard.id,
                 name: gameCard.name,
-                thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(gameCard.thumbnail),
+                thumbnail: BASE_64_HEADER + LZString.decompressFromUTF16(gameCard.thumbnail),
                 nbDifferences: gameCard.differences.length,
                 idEditedBmp: gameCard.idEditedBmp,
                 idOriginalBmp: gameCard.idOriginalBmp,

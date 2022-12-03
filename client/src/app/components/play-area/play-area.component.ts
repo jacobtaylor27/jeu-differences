@@ -7,6 +7,8 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
+import { BASE_64_HEADER } from '@common/base64';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
@@ -36,6 +38,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         private readonly communicationService: CommunicationService,
         private readonly mouseHandlerService: MouseHandlerService,
         private readonly communicationSocketService: CommunicationSocketService,
+        private readonly routerService: RouterService,
         private cheatMode: CheatModeService,
     ) {
         this.handleSocketDifferenceFound();
@@ -81,6 +84,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     ngAfterViewInit(): void {
+        this.cheatMode.handleSocketEvent(this.getContextOriginal(), this.getContextModified());
         this.displayImages();
         this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
     }
@@ -89,6 +93,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         this.communicationSocketService.off(SocketEvent.DifferenceFound);
         this.communicationSocketService.off(SocketEvent.NewGameBoard);
         this.communicationSocketService.off(SocketEvent.Clue);
+        this.cheatMode.removeHandleSocketEvent();
     }
 
     onClick($event: MouseEvent, canvas: string) {
@@ -149,15 +154,19 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             ? this.getImageData(this.gameInfoHandlerService.getOriginalBmpId())
             : this.getImageData(this.gameInfoHandlerService.getModifiedBmpId());
 
-        originalImageData.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
+        originalImageData.subscribe((response: HttpResponse<{ image: string }> | null) => {
             if (!response || !response.body) {
                 return;
             }
-            const image: ImageData = new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, {
-                colorSpace: 'srgb',
-            });
-
-            ctx.putImageData(image, 0, 0);
+            const imageBase64 = response.body.image;
+            const image = new Image();
+            image.src = BASE_64_HEADER + imageBase64;
+            image.onload = () => {
+                ctx.drawImage(image, 0, 0);
+            };
+            image.onerror = () => {
+                this.routerService.navigateTo('home');
+            };
         });
     }
 

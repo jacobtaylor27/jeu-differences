@@ -34,7 +34,13 @@ describe('WaitingRoomComponent', () => {
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
-        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', ['getId', 'setPlayerName', 'getPlayer', 'isClassic']);
+        spyGameInfoService = jasmine.createSpyObj('GameInformationHandlerService', [
+            'getId',
+            'setPlayerName',
+            'getPlayer',
+            'isClassic',
+            'isLimitedTime',
+        ]);
 
         await TestBed.configureTestingModule({
             declarations: [WaitingRoomComponent, PageHeaderComponent, ExitGameButtonComponent],
@@ -57,6 +63,13 @@ describe('WaitingRoomComponent', () => {
     });
 
     it('should redirect to select page when rejected', () => {
+        spyGameInfoService.isClassic.and.callFake(() => true);
+        socketHelper.peerSideEmit(SocketEvent.RejectPlayer);
+        expect(spyRouter.navigate).toHaveBeenCalled();
+    });
+
+    it('should redirect to home page when rejected on temps limite', () => {
+        spyGameInfoService.isLimitedTime.and.callFake(() => true);
         socketHelper.peerSideEmit(SocketEvent.RejectPlayer);
         expect(spyRouter.navigate).toHaveBeenCalled();
     });

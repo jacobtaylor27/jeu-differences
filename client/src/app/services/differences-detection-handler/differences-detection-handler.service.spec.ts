@@ -167,7 +167,7 @@ describe('DifferencesDetectionHandlerService', () => {
     });
 
     /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds */
-    it('should draw on canvas', fakeAsync(() => {
+    it('should draw on canvas and not cheat mode', fakeAsync(() => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 

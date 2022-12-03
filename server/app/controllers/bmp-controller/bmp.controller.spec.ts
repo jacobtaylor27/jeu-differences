@@ -1,5 +1,4 @@
 import { Application } from '@app/app';
-import { Bmp } from '@app/classes/bmp/bmp';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
@@ -19,23 +18,12 @@ describe('Bmp Controller', () => {
     });
 
     it('should get image with id', async () => {
-        const expectedData = new Uint8ClampedArray();
-        bmpServiceSpyObj.getBmpById.callsFake(async () =>
-            Promise.resolve({
-                getWidth: () => 0,
-                getHeight: () => 0,
-                toImageData: () => {
-                    return { data: expectedData } as ImageData;
-                },
-            } as unknown as Bmp),
-        );
+        bmpServiceSpyObj.getBmpById.callsFake(async () => Promise.resolve(''));
         return supertest(expressApp)
             .get('/api/bmp/original')
-            .expect(StatusCodes.CREATED)
+            .expect(StatusCodes.OK)
             .then((response) => {
-                expect(response.body.width).to.equal(0);
-                expect(response.body.height).to.equal(0);
-                expect(response.body.data).to.deep.equal([]);
+                expect(response.body.image).to.equal('');
             });
     });
 

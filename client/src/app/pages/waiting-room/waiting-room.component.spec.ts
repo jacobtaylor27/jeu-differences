@@ -68,6 +68,12 @@ describe('WaitingRoomComponent', () => {
         expect(spyRouter.navigate).toHaveBeenCalled();
     });
 
+    it('should redirect to home page when rejected on temps limite', () => {
+        spyGameInfoService.isLimitedTime.and.callFake(() => true);
+        socketHelper.peerSideEmit(SocketEvent.RejectPlayer);
+        expect(spyRouter.navigate).toHaveBeenCalled();
+    });
+
     it('should send JoinGame when accepted', () => {
         spyGameInfoService.getPlayer.and.returnValue({ name: '', nbDifferences: 7 });
         const spySend = spyOn(component.socketService, 'send');

@@ -123,4 +123,11 @@ describe('CheatModeService', () => {
         service.stopCheatModeDifference(ctx, ctx, expectedDifference);
         expect(spyClearInterval).not.toHaveBeenCalled();
     });
+
+
+    it('should remove the handle SocketEvent', () => {
+        const offStub = spyOn(socketServiceMock, 'off').and.callFake(() => {});
+        service.removeHandleSocketEvent();
+        expect(offStub).toHaveBeenCalled();
+    });
 });

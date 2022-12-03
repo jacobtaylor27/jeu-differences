@@ -71,4 +71,9 @@ describe('AdminService', () => {
         service.deleteAllGames();
         expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
     });
-});
+
+    it('should delete a single game', () => {
+        spyCommunicationService.deleteGame.and.returnValue(of(void 0));
+        service.deleteSingleGame('id');
+        expect(spyCommunicationService.deleteGame).toHaveBeenCalled();
+    });

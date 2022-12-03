@@ -54,9 +54,9 @@ describe('AdminCommandsComponent', () => {
         expect(spyAdminService.openSettings).toHaveBeenCalled();
     });
 
-    it('onClickDeleteGames should call deleteAllGames from admin service', () => {
+    it('onClickDeleteGames should validate that the user really wants to delete', () => {
         component.onClickDeleteGames();
-        expect(spyAdminService.deleteAllGames).toHaveBeenCalled();
+        expect(spyDialog.open).toHaveBeenCalledWith(ConfirmDeleteDialogComponent);
     });
 
     it('onClickRefreshGames should call refreshAllGames from admin service', () => {

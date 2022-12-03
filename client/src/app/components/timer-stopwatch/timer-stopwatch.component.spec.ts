@@ -64,5 +64,16 @@ describe('TimerStopwatchComponent', () => {
         const newComponent = new TimerStopwatchComponent(socketServiceMock, spyTimeFormatter, spyGameInfosService);
 
         expect(spyTimeFormatter.formatTime).toHaveBeenCalled();
+        expect(newComponent.timerDisplay).toBe('30:00');
+    });
+
+    it('should display time on init classic', () => {
+        spyGameInfosService.isClassic.and.callFake(() => true);
+
+        spyTimeFormatter.formatTime.and.callFake(() => '00:00');
+        const newComponent = new TimerStopwatchComponent(socketServiceMock, spyTimeFormatter, spyGameInfosService);
+
+        expect(spyTimeFormatter.formatTime).toHaveBeenCalled();
+        expect(newComponent.timerDisplay).toBe('00:00');
     });
 });

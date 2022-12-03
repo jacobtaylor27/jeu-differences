@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -26,7 +27,7 @@ describe('GameInformationHandlerService', () => {
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, HttpClientModule],
             providers: [
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
                 {

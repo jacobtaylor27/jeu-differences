@@ -1,4 +1,6 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
@@ -20,7 +22,7 @@ describe('TimerStopwatchComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [TimerStopwatchComponent],
-            imports: [AppMaterialModule],
+            imports: [AppMaterialModule, RouterTestingModule, HttpClientModule],
             providers: [{ provide: CommunicationSocketService, useValue: socketServiceMock }],
         }).compileComponents();
 

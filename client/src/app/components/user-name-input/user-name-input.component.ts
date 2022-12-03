@@ -31,9 +31,7 @@ export class UserNameInputComponent {
     }
 
     noWhiteSpaceValidator(control: FormControl): { [key: string]: boolean } | null {
-        const isWhitespace = (control.value || '').trim().length === 0;
-        const isValid = !isWhitespace;
-        return isValid ? null : { whitespace: true };
+        return !((control.value || '').trim().length === 0) ? null : { whitespace: true };
     }
 
     onClickContinue(): void {

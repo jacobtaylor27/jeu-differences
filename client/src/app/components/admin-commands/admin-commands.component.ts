@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Theme } from '@app/enums/theme';
 import { AdminService } from '@app/services/admin-service/admin.service';
+import { ConfirmDeleteDialogComponent } from '@app/components/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
     selector: 'app-admin-commands',

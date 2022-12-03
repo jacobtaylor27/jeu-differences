@@ -13,6 +13,7 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
@@ -33,6 +34,7 @@ describe('PlayAreaComponent', () => {
     let spyMouseHandlerService: jasmine.SpyObj<MouseHandlerService>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     let differenceService: jasmine.SpyObj<DifferencesDetectionHandlerService>;
+    let routerSpyObj: jasmine.SpyObj<RouterService>;
     let cheatModeService: jasmine.SpyObj<CheatModeService>;
     let socketHelper: SocketTestHelper;
     let socketServiceMock: SocketClientServiceMock;
@@ -50,6 +52,7 @@ describe('PlayAreaComponent', () => {
             'playCorrectSound',
             'showClue',
         ]);
+        routerSpyObj = jasmine.createSpyObj('RouterService', ['navigateTo']);
         cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
         gameInformationHandlerServiceSpy = jasmine.createSpyObj(
             'GameInformationHandlerService',
@@ -94,6 +97,7 @@ describe('PlayAreaComponent', () => {
                     provide: DifferencesDetectionHandlerService,
                     useValue: differenceService,
                 },
+                { provide: RouterService, useValue: routerSpyObj },
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
             ],
         }).compileComponents();

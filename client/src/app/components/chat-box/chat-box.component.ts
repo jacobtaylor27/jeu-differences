@@ -11,7 +11,6 @@ import { SocketEvent } from '@common/socket-event';
 export class ChatBoxComponent implements OnInit, AfterViewInit {
     @ViewChild('scroll', { static: true }) scroll: ElementRef;
     messages: ChatMessage[] = [];
-    isOpponentConnected: boolean;
     currentMessage: string;
 
     constructor(public communicationSocket: CommunicationSocketService, public gameInformation: GameInformationHandlerService) {}

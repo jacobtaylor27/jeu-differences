@@ -10,7 +10,7 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 
 import { UserNameInputComponent } from './user-name-input.component';
 
-describe('UserNameInputComponent', () => {
+fdescribe('UserNameInputComponent', () => {
     let component: UserNameInputComponent;
     let fixture: ComponentFixture<UserNameInputComponent>;
     let spySocketCommunication: jasmine.SpyObj<CommunicationSocketService>;
@@ -68,14 +68,6 @@ describe('UserNameInputComponent', () => {
 
         component.playerName = '';
         expect(component.isValidName()).toBeFalse();
-    });
-
-    it('should act like click when enter key is pressed', () => {
-        const spyClick = spyOn(component, 'onClickContinue');
-        component.playerName = 'test';
-        const key = { key: 'Enter' } as KeyboardEvent;
-        component.onDialogClick(key);
-        expect(spyClick).toHaveBeenCalled();
     });
 
     it('should use socket communication when click and is not multi', () => {

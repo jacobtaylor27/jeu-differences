@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
-import { ComponentFixture, TestBed, tick, fakeAsync, discardPeriodicTasks } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
@@ -54,6 +54,11 @@ describe('PlayAreaComponent', () => {
         ]);
         routerSpyObj = jasmine.createSpyObj('RouterService', ['navigateTo']);
         cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
+        cheatModeService = jasmine.createSpyObj(
+            'CheatModeService',
+            ['manageCheatMode', 'stopCheatModeDifference', 'handleSocketEvent', 'removeHandleSocketEvent'],
+            { isCheatModeActivated: true },
+        );
         gameInformationHandlerServiceSpy = jasmine.createSpyObj(
             'GameInformationHandlerService',
             [
@@ -169,6 +174,8 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'getContextImgModified').and.callFake(() => ctx);
         spyOn(component, 'getContextImgOriginal').and.callFake(() => ctx);
         spyOn(component, 'getContextDifferences').and.callFake(() => ctx);
+        spyOn(component, 'getContextOriginal').and.callFake(() => ctx);
+        spyOn(component, 'getContextModified').and.callFake(() => ctx);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         differenceService.setContextImgModified.and.callFake(() => {});
         component.ngAfterViewInit();

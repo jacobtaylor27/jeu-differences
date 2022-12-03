@@ -41,6 +41,18 @@ export class CheatModeService {
         );
     }
 
+    handleSocketEvent(ctx: CanvasRenderingContext2D, ctxModified: CanvasRenderingContext2D) {
+        this.socket.on(SocketEvent.NewGameBoard, async () => {
+            this.stopCheatMode(ctx, ctxModified);
+            await this.fetchAllDifferenceNotFound();
+            this.startCheatMode(ctx, ctxModified);
+        });
+    }
+
+    removeHandleSocketEvent() {
+        this.socket.off(SocketEvent.NewGameBoard);
+    }
+
     private async fetchAllDifferenceNotFound(): Promise<void> {
         return new Promise((resolve) => {
             this.socket.once(SocketEvent.FetchDifferences, (coords: Coordinate[][]) => {

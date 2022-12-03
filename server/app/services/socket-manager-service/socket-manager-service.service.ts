@@ -150,6 +150,7 @@ export class SocketManagerService {
                     return;
                 }
                 if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
+                    socket.leave(gameId);
                     socket.broadcast
                         .to(gameId)
                         .emit(
@@ -204,15 +205,10 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.GamesDeleted, () => {
                 this.limitedTimeService.deleteAllGames();
+                this.sio.emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.allGamesDeleted);
                 for (const gameId of this.multiplayerGameManager.getGamesWaiting(GameMode.Classic)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
-                    this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
-                    const request = this.multiplayerGameManager.getRequest(roomId);
-                    if (request) {
-                        for (const player of request) {
-                            this.sio.to(player.id).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
-                        }
-                    }
+                    this.multiplayerGameManager.deleteAllRequests(roomId);
                 }
             });
 

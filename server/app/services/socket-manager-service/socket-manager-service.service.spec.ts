@@ -1072,7 +1072,9 @@ describe('SocketManager', () => {
                     callback(fakeSocket);
                 }
             },
-            to: () => fakeSocket,
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.RejectPlayer);
+            },
         } as unknown as io.Server;
         stub(service['multiplayerGameManager'], 'isGameWaiting').callsFake(() => true);
         stub(service['multiplayerGameManager'], 'getRequest').callsFake(() => [{ id: 'playerTest' } as User]);
@@ -1097,6 +1099,9 @@ describe('SocketManager', () => {
                 if (eventName === SocketEvent.Connection) {
                     callback(fakeSocket);
                 }
+            },
+            emit: (eventName: string, message: string) => {
+                expect(eventName).to.equal(SocketEvent.RejectPlayer);
             },
             to: () => fakeSocket,
         } as unknown as io.Server;

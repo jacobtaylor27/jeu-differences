@@ -123,4 +123,23 @@ describe('CheatModeService', () => {
         service.stopCheatModeDifference(ctx, ctx, expectedDifference);
         expect(spyClearInterval).not.toHaveBeenCalled();
     });
+
+    it('should handle socket for reset cheat mode when a new board is load', async () => {
+        const stopCheatModeStub = spyOn(Object.getPrototypeOf(service), 'stopCheatMode').and.callFake(() => {});
+        const startCheatModeStub = spyOn(Object.getPrototypeOf(service), 'startCheatMode').and.callFake(() => {});
+        const fetchAllGamesStub = spyOn(Object.getPrototypeOf(service), 'fetchAllDifferenceNotFound')
+            .and.callFake(async () => new Promise(() => true))
+            .and.resolveTo();
+        service.handleSocketEvent({} as CanvasRenderingContext2D, {} as CanvasRenderingContext2D);
+        await socketHelper.peerSideEmit(SocketEvent.NewGameBoard);
+        expect(stopCheatModeStub).toHaveBeenCalled();
+        expect(startCheatModeStub).toHaveBeenCalled();
+        expect(fetchAllGamesStub).toHaveBeenCalled();
+    });
+
+    it('should remove the handle SocketEvent', () => {
+        const offStub = spyOn(socketServiceMock, 'off').and.callFake(() => {});
+        service.removeHandleSocketEvent();
+        expect(offStub).toHaveBeenCalled();
+    });
 });

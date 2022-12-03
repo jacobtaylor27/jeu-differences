@@ -12,7 +12,7 @@ import { ConfirmDeleteDialogComponent } from '@app/components/confirm-delete-dia
 export class AdminCommandsComponent {
     favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly adminService: AdminService) {}
+    constructor(private readonly adminService: AdminService, private readonly matDialog: MatDialog) {}
 
     hasCards(): boolean {
         return this.adminService.hasCards();

@@ -52,6 +52,7 @@ describe('UserNameInputComponent', () => {
 
         fixture = TestBed.createComponent(UserNameInputComponent);
         component = fixture.componentInstance;
+        component.form.controls.name.setValue('test');
         fixture.detectChanges();
     });
 

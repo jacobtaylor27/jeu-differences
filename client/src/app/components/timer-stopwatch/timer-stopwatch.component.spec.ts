@@ -76,4 +76,10 @@ describe('TimerStopwatchComponent', () => {
         expect(spyTimeFormatter.formatTime).toHaveBeenCalled();
         expect(newComponent.timerDisplay).toBe('00:00');
     });
+
+    it('should return true is animation is needed', () => {
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
+        component['time'] = 5;
+        expect(component.needFeedbackAnimation()).toBeTrue();
+    });
 });

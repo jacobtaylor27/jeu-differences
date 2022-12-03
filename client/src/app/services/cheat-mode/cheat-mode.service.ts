@@ -49,6 +49,10 @@ export class CheatModeService {
         });
     }
 
+    removeHandleSocketEvent() {
+        this.socket.off(SocketEvent.NewGameBoard);
+    }
+
     private async fetchAllDifferenceNotFound(): Promise<void> {
         return new Promise((resolve) => {
             this.socket.once(SocketEvent.FetchDifferences, (coords: Coordinate[][]) => {

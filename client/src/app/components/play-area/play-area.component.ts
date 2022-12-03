@@ -90,6 +90,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         this.communicationSocketService.off(SocketEvent.DifferenceFound);
         this.communicationSocketService.off(SocketEvent.NewGameBoard);
         this.communicationSocketService.off(SocketEvent.Clue);
+        this.cheatMode.removeHandleSocketEvent();
     }
 
     onClick($event: MouseEvent, canvas: string) {

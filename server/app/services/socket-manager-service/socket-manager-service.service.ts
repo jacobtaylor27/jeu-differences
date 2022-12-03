@@ -150,6 +150,7 @@ export class SocketManagerService {
                     return;
                 }
                 if (this.gameManager.isGameMultiplayer(gameId) && !this.gameManager.isGameOver(gameId)) {
+                    socket.leave(gameId);
                     socket.broadcast
                         .to(gameId)
                         .emit(

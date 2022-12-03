@@ -1,6 +1,6 @@
 <mat-card class="main-wrapper">
     <mat-card-title> Messages </mat-card-title>
-    <div class="chat-area" #scroll >
+    <div class="chat-area" #scroll>
         <div *ngFor="let message of messages">
             <div class="message-wrapper">
                 <div
@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-    <mat-form-field *ngIf="isOpponentConnected" appearance="outline" class="input-area">
+    <mat-form-field *ngIf="isMulti()" appearance="outline" class="input-area">
         <input matInput placeholder="Entrez un message..." maxlength="200" [(ngModel)]="currentMessage" />
         <button mat-icon-button matSuffix (click)="onClickSend()">
             <mat-icon>send</mat-icon>

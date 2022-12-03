@@ -1,12 +1,15 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameMode } from '@common/game-mode';
+import { GameTimeConstants } from '@common/game-time-constants';
 import { SocketEvent } from '@common/socket-event';
+import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
+import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from './game-information-handler.service';
 
 /* eslint-disable @typescript-eslint/no-empty-function  -- connect needs to be empty (Nikolay's example)*/
@@ -19,12 +22,14 @@ describe('GameInformationHandlerService', () => {
     let socketServiceMock: SocketClientServiceMock;
     let socketHelper: SocketTestHelper;
     let spyRouter: jasmine.SpyObj<Router>;
+    let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
 
     beforeEach(() => {
         socketHelper = new SocketTestHelper();
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['setGameTimeConstants', 'getGameTimeConstants']);
 
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, HttpClientModule],
@@ -34,10 +39,14 @@ describe('GameInformationHandlerService', () => {
                     provide: Router,
                     useValue: spyRouter,
                 },
+                { provide: CommunicationService, useValue: spyCommunicationService },
             ],
         });
 
         service = TestBed.inject(GameInformationHandlerService);
+        spyCommunicationService.getGameTimeConstants.and.callFake(() => {
+            return of({ body: { gameTime: 2, penaltyTime: 2, successTime: 2 } } as HttpResponse<GameTimeConstants>);
+        });
     });
 
     it('should be created', () => {

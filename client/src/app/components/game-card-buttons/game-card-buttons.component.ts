@@ -28,15 +28,7 @@ export class GameCardButtonsComponent {
     }
 
     onClickDeleteGame(game: GameCard): void {
-        this.communicationService.deleteGame(game.gameInformation.id).subscribe({
-            next: () => {
-                this.socketService.send(SocketEvent.GameDeleted, { gameId: game.gameInformation.id });
-                this.router.reloadPage('admin');
-            },
-            error: () => {
-                this.router.redirectToErrorPage();
-            },
-        });
+        this.matDialog.open(ConfirmDeleteDialogComponent, { data: { gameId: game.gameInformation.id, singleGameDelete: true } });
     }
 
     onClickPlayGame(): void {

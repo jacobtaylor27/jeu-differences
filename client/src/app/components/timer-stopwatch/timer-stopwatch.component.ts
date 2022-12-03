@@ -33,6 +33,7 @@ export class TimerStopwatchComponent implements OnInit {
     }
 
     needFeedbackAnimation() {
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- animation when 5 seconds is left to the game
         return this.gameInfoService.isLimitedTime() && this.time <= 5;
     }
 }

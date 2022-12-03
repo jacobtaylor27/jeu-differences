@@ -14,7 +14,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     isOpponentConnected: boolean;
     currentMessage: string;
 
-    constructor(public communicationSocket: CommunicationSocketService, private gameInformation: GameInformationHandlerService) {}
+    constructor(public communicationSocket: CommunicationSocketService, public gameInformation: GameInformationHandlerService) {}
 
     @HostListener('window:keyup', ['$event'])
     onDialogClick(event: KeyboardEvent): void {
@@ -30,7 +30,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.isOpponentConnected = this.gameInformation.isMulti;
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
             this.addingMessage(message, 'opponent');
         });

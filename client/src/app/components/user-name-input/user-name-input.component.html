@@ -1,5 +1,5 @@
 <section [ngClass]="favoriteTheme">
-    <div class="dialog-content">
+    <form [formGroup]="form">
         <mat-form-field>
             <mat-label>Quel est votre nom?</mat-label>
             <input [(ngModel)]="playerName" matInput/>

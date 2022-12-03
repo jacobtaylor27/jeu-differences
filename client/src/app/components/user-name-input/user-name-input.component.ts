@@ -15,6 +15,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class UserNameInputComponent {
     isMulti: boolean;
     playerName: string;
+    form: FormGroup = new FormGroup({ name: new FormControl('', [this.noWhiteSpaceValidator, Validators.required]) });
     favoriteTheme: string = Theme.ClassName;
 
     // eslint-disable-next-line max-params -- absolutely need all the imported services

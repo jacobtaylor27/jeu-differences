@@ -18,7 +18,6 @@ export class GameCardButtonsComponent {
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly gameInfoHandlerService: GameInformationHandlerService,
-        private readonly socketService: CommunicationSocketService,
         private readonly router: RouterService,
         private readonly matDialog: MatDialog,
         private readonly communicationService: CommunicationService,

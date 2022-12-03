@@ -2,13 +2,14 @@ import { Bmp } from '@app/classes/bmp/bmp';
 import { PrivateGameInformation } from '@app/interface/game-info';
 import { BmpSubtractorService } from '@app/services/bmp-subtractor-service/bmp-subtractor.service';
 import { GameInfoService } from '@app/services/game-info-service/game-info.service';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
+import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
+import { BASE_64_HEADER } from '@common/base64';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { Service } from 'typedi';
 import * as LZString from 'lz-string';
-import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager-service.service';
-import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
+import { Service } from 'typedi';
 
 @Service()
 export class GameController {
@@ -120,7 +121,7 @@ export class GameController {
                                     return {
                                         id: game.id,
                                         name: game.name,
-                                        thumbnail: 'data:image/png;base64,' + LZString.decompressFromUTF16(game.thumbnail),
+                                        thumbnail: BASE_64_HEADER + LZString.decompressFromUTF16(game.thumbnail),
                                         nbDifferences: game.differences.length,
                                         idEditedBmp: game.idEditedBmp,
                                         idOriginalBmp: game.idOriginalBmp,

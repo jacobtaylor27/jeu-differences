@@ -8,6 +8,7 @@ import { DifferencesDetectionHandlerService } from '@app/services/differences-de
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
+import { BASE_64_HEADER } from '@common/base64';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
@@ -158,7 +159,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             }
             const imageBase64 = response.body.image;
             const image = new Image();
-            image.src = 'data:image/png;base64,' + imageBase64;
+            image.src = BASE_64_HEADER + imageBase64;
             image.onload = () => {
                 ctx.drawImage(image, 0, 0);
             };

@@ -10,7 +10,7 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
 
 import { UserNameInputComponent } from './user-name-input.component';
 
-fdescribe('UserNameInputComponent', () => {
+describe('UserNameInputComponent', () => {
     let component: UserNameInputComponent;
     let fixture: ComponentFixture<UserNameInputComponent>;
     let spySocketCommunication: jasmine.SpyObj<CommunicationSocketService>;

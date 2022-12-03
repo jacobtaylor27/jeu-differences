@@ -26,4 +26,8 @@ export class TimerStopwatchComponent implements OnInit {
             this.timerDisplay = this.timeFormatter.formatTime(time);
         });
     }
+
+    needFeedbackAnimation() {
+        return this.gameInfoService.isLimitedTime() && this.time <= 5;
+    }
 }

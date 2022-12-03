@@ -264,4 +264,14 @@ describe('GameInformationHandlerService', () => {
         service.gameMode = GameMode.LimitedTime;
         expect(service.isLimitedTime()).toBeTrue();
     });
+
+    it('should get the game time constants', () => {
+        service.getConstants();
+        const expectedGameTime = 2;
+        const expectedPenaltyTime = 2;
+        const expectedSuccessTime = 2;
+        expect(service.gameTimeConstants.gameTime).toBe(expectedGameTime);
+        expect(service.gameTimeConstants.penaltyTime).toBe(expectedPenaltyTime);
+        expect(service.gameTimeConstants.successTime).toBe(expectedSuccessTime);
+    });
 });

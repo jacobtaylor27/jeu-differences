@@ -13,6 +13,7 @@ import { CommunicationService } from '@app/services/communication/communication.
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
 import { Coordinate } from '@common/coordinate';
 import { DifferenceFound } from '@common/difference';
 import { PublicGameInformation } from '@common/game-information';
@@ -33,6 +34,7 @@ describe('PlayAreaComponent', () => {
     let spyMouseHandlerService: jasmine.SpyObj<MouseHandlerService>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     let differenceService: jasmine.SpyObj<DifferencesDetectionHandlerService>;
+    let routerSpyObj: jasmine.SpyObj<RouterService>;
     let cheatModeService: jasmine.SpyObj<CheatModeService>;
     let socketHelper: SocketTestHelper;
     let socketServiceMock: SocketClientServiceMock;
@@ -50,6 +52,8 @@ describe('PlayAreaComponent', () => {
             'playCorrectSound',
             'showClue',
         ]);
+        routerSpyObj = jasmine.createSpyObj('RouterService', ['navigateTo']);
+        cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
         cheatModeService = jasmine.createSpyObj(
             'CheatModeService',
             ['manageCheatMode', 'stopCheatModeDifference', 'handleSocketEvent', 'removeHandleSocketEvent'],
@@ -98,6 +102,7 @@ describe('PlayAreaComponent', () => {
                     provide: DifferencesDetectionHandlerService,
                     useValue: differenceService,
                 },
+                { provide: RouterService, useValue: routerSpyObj },
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
             ],
         }).compileComponents();
@@ -218,7 +223,7 @@ describe('PlayAreaComponent', () => {
 
     it('should get image form server', () => {
         communicationServiceSpy.getImgData.and.callFake(() => {
-            return of({ body: { data: [0], height: 1, width: 1 } } as HttpResponse<{ width: number; height: number; data: number[] }>);
+            return of({ body: { image: '' } } as HttpResponse<{ image: string }>);
         });
         component.getImageData('');
         expect(communicationServiceSpy.getImgData).toHaveBeenCalled();
@@ -231,7 +236,7 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'getContextModified').and.callFake(() => ctx);
 
         const spyGetImage = spyOn(component, 'getImageData').and.callFake(() => {
-            return of({ body: { data: [0, 0, 0, 0], height: 1, width: 1 } } as HttpResponse<{ width: number; height: number; data: number[] }>);
+            return of({ body: { image: '' } } as HttpResponse<{ image: string }>);
         });
 
         component.displayImage(true, ctx);
@@ -250,7 +255,7 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'getContextModified').and.callFake(() => ctx);
 
         const spyGetImage = spyOn(component, 'getImageData').and.callFake(() => {
-            return of({} as HttpResponse<{ width: number; height: number; data: number[] }>);
+            return of({} as HttpResponse<{ image: string }>);
         });
 
         component.displayImage(true, ctx);

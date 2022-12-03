@@ -50,8 +50,8 @@ describe('CommunicationService', () => {
 
     it('should get image data when game card is loaded', () => {
         service.getImgData('original').subscribe({
-            next: (response: HttpResponse<{ width: number; height: number; data: number[] }>) => {
-                expect(response.body).toEqual({ width: 0, height: 0, data: [] });
+            next: (response: HttpResponse<{ image: string }>) => {
+                expect(response.body).toEqual({ image: '' });
             },
             error: fail,
         });

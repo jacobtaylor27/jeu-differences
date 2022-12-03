@@ -16,4 +16,8 @@ export class ConfirmDeleteDialogComponent {
     deleteAllGames(): void {
         this.adminService.deleteAllGames();
     }
+
+    deleteSingleGame(): void {
+        this.adminService.deleteSingleGame(this.data.gameId);
+    }
 }

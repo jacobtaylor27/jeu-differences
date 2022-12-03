@@ -56,5 +56,13 @@ describe('TimerStopwatchComponent', () => {
         socketHelper.peerSideEmit(SocketEvent.Clock, '2');
         component.ngOnInit();
         expect(component.timerDisplay).toBe('00:02');
+    it('should display time on init temps limite', () => {
+        spyGameInfosService.isClassic.and.callFake(() => false);
+        spyGameInfosService.isLimitedTime.and.callFake(() => true);
+        spyGameInfosService.gameTimeConstants = { gameTime: 30, penaltyTime: 3, successTime: 3 };
+        spyTimeFormatter.formatTime.and.callFake(() => '30:00');
+        const newComponent = new TimerStopwatchComponent(socketServiceMock, spyTimeFormatter, spyGameInfosService);
+
+        expect(spyTimeFormatter.formatTime).toHaveBeenCalled();
     });
 });

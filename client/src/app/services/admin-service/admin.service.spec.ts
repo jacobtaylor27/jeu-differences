@@ -77,3 +77,10 @@ describe('AdminService', () => {
         service.deleteSingleGame('id');
         expect(spyCommunicationService.deleteGame).toHaveBeenCalled();
     });
+
+    it('should not delete a single game when there is an error', () => {
+        spyCommunicationService.deleteGame.and.returnValue(throwError(() => new Error('error')));
+        service.deleteSingleGame('id');
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
+    });
+});

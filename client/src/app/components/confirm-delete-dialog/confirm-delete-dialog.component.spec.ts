@@ -14,11 +14,21 @@ describe('ConfirmDeleteDialogComponent', () => {
     let spyAdminService: jasmine.SpyObj<AdminService>;
 
     beforeEach(async () => {
-        spyAdminService = jasmine.createSpyObj('AdminService', ['deleteAllGames']);
+        spyAdminService = jasmine.createSpyObj('AdminService', ['deleteAllGames', 'deleteSingleGame']);
         await TestBed.configureTestingModule({
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             imports: [AppMaterialModule, HttpClientModule, RouterTestingModule],
             declarations: [ConfirmDeleteDialogComponent],
-            providers: [{ provide: AdminService, useValue: spyAdminService }],
+            providers: [
+                { provide: AdminService, useValue: spyAdminService },
+                {
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {
+                        gameId: '123',
+                        singleGameDelete: true,
+                    },
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ConfirmDeleteDialogComponent);

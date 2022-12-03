@@ -32,7 +32,7 @@ describe('UserNameInputComponent', () => {
         ]);
         await TestBed.configureTestingModule({
             declarations: [UserNameInputComponent, AdminCommandsComponent],
-            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
+            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule, ReactiveFormsModule],
             providers: [
                 {
                     provide: MatDialogRef,

@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { AdminService } from '@app/services/admin-service/admin.service';
-import { ConfirmDeleteDialogComponent } from '@app/components/confirm-delete-dialog/confirm-delete-dialog.component';
 import { AdminCommandsComponent } from './admin-commands.component';
 
 describe('AdminCommandsComponent', () => {

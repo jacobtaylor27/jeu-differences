@@ -93,6 +93,7 @@ import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog
         MongodbErrorPageComponent,
         CentralBoxComponent,
         NoGameSnackbarComponent,
+        ConfirmDeleteDialogComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

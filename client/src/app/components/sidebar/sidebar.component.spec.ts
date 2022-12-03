@@ -7,7 +7,9 @@ import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-s
 import { AppMaterialModule } from '@app/modules/material.module';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { ScoreType } from '@common/score-type';
 import { Subject } from 'rxjs';
+
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
@@ -18,7 +20,7 @@ describe('SidebarComponent', () => {
         const expectedTotalDifference = 10;
         spyGameInfosService = jasmine.createSpyObj(
             'GameInformationHandlerService',
-            ['getGameName', 'getGameMode', 'getPlayer', 'getOpponent', 'getNbDifferences', 'getNbTotalDifferences'],
+            ['getGameName', 'getGameMode', 'getPlayer', 'getOpponent', 'getNbDifferences', 'getNbTotalDifferences', 'isLimitedTime', 'isClassic'],
             { $newGame: new Subject<string>(), $differenceFound: new Subject<string>() },
         );
         spyDifferencesDetection = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['nbDifferencesFound', 'resetNumberDifferencesFound']);
@@ -58,20 +60,24 @@ describe('SidebarComponent', () => {
                 {
                     playerName: 'test2',
                     time: 10,
+                    type: ScoreType.Default,
                 },
                 {
                     playerName: 'test',
                     time: 10,
+                    type: ScoreType.Default,
                 },
             ],
             multiplayerScore: [
                 {
                     playerName: 'test2',
                     time: 10,
+                    type: ScoreType.Default,
                 },
                 {
                     playerName: 'test',
                     time: 10,
+                    type: ScoreType.Default,
                 },
             ],
             nbDifferences: 10,

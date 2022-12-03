@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { Theme } from '@app/enums/theme';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { GameMode } from '@common/game-mode';
 
 @Component({
     selector: 'app-player-left-snackbar',
@@ -14,7 +13,7 @@ export class PlayerLeftSnackbarComponent {
     constructor(public snackBarRef: MatSnackBarRef<PlayerLeftSnackbarComponent>, public gameInfoHandlerService: GameInformationHandlerService) {}
 
     messageSnackBar() {
-        return this.gameInfoHandlerService.gameMode === GameMode.LimitedTime
+        return this.gameInfoHandlerService.isLimitedTime()
             ? 'Le joueur a quitté la partie. Vous jouez maintenant en solo.'
             : 'Le joueur a quitté la partie.';
     }

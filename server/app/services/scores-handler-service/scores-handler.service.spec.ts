@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { Score } from '@common/score';
 import { stub } from 'sinon';
 import { PrivateGameInformation } from '@app/interface/game-info';
+import { ScoreType } from '@common/score-type';
 
 describe('ScoresHandlerService', () => {
     let service: ScoresHandlerService;
@@ -33,7 +34,7 @@ describe('ScoresHandlerService', () => {
         stub(Object.getPrototypeOf(service), 'trimArrayToSize').callsFake((array: Score[]) => array);
         gameInfoService.getHighScores.callsFake(async () => new Promise((resolve) => resolve({ soloScore: [], multiplayerScore: [] }))).resolves();
         gameInfoService.updateHighScores.callsFake(async () => new Promise((resolve) => resolve())).resolves();
-        const index = await service.verifyScore('gameId', { playerName: 'name', time: 1 }, false);
+        const index = await service.verifyScore('gameId', { playerName: 'name', time: 1, type: ScoreType.Default }, false);
         expect(index).equal(expectedIndex);
     });
 
@@ -51,7 +52,7 @@ describe('ScoresHandlerService', () => {
         stub(Object.getPrototypeOf(service), 'trimArrayToSize').callsFake((array: Score[]) => array);
         gameInfoService.getHighScores.callsFake(async () => new Promise((resolve) => resolve({ soloScore: [], multiplayerScore: [] }))).resolves();
         gameInfoService.updateHighScores.callsFake(async () => new Promise((resolve) => resolve())).resolves();
-        const index = await service.verifyScore('gameId', { playerName: 'name', time: 1 }, true);
+        const index = await service.verifyScore('gameId', { playerName: 'name', time: 1, type: ScoreType.Default }, true);
         expect(index).equal(expectedIndex);
     });
 
@@ -83,13 +84,13 @@ describe('ScoresHandlerService', () => {
     });
 
     it('should add the score in the array if the array is empty', () => {
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['tryAddScore'](score, service['soloScores']);
         expect(service['soloScores'].length).equal(1);
     });
 
     it('should add the score in the array if the array is not empty', () => {
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score];
         service['tryAddScore'](score, service['soloScores']);
         expect(service['soloScores'].length).equal(2);
@@ -97,7 +98,7 @@ describe('ScoresHandlerService', () => {
 
     it('should not add the score in the array if the array is full', () => {
         const expectedSize = 4;
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score, score, score];
         service['tryAddScore'](score, service['soloScores']);
         expect(service['soloScores'].length).equal(expectedSize);
@@ -105,17 +106,17 @@ describe('ScoresHandlerService', () => {
 
     it('should not add the score in the top 3 array if the score is not the best', () => {
         const expectedSize = 4;
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score, score, score];
-        service['tryAddScore']({ playerName: 'name', time: 2 }, service['soloScores']);
+        service['tryAddScore']({ playerName: 'name', time: 2, type: ScoreType.Default }, service['soloScores']);
         expect(service['soloScores'].length).equal(expectedSize);
     });
 
     it('should add the score in the array if the score is the best', () => {
         const expectedSize = 4;
-        const score = { playerName: 'name', time: 1 };
+        const score = { playerName: 'name', time: 1, type: ScoreType.Default };
         service['soloScores'] = [score, score, score];
-        service['tryAddScore']({ playerName: 'name', time: 0 }, service['soloScores']);
+        service['tryAddScore']({ playerName: 'name', time: 0, type: ScoreType.Default }, service['soloScores']);
         expect(service['soloScores'].length).equal(expectedSize);
     });
 });

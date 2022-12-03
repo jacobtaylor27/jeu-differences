@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { PrivateGameInformation } from '@app/interface/game-info';
 import { EventMessageService } from '@app/services//message-event-service/message-event.service';
 import { CluesService } from '@app/services/clues-service/clues.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
@@ -9,6 +10,7 @@ import { BASE_64_HEADER } from '@common/base64';
 import { Coordinate } from '@common/coordinate';
 import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
+import { ScoreType } from '@common/score-type';
 import { SocketEvent } from '@common/socket-event';
 import * as http from 'http';
 import * as LZString from 'lz-string';
@@ -341,30 +343,32 @@ export class SocketManagerService {
         const gameInfo = this.gameManager.getGameInfo(gameId);
         const isMulti = this.gameManager.isGameMultiplayer(gameId) as boolean;
 
-        this.scoresHandlerService.verifyScore(gameInfo?.id as string, { playerName, time }, isMulti).then((index) => {
-            this.gameManager.leaveGame(socket.id, gameId);
+        this.scoresHandlerService
+            .verifyScore((gameInfo as PrivateGameInformation).id as string, { playerName, time, type: ScoreType.Player }, isMulti)
+            .then((index) => {
+                this.gameManager.leaveGame(socket.id, gameId);
 
-            if (isMulti) {
-                socket.broadcast.to(gameId).emit(SocketEvent.Lose);
-            }
+                if (isMulti) {
+                    socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+                }
 
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
-            if (index !== -1) {
-                socket.emit(SocketEvent.Win, { index, time });
-                this.sio.sockets.emit(
-                    SocketEvent.EventMessage,
-                    this.eventMessageService.sendNewHighScoreMessage({
-                        record: { index, time },
-                        playerName,
-                        gameName: gameInfo?.name as string,
-                        isMulti,
-                    }),
-                );
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
+                if (index !== -1) {
+                    socket.emit(SocketEvent.Win, { index, time });
+                    this.sio.sockets.emit(
+                        SocketEvent.EventMessage,
+                        this.eventMessageService.sendNewHighScoreMessage({
+                            record: { index, time },
+                            playerName,
+                            gameName: (gameInfo as PrivateGameInformation).name as string,
+                            isMulti,
+                        }),
+                    );
+                    return;
+                }
+
+                socket.emit(SocketEvent.Win);
                 return;
-            }
-
-            socket.emit(SocketEvent.Win);
-            return;
-        });
+            });
     }
 }

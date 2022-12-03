@@ -23,7 +23,7 @@ export class AdminCommandsComponent {
     }
 
     onClickDeleteGames(): void {
-        this.matDialog.open(ConfirmDeleteDialogComponent);
+        this.matDialog.open(ConfirmDeleteDialogComponent, { data: { singleGameDelete: false } });
     }
 
     onClickRefreshGames(): void {

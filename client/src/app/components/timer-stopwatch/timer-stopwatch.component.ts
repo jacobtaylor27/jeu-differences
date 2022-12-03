@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { SocketEvent } from '@common/socket-event';
 
@@ -19,6 +20,10 @@ export class TimerStopwatchComponent implements OnInit {
     ) {
         if (this.gameInfoService.isClassic()) {
             this.timerDisplay = this.timeFormatter.formatTime(0);
+        } else if (this.gameInfoService.isLimitedTime()) {
+            this.timerDisplay = this.timeFormatter.formatTime(this.gameInfoService.gameTimeConstants.gameTime);
+        }
+    }
 
     ngOnInit(): void {
         this.socketService.on(SocketEvent.Clock, (time: number) => {

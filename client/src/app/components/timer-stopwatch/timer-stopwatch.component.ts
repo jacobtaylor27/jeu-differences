@@ -10,8 +10,15 @@ import { SocketEvent } from '@common/socket-event';
 })
 export class TimerStopwatchComponent implements OnInit {
     timerDisplay: string;
+    private time: number;
 
-    constructor(private readonly socketService: CommunicationSocketService, private readonly timeFormatter: TimeFormatterService) {}
+    constructor(
+        private readonly socketService: CommunicationSocketService,
+        private readonly timeFormatter: TimeFormatterService,
+        private readonly gameInfoService: GameInformationHandlerService,
+    ) {
+        if (this.gameInfoService.isClassic()) {
+            this.timerDisplay = this.timeFormatter.formatTime(0);
 
     ngOnInit(): void {
         this.socketService.on(SocketEvent.Clock, (time: number) => {

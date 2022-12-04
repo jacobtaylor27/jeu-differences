@@ -38,7 +38,7 @@ export class DrawService {
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
 
-    constructor(private canvasStateService: CanvasStateService, private readonly pencilService: PencilService) {
+    constructor(private canvasStateService: CanvasStateService, private readonly pencil: PencilService) {
         this.$drawingImage = new Map();
     }
 
@@ -54,7 +54,7 @@ export class DrawService {
 
         this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
         this.setCurrentCommand('', focusedCanvas.canvasType);
-        if (this.pencilService.pencil.state === Tool.Pencil) {
+        if (this.pencil.state === Tool.Pencil) {
             this.draw(event);
         } else {
             this.draw(event, true);
@@ -78,9 +78,9 @@ export class DrawService {
     }
 
     stopDrawing(event: MouseEvent) {
-        this.draw(event, this.pencilService.pencil.state === Tool.Pencil ? undefined : true);
+        this.draw(event, this.pencil.state === Tool.Pencil ? undefined : true);
         this.isClick = false;
-        this.currentCommand.name = this.pencilService.pencil.state === 'Pencil' ? 'draw' : 'erase';
+        this.currentCommand.name = this.pencil.state === 'Pencil' ? 'draw' : 'erase';
         this.addCurrentCommand(new DrawCommand(this.currentCommand, this), false);
         this.removeCommandsPastIndex();
     }
@@ -249,11 +249,11 @@ export class DrawService {
     }
 
     private initializePencil() {
-        this.pencilService.pencil.color = '#000000';
-        this.pencilService.pencil.width.pencil = 1;
-        this.pencilService.pencil.width.eraser = 2;
-        this.pencilService.pencil.cap = 'round';
-        this.pencilService.pencil.state = Tool.Pencil;
+        this.pencil.color = '#000000';
+        this.pencil.width.pencil = 1;
+        this.pencil.width.eraser = 2;
+        this.pencil.cap = 'round';
+        this.pencil.state = Tool.Pencil;
     }
 
     private createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
@@ -278,10 +278,10 @@ export class DrawService {
         const cap = didStartErasing === true ? 'square' : 'round';
         this.currentCommand.strokes[0].lines.push(line);
         this.currentCommand.style = {
-            color: this.pencilService.pencil.color,
+            color: this.pencil.color,
             cap,
-            width: this.pencilService.pencil.state === Tool.Pencil ? this.pencilService.pencil.width.pencil : this.pencilService.pencil.width.eraser,
-            destination: this.pencilService.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
+            width: this.pencil.width,
+            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
     }
 

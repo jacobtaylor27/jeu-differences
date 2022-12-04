@@ -1,10 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Tool } from '@app/enums/tool';
-import { Pencil } from '@app/interfaces/pencil';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PencilService {
-    pencil: Pencil = { width: { pencil: 1, eraser: 2 }, cap: 'round', color: '#000000', state: Tool.Pencil };
+    cap: CanvasLineCap = 'round';
+    color: string = '#000000';
+    state: Tool = Tool.Pencil;
+    private pencilWidth: { pencil: number; eraser: number } = { pencil: 1, eraser: 2 };
+
+    get width(): number {
+        if (this.state === Tool.Eraser) return this.pencilWidth.eraser;
+        return this.pencilWidth.pencil;
+    }
+
+    setEraserWidth(width: number): void {
+        this.pencilWidth.eraser = width;
+    }
+
+    setPencilWidth(width: number): void {
+        this.pencilWidth.pencil = width;
+    }
 }

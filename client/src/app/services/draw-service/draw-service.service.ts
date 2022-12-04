@@ -215,6 +215,7 @@ export class DrawService {
         }
         this.indexOfCommand++;
         this.executeAllCommand();
+        this.updateImages();
     }
 
     undo() {
@@ -225,6 +226,7 @@ export class DrawService {
         }
         this.indexOfCommand--;
         this.executeAllCommand();
+        this.updateImages();
     }
 
     switchForegroundImageData(primaryCanvasState: DrawingBoardState, secondCanvasState: DrawingBoardState) {

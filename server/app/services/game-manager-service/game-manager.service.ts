@@ -100,6 +100,11 @@ export class GameManagerService {
             }
         });
     }
+
+    isGameCardDeleted(gameId: string) {
+        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).isCardDeleted : null;
+    }
+
     getTime(gameId: string) {
         const game = this.findGame(gameId);
         return game ? this.timer.seconds(game) : null;

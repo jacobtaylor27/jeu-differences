@@ -5,7 +5,7 @@ import { GameCarouselService } from '@app/services/carousel/game-carousel.servic
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { SocketEvent } from '@common/socket-event';
-import { NoGameSnackbarComponent } from '@app/components/no-game-snackbar/no-game-snackbar/no-game-snackbar.component';
+import { NoGameSnackbarComponent } from '@app/components/no-game-snackbar/no-game-snackbar.component';
 
 @Component({
     selector: 'app-dialog-limited-time',

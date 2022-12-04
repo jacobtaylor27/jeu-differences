@@ -161,12 +161,12 @@ describe('DrawServiceService', () => {
         service.coordDraw = { x: 0, y: 0 };
         drawingBoardStub.canvasType = CanvasType.Left;
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => drawingBoardStub);
-        service['pencil'].setEraserWidth(0);
+        pencilServiceStub.setEraserWidth(0);
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        service['pencil'].setPencilWidth(5);
-        service['pencil'].cap = 'round';
-        service['pencil'].color = '#000000';
-        service['pencil'].state = Tool.Pencil;
+        pencilServiceStub.setPencilWidth(5);
+        pencilServiceStub.cap = 'round';
+        pencilServiceStub.color = '#000000';
+        pencilServiceStub.state = Tool.Pencil;
         spyOn(Object.getPrototypeOf(service), 'reposition').and.returnValue({ x: 0, y: 0 });
         const ctx = drawingBoardStub.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
@@ -174,17 +174,17 @@ describe('DrawServiceService', () => {
         const lineToSpy = spyOn(ctx, 'lineTo');
         const stokeSpy = spyOn(ctx, 'stroke');
         service['createStroke'](fakeLine, {
-            width: service['pencil'].width,
-            cap: service['pencil'].cap,
-            color: service['pencil'].color,
+            width: pencilServiceStub.width,
+            cap: pencilServiceStub.cap,
+            color: pencilServiceStub.color,
         } as StrokeStyle);
         expect(beginPathSpy).toHaveBeenCalled();
         expect(moveToSpy).toHaveBeenCalled();
         expect(lineToSpy).toHaveBeenCalled();
         expect(stokeSpy).toHaveBeenCalled();
-        expect(ctx.lineWidth).toEqual(service['pencil'].width);
-        expect(ctx.lineCap).toEqual(service['pencil'].cap);
-        expect(ctx.strokeStyle).toEqual(service['pencil'].color);
+        expect(ctx.lineWidth).toEqual(pencilServiceStub.width);
+        expect(ctx.lineCap).toEqual(pencilServiceStub.cap);
+        expect(ctx.strokeStyle).toEqual(pencilServiceStub.color);
     });
 
     it('startDrawing should handle mouse event and return undefined if no canvas is in focus', () => {
@@ -299,12 +299,13 @@ describe('DrawServiceService', () => {
             strokes: [newStroke],
             style: {} as StrokeStyle,
         };
+        pencilServiceStub.state = Tool.Pencil;
         service['currentCommand'] = newCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
-            color: '#000000',
-            cap: 'round',
-            width: 1,
+            color: pencilServiceStub.color,
+            cap: pencilServiceStub.cap,
+            width: pencilServiceStub.width,
             destination: 'source-over',
         };
         expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
@@ -325,12 +326,13 @@ describe('DrawServiceService', () => {
             strokes: [newStroke],
             style: {} as StrokeStyle,
         };
+        pencilServiceStub.state = Tool.Pencil;
         service['currentCommand'] = newCurrentCommand;
-        service['updateCurrentCommand'](fakeLine, true);
+        service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
-            color: '#000000',
-            cap: 'square',
-            width: 1,
+            color: pencilServiceStub.color,
+            cap: pencilServiceStub.cap,
+            width: pencilServiceStub.width,
             destination: 'source-over',
         };
         expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
@@ -351,13 +353,14 @@ describe('DrawServiceService', () => {
             strokes: [newStroke],
             style: {} as StrokeStyle,
         };
+        pencilServiceStub.state = Tool.Pencil;
         service['currentCommand'] = newCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
-            color: '#000000',
-            cap: 'round',
-            width: 1,
-            destination: 'destination-out',
+            color: pencilServiceStub.color,
+            cap: pencilServiceStub.cap,
+            width: pencilServiceStub.width,
+            destination: 'source-over',
         };
         expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
         expect(service['currentCommand'].style).toEqual(expectedStyle);

@@ -211,6 +211,19 @@ describe('GameManagerService', () => {
         gameManager.gameCardDeletedHandle('1');
         expect(expectedGame.isCardDeleted).to.equal(true);
     });
+
+    it('should set all cards to deleted', () => {
+        const expectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
+        gameManager['games'].set('1', expectedGame);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+
+        gameManager.allGameCardsDeleted();
+        expect(expectedGame.isCardDeleted).to.equal(true);
+    });
+
     it('should check if the game is over', () => {
         const gameFoundSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
         const expectedGame = stub(

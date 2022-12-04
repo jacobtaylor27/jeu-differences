@@ -54,6 +54,12 @@ export class DrawService {
             strokes: [{ lines: [] }],
             style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
         };
+
+        // This should change the color of the pencil
+        this.pencil.color = '#000000';
+        this.pencil.width.pencil = 1;
+        this.pencil.width.eraser = 2;
+        this.pencil.cap = 'round';
     }
 
     startDrawing(event: MouseEvent) {

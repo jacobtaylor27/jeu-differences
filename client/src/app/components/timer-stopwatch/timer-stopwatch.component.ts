@@ -18,11 +18,9 @@ export class TimerStopwatchComponent implements OnInit {
         private readonly timeFormatter: TimeFormatterService,
         private readonly gameInfoService: GameInformationHandlerService,
     ) {
-        if (this.gameInfoService.isClassic()) {
-            this.timerDisplay = this.timeFormatter.formatTime(0);
-        } else if (this.gameInfoService.isLimitedTime()) {
-            this.timerDisplay = this.timeFormatter.formatTime(this.gameInfoService.gameTimeConstants.gameTime);
-        }
+        this.timerDisplay = this.gameInfoService.isClassic()
+            ? this.timeFormatter.formatTime(0)
+            : this.timeFormatter.formatTime(this.gameInfoService.gameTimeConstants.gameTime);
     }
 
     ngOnInit(): void {

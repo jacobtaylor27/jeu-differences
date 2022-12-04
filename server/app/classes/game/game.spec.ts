@@ -20,7 +20,6 @@ describe('Game', () => {
         idOriginalBmp: '0',
         thumbnail: 'thumbnail',
         idEditedBmp: '1',
-        idDifferenceBmp: '2',
         soloScore: [{} as Score],
         multiplayerScore: [{} as Score],
         name: 'test game',

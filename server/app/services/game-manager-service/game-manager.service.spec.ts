@@ -91,6 +91,22 @@ describe('GameManagerService', () => {
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
         expect(gameManager.isClassic('3')).to.deep.equal(true);
     });
+
+    it('should return if is limited time', () => {
+        expect(gameManager.isLimitedTime('1')).to.equal(null);
+
+        const expectedGame = stub(
+            new Game(
+                { player: { name: 'test', id: '' }, isMulti: false },
+                { info: { id: '4' } as PrivateGameInformation, mode: GameMode.LimitedTime },
+            ),
+        );
+        expectedGame.isLimitedTime.callsFake(() => true);
+
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        expect(gameManager.isLimitedTime('4')).to.equal(true);
+    });
+
     it('should check if the game is found', () => {
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
             return {} as Game;

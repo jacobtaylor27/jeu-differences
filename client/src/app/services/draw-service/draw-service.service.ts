@@ -3,7 +3,7 @@ import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-c
 import { DrawCommand } from '@app/classes/commands/draw-command';
 import { PasteExternalForegroundOnCommand } from '@app/classes/commands/paste-external-foreground-on-command';
 import { SwitchForegroundCommand } from '@app/classes/commands/switch-foreground-command';
-import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
+import { DEFAULT_DRAW_CLIENT, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
@@ -11,10 +11,10 @@ import { Command } from '@app/interfaces/command';
 import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { Line } from '@app/interfaces/line';
-import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
+import { PencilService } from '@app/services/pencil-service/pencil.service';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -37,9 +37,8 @@ export class DrawService {
 
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
-    pencil: Pencil = DEFAULT_PENCIL;
 
-    constructor(private canvasStateService: CanvasStateService) {
+    constructor(private canvasStateService: CanvasStateService, private readonly pencilService: PencilService) {
         this.$drawingImage = new Map();
     }
 
@@ -55,7 +54,7 @@ export class DrawService {
 
         this.coordDraw = this.reposition(focusedCanvas.foreground.nativeElement, event);
         this.setCurrentCommand('', focusedCanvas.canvasType);
-        if (this.pencil.state === Tool.Pencil) {
+        if (this.pencilService.pencil.state === Tool.Pencil) {
             this.draw(event);
         } else {
             this.draw(event, true);
@@ -79,9 +78,9 @@ export class DrawService {
     }
 
     stopDrawing(event: MouseEvent) {
-        this.draw(event, this.pencil.state === Tool.Pencil ? undefined : true);
+        this.draw(event, this.pencilService.pencil.state === Tool.Pencil ? undefined : true);
         this.isClick = false;
-        this.currentCommand.name = this.pencil.state === 'Pencil' ? 'draw' : 'erase';
+        this.currentCommand.name = this.pencilService.pencil.state === 'Pencil' ? 'draw' : 'erase';
         this.addCurrentCommand(new DrawCommand(this.currentCommand, this), false);
         this.removeCommandsPastIndex();
     }
@@ -250,11 +249,11 @@ export class DrawService {
     }
 
     private initializePencil() {
-        this.pencil.color = '#000000';
-        this.pencil.width.pencil = 1;
-        this.pencil.width.eraser = 2;
-        this.pencil.cap = 'round';
-        this.pencil.state = Tool.Pencil;
+        this.pencilService.pencil.color = '#000000';
+        this.pencilService.pencil.width.pencil = 1;
+        this.pencilService.pencil.width.eraser = 2;
+        this.pencilService.pencil.cap = 'round';
+        this.pencilService.pencil.state = Tool.Pencil;
     }
 
     private createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {
@@ -279,10 +278,10 @@ export class DrawService {
         const cap = didStartErasing === true ? 'square' : 'round';
         this.currentCommand.strokes[0].lines.push(line);
         this.currentCommand.style = {
-            color: this.pencil.color,
+            color: this.pencilService.pencil.color,
             cap,
-            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
-            destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
+            width: this.pencilService.pencil.state === Tool.Pencil ? this.pencilService.pencil.width.pencil : this.pencilService.pencil.width.eraser,
+            destination: this.pencilService.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
     }
 

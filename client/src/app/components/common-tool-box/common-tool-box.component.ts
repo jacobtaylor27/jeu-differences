@@ -2,13 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { DialogUploadFormComponent } from '@app/components/dialog-upload-form/dialog-upload-form.component';
-import { DEFAULT_PENCIL } from '@app/constants/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
-import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
+import { PencilService } from '@app/services/pencil-service/pencil.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-common-tool-box',
@@ -17,11 +15,12 @@ import { Subject } from 'rxjs';
 })
 export class CommonToolBoxComponent implements OnInit {
     @Input() canvasType: CanvasType;
-    pencil: Pencil = DEFAULT_PENCIL;
     tool: typeof Tool = Tool;
     colorButton: { pencil: string; eraser: string } = { pencil: 'background', eraser: 'primary' };
 
-    constructor(public dialog: MatDialog, public toolService: ToolBoxService, public drawService: DrawService) {
+    /* Michel prefers to have more services uncoupled than tighly bounded components and services*/
+    // eslint-disable-next-line max-params
+    constructor(public dialog: MatDialog, public pencilService: PencilService, public toolService: ToolBoxService, public drawService: DrawService) {
         this.changeButtonColor(Tool.Pencil);
     }
 
@@ -31,8 +30,7 @@ export class CommonToolBoxComponent implements OnInit {
 
     changePencilState(tool: Tool): void {
         this.changeButtonColor(tool);
-        this.pencil.state = tool;
-        (this.toolService.$pencil.get(this.canvasType) as Subject<Pencil>).next(this.pencil);
+        this.pencilService.pencil.state = tool;
     }
 
     formatLabel(value: number | null) {
@@ -43,19 +41,17 @@ export class CommonToolBoxComponent implements OnInit {
     }
 
     changePencilColor(color: string): void {
-        this.pencil.color = color;
-        (this.toolService.$pencil.get(this.canvasType) as Subject<Pencil>).next(this.pencil);
+        this.pencilService.pencil.color = color;
     }
 
     changePencilWidth(event: MatSliderChange): void {
         if (!event.value) {
             return;
         }
-        this.pencil.width =
-            this.pencil.state === Tool.Pencil
-                ? { pencil: event.value, eraser: this.pencil.width.eraser }
-                : { pencil: this.pencil.width.pencil, eraser: event.value };
-        (this.toolService.$pencil.get(this.canvasType) as Subject<Pencil>).next(this.pencil);
+        this.pencilService.pencil.width =
+            this.pencilService.pencil.state === Tool.Pencil
+                ? { pencil: event.value, eraser: this.pencilService.pencil.width.eraser }
+                : { pencil: this.pencilService.pencil.width.pencil, eraser: event.value };
     }
 
     changeButtonColor(tool: Tool) {

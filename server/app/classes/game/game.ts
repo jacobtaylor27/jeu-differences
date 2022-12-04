@@ -86,6 +86,10 @@ export class Game {
         return (!this.isMulti && this.players.size === 1) || (this.isMulti && this.players.size === 2);
     }
 
+    setGameCardDeleted() {
+        this.isCardDeleted = true;
+    }
+
     addPlayer(player: User) {
         if (this.isGameFull()) {
             return;

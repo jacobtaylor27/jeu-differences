@@ -174,11 +174,12 @@ describe('DifferencesDetectionHandlerService', () => {
         const clearRectSpy = spyOn(ctx, 'clearRect');
         const fillRectSpy = spyOn(ctx, 'fillRect');
 
-        service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], false);
+        const timerId = service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], false);
         tick(1500);
         expect(fillRectSpy).toHaveBeenCalled();
         tick(1500);
         expect(clearRectSpy).toHaveBeenCalled();
+        clearInterval(timerId);
     }));
 
     /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds */

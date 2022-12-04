@@ -65,6 +65,10 @@ export class Game {
         this.context.next();
     }
 
+    isClassic(){
+        return this.gameMode === GameMode.Classic;
+    }
+
     isGameInitialize() {
         return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }

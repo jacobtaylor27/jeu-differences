@@ -25,7 +25,7 @@ export class DialogGameOverComponent {
         this.winner = data.winner;
         this.isClassic = data.isClassic;
         this.nbPoints = data.nbPoints;
-        this.index = data.record.index;
-        this.time = this.timeFormatter.formatTime(data.record.time);
+        this.index = data.record ? data.record.index : null;
+        this.time = data.record ? this.timeFormatter.formatTimeForScore(data.record.time) : null;
     }
 }

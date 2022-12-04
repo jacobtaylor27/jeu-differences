@@ -18,11 +18,6 @@ export class CommunicationService {
 
     constructor(private readonly http: HttpClient) {}
 
-
-    basicPost(message: Message): Observable<void> {
-        return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
-    }
-
     deleteAllGameCards(): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/game/cards`).pipe(catchError(this.handleError<void>('deleteAllGameCards')));
     }

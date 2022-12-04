@@ -28,7 +28,7 @@ describe('DrawServiceService', () => {
     beforeEach(() => {
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], { $resetBackground: new Map(), $resetForeground: new Map() });
         canvasStateServiceSpyObj = jasmine.createSpyObj('CanvasStateService', ['getCanvasState', 'getFocusedCanvas']);
-        pencilServiceStub = jasmine.createSpyObj('PencilService', ['setPencilWidth', 'setEraserWidth']);
+        pencilServiceStub = jasmine.createSpyObj('PencilService', ['setPencilWidth', 'setEraserWidth', 'width']);
 
         TestBed.configureTestingModule({
             providers: [
@@ -295,14 +295,14 @@ describe('DrawServiceService', () => {
             strokes: [newStroke],
             style: {} as StrokeStyle,
         };
-        pencilServiceStub.state = Tool.Pencil;
+        pencilServiceStub.state = Tool.Eraser;
         service['currentCommand'] = newCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
             color: pencilServiceStub.color,
             cap: pencilServiceStub.cap,
             width: pencilServiceStub.width,
-            destination: 'source-over',
+            destination: 'destination-out',
         };
         expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
         expect(service['currentCommand'].style).toEqual(expectedStyle);

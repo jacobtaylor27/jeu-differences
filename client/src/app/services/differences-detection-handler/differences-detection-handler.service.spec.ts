@@ -9,7 +9,6 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
 import { Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';

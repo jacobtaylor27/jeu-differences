@@ -115,7 +115,7 @@ export class GameInfoService {
             const deletedGame = (await this.collection.findOneAndDelete(filter)).value;
 
             if (deletedGame) {
-                const imageIds = [deletedGame.idOriginalBmp, deletedGame.idEditedBmp, deletedGame.idDifferenceBmp];
+                const imageIds = [deletedGame.idOriginalBmp, deletedGame.idEditedBmp];
                 await this.bmpService.deleteGameImages(imageIds, this.srcPath);
             }
 

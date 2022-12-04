@@ -9,7 +9,7 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./chat-box.component.scss'],
 })
 export class ChatBoxComponent implements OnInit, AfterViewInit {
-    @ViewChild('scroll', { static: true }) scroll: ElementRef;
+    @ViewChild('scroll', { static: true }) private scroll: ElementRef;
     messages: ChatMessage[] = [];
     currentMessage: string;
 

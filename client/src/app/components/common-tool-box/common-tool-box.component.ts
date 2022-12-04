@@ -16,11 +16,12 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 export class CommonToolBoxComponent implements OnInit {
     @Input() canvasType: CanvasType;
     tool: typeof Tool = Tool;
-    colorButton: { pencil: string; eraser: string } = { pencil: 'background', eraser: 'primary' };
+    colorButton: { pencil: string; eraser: string };
 
     /* Michel prefers to have more services uncoupled than tighly bounded components and services*/
     // eslint-disable-next-line max-params
     constructor(public dialog: MatDialog, public pencil: PencilService, public toolService: ToolBoxService, public drawService: DrawService) {
+        this.colorButton = { pencil: 'background', eraser: 'primary' };
         this.changeButtonColor(Tool.Pencil);
     }
 

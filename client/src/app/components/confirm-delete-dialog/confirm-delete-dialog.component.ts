@@ -9,9 +9,11 @@ import { AdminService } from '@app/services/admin-service/admin.service';
     styleUrls: ['./confirm-delete-dialog.component.scss'],
 })
 export class ConfirmDeleteDialogComponent {
-    theme: string = Theme.ClassName;
+    theme: string;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { gameId: string; singleGameDelete: boolean }, private readonly adminService: AdminService) {}
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { gameId: string; singleGameDelete: boolean }, private readonly adminService: AdminService) {
+        this.theme = Theme.ClassName;
+    }
 
     deleteAllGames(): void {
         this.adminService.deleteAllGames();

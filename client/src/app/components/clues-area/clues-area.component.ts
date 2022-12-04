@@ -8,10 +8,12 @@ import { NUMBER_CLUES } from '@common/clues';
     styleUrls: ['./clues-area.component.scss'],
 })
 export class CluesAreaComponent implements OnInit {
-    clueAskedCounter: number = 0;
-    isDisabled: boolean = false;
+    clueAskedCounter: number;
+    isDisabled: boolean;
 
     constructor(public gameInformation: GameInformationHandlerService, private readonly clueHandlerService: ClueHandlerService) {
+        this.clueAskedCounter = 0;
+        this.isDisabled = false;
         this.handleClueAsked();
     }
 

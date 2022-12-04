@@ -367,14 +367,15 @@ export class SocketManagerService {
                     socket.emit(SocketEvent.Win);
                     return;
                 });
-        }
-        this.gameManager.leaveGame(socket.id, gameId);
+        } else {
+            this.gameManager.leaveGame(socket.id, gameId);
 
-        if (isMulti) {
-            socket.broadcast.to(gameId).emit(SocketEvent.Lose);
-        }
+            if (isMulti) {
+                socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+            }
 
-        socket.emit(SocketEvent.Win);
-        return;
+            socket.emit(SocketEvent.Win);
+            return;
+        }
     }
 }

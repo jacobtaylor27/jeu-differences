@@ -40,9 +40,6 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
         this.canvasStateService.states.push(currentState);
 
         this.toolBoxService.addCanvasType(this.canvasType);
-        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
-            this.pencil = newPencil;
-        });
 
         this.toolBoxService.$uploadImage.get(this.canvasType)?.subscribe((newImage: ImageBitmap) => {
             const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;

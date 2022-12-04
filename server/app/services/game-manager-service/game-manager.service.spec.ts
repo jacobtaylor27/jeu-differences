@@ -79,6 +79,18 @@ describe('GameManagerService', () => {
         expect(gameManager['games'].size).not.to.equal(0);
     });
 
+    it('should return if is classic', () => {
+        expect(gameManager.isClassic('1')).to.equal(null);
+        const expectedGame = stub(
+            new Game(
+                { player: { name: 'test', id: '' }, isMulti: false },
+                { info: { id: '3' } as PrivateGameInformation, mode: GameMode.LimitedTime },
+            ),
+        );
+        expectedGame.isClassic.callsFake(() => true);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        expect(gameManager.isClassic('3')).to.deep.equal(true);
+    });
     it('should check if the game is found', () => {
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
             return {} as Game;

@@ -101,6 +101,12 @@ export class GameManagerService {
         });
     }
 
+    allGameCardsDeleted() {
+        this.games.forEach((gameCard, gameId) => {
+            this.findGame(gameId)?.setGameCardDeleted();
+        });
+    }
+
     isGameCardDeleted(gameId: string) {
         return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).isCardDeleted : null;
     }

@@ -101,11 +101,6 @@ export class GameInformationHandlerService {
         return this.gameMode;
     }
 
-    getGameInformation(): PublicGameInformation {
-        this.handleNotDefined();
-        return this.gameInformation;
-    }
-
     getId(): string {
         this.handleNotDefined();
         return this.gameInformation.id;

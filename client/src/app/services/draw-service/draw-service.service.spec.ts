@@ -381,7 +381,7 @@ describe('DrawServiceService', () => {
         service['updateCurrentCommand'](fakeLine, true);
         const expectedStyle: StrokeStyle = {
             color: pencilServiceStub.color,
-            cap: pencilServiceStub.cap,
+            cap: 'square',
             width: pencilServiceStub.width,
             destination: 'source-over',
         };

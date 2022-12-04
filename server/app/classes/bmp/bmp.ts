@@ -40,15 +40,6 @@ export class Bmp {
         return imageData;
     }
 
-    async toBmpImageData(): Promise<bmp.ImageData> {
-        const imageData: bmp.ImageData = {
-            width: this.dimensions.width,
-            height: this.dimensions.height,
-            data: await this.getPixelBuffer(),
-        };
-        return bmp.encode(imageData);
-    }
-
     getWidth(): number {
         return this.dimensions.width;
     }

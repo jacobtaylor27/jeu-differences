@@ -6,6 +6,7 @@ import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { CluesAreaComponent } from './clues-area.component';
 class SocketClientServiceMock extends CommunicationSocketService {
@@ -25,7 +26,7 @@ describe('CluesAreaComponent', () => {
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
-        spyClueHandler = jasmine.createSpyObj('ClueHandlerService', ['getClue', 'getNbCluesAsked']);
+        spyClueHandler = jasmine.createSpyObj('ClueHandlerService', ['getClue', 'getNbCluesAsked'], { $clueAsked: new Subject<void>() });
 
         await TestBed.configureTestingModule({
             declarations: [CluesAreaComponent],
@@ -46,50 +47,24 @@ describe('CluesAreaComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should ask for clue when i keyboard is pressed', () => {
-        const getClueSpy = spyOn(component, 'getClue');
-        const expectedKey = 'i';
-        const buttonEvent = {
-            key: expectedKey,
-        } as KeyboardEvent;
-        component.buttonDetect(buttonEvent);
-        expect(getClueSpy).toHaveBeenCalled();
-    });
-
-    it('should not call clue when 3 clues have already been asked', () => {
-        const componentInstance = fixture.componentInstance;
-        const getClueSpy = spyOn(componentInstance, 'getClue');
-        componentInstance.isDisabled = true;
-        const expectedKey = 'i';
-        const buttonEvent = {
-            key: expectedKey,
-        } as KeyboardEvent;
-        componentInstance.buttonDetect(buttonEvent);
-        expect(getClueSpy).not.toHaveBeenCalled();
-    });
-
-    it('should not increment clue counter when 3 clues have been asked', () => {
-        const expectedCount = 3;
-        component.clueAskedCounter = 3;
-        component.isDisabled = true;
-        const buttonEvent = {
-            key: 'i',
-        } as KeyboardEvent;
-        component.buttonDetect(buttonEvent);
-        expect(component.clueAskedCounter).toEqual(expectedCount);
+    it('should get clue', () => {
+        component.getClue();
+        expect(spyClueHandler.getClue).toHaveBeenCalled();
     });
 
     it('should return the clue number ', () => {
         spyClueHandler.getNbCluesAsked.and.callFake(() => {
             return 1;
         });
-        component.getClue();
+        component.handleClueAsked();
+        spyClueHandler.$clueAsked.next();
         expect(component.clueAskedCounter).toEqual(1);
         expect(component.isDisabled).toEqual(false);
         spyClueHandler.getNbCluesAsked.and.callFake(() => {
             return 3;
         });
-        component.getClue();
+        component.handleClueAsked();
+        spyClueHandler.$clueAsked.next();
         expect(component.clueAskedCounter).toEqual(3);
     });
 });

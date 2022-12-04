@@ -76,18 +76,22 @@ describe('CommonToolBoxComponent', () => {
     });
 
     it('changePencilWidth should change the width is changed', () => {
-        component.pencil.width.eraser = 0;
-        component.pencil.width.pencil = 1;
+        component.pencil.setEraserWidth(0);
+        component.pencil.setPencilWidth(1);
         component.pencil.state = Tool.Pencil;
         component.changePencilWidth({ value: 2 } as MatSliderChange);
-        expect(component.pencil.width).toEqual({ pencil: 2, eraser: 0 });
+        expect(component.pencil.width).toEqual(2);
+        component.pencil.state = Tool.Eraser;
+        expect(component.pencil.width).toEqual(0);
     });
 
     it('changePencilWidth should change the width is changed', () => {
-        component.pencil.width.eraser = 0;
-        component.pencil.width.pencil = 1;
+        component.pencil.setEraserWidth(0);
+        component.pencil.setPencilWidth(1);
         component.pencil.state = Tool.Eraser;
         component.changePencilWidth({ value: 2 } as MatSliderChange);
-        expect(component.pencil.width).toEqual({ pencil: 1, eraser: 2 });
+        expect(component.pencil.width).toEqual(2);
+        component.pencil.state = Tool.Pencil;
+        expect(component.pencil.width).toEqual(1);
     });
 });

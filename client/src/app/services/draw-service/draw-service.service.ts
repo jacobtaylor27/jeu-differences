@@ -3,7 +3,7 @@ import { ClearForegroundCommand } from '@app/classes/commands/clear-foreground-c
 import { DrawCommand } from '@app/classes/commands/draw-command';
 import { PasteExternalForegroundOnCommand } from '@app/classes/commands/paste-external-foreground-on-command';
 import { SwitchForegroundCommand } from '@app/classes/commands/switch-foreground-command';
-import { DEFAULT_DRAW_CLIENT, DEFAULT_PENCIL, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
+import { DEFAULT_DRAW_CLIENT, DEFAULT_POSITION_MOUSE_CLIENT, SIZE } from '@app/constants/canvas';
 import { Canvas } from '@app/enums/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { Tool } from '@app/enums/tool';
@@ -11,10 +11,10 @@ import { Command } from '@app/interfaces/command';
 import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { DrawingCommand } from '@app/interfaces/drawing-command';
 import { Line } from '@app/interfaces/line';
-import { Pencil } from '@app/interfaces/pencil';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 import { Vec2 } from '@app/interfaces/vec2';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
+import { PencilService } from '@app/services/pencil-service/pencil.service';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -37,9 +37,8 @@ export class DrawService {
 
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
-    pencil: Pencil = DEFAULT_PENCIL;
 
-    constructor(private canvasStateService: CanvasStateService) {
+    constructor(private canvasStateService: CanvasStateService, private pencil: PencilService) {
         this.$drawingImage = new Map();
     }
 
@@ -216,6 +215,7 @@ export class DrawService {
         }
         this.indexOfCommand++;
         this.executeAllCommand();
+        this.updateImages();
     }
 
     undo() {
@@ -226,6 +226,7 @@ export class DrawService {
         }
         this.indexOfCommand--;
         this.executeAllCommand();
+        this.updateImages();
     }
 
     switchForegroundImageData(primaryCanvasState: DrawingBoardState, secondCanvasState: DrawingBoardState) {
@@ -251,8 +252,8 @@ export class DrawService {
 
     private initializePencil() {
         this.pencil.color = '#000000';
-        this.pencil.width.pencil = 1;
-        this.pencil.width.eraser = 2;
+        this.pencil.setPencilWidth(1);
+        this.pencil.setEraserWidth(2);
         this.pencil.cap = 'round';
         this.pencil.state = Tool.Pencil;
     }
@@ -281,7 +282,7 @@ export class DrawService {
         this.currentCommand.style = {
             color: this.pencil.color,
             cap,
-            width: this.pencil.state === Tool.Pencil ? this.pencil.width.pencil : this.pencil.width.eraser,
+            width: this.pencil.width,
             destination: this.pencil.state === Tool.Pencil ? 'source-over' : 'destination-out',
         };
     }

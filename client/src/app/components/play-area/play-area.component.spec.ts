@@ -8,6 +8,7 @@ import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { SIZE } from '@app/constants/canvas';
 import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
+import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
@@ -36,6 +37,7 @@ describe('PlayAreaComponent', () => {
     let differenceService: jasmine.SpyObj<DifferencesDetectionHandlerService>;
     let routerSpyObj: jasmine.SpyObj<RouterService>;
     let cheatModeService: jasmine.SpyObj<CheatModeService>;
+    let spyClueHandlerService: jasmine.SpyObj<ClueHandlerService>;
     let socketHelper: SocketTestHelper;
     let socketServiceMock: SocketClientServiceMock;
 
@@ -53,7 +55,6 @@ describe('PlayAreaComponent', () => {
             'showClue',
         ]);
         routerSpyObj = jasmine.createSpyObj('RouterService', ['navigateTo']);
-        cheatModeService = jasmine.createSpyObj('CheatModeService', ['manageCheatMode', 'stopCheatModeDifference'], { isCheatModeActivated: true });
         cheatModeService = jasmine.createSpyObj(
             'CheatModeService',
             ['manageCheatMode', 'stopCheatModeDifference', 'handleSocketEvent', 'removeHandleSocketEvent'],
@@ -76,6 +77,7 @@ describe('PlayAreaComponent', () => {
             ],
             { $newGame: new Subject<void>() },
         );
+        spyClueHandlerService = jasmine.createSpyObj('ClueHandlerService', ['getClue', 'showClue']);
 
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
@@ -101,6 +103,10 @@ describe('PlayAreaComponent', () => {
                 {
                     provide: DifferencesDetectionHandlerService,
                     useValue: differenceService,
+                },
+                {
+                    provide: ClueHandlerService,
+                    useValue: spyClueHandlerService,
                 },
                 { provide: RouterService, useValue: routerSpyObj },
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
@@ -141,7 +147,7 @@ describe('PlayAreaComponent', () => {
         component.ngOnInit();
         socketHelper.peerSideEmit(SocketEvent.Clue, { clue: [{ x: 1, y: 3 }] as Coordinate[], nbClues: 2 });
 
-        expect(differenceService.showClue).toHaveBeenCalled();
+        expect(spyClueHandlerService.showClue).toHaveBeenCalled();
     });
 
     /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds and 5000 -> 5 seconds */
@@ -162,7 +168,7 @@ describe('PlayAreaComponent', () => {
         expect(component.isThirdClue).toEqual(true);
         tick(5000);
         expect(component.isThirdClue).toEqual(false);
-        expect(differenceService.showClue).not.toHaveBeenCalled();
+        expect(spyClueHandlerService.showClue).not.toHaveBeenCalled();
         discardPeriodicTasks();
     }));
 
@@ -229,6 +235,26 @@ describe('PlayAreaComponent', () => {
         expect(communicationServiceSpy.getImgData).toHaveBeenCalled();
     });
 
+    it('should not display image and go to the main page', () => {
+        // can display example image to draw Image
+        const srcImage =
+            // eslint-disable-next-line max-len
+            'Qk1SAgAAAAAAADYAAAAoAAAADAAAAPH///8BABgAAAAAABwCAAAAAAAAAAAAAAAAAAAAAAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////';
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextOriginal').and.callFake(() => ctx);
+        spyOn(component, 'getContextModified').and.callFake(() => ctx);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(ctx, 'drawImage').and.callFake(() => {});
+        const spyGetImage = spyOn(component, 'getImageData').and.callFake(() => {
+            return of({ body: { image: srcImage } } as HttpResponse<{ image: string }>);
+        });
+
+        component.displayImage(true, ctx);
+        expect(spyGetImage).toHaveBeenCalledWith(gameInformationHandlerServiceSpy.getOriginalBmpId());
+        expect(gameInformationHandlerServiceSpy.getOriginalBmpId).toHaveBeenCalled();
+    });
+
     it('should display image', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -247,7 +273,6 @@ describe('PlayAreaComponent', () => {
         expect(spyGetImage).toHaveBeenCalledWith(gameInformationHandlerServiceSpy.getModifiedBmpId());
         expect(gameInformationHandlerServiceSpy.getModifiedBmpId).toHaveBeenCalled();
     });
-
     it('should not display image if response is empty', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -337,7 +362,7 @@ describe('PlayAreaComponent', () => {
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         cheatModeService.manageCheatMode.and
             .callFake(async () => {
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
                 return new Promise(() => {});
             })
             .and.resolveTo();
@@ -349,6 +374,13 @@ describe('PlayAreaComponent', () => {
         });
         await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 't' } as unknown as KeyboardEvent);
         expect(cheatModeService.manageCheatMode).toHaveBeenCalled();
+    });
+
+    it('should manage the clue service if the i is press', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- test
+        spyClueHandlerService.getClue.and.callFake(() => {});
+        await component.keyBoardDetected({ target: { tagName: 'TEST' } as unknown as HTMLElement, key: 'i' } as unknown as KeyboardEvent);
+        expect(spyClueHandlerService.getClue).toHaveBeenCalled();
     });
 
     it('should display new image on socket event', () => {

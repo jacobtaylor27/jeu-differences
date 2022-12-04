@@ -2,6 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
 import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
+import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
@@ -40,6 +41,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         private readonly communicationSocketService: CommunicationSocketService,
         private readonly routerService: RouterService,
         private cheatMode: CheatModeService,
+        private readonly clueHandlerService: ClueHandlerService,
     ) {
         this.handleSocketDifferenceFound();
     }
@@ -64,6 +66,10 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         }
         if (event.key === 't') {
             await this.cheatMode.manageCheatMode(this.getContextOriginal(), this.getContextModified());
+        }
+
+        if (event.key === 'i') {
+            this.clueHandlerService.getClue();
         }
     }
 

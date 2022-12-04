@@ -229,6 +229,26 @@ describe('PlayAreaComponent', () => {
         expect(communicationServiceSpy.getImgData).toHaveBeenCalled();
     });
 
+    it('should not display image and go to the main page', () => {
+        // can display example image to draw Image
+        const srcImage =
+            // eslint-disable-next-line max-len
+            'Qk1SAgAAAAAAADYAAAAoAAAADAAAAPH///8BABgAAAAAABwCAAAAAAAAAAAAAAAAAAAAAAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////';
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        spyOn(component, 'getContextOriginal').and.callFake(() => ctx);
+        spyOn(component, 'getContextModified').and.callFake(() => ctx);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        spyOn(ctx, 'drawImage').and.callFake(() => {});
+        const spyGetImage = spyOn(component, 'getImageData').and.callFake(() => {
+            return of({ body: { image: srcImage } } as HttpResponse<{ image: string }>);
+        });
+
+        component.displayImage(true, ctx);
+        expect(spyGetImage).toHaveBeenCalledWith(gameInformationHandlerServiceSpy.getOriginalBmpId());
+        expect(gameInformationHandlerServiceSpy.getOriginalBmpId).toHaveBeenCalled();
+    });
+
     it('should display image', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -247,7 +267,6 @@ describe('PlayAreaComponent', () => {
         expect(spyGetImage).toHaveBeenCalledWith(gameInformationHandlerServiceSpy.getModifiedBmpId());
         expect(gameInformationHandlerServiceSpy.getModifiedBmpId).toHaveBeenCalled();
     });
-
     it('should not display image if response is empty', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;

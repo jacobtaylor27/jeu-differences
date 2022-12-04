@@ -182,21 +182,6 @@ describe('DifferencesDetectionHandlerService', () => {
         clearInterval(timerId);
     }));
 
-    it('should draw on canvas and cheat mode', fakeAsync(() => {
-        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-        const clearRectSpy = spyOn(ctx, 'clearRect');
-        const fillRectSpy = spyOn(ctx, 'fillRect');
-
-        const timerId = service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], true);
-        tick(375);
-        expect(fillRectSpy).toHaveBeenCalled();
-        tick(375);
-        expect(clearRectSpy).toHaveBeenCalled();
-        clearInterval(timerId);
-    }));
-
     /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds */
     it('should draw on canvas and cheat mode', fakeAsync(() => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);

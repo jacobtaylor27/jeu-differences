@@ -1284,6 +1284,62 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'getTime').callsFake(() => 1);
         stub(service['gameManager'], 'findPlayer').callsFake(() => '');
         stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        stub(service['gameManager'], 'isGameCardDeleted').callsFake(() => false);
+        const verifyScore = stub(service['scoresHandlerService'], 'verifyScore')
+            .callsFake(async () => new Promise(() => 1))
+            .resolves(1);
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        //  no score
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        verifyScore.callsFake(async () => new Promise(() => -1)).resolves(-1);
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        gameMulti.callsFake(() => false);
+        const broadcastEvent = stub(fakeSocket.broadcast.to('gameId'), 'emit');
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        expect(broadcastEvent.called).to.equal(false);
+    });
+    it('should handle the end game when game card is deleted', () => {
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
+        const fakeSocket = {
+            emit: (eventName: string, message: unknown) => {
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.EventMessage).to.equal(true);
+            },
+            join: (id: string) => {
+                return;
+            },
+            to: (id: string) => {
+                return { emit: (eventName: string, message: unknown) => {} };
+            },
+            broadcast: {
+                to: (gameId: string) => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.Lose);
+                        },
+                    };
+                },
+            },
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            to: (gameId: string) => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['eventMessageService'], 'sendNewHighScoreMessage').callsFake(() => '');
+        const gameMulti = stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'getTime').callsFake(() => 1);
+        stub(service['gameManager'], 'findPlayer').callsFake(() => '');
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        stub(service['gameManager'], 'isGameCardDeleted').callsFake(() => true);
         const verifyScore = stub(service['scoresHandlerService'], 'verifyScore')
             .callsFake(async () => new Promise(() => 1))
             .resolves(1);

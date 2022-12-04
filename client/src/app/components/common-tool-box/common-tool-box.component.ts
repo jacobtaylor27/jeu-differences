@@ -20,7 +20,7 @@ export class CommonToolBoxComponent implements OnInit {
 
     /* Michel prefers to have more services uncoupled than tighly bounded components and services*/
     // eslint-disable-next-line max-params
-    constructor(public dialog: MatDialog, public pencilService: PencilService, public toolService: ToolBoxService, public drawService: DrawService) {
+    constructor(public dialog: MatDialog, public pencil: PencilService, public toolService: ToolBoxService, public drawService: DrawService) {
         this.changeButtonColor(Tool.Pencil);
     }
 
@@ -30,7 +30,7 @@ export class CommonToolBoxComponent implements OnInit {
 
     changePencilState(tool: Tool): void {
         this.changeButtonColor(tool);
-        this.pencilService.pencil.state = tool;
+        this.pencil.state = tool;
     }
 
     formatLabel(value: number | null) {
@@ -41,17 +41,18 @@ export class CommonToolBoxComponent implements OnInit {
     }
 
     changePencilColor(color: string): void {
-        this.pencilService.pencil.color = color;
+        this.pencil.color = color;
     }
 
     changePencilWidth(event: MatSliderChange): void {
         if (!event.value) {
             return;
         }
-        this.pencilService.pencil.width =
-            this.pencilService.pencil.state === Tool.Pencil
-                ? { pencil: event.value, eraser: this.pencilService.pencil.width.eraser }
-                : { pencil: this.pencilService.pencil.width.pencil, eraser: event.value };
+        if (this.pencil.state === Tool.Pencil) {
+            this.pencil.setPencilWidth(event.value);
+        } else {
+            this.pencil.setEraserWidth(event.value);
+        }
     }
 
     changeButtonColor(tool: Tool) {

@@ -38,7 +38,7 @@ export class DrawService {
     coordDraw: Vec2 = DEFAULT_POSITION_MOUSE_CLIENT;
     isClick: boolean = DEFAULT_DRAW_CLIENT;
 
-    constructor(private canvasStateService: CanvasStateService, private readonly pencil: PencilService) {
+    constructor(private canvasStateService: CanvasStateService, private pencil: PencilService) {
         this.$drawingImage = new Map();
     }
 
@@ -250,8 +250,8 @@ export class DrawService {
 
     private initializePencil() {
         this.pencil.color = '#000000';
-        this.pencil.width.pencil = 1;
-        this.pencil.width.eraser = 2;
+        this.pencil.setPencilWidth(1);
+        this.pencil.setEraserWidth(2);
         this.pencil.cap = 'round';
         this.pencil.state = Tool.Pencil;
     }

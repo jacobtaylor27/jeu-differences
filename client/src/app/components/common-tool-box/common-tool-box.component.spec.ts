@@ -49,13 +49,13 @@ describe('CommonToolBoxComponent', () => {
     it('changePencilState should modify the current state of the pencil', () => {
         const tool: Tool = Tool.Eraser;
         component.changePencilState(tool);
-        expect(component.pencilService.pencil.state).toEqual(tool);
+        expect(component.pencil.state).toEqual(tool);
     });
 
     it('changePencilState should modify the current state of the pencil', () => {
         const tool: Tool = Tool.Eraser;
         component.changePencilState(tool);
-        expect(component.pencilService.pencil.state).toEqual(tool);
+        expect(component.pencil.state).toEqual(tool);
     });
 
     it('formatLabel should return null if the parameter is invalid', () => {
@@ -68,7 +68,7 @@ describe('CommonToolBoxComponent', () => {
 
     it('changePencilColor should change the color of the pencil', () => {
         component.changePencilColor('orange');
-        expect(component.pencilService.pencil.color).toEqual('orange');
+        expect(component.pencil.color).toEqual('orange');
     });
 
     it('changePencilWidth should return if nothing is pass as parameter', () => {
@@ -76,18 +76,22 @@ describe('CommonToolBoxComponent', () => {
     });
 
     it('changePencilWidth should change the width is changed', () => {
-        component.pencilService.pencil.width.eraser = 0;
-        component.pencilService.pencil.width.pencil = 1;
-        component.pencilService.pencil.state = Tool.Pencil;
+        component.pencil.setEraserWidth(0);
+        component.pencil.setPencilWidth(1);
+        component.pencil.state = Tool.Pencil;
         component.changePencilWidth({ value: 2 } as MatSliderChange);
-        expect(component.pencilService.pencil.width).toEqual({ pencil: 2, eraser: 0 });
+        expect(component.pencil.width).toEqual(2);
+        component.pencil.state = Tool.Eraser;
+        expect(component.pencil.width).toEqual(0);
     });
 
     it('changePencilWidth should change the width is changed', () => {
-        component.pencilService.pencil.width.eraser = 0;
-        component.pencilService.pencil.width.pencil = 1;
-        component.pencilService.pencil.state = Tool.Eraser;
+        component.pencil.setEraserWidth(0);
+        component.pencil.setPencilWidth(1);
+        component.pencil.state = Tool.Eraser;
         component.changePencilWidth({ value: 2 } as MatSliderChange);
-        expect(component.pencilService.pencil.width).toEqual({ pencil: 1, eraser: 2 });
+        expect(component.pencil.width).toEqual(2);
+        component.pencil.state = Tool.Pencil;
+        expect(component.pencil.width).toEqual(1);
     });
 });

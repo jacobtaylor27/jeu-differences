@@ -65,6 +65,10 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         if (event.key === 't') {
             await this.cheatMode.manageCheatMode(this.getContextOriginal(), this.getContextModified());
         }
+
+        if (event.key === 'i') {
+            this.clueHandlerService.getClue();
+        }
     }
 
     ngOnInit(): void {

@@ -90,7 +90,7 @@ export class GameManagerService {
         if (!game) {
             return;
         }
-        clearInterval(game.timerId);
+        clearInterval(game.timerId as NodeJS.Timer);
     }
 
     getTime(gameId: string) {
@@ -188,10 +188,6 @@ export class GameManagerService {
 
     findPlayer(gameId: string, playerId: string) {
         return this.findGame(gameId)?.findPlayer(playerId);
-    }
-
-    findGameMode(gameId: string) {
-        return this.findGame(gameId)?.gameMode;
     }
 
     private findGame(gameId: string): Game | undefined {

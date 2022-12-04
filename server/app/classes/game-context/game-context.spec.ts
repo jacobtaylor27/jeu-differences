@@ -1,7 +1,6 @@
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
 import { FindDifferenceState } from '@app/classes/find-difference-state/find-difference-state';
 import { GameContext } from '@app/classes/game-context/game-context';
-import { PlayerOneTurnState } from '@app/classes/player-one-tour-state/player-one-tour-state';
 import { GameMode } from '@common/game-mode';
 import { expect } from 'chai';
 import { SinonSpiedInstance, spy } from 'sinon';
@@ -34,7 +33,7 @@ describe('GameContext', () => {
     });
 
     it('should select a different state', () => {
-        const expectedNewState = new PlayerOneTurnState();
+        const expectedNewState = new EndGameState();
         gameContext.transitionTo(expectedNewState);
         expect(gameContext.gameState()).to.equal(expectedNewState.status());
     });

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers -- bmp data numbers range of 1 - 255 */
 import { Bmp } from '@app/classes/bmp/bmp';
-import { EQUIVALENT_DATA, PIXEL_BUFFER_ARGB, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
+import { EQUIVALENT_DATA, TEST_BMP_DATA } from '@app/classes/bmp/bmp.spec.contants';
 import { Pixel } from '@app/classes/pixel/pixel';
-import * as bmp from 'bmp-js';
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
@@ -86,12 +85,6 @@ describe('Bmp', () => {
             new Bmp({ width: 1, height: 3 }, [0, 1, 2, 3, 0]);
         }).to.throw(Error);
     });
-
-    it('toBuffer() should convert a bmp file into a buffer', async () => {
-        const bmpProduced = new Bmp(TEST_BMP_DATA[0].dimensions, TEST_BMP_DATA[0].data);
-        expect(await bmpProduced['getPixelBuffer']()).to.deep.equal(Buffer.from(PIXEL_BUFFER_ARGB));
-    });
-
     it('convertRawToPixels() should convert an array of numbers into pixels', async () => {
         const pixel1: Pixel = new Pixel(1, 2, 3);
         const pixel2: Pixel = new Pixel(1, 2, 3);
@@ -132,19 +125,8 @@ describe('Bmp', () => {
             colorSpace,
             width: TEST_BMP_DATA[0].dimensions.width,
             height: TEST_BMP_DATA[0].dimensions.height,
-            data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToBGRA(bmpObj.getPixels()))),
+            data: new Uint8ClampedArray(Pixel.convertPixelsToBGRA(bmpObj.getPixels())),
         };
         expect(await bmpObj.toImageData()).to.deep.equal(imageDataExpected);
-    });
-
-    it('toBmpImageData() should convert the data from the bmp object into an bmp.ImageData format', async () => {
-        const bmpObj = new Bmp(TEST_BMP_DATA[0].dimensions, TEST_BMP_DATA[0].data);
-        const imgData: bmp.ImageData = {
-            width: TEST_BMP_DATA[0].dimensions.width,
-            height: TEST_BMP_DATA[0].dimensions.height,
-            data: await bmpObj['getPixelBuffer'](),
-        };
-        const encodedBmp = bmp.encode(imgData);
-        expect(await bmpObj.toBmpImageData()).to.deep.equal(encodedBmp);
     });
 });

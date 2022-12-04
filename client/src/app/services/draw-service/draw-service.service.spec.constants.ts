@@ -1,10 +1,8 @@
 import { ElementRef } from '@angular/core';
 import { CanvasType } from '@app/enums/canvas-type';
-import { Tool } from '@app/enums/tool';
 import { Command } from '@app/interfaces/command';
 import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
 import { Line } from '@app/interfaces/line';
-import { Pencil } from '@app/interfaces/pencil';
 import { Stroke } from '@app/interfaces/stroke';
 import { StrokeStyle } from '@app/interfaces/stroke-style';
 
@@ -20,13 +18,6 @@ export const fakeMouseEvent = {
     clientY: 0,
     buttons: 1,
 } as MouseEvent;
-
-export const fakePencil: Pencil = {
-    color: 'blue',
-    cap: 'square',
-    width: { pencil: 1, eraser: 3 },
-    state: Tool.Pencil,
-};
 
 export const fakeLine: Line = {
     initCoord: { x: 0, y: 0 },

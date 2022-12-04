@@ -15,7 +15,6 @@ import { LoadingScreenComponent } from '@app/components/loading-screen/loading-s
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
 import { CanvasType } from '@app/enums/canvas-type';
-import { Pencil } from '@app/interfaces/pencil';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { CanvasEventHandlerService } from '@app/services/canvas-event-handler/canvas-event-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
@@ -39,7 +38,6 @@ describe('CreateGamePageComponent', () => {
         dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
         communicationSpyObject = jasmine.createSpyObj('CommunicationService', ['validateGame']);
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', ['addCanvasType'], {
-            $pencil: new Map<CanvasType, Subject<Pencil>>(),
             $uploadImage: new Map<CanvasType, Subject<ImageBitmap>>(),
             $resetBackground: new Map<CanvasType, Subject<void>>(),
             $switchForeground: new Map<CanvasType, Subject<void>>(),

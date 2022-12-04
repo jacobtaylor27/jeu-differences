@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SIZE } from '@app/constants/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
-import { Pencil } from '@app/interfaces/pencil';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
@@ -17,11 +16,9 @@ describe('DrawCanvasComponent', () => {
     beforeEach(async () => {
         const drawImage = new Map<CanvasType, Subject<ImageData>>();
         const foregroundContext = new Map<CanvasType, HTMLCanvasElement>();
-        const pencil = new Map<CanvasType, Subject<Pencil>>();
         const uploadImage = new Map<CanvasType, Subject<ImageBitmap>>();
         drawImage.set(CanvasType.Left, new Subject());
         foregroundContext.set(CanvasType.Left, {} as HTMLCanvasElement);
-        pencil.set(CanvasType.Left, new Subject());
         uploadImage.set(CanvasType.Left, new Subject());
         drawServiceSpyObj = jasmine.createSpyObj(
             'DrawService',
@@ -47,7 +44,6 @@ describe('DrawCanvasComponent', () => {
         );
 
         toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', ['addCanvasType'], {
-            $pencil: pencil,
             $uploadImage: uploadImage,
         });
 

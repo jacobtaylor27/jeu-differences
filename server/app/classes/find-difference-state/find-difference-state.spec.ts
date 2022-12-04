@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { SinonSpiedInstance, spy } from 'sinon';
 import { FindDifferenceState } from './find-difference-state';
 
-describe('PlayerOneTurnState', () => {
+describe('Find Difference State', () => {
     let state: FindDifferenceState;
     let gameContextSpyObj: SinonSpiedInstance<GameContext>;
     let gameContext: GameContext;

@@ -98,6 +98,10 @@ export class GameManagerService {
         return game ? this.timer.seconds(game) : null;
     }
 
+    isClassic(gameId: string){
+        return this.findGame(gameId)?.isClassic();
+    }
+
     isDifference(gameId: string, playerId: string, coord: Coordinate) {
         const game = this.findGame(gameId);
         return !game ? null : this.difference.isDifferenceFound(playerId, coord, game);

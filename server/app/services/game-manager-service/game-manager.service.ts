@@ -93,6 +93,13 @@ export class GameManagerService {
         clearInterval(game.timerId as NodeJS.Timer);
     }
 
+    gameCardDeletedHandle(gameCardId: string) {
+        this.games.forEach((gameCard, gameId) => {
+            if (gameCard.information.id === gameCardId) {
+                this.findGame(gameId)?.setGameCardDeleted();
+            }
+        });
+    }
     getTime(gameId: string) {
         const game = this.findGame(gameId);
         return game ? this.timer.seconds(game) : null;

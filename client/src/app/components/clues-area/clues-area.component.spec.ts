@@ -1,5 +1,7 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
@@ -27,7 +29,7 @@ describe('CluesAreaComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [CluesAreaComponent],
-            imports: [AppMaterialModule],
+            imports: [AppMaterialModule, RouterTestingModule, HttpClientModule],
             providers: [
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
                 { provide: Router, useValue: spyRouter },

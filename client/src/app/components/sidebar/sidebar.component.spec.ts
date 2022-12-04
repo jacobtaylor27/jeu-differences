@@ -32,6 +32,7 @@ describe('SidebarComponent', () => {
         });
         spyGameInfosService.getNbDifferences.and.callFake(() => 0);
         spyGameInfosService.getNbTotalDifferences.and.callFake(() => expectedTotalDifference);
+        spyGameInfosService.gameTimeConstants = { gameTime: 30, penaltyTime: 3, successTime: 3 };
         await TestBed.configureTestingModule({
             declarations: [SidebarComponent, DifferencesAreaComponent, TimerStopwatchComponent, CluesAreaComponent],
             imports: [AppMaterialModule, HttpClientTestingModule],

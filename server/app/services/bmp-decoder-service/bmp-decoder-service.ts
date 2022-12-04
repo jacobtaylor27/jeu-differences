@@ -18,16 +18,6 @@ export class BmpDecoderService {
         return new Bmp({ width: bmpData.width, height: bmpData.height }, rawData);
     }
 
-
-    async convertBufferIntoArrayBuffer(buffer: Buffer): Promise<ArrayBuffer> {
-        const arrayBuffer: ArrayBuffer = new ArrayBuffer(buffer.length);
-        const view = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < buffer.length; ++i) {
-            view[i] = buffer[i];
-        }
-        return arrayBuffer;
-    }
-
     private isFileExtensionValid(filename: string): boolean {
         return filename.match('^.*.(bmp)$') !== null;
     }

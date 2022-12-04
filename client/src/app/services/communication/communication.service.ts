@@ -63,13 +63,6 @@ export class CommunicationService {
             );
     }
 
-    createGameRoom(playerName: string, gameMode: GameMode) {
-        return this.http.post<{ id: string }>(`${this.baseUrl}/game/create`, { players: [playerName], mode: gameMode }, { observe: 'response' }).pipe(
-            catchError(() => {
-                return of(null);
-            }),
-        );
-    }
 
     validateCoordinates(id: string, coordinate: Vec2) {
         return this.http

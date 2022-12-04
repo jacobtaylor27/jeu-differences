@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers --display on canvas with settings*/
+/* eslint-disable @typescript-eslint/no-magic-numbers -- display on canvas with settings*/
 import { Injectable } from '@angular/core';
 import { SocketEvent } from '@common/socket-event';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';

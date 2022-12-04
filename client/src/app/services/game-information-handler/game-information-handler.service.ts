@@ -6,6 +6,8 @@ import { GameMode } from '@common/game-mode';
 import { SocketEvent } from '@common/socket-event';
 import { Subject } from 'rxjs';
 import { GameId } from '@common/game-id';
+import { GameTimeConstants } from '@common/game-time-constants';
+import { CommunicationService } from '@app/services/communication/communication.service';
 
 @Injectable({
     providedIn: 'root',
@@ -20,8 +22,13 @@ export class GameInformationHandlerService {
     gameMode: GameMode = GameMode.Classic;
     isReadyToAccept: boolean = true;
     isMulti: boolean = false;
+    gameTimeConstants: GameTimeConstants;
 
-    constructor(private readonly routerService: RouterService, private readonly socket: CommunicationSocketService) {}
+    constructor(
+        private readonly routerService: RouterService,
+        private readonly socket: CommunicationSocketService,
+        private readonly communicationService: CommunicationService,
+    ) {}
 
     propertiesAreUndefined(): boolean {
         return this.gameInformation === undefined || this.players === undefined || this.gameMode === undefined;
@@ -40,6 +47,14 @@ export class GameInformationHandlerService {
             this.roomId = roomId;
             this.isMulti = true;
             this.routerService.navigateTo('waiting');
+        });
+    }
+
+    getConstants(): void {
+        this.communicationService.getGameTimeConstants().subscribe((gameTimeConstants) => {
+            if (gameTimeConstants && gameTimeConstants.body) {
+                this.gameTimeConstants = gameTimeConstants.body;
+            }
         });
     }
 

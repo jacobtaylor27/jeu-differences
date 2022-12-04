@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,7 +30,7 @@ describe('ChatBoxComponent', () => {
         spyRouter = jasmine.createSpyObj('Router', ['navigate']);
         await TestBed.configureTestingModule({
             declarations: [ChatBoxComponent],
-            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
+            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule, HttpClientModule],
             providers: [
                 { provide: CommunicationSocketService, useValue: socketServiceMock },
                 { provide: Router, useValue: spyRouter },

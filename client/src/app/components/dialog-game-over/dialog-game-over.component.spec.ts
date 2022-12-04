@@ -7,6 +7,7 @@ import { DialogGameOverComponent } from './dialog-game-over.component';
 describe('DialogGameOverComponent', () => {
     let component: DialogGameOverComponent;
     let fixture: ComponentFixture<DialogGameOverComponent>;
+    let spyTimeFormatter: jasmine.SpyObj<TimeFormatterService>;
 
     beforeEach(async () => {
         const model = { isWin: false };

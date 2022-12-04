@@ -1,11 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
-import { Vec2 } from '@app/interfaces/vec2';
-import { Coordinate } from '@common/coordinate';
-import { GameMode } from '@common/game-mode';
 import { GameTimeConstants } from '@common/game-time-constants';
-import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';

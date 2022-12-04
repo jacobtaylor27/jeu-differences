@@ -18,8 +18,15 @@ export class ClueHandlerService {
     }
 
     getClue() {
-        this.clueAskedCounter++;
-        this.communicationSocket.send(SocketEvent.Clue, { gameId: this.gameInformation.roomId });
+        if (!this.isGameOver() && this.clueAskedCounter <= NUMBER_CLUES) {
+            this.clueAskedCounter++;
+            this.$clueAsked.next();
+            this.communicationSocket.send(SocketEvent.Clue, { gameId: this.gameInformation.roomId });
+        }
+    }
+
+    isGameOver() {
+        return this.gameInformation.getNbDifferences(this.gameInformation.getPlayer().name) === this.gameInformation.getNbTotalDifferences();
     }
 
     resetNbClue() {

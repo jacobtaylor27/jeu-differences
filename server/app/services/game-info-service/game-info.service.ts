@@ -85,8 +85,6 @@ export class GameInfoService {
             const differences = await this.bmpDifferenceInterpreter.getCoordinates(
                 await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius),
             );
-            const difference = await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius);
-            const idDifferenceBmp = await this.bmpService.addBmp(await difference.toImageData(), DEFAULT_BMP_ASSET_PATH);
             const compressedThumbnail = LZString.compressToUTF16(
                 await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION),
             );
@@ -99,7 +97,6 @@ export class GameInfoService {
                 thumbnail: compressedThumbnail,
                 differenceRadius: radius,
                 differences,
-                idDifferenceBmp,
                 soloScore: [],
                 multiplayerScore: [],
             });

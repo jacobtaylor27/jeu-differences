@@ -220,34 +220,4 @@ describe('DifferencesDetectionHandlerService', () => {
         socketHelper.peerSideEmit(SocketEvent.DifferenceNotFound);
         expect(spyDifferenceNotDetected).toHaveBeenCalled();
     });
-
-    it('should show a clue', () => {
-        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        const coord: Coordinate[] = [{ x: 0, y: 0 }];
-        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
-        const spyDrawRect = spyOn(Object.getPrototypeOf(service), 'drawRect').and.callFake(() => {});
-        service.showClue(ctx, coord);
-        expect(spyDrawRect).toHaveBeenCalled();
-    });
-
-    it('should drawRect on canvas and erase it ', fakeAsync(() => {
-        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        const saveSpy = spyOn(ctx, 'save');
-        const clearRectSpy = spyOn(ctx, 'clearRect');
-        const strokeRectSpy = spyOn(ctx, 'strokeRect');
-        const restoreSpy = spyOn(ctx, 'restore');
-
-        service['drawRect'](ctx, [
-            { x: 1, y: 3 },
-            { x: 3, y: 6 },
-        ]);
-        tick(1500);
-        expect(strokeRectSpy).toHaveBeenCalled();
-        tick(1500);
-        expect(clearRectSpy).toHaveBeenCalled();
-        expect(saveSpy).toHaveBeenCalled();
-        expect(restoreSpy).toHaveBeenCalled();
-    }));
 });

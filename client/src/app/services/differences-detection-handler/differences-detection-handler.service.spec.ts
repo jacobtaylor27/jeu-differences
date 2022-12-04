@@ -174,11 +174,27 @@ describe('DifferencesDetectionHandlerService', () => {
         const clearRectSpy = spyOn(ctx, 'clearRect');
         const fillRectSpy = spyOn(ctx, 'fillRect');
 
-        service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], false);
+        const timerId = service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], false);
         tick(1500);
         expect(fillRectSpy).toHaveBeenCalled();
         tick(1500);
         expect(clearRectSpy).toHaveBeenCalled();
+        clearInterval(timerId);
+    }));
+
+    it('should draw on canvas and cheat mode', fakeAsync(() => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        const clearRectSpy = spyOn(ctx, 'clearRect');
+        const fillRectSpy = spyOn(ctx, 'fillRect');
+
+        const timerId = service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], true);
+        tick(375);
+        expect(fillRectSpy).toHaveBeenCalled();
+        tick(375);
+        expect(clearRectSpy).toHaveBeenCalled();
+        clearInterval(timerId);
     }));
 
     it('should clear on canvas', () => {

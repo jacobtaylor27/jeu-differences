@@ -7,7 +7,6 @@ export interface PrivateGameInformation {
     idOriginalBmp: string;
     thumbnail: string;
     idEditedBmp: string;
-    idDifferenceBmp: string;
     soloScore: Score[];
     multiplayerScore: Score[];
     differenceRadius: number;

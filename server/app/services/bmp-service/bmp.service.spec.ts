@@ -54,7 +54,7 @@ describe('Bmp service', async () => {
         const dir = 'test-dir';
 
         await bmpService.addBmp(await bmpObj.toImageData(), dir);
-        expect(fs.existsSync(dir).valueOf()).to.equal(true);
+        expect(fs.promises.readdir(dir).valueOf()).to.equal(true);
         await fsPromises.rm(dir, { recursive: true });
     });
 

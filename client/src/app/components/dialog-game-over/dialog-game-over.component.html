@@ -14,8 +14,8 @@
         <div mat-dialog-content>Bonne partie, mais tu as <b>perdu </b>.</div>
         <div *ngIf="isClassic" mat-dialog-content>Le vainqueur est :  {{winner}}.</div>
     </div>
-    <div *ngIf="this.time && this.index">
-        <div mat-dialog-content>Vous avez gagné en <b>{{ time }}</b>, vous êtes maintenant top <b>{{ index }}</b>.</div>
+    <div *ngIf="this.index && this.time">
+        <div mat-dialog-content>Vous avez gagné en <b>{{ time }}</b>, vous êtes maintenant à la position <b>{{ index }}</b>.</div>
     </div>
     <div mat-dialog-actions align="end">
         <button mat-raised-button routerLink="/home" mat-dialog-close color="primary" mat-primary>Quitter</button>

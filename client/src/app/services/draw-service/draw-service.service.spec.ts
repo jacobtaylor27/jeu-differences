@@ -179,7 +179,6 @@ describe('DrawServiceService', () => {
         expect(moveToSpy).toHaveBeenCalled();
         expect(lineToSpy).toHaveBeenCalled();
         expect(stokeSpy).toHaveBeenCalled();
-        expect(ctx.lineWidth).toEqual(pencilServiceStub.width);
         expect(ctx.lineCap).toEqual(pencilServiceStub.cap);
         expect(ctx.strokeStyle).toEqual(pencilServiceStub.color);
     });
@@ -362,6 +361,34 @@ describe('DrawServiceService', () => {
         expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
         expect(service['currentCommand'].style).toEqual(expectedStyle);
     });
+
+    it('updateCurrentCommand(...) should update the command when didStartErasing has started', () => {
+        const newLine: Line = {
+            initCoord: { x: 0, y: 0 },
+            finalCoord: { x: 0, y: 0 },
+        };
+        const newStroke: Stroke = {
+            lines: [newLine],
+        };
+        const newCurrentCommand: Command = {
+            canvasType: CanvasType.None,
+            name: 'test',
+            strokes: [newStroke],
+            style: {} as StrokeStyle,
+        };
+        pencilServiceStub.state = Tool.Pencil;
+        service['currentCommand'] = newCurrentCommand;
+        service['updateCurrentCommand'](fakeLine, true);
+        const expectedStyle: StrokeStyle = {
+            color: pencilServiceStub.color,
+            cap: pencilServiceStub.cap,
+            width: pencilServiceStub.width,
+            destination: 'source-over',
+        };
+        expect(service['currentCommand'].strokes[0].lines[1]).toEqual(fakeLine);
+        expect(service['currentCommand'].style).toEqual(expectedStyle);
+    });
+
     it('createStroke(...) should return undefined when the focus canvas is undefined', () => {
         const drawingBoard: DrawingBoardState = {
             canvasType: CanvasType.Left,

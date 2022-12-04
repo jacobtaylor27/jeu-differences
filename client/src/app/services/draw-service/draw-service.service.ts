@@ -65,6 +65,7 @@ export class DrawService {
         if (!this.isClick) return;
         const line = this.updateMouseCoordinates(event);
         this.updateCurrentCommand(line, startOrEndErasing ? true : undefined);
+        console.log(`The color of the stroke is ${this.pencilService.pencil.color}`);
         this.createStroke(line, this.currentCommand.style);
         this.updateImages();
     }

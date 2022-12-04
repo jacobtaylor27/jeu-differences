@@ -20,4 +20,11 @@ describe('TimeFormatterService', () => {
         const actual = service.formatTime(seconds);
         expect(actual).toEqual(expected);
     });
+
+    it('should format the time for a score', () => {
+        const seconds = 61;
+        const expected = '1 minute(s) et 1 secondes';
+        const actual = service.formatTimeForScore(seconds);
+        expect(actual).toEqual(expected);
+    });
 });

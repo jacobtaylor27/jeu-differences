@@ -45,7 +45,9 @@ export class CheatModeService {
         this.socket.on(SocketEvent.NewGameBoard, async () => {
             this.stopCheatMode(ctx, ctxModified);
             await this.fetchAllDifferenceNotFound();
-            this.startCheatMode(ctx, ctxModified);
+            if (this.isCheatModeActivated) {
+                this.startCheatMode(ctx, ctxModified);
+            }
         });
     }
 

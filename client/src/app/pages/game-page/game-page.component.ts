@@ -34,6 +34,7 @@ export class GamePageComponent implements OnDestroy {
         this.title = 'Mode ' + this.gameInfoHandlerService.gameMode + ' ' + (this.gameInfoHandlerService.isMulti ? 'Multijoueur' : 'Solo');
         this.handleSocket();
     }
+
     handleSocket() {
         this.socket.once(SocketEvent.Win, (record?: GameRecord) => {
             this.openGameOverDialog(true, record);
@@ -49,6 +50,13 @@ export class GamePageComponent implements OnDestroy {
             this.gameInfoHandlerService.$playerLeft.next();
             this.title = 'Mode ' + this.gameInfoHandlerService.gameMode + ' Solo';
         });
+    }
+
+    ngOnDestroy(): void {
+        this.clueHandlerService.resetNbClue();
+        this.socket.send(SocketEvent.LeaveGame, { gameId: this.gameInfoHandlerService.roomId });
+        this.socket.off(SocketEvent.Win);
+        this.socket.off(SocketEvent.Lose);
     }
 
     openSnackBar() {
@@ -75,13 +83,6 @@ export class GamePageComponent implements OnDestroy {
             };
         }
         this.dialog.open(DialogGameOverComponent, dialogConfig);
-    }
-
-    ngOnDestroy(): void {
-        this.clueHandlerService.resetNbClue();
-        this.socket.send(SocketEvent.LeaveGame, { gameId: this.gameInfoHandlerService.roomId });
-        this.socket.off(SocketEvent.Win);
-        this.socket.off(SocketEvent.Lose);
     }
 
     private findNbDifferences(): string {

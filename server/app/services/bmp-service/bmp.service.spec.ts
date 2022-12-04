@@ -1,10 +1,7 @@
 import { Bmp } from '@app/classes/bmp/bmp';
-import { BMP_EXTENSION, DEFAULT_BMP_TEST_PATH, ID_PREFIX } from '@app/constants/database';
-import { BmpDecoderService } from '@app/services/bmp-decoder-service/bmp-decoder-service';
 import { BmpEncoderService } from '@app/services/bmp-encoder-service/bmp-encoder.service';
 import { BmpService } from '@app/services/bmp-service/bmp.service';
 import { IdGeneratorService } from '@app/services/id-generator-service/id-generator.service';
-import * as bmp from 'bmp-js';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -12,7 +9,6 @@ import * as fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import { describe } from 'mocha';
 import { tmpdir } from 'os';
-import * as path from 'path';
 import * as sinon from 'sinon';
 import { Container } from 'typedi';
 
@@ -20,7 +16,6 @@ chai.use(chaiAsPromised);
 
 describe('Bmp service', async () => {
     let bmpService: BmpService;
-    let bmpDecoderService: BmpDecoderService;
     let bmpEncoderService: BmpEncoderService;
     let idGeneratorService: sinon.SinonStubbedInstance<IdGeneratorService>;
 
@@ -29,22 +24,8 @@ describe('Bmp service', async () => {
         idGeneratorService['generateNewId'].callsFake(() => {
             return '5';
         });
-        bmpDecoderService = Container.get(BmpDecoderService);
         bmpEncoderService = Container.get(BmpEncoderService);
         bmpService = new BmpService(idGeneratorService as IdGeneratorService, bmpEncoderService);
-
-        const bmpObj = await bmpDecoderService.decodeBIntoBmp(DEFAULT_BMP_TEST_PATH + '/test_bmp_original.bmp');
-        const buffer = bmp.encode(await bmpObj.toBmpImageData());
-        await fsPromises.writeFile(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION), buffer.data);
-        await fsPromises.writeFile(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION), buffer.data);
-    });
-
-    it('getBmpById(id) should return a bmp according to a specific id', async () => {
-        const id = '1';
-        const btmDecoded: string = await bmpEncoderService.base64Encode(path.join(tmpdir(), ID_PREFIX + id + BMP_EXTENSION));
-        await expect(bmpService.getBmpById(id, tmpdir())).to.eventually.deep.equal(btmDecoded);
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
     });
 
     it("getBmpById(id) should return throw an exception if the id doesn't exist", async () => {
@@ -52,8 +33,6 @@ describe('Bmp service', async () => {
         await expect(bmpService.getBmpById(invalidId, tmpdir()))
             .to.eventually.be.rejectedWith("Couldn't get the bmp by id")
             .and.be.an.instanceof(Error);
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
     });
 
     it('addBmp(bmp) should create a file and store it with a unique id', async () => {
@@ -65,8 +44,6 @@ describe('Bmp service', async () => {
         await bmpService.addBmp(await bmpObj.toImageData(), tmpdir());
         await expect(bmpService.getBmpById('5', tmpdir())).to.eventually.deep.equal(converedObj);
         await bmpService.deleteGameImages(['5'], tmpdir());
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
     });
 
     it('should create a dir if it does not already exist', async () => {
@@ -79,13 +56,18 @@ describe('Bmp service', async () => {
         await bmpService.addBmp(await bmpObj.toImageData(), dir);
         expect(fs.existsSync(dir).valueOf()).to.equal(true);
         await fsPromises.rm(dir, { recursive: true });
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '1' + BMP_EXTENSION));
-        await fsPromises.unlink(path.join(tmpdir(), ID_PREFIX + '2' + BMP_EXTENSION));
     });
 
     it('should delete all the bmp files in the directory', async () => {
-        const dir = 'test-dir';
-        await bmpService.deleteAllSourceImages(tmpdir());
-        expect(fs.existsSync(dir).valueOf()).to.equal(false);
+        const width = 2;
+        const height = 2;
+        const defaultRawData = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
+        const bmpObj = new Bmp({ width, height }, defaultRawData);
+        const dir = './test-dir';
+
+        await bmpService.addBmp(await bmpObj.toImageData(), dir);
+        expect((await fs.promises.readdir(dir)).length).to.equal(1);
+        await bmpService.deleteAllSourceImages(dir);
+        expect((await fs.promises.readdir(dir)).length).to.equal(0);
     });
 });

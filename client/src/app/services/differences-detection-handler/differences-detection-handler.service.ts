@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers -- tests for differences detection with random numbers*/
+/* eslint-disable @typescript-eslint/no-magic-numbers -- display on canvas with settings*/
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FlashTimer } from '@app/constants/game-constants';
@@ -105,31 +105,6 @@ export class DifferencesDetectionHandlerService {
             isCheatMode ? FlashTimer.CheatMode : FlashTimer.Classic,
         ) as unknown as number;
         return interval;
-    }
-
-    async showClue(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
-        this.drawRect(ctx, quadrantCoordinate);
-    }
-
-    private drawRect(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
-        const width = Math.abs(quadrantCoordinate[1].x - quadrantCoordinate[0].x);
-        const height = Math.abs(quadrantCoordinate[1].y - quadrantCoordinate[0].y);
-        let counter = 0;
-        ctx.save();
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = 'yellow';
-        ctx.strokeStyle = 'red';
-        const interval = setInterval(() => {
-            ctx.clearRect(quadrantCoordinate[0].x - 20, quadrantCoordinate[0].y - 20, width + 30, height + 30);
-            if (counter === 5) {
-                clearInterval(interval);
-                ctx.restore();
-            }
-            if (counter % 2 === 0) {
-                ctx.strokeRect(quadrantCoordinate[0].x, quadrantCoordinate[0].y, width, height);
-            }
-            counter++;
-        }, FlashTimer.Classic) as unknown as number;
     }
 
     private clearDifference(ctx: CanvasRenderingContext2D, coords: Coordinate[]) {

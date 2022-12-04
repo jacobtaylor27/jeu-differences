@@ -161,9 +161,6 @@ describe('DrawServiceService', () => {
         service.coordDraw = { x: 0, y: 0 };
         drawingBoardStub.canvasType = CanvasType.Left;
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => drawingBoardStub);
-        pencilServiceStub.setEraserWidth(0);
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        pencilServiceStub.setPencilWidth(5);
         pencilServiceStub.cap = 'round';
         pencilServiceStub.color = '#000000';
         pencilServiceStub.state = Tool.Pencil;

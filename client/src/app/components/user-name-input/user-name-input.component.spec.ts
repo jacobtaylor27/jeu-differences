@@ -29,6 +29,7 @@ describe('UserNameInputComponent', () => {
             'handleSocketEvent',
             'resetPlayers',
             'isLimitedTime',
+            'getConstants',
         ]);
         await TestBed.configureTestingModule({
             declarations: [UserNameInputComponent, AdminCommandsComponent],

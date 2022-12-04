@@ -14,7 +14,12 @@ describe('DialogLimitedTimeComponent', () => {
     let gameInformationHandlerService: jasmine.SpyObj<GameInformationHandlerService>;
 
     beforeEach(async () => {
-        gameInformationHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setPlayerName', 'getPlayer', 'handleSocketEvent']);
+        gameInformationHandlerService = jasmine.createSpyObj('GameInformationHandlerService', [
+            'setPlayerName',
+            'getPlayer',
+            'handleSocketEvent',
+            'getConstants',
+        ]);
         gameInformationHandlerService.players = [{ name: '', nbDifferences: 2 }];
         gameInformationHandlerService.gameMode = GameMode.LimitedTime;
         await TestBed.configureTestingModule({

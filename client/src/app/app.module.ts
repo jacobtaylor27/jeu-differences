@@ -43,7 +43,7 @@ import { UserNameInputComponent } from './components/user-name-input/user-name-i
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { MongodbErrorPageComponent } from './pages/mongodb-error-page/mongodb-error-page.component';
-import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-snackbar/no-game-snackbar.component';
+import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-snackbar.component';
 import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
 /**
  * Main module that is used in main.ts.

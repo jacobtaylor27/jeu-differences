@@ -99,6 +99,12 @@ describe('Game', () => {
         expect(game.isGameInitialize()).to.equal(false);
     });
 
+    it('should return if the game is deleted', () => {
+        expect(game.isCardDeleted).to.equal(false);
+        game.setGameCardDeleted();
+        expect(game.isCardDeleted).to.equal(true);
+    });
+
     it('should return if the game is limited time ', () => {
         const gameInfo: PrivateGameInformation = {
             id: '1',

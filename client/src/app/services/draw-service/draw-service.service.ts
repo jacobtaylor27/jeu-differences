@@ -44,16 +44,8 @@ export class DrawService {
     }
 
     initialize() {
-        // same reason as before
-        this.indexOfCommand = -1;
-        this.strokeIndex = 0;
-        this.commands = [];
-        this.currentCommand = {
-            canvasType: CanvasType.None,
-            name: '',
-            strokes: [{ lines: [] }],
-            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
-        };
+        this.initializeCurrentCommand();
+        this.initializePencil();
     }
 
     startDrawing(event: MouseEvent) {
@@ -243,6 +235,26 @@ export class DrawService {
         const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
         primaryForeground.putImageData(rightImageData, 0, 0);
         secondForeground.putImageData(leftImageData, 0, 0);
+    }
+
+    private initializeCurrentCommand() {
+        this.indexOfCommand = -1;
+        this.strokeIndex = 0;
+        this.commands = [];
+        this.currentCommand = {
+            canvasType: CanvasType.None,
+            name: '',
+            strokes: [{ lines: [] }],
+            style: { color: '', width: 0, cap: 'round', destination: 'source-over' },
+        };
+    }
+
+    private initializePencil() {
+        this.pencil.color = '#000000';
+        this.pencil.width.pencil = 1;
+        this.pencil.width.eraser = 2;
+        this.pencil.cap = 'round';
+        this.pencil.state = Tool.Pencil;
     }
 
     private createStroke(line: Line, strokeStyle: StrokeStyle, canvasType?: CanvasType) {

@@ -66,6 +66,7 @@ describe('GamePageComponent', () => {
                 'setGameMode',
                 'isLimitedTime',
                 'isClassic',
+                'getConstants',
             ],
             { $differenceFound: new Subject<string>(), $newGame: new Subject<string>(), $playerLeft: new Subject() },
         );
@@ -75,6 +76,7 @@ describe('GamePageComponent', () => {
         gameInformationHandlerServiceSpy.getOpponent.and.callFake(() => {
             return { name: 'test2', nbDifferences: 0 };
         });
+        gameInformationHandlerServiceSpy.gameTimeConstants = { gameTime: 30, penaltyTime: 3, successTime: 3 };
         gameInformationHandlerServiceSpy.isMulti = false;
         gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
         gameInformationHandlerServiceSpy.getNbDifferences.and.callFake(() => 0);

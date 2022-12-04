@@ -16,7 +16,7 @@ describe('AdminService', () => {
     let spyRouterService: jasmine.SpyObj<RouterService>;
 
     beforeEach(() => {
-        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards', 'refreshAllGames']);
+        spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['deleteAllGameCards', 'refreshAllGames', 'deleteGame']);
         spyCarouselService = jasmine.createSpyObj('GameCarouselService', ['hasCards']);
         spyRouterService = jasmine.createSpyObj('RouterService', ['reloadPage', 'redirectToErrorPage']);
         spyMatDialog = jasmine.createSpyObj('MatDialog', ['open']);
@@ -69,6 +69,18 @@ describe('AdminService', () => {
     it('should redirect to error page when there is an error deleting the games', () => {
         spyCommunicationService.deleteAllGameCards.and.returnValue(throwError(() => new Error('error')));
         service.deleteAllGames();
+        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
+    });
+
+    it('should delete a single game', () => {
+        spyCommunicationService.deleteGame.and.returnValue(of(void 0));
+        service.deleteSingleGame('id');
+        expect(spyCommunicationService.deleteGame).toHaveBeenCalled();
+    });
+
+    it('should not delete a single game when there is an error', () => {
+        spyCommunicationService.deleteGame.and.returnValue(throwError(() => new Error('error')));
+        service.deleteSingleGame('id');
         expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
     });
 });

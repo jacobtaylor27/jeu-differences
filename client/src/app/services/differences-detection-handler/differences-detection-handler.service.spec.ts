@@ -1,5 +1,5 @@
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
@@ -179,6 +179,22 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(fillRectSpy).toHaveBeenCalled();
         tick(1500);
         expect(clearRectSpy).toHaveBeenCalled();
+    }));
+
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- 1500 -> 1.5 seconds */
+    it('should draw on canvas and cheat mode', fakeAsync(() => {
+        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        const clearRectSpy = spyOn(ctx, 'clearRect');
+        const fillRectSpy = spyOn(ctx, 'fillRect');
+
+        service['displayDifferenceTemp'](ctx, [{ x: 1, y: 3 }], true);
+        tick(1500);
+        expect(fillRectSpy).toHaveBeenCalled();
+        tick(5000);
+        expect(clearRectSpy).toHaveBeenCalled();
+        discardPeriodicTasks();
     }));
 
     it('should clear on canvas', () => {

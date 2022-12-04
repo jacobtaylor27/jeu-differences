@@ -130,6 +130,7 @@ describe('CheatModeService', () => {
         const fetchAllGamesStub = spyOn(Object.getPrototypeOf(service), 'fetchAllDifferenceNotFound')
             .and.callFake(async () => new Promise(() => true))
             .and.resolveTo();
+        service.isCheatModeActivated = true;
         service.handleSocketEvent({} as CanvasRenderingContext2D, {} as CanvasRenderingContext2D);
         await socketHelper.peerSideEmit(SocketEvent.NewGameBoard);
         expect(stopCheatModeStub).toHaveBeenCalled();

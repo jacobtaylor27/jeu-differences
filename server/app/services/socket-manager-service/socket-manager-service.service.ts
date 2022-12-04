@@ -161,9 +161,7 @@ export class SocketManagerService {
                         socket.leave(gameId);
                         this.gameManager.leaveGame(socket.id, gameId);
                     }
-                    socket.broadcast
-                        .to(gameId)
-                        .emit(this.gameManager.isClassic(gameId) ? SocketEvent.Win : SocketEvent.PlayerLeft);
+                    socket.broadcast.to(gameId).emit(this.gameManager.isClassic(gameId) ? SocketEvent.Win : SocketEvent.PlayerLeft);
                 } else if (!this.gameManager.isGameMultiplayer(gameId)) {
                     socket.leave(gameId);
                     this.gameManager.leaveGame(socket.id, gameId);
@@ -247,7 +245,7 @@ export class SocketManagerService {
                     this.handleEndGame(gameId, socket);
                 }
 
-                if (!this.gameManager.isClassic(gameId)) {
+                if (this.gameManager.isLimitedTime(gameId)) {
                     this.gameManager.setNextGame(gameId);
                     const nextGameCard = this.gameManager.getGameInfo(gameId);
                     let gameCardInfo: PublicGameInformation;

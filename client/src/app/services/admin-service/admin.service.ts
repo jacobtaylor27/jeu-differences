@@ -47,6 +47,18 @@ export class AdminService {
         });
     }
 
+    deleteSingleGame(gameId: string): void {
+        this.communicationService.deleteGame(gameId).subscribe({
+            next: () => {
+                this.socketService.send(SocketEvent.GameDeleted, { gameId });
+                this.router.reloadPage('admin');
+            },
+            error: () => {
+                this.router.redirectToErrorPage();
+            },
+        });
+    }
+
     openSettings(): void {
         this.matDialog.open(GameConstantsSettingsComponent);
     }

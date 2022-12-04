@@ -52,7 +52,6 @@ describe('GameCardButtonsComponent', () => {
         fixture = TestBed.createComponent(GameCardButtonsComponent);
         component = fixture.componentInstance;
         component.gameCard = gameCard1;
-        spyCommunicationService.refreshSingleGame.and.returnValue(of(void 0));
         spyCommunicationService.deleteGame.and.returnValue(of(void 0));
         fixture.detectChanges();
     });
@@ -79,20 +78,13 @@ describe('GameCardButtonsComponent', () => {
 
     it('should delete game on click', () => {
         component.onClickDeleteGame(gameCard1);
-        expect(spyCommunicationService.deleteGame).toHaveBeenCalled();
-        expect(spyRouterService.reloadPage).toHaveBeenCalled();
+        expect(spyMatDialog.open).toHaveBeenCalled();
     });
 
     it('should refresh the scores on click', () => {
+        spyCommunicationService.refreshSingleGame.and.returnValue(of(void 0));
         component.onClickRefreshGame();
-        expect(spyCommunicationService.refreshSingleGame).toHaveBeenCalled();
         expect(spyRouterService.reloadPage).toHaveBeenCalled();
-    });
-
-    it('should redirect to error page when onclick delete game fails', () => {
-        spyCommunicationService.deleteGame.and.returnValue(throwError(() => new Error('error')));
-        component.onClickDeleteGame(gameCard1);
-        expect(spyRouterService.redirectToErrorPage).toHaveBeenCalled();
     });
 
     it('should redirect to error page when on click reset fails', () => {

@@ -1,12 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameCard } from '@app/interfaces/game-card';
-import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { RouterService } from '@app/services/router-service/router.service';
-import { SocketEvent } from '@common/socket-event';
 import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
+import { ConfirmDeleteDialogComponent } from '@app/components/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
     selector: 'app-game-card-buttons',
@@ -19,7 +18,6 @@ export class GameCardButtonsComponent {
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly gameInfoHandlerService: GameInformationHandlerService,
-        private readonly socketService: CommunicationSocketService,
         private readonly router: RouterService,
         private readonly matDialog: MatDialog,
         private readonly communicationService: CommunicationService,
@@ -30,15 +28,7 @@ export class GameCardButtonsComponent {
     }
 
     onClickDeleteGame(game: GameCard): void {
-        this.communicationService.deleteGame(game.gameInformation.id).subscribe({
-            next: () => {
-                this.socketService.send(SocketEvent.GameDeleted, { gameId: game.gameInformation.id });
-                this.router.reloadPage('admin');
-            },
-            error: () => {
-                this.router.redirectToErrorPage();
-            },
-        });
+        this.matDialog.open(ConfirmDeleteDialogComponent, { data: { gameId: game.gameInformation.id, singleGameDelete: true } });
     }
 
     onClickPlayGame(): void {

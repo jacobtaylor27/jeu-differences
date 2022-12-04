@@ -94,16 +94,16 @@ export class GameManagerService {
     }
 
     gameCardDeletedHandle(gameCardId: string) {
-        this.games.forEach((gameCard, gameId) => {
-            if (gameCard.information.id === gameCardId) {
-                this.findGame(gameId)?.setGameCardDeleted();
+        this.games.forEach((game) => {
+            if (game.information.id === gameCardId) {
+                game.setGameCardDeleted();
             }
         });
     }
 
     allGameCardsDeleted() {
-        this.games.forEach((gameCard, gameId) => {
-            this.findGame(gameId)?.setGameCardDeleted();
+        this.games.forEach((game) => {
+            game.setGameCardDeleted();
         });
     }
 

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers --display on canvas with settings*/
+/* eslint-disable @typescript-eslint/no-magic-numbers -- display on canvas with settings*/
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FlashTimer } from '@app/constants/game-constants';

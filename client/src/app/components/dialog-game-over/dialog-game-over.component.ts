@@ -17,7 +17,10 @@ export class DialogGameOverComponent {
     index: number;
     time: string;
     theme = Theme.ClassName;
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string; isClassic: boolean; nbPoints: string; record: GameRecord }) {
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string; isClassic: boolean; nbPoints: string; record: GameRecord },
+        private readonly timeFormatter: TimeFormatterService,
+    ) {
         this.isWin = data.win;
         this.winner = data.winner;
         this.isClassic = data.isClassic;

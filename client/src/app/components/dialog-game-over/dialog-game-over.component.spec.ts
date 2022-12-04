@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 
 import { DialogGameOverComponent } from './dialog-game-over.component';
 

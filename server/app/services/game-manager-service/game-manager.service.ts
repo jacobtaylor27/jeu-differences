@@ -90,7 +90,7 @@ export class GameManagerService {
         if (!game) {
             return;
         }
-        clearInterval(game.timerId);
+        clearInterval(game.timerId as NodeJS.Timer);
     }
 
     getTime(gameId: string) {

@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 
 export class Game {
     players: Map<string, string>;
-    timerId: NodeJS.Timer;
+    timerId: unknown;
     currentIndex: number = 0;
     nbCluesAsked: number = 0;
     private id: string;

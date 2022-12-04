@@ -108,7 +108,7 @@ describe('DrawCanvasComponent', () => {
     });
 
     it('should upload image', () => {
-        component.background = {
+        component['background'] = {
             nativeElement: {
                 getContext: () => {
                     // eslint-disable-next-line @typescript-eslint/no-empty-function

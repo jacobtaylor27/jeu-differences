@@ -65,8 +65,12 @@ export class Game {
         this.context.next();
     }
 
-    isClassic(){
+    isClassic() {
         return this.gameMode === GameMode.Classic;
+    }
+
+    isLimitedTime() {
+        return this.gameMode === GameMode.LimitedTime;
     }
 
     isGameInitialize() {

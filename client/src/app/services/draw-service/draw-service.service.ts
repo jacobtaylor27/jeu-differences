@@ -63,6 +63,7 @@ export class DrawService {
     }
 
     draw(event: MouseEvent, startOrEndErasing?: boolean) {
+        console.log(`during the drawing the color is ${this.pencil.color}`);
         if (!this.isClick) return;
         const line = this.updateMouseCoordinates(event);
         this.updateCurrentCommand(line, startOrEndErasing ? true : undefined);

@@ -2,7 +2,6 @@ import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
 import { Dimension } from '@app/interface/dimension';
-import * as bmp from 'bmp-js';
 import { Buffer } from 'buffer';
 export class Bmp {
     private dimensions: Dimension;
@@ -50,10 +49,6 @@ export class Bmp {
 
     getPixels(): Pixel[][] {
         return this.pixels;
-    }
-
-    private async getPixelBuffer(): Promise<Buffer> {
-        return Buffer.from(Pixel.convertPixelsToARGB(this.pixels));
     }
 
     private convertRawToPixels(rawData: number[], dimensions: Dimension): Pixel[][] {

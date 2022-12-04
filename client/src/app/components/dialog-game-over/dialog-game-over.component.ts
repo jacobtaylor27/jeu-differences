@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Theme } from '@app/enums/theme';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { GameRecord } from '@common/game-record';
 
 @Component({
@@ -13,13 +14,18 @@ export class DialogGameOverComponent {
     winner: string;
     nbPoints: string;
     isClassic: boolean;
-    record: GameRecord;
+    index: number | null;
+    time: string | null;
     theme = Theme.ClassName;
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string; isClassic: boolean; nbPoints: string; record: GameRecord }) {
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: { win: boolean; winner: string; isClassic: boolean; nbPoints: string; record: GameRecord },
+        private readonly timeFormatter: TimeFormatterService,
+    ) {
         this.isWin = data.win;
         this.winner = data.winner;
         this.isClassic = data.isClassic;
         this.nbPoints = data.nbPoints;
-        this.record = data.record;
+        this.index = data.record ? data.record.index : null;
+        this.time = data.record ? this.timeFormatter.formatTimeForScore(data.record.time) : null;
     }
 }

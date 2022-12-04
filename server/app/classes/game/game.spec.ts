@@ -20,7 +20,6 @@ describe('Game', () => {
         idOriginalBmp: '0',
         thumbnail: 'thumbnail',
         idEditedBmp: '1',
-        idDifferenceBmp: '2',
         soloScore: [{} as Score],
         multiplayerScore: [{} as Score],
         name: 'test game',
@@ -100,13 +99,18 @@ describe('Game', () => {
         expect(game.isGameInitialize()).to.equal(false);
     });
 
+    it('should return if the game is deleted', () => {
+        expect(game.isCardDeleted).to.equal(false);
+        game.setGameCardDeleted();
+        expect(game.isCardDeleted).to.equal(true);
+    });
+
     it('should return if the game is limited time ', () => {
         const gameInfo: PrivateGameInformation = {
             id: '1',
             idOriginalBmp: '0',
             thumbnail: 'thumbnail',
             idEditedBmp: '1',
-            idDifferenceBmp: '2',
             soloScore: [{} as Score],
             multiplayerScore: [{} as Score],
             name: 'test game',

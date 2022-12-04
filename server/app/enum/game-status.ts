@@ -3,6 +3,4 @@ export enum GameStatus {
     FindDifference = 'FindDifference',
     InitGame = 'InitGame',
     InitTimer = 'InitTimer',
-    PlayerOneTour = 'PlayerOneTour',
-    PlayerTwoTour = 'PlayerTwoTour',
 }

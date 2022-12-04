@@ -7,7 +7,6 @@ export class CountdownTimerService {
     private seconds: number;
     private valueTimer: number = 0;
 
-    // TODO : add admin inputs for both minutes and seconds
     /* eslint-disable @typescript-eslint/no-magic-numbers -- 20 seconds set for the demo WILL BE REMOVED LATER */
     constructor(secondsAdmin: number = 20, minutesAdmin: number = 0) {
         this.seconds = secondsAdmin;

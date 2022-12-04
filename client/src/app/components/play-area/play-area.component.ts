@@ -108,8 +108,8 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
                 }, 5000);
                 return;
             }
-            this.differencesDetectionHandlerService.showClue(this.getContextOriginal(), data.clue);
-            this.differencesDetectionHandlerService.showClue(this.getContextModified(), data.clue);
+            this.clueHandlerService.showClue(this.getContextOriginal(), data.clue);
+            this.clueHandlerService.showClue(this.getContextModified(), data.clue);
         });
     }
 

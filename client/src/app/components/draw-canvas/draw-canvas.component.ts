@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-import { DEFAULT_PENCIL, SIZE } from '@app/constants/canvas';
+import { SIZE } from '@app/constants/canvas';
 import { CanvasType } from '@app/enums/canvas-type';
 import { DrawingBoardState } from '@app/interfaces/drawing-board-state';
-import { Pencil } from '@app/interfaces/pencil';
 import { CanvasStateService } from '@app/services/canvas-state/canvas-state.service';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
@@ -17,8 +16,6 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
     @ViewChild('foreground', { static: false }) foreground!: ElementRef<HTMLCanvasElement>;
     @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() canvasType: CanvasType;
-
-    pencil: Pencil = DEFAULT_PENCIL;
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService, private canvasStateService: CanvasStateService) {}
 
@@ -45,10 +42,6 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
             const background = this.background.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             background.drawImage(newImage, 0, 0);
             this.drawService.updateImages();
-        });
-
-        this.toolBoxService.$pencil.get(this.canvasType)?.subscribe((newPencil: Pencil) => {
-            this.pencil = newPencil;
         });
 
         this.drawService.clearAllLayers(this.canvasType);

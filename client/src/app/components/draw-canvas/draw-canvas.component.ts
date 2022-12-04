@@ -50,7 +50,6 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.canvasStateService.states.pop();
-        this.toolBoxService.$pencil.get(this.canvasType)?.unsubscribe();
     }
 
     enterCanvas(event: MouseEvent) {

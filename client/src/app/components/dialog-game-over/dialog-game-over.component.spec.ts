@@ -10,7 +10,14 @@ describe('DialogGameOverComponent', () => {
     let spyTimeFormatter: jasmine.SpyObj<TimeFormatterService>;
 
     beforeEach(async () => {
-        const model = { isWin: false };
+        const model = {
+            isWin: false,
+            record: {
+                index: 1,
+                time: 10,
+            },
+        };
+        spyTimeFormatter = jasmine.createSpyObj('TimeFormatterService', ['formatTime']);
         await TestBed.configureTestingModule({
             declarations: [DialogGameOverComponent],
             providers: [{ provide: MAT_DIALOG_DATA, useValue: model }],

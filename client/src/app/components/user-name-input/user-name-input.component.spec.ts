@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -32,7 +32,7 @@ describe('UserNameInputComponent', () => {
         ]);
         await TestBed.configureTestingModule({
             declarations: [UserNameInputComponent, AdminCommandsComponent],
-            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule],
+            imports: [AppMaterialModule, NoopAnimationsModule, FormsModule, RouterTestingModule, ReactiveFormsModule],
             providers: [
                 {
                     provide: MatDialogRef,
@@ -52,6 +52,7 @@ describe('UserNameInputComponent', () => {
 
         fixture = TestBed.createComponent(UserNameInputComponent);
         component = fixture.componentInstance;
+        component.form.controls.name.setValue('test');
         fixture.detectChanges();
     });
 
@@ -68,14 +69,6 @@ describe('UserNameInputComponent', () => {
 
         component.playerName = '';
         expect(component.isValidName()).toBeFalse();
-    });
-
-    it('should act like click when enter key is pressed', () => {
-        const spyClick = spyOn(component, 'onClickContinue');
-        component.playerName = 'test';
-        const key = { key: 'Enter' } as KeyboardEvent;
-        component.onDialogClick(key);
-        expect(spyClick).toHaveBeenCalled();
     });
 
     it('should use socket communication when click and is not multi', () => {
@@ -106,5 +99,11 @@ describe('UserNameInputComponent', () => {
         const spyDialog = spyOn(component['matDialog'], 'open');
         component.openGameModeDialog();
         expect(spyDialog).toHaveBeenCalled();
+    });
+
+    it('should send information when the button is clicked', () => {
+        component.onClickContinue();
+        component.playerName = 'test';
+        expect(spyGameInformationService.setPlayerName).toHaveBeenCalledWith('test');
     });
 });

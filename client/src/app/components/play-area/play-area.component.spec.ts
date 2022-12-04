@@ -74,7 +74,7 @@ describe('PlayAreaComponent', () => {
                 'isLimitedTime',
                 'isClassic',
             ],
-            { $newGame: new Subject<string>() },
+            { $newGame: new Subject<void>() },
         );
 
         await TestBed.configureTestingModule({

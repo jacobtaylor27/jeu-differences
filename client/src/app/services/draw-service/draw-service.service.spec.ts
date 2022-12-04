@@ -807,6 +807,8 @@ describe('DrawServiceService', () => {
 
     it('redo(...) should iterate over all of the commands and change the index for the correct one', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImages = spyOn(service, 'updateImages').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
         const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
         service.commands = [newCommand, newCommand];
@@ -814,6 +816,7 @@ describe('DrawServiceService', () => {
         service.redo();
         expect(service['indexOfCommand']).toEqual(1);
         expect(spyExecuteAllCommands).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
     });
 
     it('redo(...) should not iterate over elements if its index is greated than the commands lenght', () => {
@@ -827,6 +830,8 @@ describe('DrawServiceService', () => {
     it('undo(...) should iterate over all of the commands and change the index for the correct one', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const spyExecuteAllCommands = spyOn(Object.getPrototypeOf(service), 'executeAllCommand').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        const spyUpdateImages = spyOn(service, 'updateImages').and.callFake(() => {});
         const newCommand = new ClearForegroundCommand({} as CanvasRenderingContext2D, service);
         service.commands = [newCommand];
         service['indexOfCommand'] = 0;
@@ -834,6 +839,7 @@ describe('DrawServiceService', () => {
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         expect(service['indexOfCommand']).toEqual(-1);
         expect(spyExecuteAllCommands).toHaveBeenCalled();
+        expect(spyUpdateImages).toHaveBeenCalled();
     });
 
     it('undo(...) should not iterate over commands if the index is less than 0', () => {

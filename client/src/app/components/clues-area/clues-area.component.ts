@@ -21,9 +21,14 @@ export class CluesAreaComponent implements OnInit {
 
     getClue() {
         this.clueHandlerService.getClue();
-        this.clueAskedCounter = this.clueHandlerService.getNbCluesAsked();
-        if (this.clueAskedCounter === NUMBER_CLUES) {
-            this.isDisabled = true;
-        }
+    }
+
+    handleClueAsked() {
+        this.clueHandlerService.$clueAsked.subscribe(() => {
+            this.clueAskedCounter = this.clueHandlerService.getNbCluesAsked();
+            if (this.clueAskedCounter === NUMBER_CLUES) {
+                this.isDisabled = true;
+            }
+        });
     }
 }

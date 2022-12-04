@@ -44,6 +44,7 @@ import { GameSelectionPageComponent } from './pages/game-selection-page/game-sel
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { MongodbErrorPageComponent } from './pages/mongodb-error-page/mongodb-error-page.component';
 import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-snackbar/no-game-snackbar.component';
+import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -92,6 +93,7 @@ import { NoGameSnackbarComponent } from './components/no-game-snackbar/no-game-s
         MongodbErrorPageComponent,
         CentralBoxComponent,
         NoGameSnackbarComponent,
+        ConfirmDeleteDialogComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
     providers: [],

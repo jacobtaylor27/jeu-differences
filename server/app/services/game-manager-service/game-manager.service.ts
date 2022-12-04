@@ -90,12 +90,38 @@ export class GameManagerService {
         if (!game) {
             return;
         }
-        clearInterval(game.timerId);
+        clearInterval(game.timerId as NodeJS.Timer);
+    }
+
+    gameCardDeletedHandle(gameCardId: string) {
+        this.games.forEach((game) => {
+            if (game.information.id === gameCardId) {
+                game.setGameCardDeleted();
+            }
+        });
+    }
+
+    allGameCardsDeleted() {
+        this.games.forEach((game) => {
+            game.setGameCardDeleted();
+        });
+    }
+
+    isGameCardDeleted(gameId: string) {
+        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).isCardDeleted : null;
     }
 
     getTime(gameId: string) {
         const game = this.findGame(gameId);
         return game ? this.timer.seconds(game) : null;
+    }
+
+    isClassic(gameId: string) {
+        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).isClassic() : null;
+    }
+
+    isLimitedTime(gameId: string) {
+        return this.isGameFound(gameId) ? (this.findGame(gameId) as Game).isLimitedTime() : null;
     }
 
     isDifference(gameId: string, playerId: string, coord: Coordinate) {
@@ -180,10 +206,6 @@ export class GameManagerService {
 
     findPlayer(gameId: string, playerId: string) {
         return this.findGame(gameId)?.findPlayer(playerId);
-    }
-
-    findGameMode(gameId: string) {
-        return this.findGame(gameId)?.gameMode;
     }
 
     private findGame(gameId: string): Game | undefined {

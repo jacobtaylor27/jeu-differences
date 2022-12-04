@@ -1,6 +1,5 @@
 import { Game } from '@app/classes/game/game';
 import { Coordinate } from '@common/coordinate';
-import { GameMode } from '@common/game-mode';
 import { Service } from 'typedi';
 
 @Service()
@@ -53,7 +52,7 @@ export class DifferenceService {
         }
         (this.gamesDifferencesTotalFound.get(game.identifier) as Set<Coordinate[]>).add(differenceCoords);
         player.add(differenceCoords);
-        if (this.isAllDifferenceFound(playerId, game) && !game.isGameOver() && game.gameMode === GameMode.Classic) {
+        if (this.isAllDifferenceFound(playerId, game) && !game.isGameOver() && game.isClassic()) {
             game.setEndgame();
         }
     }

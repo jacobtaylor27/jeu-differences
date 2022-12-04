@@ -9,9 +9,10 @@ import { v4 } from 'uuid';
 
 export class Game {
     players: Map<string, string>;
-    timerId: NodeJS.Timer;
+    timerId: unknown;
     currentIndex: number = 0;
     nbCluesAsked: number = 0;
+    isCardDeleted: boolean = false;
     private id: string;
     private mode: GameMode;
     private isMulti: boolean;
@@ -65,6 +66,14 @@ export class Game {
         this.context.next();
     }
 
+    isClassic() {
+        return this.gameMode === GameMode.Classic;
+    }
+
+    isLimitedTime() {
+        return this.gameMode === GameMode.LimitedTime;
+    }
+
     isGameInitialize() {
         return this.status === GameStatus.InitGame || this.status === GameStatus.InitTimer;
     }
@@ -75,6 +84,10 @@ export class Game {
 
     isGameFull() {
         return (!this.isMulti && this.players.size === 1) || (this.isMulti && this.players.size === 2);
+    }
+
+    setGameCardDeleted() {
+        this.isCardDeleted = true;
     }
 
     addPlayer(player: User) {

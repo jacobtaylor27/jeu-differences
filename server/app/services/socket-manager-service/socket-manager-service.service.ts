@@ -122,7 +122,7 @@ export class SocketManagerService {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
                 socket.broadcast.to(gameId).emit(SocketEvent.JoinGame, { roomId: gameId, playerName: player });
-                if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                if (this.gameManager.isClassic(gameId)) {
                     this.sio.to(gameId).emit(SocketEvent.Play, gameId);
                 } else {
                     const gameCard = this.gameManager.getGameInfo(gameId);
@@ -157,13 +157,11 @@ export class SocketManagerService {
                             SocketEvent.EventMessage,
                             this.eventMessageService.leavingGameMessage(this.gameManager.findPlayer(gameId, socket.id) as string),
                         );
-                    if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                    if (this.gameManager.isClassic(gameId)) {
                         socket.leave(gameId);
                         this.gameManager.leaveGame(socket.id, gameId);
                     }
-                    socket.broadcast
-                        .to(gameId)
-                        .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
+                    socket.broadcast.to(gameId).emit(this.gameManager.isClassic(gameId) ? SocketEvent.Win : SocketEvent.PlayerLeft);
                 } else if (!this.gameManager.isGameMultiplayer(gameId)) {
                     socket.leave(gameId);
                     this.gameManager.leaveGame(socket.id, gameId);
@@ -191,6 +189,7 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.GameDeleted, (gameId: string) => {
                 this.limitedTimeService.deleteGame(gameId);
+                this.gameManager.gameCardDeletedHandle(gameId);
                 if (this.multiplayerGameManager.isGameWaiting(gameId, undefined)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
                     this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);
@@ -205,6 +204,7 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.GamesDeleted, () => {
                 this.limitedTimeService.deleteAllGames();
+                this.gameManager.allGameCardsDeleted();
                 this.sio.emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.allGamesDeleted);
                 for (const gameId of this.multiplayerGameManager.getGamesWaiting(GameMode.Classic)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
@@ -247,7 +247,7 @@ export class SocketManagerService {
                     this.handleEndGame(gameId, socket);
                 }
 
-                if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
+                if (this.gameManager.isLimitedTime(gameId)) {
                     this.gameManager.setNextGame(gameId);
                     const nextGameCard = this.gameManager.getGameInfo(gameId);
                     let gameCardInfo: PublicGameInformation;
@@ -339,32 +339,43 @@ export class SocketManagerService {
         const gameInfo = this.gameManager.getGameInfo(gameId);
         const isMulti = this.gameManager.isGameMultiplayer(gameId) as boolean;
 
-        this.scoresHandlerService
-            .verifyScore((gameInfo as PrivateGameInformation).id as string, { playerName, time, type: ScoreType.Player }, isMulti)
-            .then((index) => {
-                this.gameManager.leaveGame(socket.id, gameId);
+        if (!this.gameManager.isGameCardDeleted(gameId)) {
+            this.scoresHandlerService
+                .verifyScore((gameInfo as PrivateGameInformation).id as string, { playerName, time, type: ScoreType.Player }, isMulti)
+                .then((index) => {
+                    this.gameManager.leaveGame(socket.id, gameId);
 
-                if (isMulti) {
-                    socket.broadcast.to(gameId).emit(SocketEvent.Lose);
-                }
+                    if (isMulti) {
+                        socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+                    }
 
-                // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
-                if (index !== -1) {
-                    socket.emit(SocketEvent.Win, { index, time });
-                    this.sio.sockets.emit(
-                        SocketEvent.EventMessage,
-                        this.eventMessageService.sendNewHighScoreMessage({
-                            record: { index, time },
-                            playerName,
-                            gameName: (gameInfo as PrivateGameInformation).name as string,
-                            isMulti,
-                        }),
-                    );
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- index is -1 when not added to the list
+                    if (index !== -1) {
+                        socket.emit(SocketEvent.Win, { index, time });
+                        this.sio.sockets.emit(
+                            SocketEvent.EventMessage,
+                            this.eventMessageService.sendNewHighScoreMessage({
+                                record: { index, time },
+                                playerName,
+                                gameName: (gameInfo as PrivateGameInformation).name as string,
+                                isMulti,
+                            }),
+                        );
+                        return;
+                    }
+
+                    socket.emit(SocketEvent.Win);
                     return;
-                }
+                });
+        } else {
+            this.gameManager.leaveGame(socket.id, gameId);
 
-                socket.emit(SocketEvent.Win);
-                return;
-            });
+            if (isMulti) {
+                socket.broadcast.to(gameId).emit(SocketEvent.Lose);
+            }
+
+            socket.emit(SocketEvent.Win);
+            return;
+        }
     }
 }

@@ -9,17 +9,7 @@ import { Service } from 'typedi';
 @Service()
 export class BmpService {
     constructor(private readonly idGeneratorService: IdGeneratorService, private readonly bmpEncoderService: BmpEncoderService) {}
-    async getAllBmps(filepath: string): Promise<string[]> {
-        const allBmps: string[] = [];
-        const files: string[] = await fs.promises.readdir(filepath);
-        for (const file of files) {
-            if (file.includes(ID_PREFIX)) {
-                const fileToAdd = file.slice(0, -BMP_EXTENSION.length).slice(ID_PREFIX.length);
-                allBmps.push(await this.getBmpById(fileToAdd, filepath));
-            }
-        }
-        return allBmps;
-    }
+
     async getBmpById(bmpId: string, filepath: string): Promise<string> {
         const fullpath: string = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
         if (!fs.existsSync(fullpath)) throw new Error("Couldn't get the bmp by id");

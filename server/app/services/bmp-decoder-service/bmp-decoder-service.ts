@@ -18,30 +18,6 @@ export class BmpDecoderService {
         return new Bmp({ width: bmpData.width, height: bmpData.height }, rawData);
     }
 
-    async decodeArrayBufferToBmp(arrayBuffer: ArrayBuffer): Promise<Bmp> {
-        const buffer: Buffer = Buffer.alloc(arrayBuffer.byteLength);
-        const view = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < buffer.length; ++i) {
-            buffer[i] = view[i];
-        }
-        let bmpData: bmp.BmpDecoder;
-        try {
-            bmpData = bmp.decode(buffer);
-        } catch (e) {
-            throw new Error('Le décodage du bmp a échoué');
-        }
-        return new Bmp({ width: bmpData.width, height: bmpData.height }, bmpData.data.toJSON().data);
-    }
-
-    async convertBufferIntoArrayBuffer(buffer: Buffer): Promise<ArrayBuffer> {
-        const arrayBuffer: ArrayBuffer = new ArrayBuffer(buffer.length);
-        const view = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < buffer.length; ++i) {
-            view[i] = buffer[i];
-        }
-        return arrayBuffer;
-    }
-
     private isFileExtensionValid(filename: string): boolean {
         return filename.match('^.*.(bmp)$') !== null;
     }

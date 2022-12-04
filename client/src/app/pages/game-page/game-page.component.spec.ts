@@ -66,6 +66,7 @@ describe('GamePageComponent', () => {
                 'setGameMode',
                 'isLimitedTime',
                 'isClassic',
+                'getConstants',
             ],
             { $differenceFound: new Subject<string>(), $newGame: new Subject<string>(), $playerLeft: new Subject() },
         );

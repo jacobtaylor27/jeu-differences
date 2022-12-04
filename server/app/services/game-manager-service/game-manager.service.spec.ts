@@ -79,6 +79,34 @@ describe('GameManagerService', () => {
         expect(gameManager['games'].size).not.to.equal(0);
     });
 
+    it('should return if is classic', () => {
+        expect(gameManager.isClassic('1')).to.equal(null);
+        const expectedGame = stub(
+            new Game(
+                { player: { name: 'test', id: '' }, isMulti: false },
+                { info: { id: '3' } as PrivateGameInformation, mode: GameMode.LimitedTime },
+            ),
+        );
+        expectedGame.isClassic.callsFake(() => true);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        expect(gameManager.isClassic('3')).to.deep.equal(true);
+    });
+
+    it('should return if is limited time', () => {
+        expect(gameManager.isLimitedTime('1')).to.equal(null);
+
+        const expectedGame = stub(
+            new Game(
+                { player: { name: 'test', id: '' }, isMulti: false },
+                { info: { id: '4' } as PrivateGameInformation, mode: GameMode.LimitedTime },
+            ),
+        );
+        expectedGame.isLimitedTime.callsFake(() => true);
+
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        expect(gameManager.isLimitedTime('4')).to.equal(true);
+    });
+
     it('should check if the game is found', () => {
         const findGameSpy = stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => {
             return {} as Game;
@@ -172,6 +200,53 @@ describe('GameManagerService', () => {
         expect(gameManager.getTime('1')).to.equal(timer.seconds(expectedGame));
     });
 
+    it('should set one game card to deleted', () => {
+        const expectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
+        const secondExpectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '2' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
+        expect(gameManager.gameCardDeletedHandle('1'));
+        gameManager['games'].set('1', expectedGame);
+        gameManager['games'].set('2', secondExpectedGame);
+
+        expect(expectedGame.isCardDeleted).to.equal(false);
+        gameManager.gameCardDeletedHandle('1');
+        gameManager.gameCardDeletedHandle('3');
+        expect(expectedGame.isCardDeleted).to.equal(true);
+        expect(secondExpectedGame.isCardDeleted).to.equal(false);
+    });
+
+    it('should set all cards to deleted', () => {
+        const expectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
+        gameManager.allGameCardsDeleted();
+        gameManager['games'].set('1', expectedGame);
+        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+
+        expect(expectedGame.isCardDeleted).to.equal(false);
+        gameManager.allGameCardsDeleted();
+        expect(expectedGame.isCardDeleted).to.equal(true);
+    });
+
+    it('should return is game card is deleted', () => {
+        const expectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
+        gameManager['games'].set('1', expectedGame);
+
+        expect(gameManager.isGameCardDeleted('1')).to.equal(false);
+        expect(gameManager.isGameCardDeleted('2')).to.equal(null);
+        gameManager.allGameCardsDeleted();
+        expect(gameManager.isGameCardDeleted('1')).to.equal(true);
+    });
+
     it('should check if the game is over', () => {
         const gameFoundSpy = stub(gameManager, 'isGameFound').callsFake(() => false);
         const expectedGame = stub(
@@ -263,18 +338,6 @@ describe('GameManagerService', () => {
         game.players.set('id', 'name');
         expect(gameManager.hasSameName('room', 'name')).to.equal(true);
         expect(gameManager.hasSameName('room', 'test')).to.equal(false);
-    });
-
-    it('should return the game mode', () => {
-        const stubFindGame = stub(Object.getPrototypeOf(gameManager), 'findGame');
-        stubFindGame.callsFake(() => undefined);
-        expect(gameManager.findGameMode('room')).to.equal(undefined);
-
-        const expectedGame = stub(
-            new Game({ player: { name: 'test', id: '' }, isMulti: false }, { info: {} as PrivateGameInformation, mode: GameMode.Classic }),
-        );
-        stubFindGame.callsFake(() => expectedGame);
-        expect(gameManager.findGameMode('')).to.equal(GameMode.Classic);
     });
 
     it('should check if the game is in multiplayer', () => {

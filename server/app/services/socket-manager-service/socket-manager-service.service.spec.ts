@@ -186,7 +186,7 @@ describe('SocketManager', () => {
                 }
             },
         } as io.Server;
-        const spyMode = stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.Classic);
+        const spyMode = stub(service['gameManager'], 'isClassic').callsFake(() => true);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         const spyLeave = stub(fakeSocket, 'leave');
         stub(service['gameManager'], 'findPlayer').callsFake(() => 'test');
@@ -194,7 +194,7 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
         service.handleSockets();
         expect(spyLeave.called).to.equal(true);
-        spyMode.callsFake(() => GameMode.LimitedTime);
+        spyMode.callsFake(() => false);
         service.handleSockets();
         expect(spyLeave.calledTwice).to.equal(false);
         spyIsGameOver.callsFake(() => true);
@@ -323,6 +323,7 @@ describe('SocketManager', () => {
         } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
+        stub(service['gameManager'], 'isLimitedTime').callsFake(() => true);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
         service.handleSockets();
@@ -367,6 +368,7 @@ describe('SocketManager', () => {
             to: () => fakeSocket,
         } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
+        stub(service['gameManager'], 'isLimitedTime').callsFake(() => false);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
@@ -414,6 +416,7 @@ describe('SocketManager', () => {
         } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'isLimitedTime').callsFake(() => true);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
@@ -467,6 +470,7 @@ describe('SocketManager', () => {
         } as unknown as io.Server;
         stub(service['gameManager'], 'isDifference').callsFake(() => expectedDifferenceFound.coords);
         stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'isLimitedTime').callsFake(() => true);
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameOver').callsFake(() => true);
         stub(Object.getPrototypeOf(service), 'handleEndGame').callsFake(() => {});
@@ -609,9 +613,9 @@ describe('SocketManager', () => {
             to: (id: string) => fakeSocket,
         } as unknown as io.Server;
         stub(service['gameManager'], 'addPlayer').callsFake(() => {});
-        const spyGameMode = stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.Classic);
+        const spyGameMode = stub(service['gameManager'], 'isClassic').callsFake(() => true);
         service.handleSockets();
-        spyGameMode.callsFake(() => GameMode.LimitedTime);
+        spyGameMode.callsFake(() => false);
         const expectedGameInfo = {
             id: '',
             name: 'test',
@@ -1231,8 +1235,9 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'getNbDifferencesFound').callsFake(() => expectedDifferenceFound);
         stub(service['gameManager'], 'isGameFound').callsFake(() => true);
         stub(service['gameManager'], 'isGameOver').callsFake(() => false);
-        stub(service['gameManager'], 'findGameMode').callsFake(() => GameMode.LimitedTime);
+        stub(service['gameManager'], 'isLimitedTime').callsFake(() => true);
         const gameInfo = stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        service.handleSockets();
         service.handleSockets();
         gameInfo.callsFake(() => undefined);
         service.handleSockets();
@@ -1279,6 +1284,62 @@ describe('SocketManager', () => {
         stub(service['gameManager'], 'getTime').callsFake(() => 1);
         stub(service['gameManager'], 'findPlayer').callsFake(() => '');
         stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        stub(service['gameManager'], 'isGameCardDeleted').callsFake(() => false);
+        const verifyScore = stub(service['scoresHandlerService'], 'verifyScore')
+            .callsFake(async () => new Promise(() => 1))
+            .resolves(1);
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        //  no score
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        verifyScore.callsFake(async () => new Promise(() => -1)).resolves(-1);
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        gameMulti.callsFake(() => false);
+        const broadcastEvent = stub(fakeSocket.broadcast.to('gameId'), 'emit');
+        service['handleEndGame']('gameId', fakeSocket as unknown as io.Socket);
+        expect(broadcastEvent.called).to.equal(false);
+    });
+    it('should handle the end game when game card is deleted', () => {
+        const expectedGameInfo = {
+            id: '',
+            name: 'test',
+            thumbnail: '',
+            differences: [],
+            idEditedBmp: '',
+            idOriginalBmp: '',
+            multiplayerScore: [],
+            soloScore: [],
+        } as unknown as PrivateGameInformation;
+        const fakeSocket = {
+            emit: (eventName: string, message: unknown) => {
+                expect(eventName === SocketEvent.Win || eventName === SocketEvent.EventMessage).to.equal(true);
+            },
+            join: (id: string) => {
+                return;
+            },
+            to: (id: string) => {
+                return { emit: (eventName: string, message: unknown) => {} };
+            },
+            broadcast: {
+                to: (gameId: string) => {
+                    return {
+                        emit: (eventName: string, _message: unknown) => {
+                            expect(eventName).to.equal(SocketEvent.Lose);
+                        },
+                    };
+                },
+            },
+        };
+
+        service['sio'] = {
+            sockets: fakeSocket,
+            to: (gameId: string) => fakeSocket,
+        } as unknown as io.Server;
+        stub(service['eventMessageService'], 'sendNewHighScoreMessage').callsFake(() => '');
+        const gameMulti = stub(service['gameManager'], 'isGameMultiplayer').callsFake(() => true);
+        stub(service['gameManager'], 'getTime').callsFake(() => 1);
+        stub(service['gameManager'], 'findPlayer').callsFake(() => '');
+        stub(service['gameManager'], 'getGameInfo').callsFake(() => expectedGameInfo);
+        stub(service['gameManager'], 'isGameCardDeleted').callsFake(() => true);
         const verifyScore = stub(service['scoresHandlerService'], 'verifyScore')
             .callsFake(async () => new Promise(() => 1))
             .resolves(1);

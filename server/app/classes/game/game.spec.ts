@@ -20,7 +20,6 @@ describe('Game', () => {
         idOriginalBmp: '0',
         thumbnail: 'thumbnail',
         idEditedBmp: '1',
-        idDifferenceBmp: '2',
         soloScore: [{} as Score],
         multiplayerScore: [{} as Score],
         name: 'test game',
@@ -98,6 +97,30 @@ describe('Game', () => {
         expect(game.isGameInitialize()).to.equal(true);
         stateSpyObj.callsFake(() => GameStatus.EndGame);
         expect(game.isGameInitialize()).to.equal(false);
+    });
+
+    it('should return if the game is deleted', () => {
+        expect(game.isCardDeleted).to.equal(false);
+        game.setGameCardDeleted();
+        expect(game.isCardDeleted).to.equal(true);
+    });
+
+    it('should return if the game is limited time ', () => {
+        const gameInfo: PrivateGameInformation = {
+            id: '1',
+            idOriginalBmp: '0',
+            thumbnail: 'thumbnail',
+            idEditedBmp: '1',
+            soloScore: [{} as Score],
+            multiplayerScore: [{} as Score],
+            name: 'test game',
+            differenceRadius: 0,
+            differences: [[{} as Coordinate]],
+        };
+        const player = { player: { name: 'test player', id: 'test' }, isMulti: false };
+        const mode = GameMode.LimitedTime;
+        const newGame = new Game(player, { info: gameInfo, mode });
+        expect(newGame.isLimitedTime()).to.equal(true);
     });
 
     it('should check if the game is over', () => {

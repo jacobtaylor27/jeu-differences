@@ -68,19 +68,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     ngOnInit(): void {
-        this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
-            if (data.nbClues === 3) {
-                this.isThirdClue = true;
-                this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
-                setInterval(() => {
-                    this.isThirdClue = false;
-                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers  -- time to show third clue coordinates
-                }, 5000);
-                return;
-            }
-            this.differencesDetectionHandlerService.showClue(this.getContextOriginal(), data.clue);
-            this.differencesDetectionHandlerService.showClue(this.getContextModified(), data.clue);
-        });
+        this.handleClue();
     }
 
     ngAfterViewInit(): void {
@@ -101,6 +89,22 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
             this.mouseHandlerService.mouseHitDetect($event, ctx, this.gameInfoHandlerService.roomId);
         }
+    }
+
+    handleClue() {
+        this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
+            if (data.nbClues === 3) {
+                this.isThirdClue = true;
+                this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
+                setInterval(() => {
+                    this.isThirdClue = false;
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers  -- time to show third clue coordinates
+                }, 5000);
+                return;
+            }
+            this.differencesDetectionHandlerService.showClue(this.getContextOriginal(), data.clue);
+            this.differencesDetectionHandlerService.showClue(this.getContextModified(), data.clue);
+        });
     }
 
     handleSocketDifferenceFound() {

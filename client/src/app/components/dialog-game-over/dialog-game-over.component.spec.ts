@@ -29,6 +29,7 @@ describe('DialogGameOverComponent', () => {
     });
 
     it('should create', () => {
+        expect(spyTimeFormatter.formatTime).toBeDefined();
         expect(component).toBeTruthy();
     });
 });

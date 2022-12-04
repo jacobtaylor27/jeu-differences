@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Theme } from '@app/enums/theme';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
 import { GameRecord } from '@common/game-record';
 
 @Component({

@@ -54,7 +54,7 @@ describe('ChatBoxComponent', () => {
     });
 
     it('should push the message into messages array when message event is heard', () => {
-        const spyAddingMessage = spyOn(component, 'addingMessage');
+        const spyAddingMessage = spyOn(component, 'addMessage');
         socketHelper.peerSideEmit(SocketEvent.Message, 'message');
         expect(spyAddingMessage).toHaveBeenCalled();
     });
@@ -78,7 +78,7 @@ describe('ChatBoxComponent', () => {
     });
 
     it('should send the message onClick', () => {
-        const spyAddingMessage = spyOn(component, 'addingMessage');
+        const spyAddingMessage = spyOn(component, 'addMessage');
         const spySend = spyOn(socketServiceMock, 'send');
         component.onClickSend();
         socketHelper.peerSideEmit(SocketEvent.Message, 'message');

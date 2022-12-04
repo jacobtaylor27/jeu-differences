@@ -189,6 +189,7 @@ export class SocketManagerService {
 
             socket.on(SocketEvent.GameDeleted, (gameId: string) => {
                 this.limitedTimeService.deleteGame(gameId);
+                this.gameManager.gameCardDeletedHandle(gameId);
                 if (this.multiplayerGameManager.isGameWaiting(gameId, undefined)) {
                     const roomId = this.multiplayerGameManager.getRoomIdWaiting(gameId);
                     this.sio.to(roomId).emit(SocketEvent.RejectPlayer, this.multiplayerGameManager.rejectMessages.deletedGame);

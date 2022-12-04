@@ -8,7 +8,6 @@ import { Injectable } from '@angular/core';
 export class TimeFormatterService {
     private precision: number = 2;
 
-    // MM:SS format
     formatTime(seconds: number): string {
         const min = Math.floor(seconds / 60).toString();
         const sec = (seconds % 60).toString();

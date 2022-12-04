@@ -37,6 +37,7 @@ export class UserNameInputComponent {
     onClickContinue(): void {
         this.playerName = (this.form.get('name') as FormControl).value;
         this.gameInformationHandlerService.resetPlayers();
+        this.gameInformationHandlerService.getConstants();
         if (this.isValidName()) {
             this.gameInformationHandlerService.setPlayerName(this.playerName);
             this.dialogRef.close(true);

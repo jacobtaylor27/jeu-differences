@@ -14,6 +14,10 @@ export class SidebarComponent {
     differenceTime: number = 0;
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
+        this.setInfos();
+    }
+
+    setInfos() {
         this.gameMode = this.gameInformationHandlerService.getGameMode();
         this.gameName = this.gameInformationHandlerService.getGameName();
         this.isMulti = this.gameInformationHandlerService.isMulti;

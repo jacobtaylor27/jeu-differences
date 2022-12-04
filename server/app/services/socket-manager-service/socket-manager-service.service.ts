@@ -122,7 +122,7 @@ export class SocketManagerService {
                 this.gameManager.addPlayer({ name: player, id: socket.id }, gameId);
                 socket.join(gameId);
                 socket.broadcast.to(gameId).emit(SocketEvent.JoinGame, { roomId: gameId, playerName: player });
-                if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                if (this.gameManager.isClassic(gameId)) {
                     this.sio.to(gameId).emit(SocketEvent.Play, gameId);
                 } else {
                     const gameCard = this.gameManager.getGameInfo(gameId);
@@ -157,13 +157,13 @@ export class SocketManagerService {
                             SocketEvent.EventMessage,
                             this.eventMessageService.leavingGameMessage(this.gameManager.findPlayer(gameId, socket.id) as string),
                         );
-                    if (this.gameManager.findGameMode(gameId) === GameMode.Classic) {
+                    if (this.gameManager.isClassic(gameId)) {
                         socket.leave(gameId);
                         this.gameManager.leaveGame(socket.id, gameId);
                     }
                     socket.broadcast
                         .to(gameId)
-                        .emit(this.gameManager.findGameMode(gameId) === GameMode.Classic ? SocketEvent.Win : SocketEvent.PlayerLeft);
+                        .emit(this.gameManager.isClassic(gameId) ? SocketEvent.Win : SocketEvent.PlayerLeft);
                 } else if (!this.gameManager.isGameMultiplayer(gameId)) {
                     socket.leave(gameId);
                     this.gameManager.leaveGame(socket.id, gameId);
@@ -247,7 +247,7 @@ export class SocketManagerService {
                     this.handleEndGame(gameId, socket);
                 }
 
-                if (this.gameManager.findGameMode(gameId) === GameMode.LimitedTime) {
+                if (!this.gameManager.isClassic(gameId)) {
                     this.gameManager.setNextGame(gameId);
                     const nextGameCard = this.gameManager.getGameInfo(gameId);
                     let gameCardInfo: PublicGameInformation;

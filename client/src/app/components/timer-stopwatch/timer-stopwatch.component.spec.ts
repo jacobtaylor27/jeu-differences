@@ -42,6 +42,7 @@ describe('TimerStopwatchComponent', () => {
             ],
         }).compileComponents();
 
+        spyGameInfosService.gameTimeConstants = { gameTime: 30, penaltyTime: 3, successTime: 3 };
         fixture = TestBed.createComponent(TimerStopwatchComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -62,7 +63,6 @@ describe('TimerStopwatchComponent', () => {
     it('should display time on init temps limite', () => {
         spyGameInfosService.isClassic.and.callFake(() => false);
         spyGameInfosService.isLimitedTime.and.callFake(() => true);
-        spyGameInfosService.gameTimeConstants = { gameTime: 30, penaltyTime: 3, successTime: 3 };
         spyTimeFormatter.formatTime.and.callFake(() => '30:00');
         const newComponent = new TimerStopwatchComponent(socketServiceMock, spyTimeFormatter, spyGameInfosService);
 

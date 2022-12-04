@@ -10,26 +10,55 @@ describe('DialogGameOverComponent', () => {
     let spyTimeFormatter: jasmine.SpyObj<TimeFormatterService>;
 
     beforeEach(async () => {
-        const model = {
-            isWin: false,
-            record: {
-                index: 1,
-                time: 10,
-            },
-        };
-        spyTimeFormatter = jasmine.createSpyObj('TimeFormatterService', ['formatTime']);
+        spyTimeFormatter = jasmine.createSpyObj('TimeFormatterService', ['formatTimeForScore']);
+    });
+
+    it('should create', async () => {
         await TestBed.configureTestingModule({
             declarations: [DialogGameOverComponent],
-            providers: [{ provide: MAT_DIALOG_DATA, useValue: model }],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {
+                        win: true,
+                        winner: 'test',
+                        isClassic: true,
+                        nbPoints: '0',
+                        record: { index: 1, time: 0 },
+                    },
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DialogGameOverComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+
+        expect(spyTimeFormatter.formatTimeForScore).toBeDefined();
+        expect(component).toBeTruthy();
     });
 
-    it('should create', () => {
-        expect(spyTimeFormatter.formatTime).toBeDefined();
-        expect(component).toBeTruthy();
+    it('should be null when there is no record passed', async () => {
+        await TestBed.configureTestingModule({
+            declarations: [DialogGameOverComponent],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {
+                        win: true,
+                        winner: 'test',
+                        isClassic: true,
+                        nbPoints: '0',
+                        record: null,
+                    },
+                },
+            ],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(DialogGameOverComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        expect(component.index).toBeNull();
+        expect(component.time).toBeNull();
     });
 });

@@ -153,7 +153,7 @@ describe('DrawServiceService', () => {
         service.coordDraw = { x: 0, y: 0 };
         drawingBoardStub.canvasType = CanvasType.Left;
         canvasStateServiceSpyObj.getFocusedCanvas.and.callFake(() => drawingBoardStub);
-        service.pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
+        service['pencilService'].pencil = { width: { pencil: 5, eraser: 0 }, cap: 'round', color: '#000000', state: Tool.Pencil };
         spyOn(Object.getPrototypeOf(service), 'reposition').and.returnValue({ x: 0, y: 0 });
         const ctx = drawingBoardStub.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const beginPathSpy = spyOn(ctx, 'beginPath');
@@ -161,17 +161,17 @@ describe('DrawServiceService', () => {
         const lineToSpy = spyOn(ctx, 'lineTo');
         const stokeSpy = spyOn(ctx, 'stroke');
         service['createStroke'](fakeLine, {
-            width: service.pencil.width.pencil,
-            cap: service.pencil.cap,
-            color: service.pencil.color,
+            width: service['pencilService'].pencil.width.pencil,
+            cap: service['pencilService'].pencil.cap,
+            color: service['pencilService'].pencil.color,
         } as StrokeStyle);
         expect(beginPathSpy).toHaveBeenCalled();
         expect(moveToSpy).toHaveBeenCalled();
         expect(lineToSpy).toHaveBeenCalled();
         expect(stokeSpy).toHaveBeenCalled();
-        expect(ctx.lineWidth).toEqual(service.pencil.width.pencil);
-        expect(ctx.lineCap).toEqual(service.pencil.cap);
-        expect(ctx.strokeStyle).toEqual(service.pencil.color);
+        expect(ctx.lineWidth).toEqual(service['pencilService'].pencil.width.pencil);
+        expect(ctx.lineCap).toEqual(service['pencilService'].pencil.cap);
+        expect(ctx.strokeStyle).toEqual(service['pencilService'].pencil.color);
     });
 
     it('startDrawing should handle mouse event and return undefined if no canvas is in focus', () => {
@@ -231,7 +231,7 @@ describe('DrawServiceService', () => {
 
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
-        service.pencil.state = Tool.Pencil;
+        service['pencilService'].pencil.state = Tool.Pencil;
         const returnedValue = service.startDrawing({} as MouseEvent);
         expect(returnedValue).toBe(undefined);
         expect(respositionSpy).toHaveBeenCalled();
@@ -254,7 +254,7 @@ describe('DrawServiceService', () => {
 
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
-        service.pencil.state = Tool.Eraser;
+        service['pencilService'].pencil.state = Tool.Eraser;
         const returnedValue = service.startDrawing({} as MouseEvent);
         expect(returnedValue).toBe(undefined);
         expect(respositionSpy).toHaveBeenCalled();
@@ -291,7 +291,7 @@ describe('DrawServiceService', () => {
             strokes: [newStroke],
             style: {} as StrokeStyle,
         };
-        service['pencil'] = newPencil;
+        service['pencilService'].pencil = newPencil;
         service['currentCommand'] = newCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
@@ -324,7 +324,7 @@ describe('DrawServiceService', () => {
             strokes: [newStroke],
             style: {} as StrokeStyle,
         };
-        service['pencil'] = newPencil;
+        service['pencilService'].pencil = newPencil;
         service['currentCommand'] = newCurrentCommand;
         service['updateCurrentCommand'](fakeLine, true);
         const expectedStyle: StrokeStyle = {
@@ -357,7 +357,7 @@ describe('DrawServiceService', () => {
             strokes: [newStroke],
             style: {} as StrokeStyle,
         };
-        service['pencil'] = newPencil;
+        service['pencilService'].pencil = newPencil;
         service['currentCommand'] = newCurrentCommand;
         service['updateCurrentCommand'](fakeLine);
         const expectedStyle: StrokeStyle = {
@@ -422,7 +422,7 @@ describe('DrawServiceService', () => {
             return drawingBoardStub;
         });
         service['isClick'] = true;
-        service['pencil'] = Object.create(fakePencil);
+        service['pencilService'].pencil = Object.create(fakePencil);
         service['currentCommand'] = Object.create(fakeCurrentCommand);
         service['updateCurrentCommand'](fakeLine);
         const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
@@ -440,7 +440,7 @@ describe('DrawServiceService', () => {
             return drawingBoardStub;
         });
         service['isClick'] = true;
-        service['pencil'] = Object.create(fakePencil);
+        service['pencilService'].pencil = Object.create(fakePencil);
         service['currentCommand'] = Object.create(fakeCurrentCommand);
         service['updateCurrentCommand'](fakeLine);
         const spyUpdateCurrentCommand = spyOn(Object.getPrototypeOf(service), 'updateCurrentCommand');
@@ -476,8 +476,8 @@ describe('DrawServiceService', () => {
 
     it('stopDrawing(...) should stop the drawing', () => {
         service['isClick'] = true;
-        service.pencil = fakePencil;
-        service.pencil.state = Tool.Pencil;
+        service['pencilService'].pencil = fakePencil;
+        service['pencilService'].pencil.state = Tool.Pencil;
         service['currentCommand'] = fakeCurrentCommand;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const drawSpy = spyOn(service, 'draw').and.callFake(() => {});
@@ -493,8 +493,8 @@ describe('DrawServiceService', () => {
 
     it('stopDrawing(...) should stop the erasing', () => {
         service['isClick'] = true;
-        service.pencil = fakePencil;
-        service.pencil.state = Tool.Eraser;
+        service['pencilService'].pencil = fakePencil;
+        service['pencilService'].pencil.state = Tool.Eraser;
         service['currentCommand'] = fakeCurrentCommand;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const drawSpy = spyOn(service, 'draw').and.callFake(() => {});

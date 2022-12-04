@@ -4,7 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasType } from '@app/enums/canvas-type';
 import { AppMaterialModule } from '@app/modules/material.module';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
-import { Subject } from 'rxjs';
 
 import { ToolBoxComponent } from './tool-box.component';
 
@@ -29,7 +28,6 @@ describe('ToolBoxComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
         component.canvasType = CanvasType.Left;
-        toolBoxServiceSpyObj.$pencil.set(component.canvasType, new Subject());
     });
 
     it('should create', () => {

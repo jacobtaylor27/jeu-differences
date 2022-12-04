@@ -16,10 +16,8 @@ describe('ToolBoxService', () => {
     });
 
     it('should add CanvasType', () => {
-        const spyPencil = spyOn(service.$pencil, 'set');
         const spyUploadImage = spyOn(service.$uploadImage, 'set');
         service.addCanvasType(CanvasType.Left);
-        expect(spyPencil).toHaveBeenCalled();
         expect(spyUploadImage).toHaveBeenCalled();
     });
 });

@@ -205,11 +205,19 @@ describe('GameManagerService', () => {
             { player: { name: 'test', id: '' }, isMulti: false },
             { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
         );
+        const secondExpectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '2' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
+        expect(gameManager.gameCardDeletedHandle('1'));
         gameManager['games'].set('1', expectedGame);
-        stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
+        gameManager['games'].set('2', secondExpectedGame);
 
+        expect(expectedGame.isCardDeleted).to.equal(false);
         gameManager.gameCardDeletedHandle('1');
+        gameManager.gameCardDeletedHandle('3');
         expect(expectedGame.isCardDeleted).to.equal(true);
+        expect(secondExpectedGame.isCardDeleted).to.equal(false);
     });
 
     it('should set all cards to deleted', () => {
@@ -217,11 +225,26 @@ describe('GameManagerService', () => {
             { player: { name: 'test', id: '' }, isMulti: false },
             { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
         );
+        gameManager.allGameCardsDeleted();
         gameManager['games'].set('1', expectedGame);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
 
+        expect(expectedGame.isCardDeleted).to.equal(false);
         gameManager.allGameCardsDeleted();
         expect(expectedGame.isCardDeleted).to.equal(true);
+    });
+
+    it('should return is game card is deleted', () => {
+        const expectedGame = new Game(
+            { player: { name: 'test', id: '' }, isMulti: false },
+            { info: { id: '1' } as PrivateGameInformation, mode: GameMode.Classic },
+        );
+        gameManager['games'].set('1', expectedGame);
+
+        expect(gameManager.isGameCardDeleted('1')).to.equal(false);
+        expect(gameManager.isGameCardDeleted('2')).to.equal(null);
+        gameManager.allGameCardsDeleted();
+        expect(gameManager.isGameCardDeleted('1')).to.equal(true);
     });
 
     it('should check if the game is over', () => {

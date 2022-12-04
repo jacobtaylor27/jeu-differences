@@ -21,13 +21,13 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
-    @ViewChild('actionsGameOriginal') canvasOriginal: ElementRef<HTMLCanvasElement>;
-    @ViewChild('actionsGameModified') canvasModified: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgOriginal') canvasImgOriginal: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModified') canvasImgModified: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModifiedWODifference') canvasImgDifference: ElementRef<HTMLCanvasElement>;
     @Input() gameId: string;
-
+    @ViewChild('actionsGameOriginal') private canvasOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('actionsGameModified') private canvasModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgOriginal') private canvasImgOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModified') private canvasImgModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModifiedWODifference') private canvasImgDifference: ElementRef<HTMLCanvasElement>;
+    
     isThirdClue: boolean = false;
     clue: string;
     buttonPressed = '';

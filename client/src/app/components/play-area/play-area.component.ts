@@ -27,7 +27,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild('imgOriginal') private canvasImgOriginal: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModified') private canvasImgModified: ElementRef<HTMLCanvasElement>;
     @ViewChild('imgModifiedWODifference') private canvasImgDifference: ElementRef<HTMLCanvasElement>;
-    
+
     isThirdClue: boolean = false;
     clue: string;
     buttonPressed = '';

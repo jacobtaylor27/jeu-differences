@@ -63,7 +63,7 @@ describe('ChatBoxComponent', () => {
         component.messages = [];
         const messageTest = 'message';
         const userType = 'personal';
-        component.addingMessage(messageTest, userType);
+        component.addMessage(messageTest, userType);
         expect(component.messages).toHaveSize(1);
         expect(component.messages[0].type).toEqual('personal');
     });
@@ -72,7 +72,7 @@ describe('ChatBoxComponent', () => {
         component.messages = [];
         const messageTest = 'message';
         const userType = 'opponent';
-        component.addingMessage(messageTest, userType);
+        component.addMessage(messageTest, userType);
         expect(component.messages).toHaveSize(1);
         expect(component.messages[0].type).toEqual('opponent');
     });

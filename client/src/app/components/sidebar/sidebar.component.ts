@@ -10,8 +10,8 @@ export class SidebarComponent implements AfterContentInit {
     gameMode: GameMode;
     gameName: string;
     isMulti: boolean;
-    penaltyTime : number;
-    differenceTime : number
+    penaltyTime: number;
+    differenceTime: number;
 
     constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
         this.gameInformationHandlerService.getConstants();
@@ -24,18 +24,16 @@ export class SidebarComponent implements AfterContentInit {
         });
     }
 
-    ngAfterContentInit():  void {
+    ngAfterContentInit(): void {
         this.penaltyTime = this.gameInformationHandlerService.gameTimeConstants.penaltyTime;
         this.differenceTime = this.gameInformationHandlerService.gameTimeConstants.successTime;
     }
 
-    isSoloMode(){
+    isSoloMode() {
         return !this.gameInformationHandlerService.isMulti;
     }
 
-    isLimitedTimeMode(){
+    isLimitedTimeMode() {
         return this.gameInformationHandlerService.isLimitedTime();
     }
-
-    
 }

@@ -16,7 +16,7 @@ export class BmpSubtractorService {
             throw new Error('Both images do not have the same height or width');
         }
         const differenceImage0px: Bmp = await this.getDifference(originalImage, modifiedImage);
-        return this.applyEnlargment(differenceImage0px, radius);
+        return this.applyEnlargement(differenceImage0px, radius);
     }
 
     private async getDifference(originalImage: Bmp, modifiedImage: Bmp): Promise<Bmp> {
@@ -36,7 +36,7 @@ export class BmpSubtractorService {
         return new Bmp({ width: modifiedImage.getWidth(), height: modifiedImage.getHeight() }, [], pixels);
     }
 
-    private async applyEnlargment(originalImage: Bmp, radius: number): Promise<Bmp> {
+    private async applyEnlargement(originalImage: Bmp, radius: number): Promise<Bmp> {
         if (radius < 0) throw new Error('radius should be greater or equal to zero');
         if (radius === 0) return originalImage;
 

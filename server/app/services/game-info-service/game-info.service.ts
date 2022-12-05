@@ -58,10 +58,6 @@ export class GameInfoService {
         }
     }
 
-    validatePageNumber(pageNb: number, total: number): number {
-        return pageNb < 1 ? 1 : pageNb > total ? 1 : pageNb;
-    }
-
     async getAllGameInfos(): Promise<PrivateGameInformation[] | null> {
         try {
             return await this.collection.find({}).toArray();
@@ -165,5 +161,9 @@ export class GameInfoService {
         } catch (err) {
             return null;
         }
+    }
+
+    private validatePageNumber(pageNb: number, total: number): number {
+        return pageNb < 1 ? 1 : pageNb > total ? 1 : pageNb;
     }
 }

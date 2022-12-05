@@ -193,7 +193,7 @@ describe('GameManagerService', () => {
         timer.setTimer(expectedGame);
         /* eslint-disable @typescript-eslint/no-magic-numbers -- test with 5 seconds */
         clock.tick(5000);
-        timer.calculateTime(expectedGame);
+        timer['calculateTime'](expectedGame);
         expect(gameManager.getTime('1')).to.equal(null);
         stub(Object.getPrototypeOf(gameManager), 'findGame').callsFake(() => expectedGame);
 

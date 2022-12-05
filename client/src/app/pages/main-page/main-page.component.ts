@@ -37,6 +37,8 @@ export class MainPageComponent {
             next: (response: HttpResponse<CarouselResponse>) => {
                 if (response && response.body) {
                     this.carouselService.setCarouselInformation(response.body.carouselInfo);
+                    this.mainPageService.setGameMode(GameMode.LimitedTime);
+                    this.openNameDialog();
                 }
             },
             error: () => {

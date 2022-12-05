@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
 import { Theme } from '@app/enums/theme';
 import { CarouselResponse } from '@app/interfaces/carousel-response';

@@ -33,8 +33,8 @@ export class CreateGamePageComponent {
         exitButtonService: ExitButtonHandlerService,
     ) {
         this.drawService.initialize();
-        this.drawingImage.set(CanvasType.Left, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
-        this.drawingImage.set(CanvasType.Right, new ImageData(Canvas.WIDTH, Canvas.HEIGHT));
+        this.drawingImage.set(CanvasType.Left, new ImageData(Canvas.Width, Canvas.Height));
+        this.drawingImage.set(CanvasType.Right, new ImageData(Canvas.Width, Canvas.Height));
         this.drawService.addDrawingCanvas(CanvasType.Left);
         this.drawService.addDrawingCanvas(CanvasType.Right);
 

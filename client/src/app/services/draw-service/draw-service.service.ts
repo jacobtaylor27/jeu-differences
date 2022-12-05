@@ -135,7 +135,7 @@ export class DrawService {
     }
 
     clearForeground(ctxCanvas: CanvasRenderingContext2D) {
-        ctxCanvas.clearRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        ctxCanvas.clearRect(0, 0, Canvas.Width, Canvas.Height);
         this.updateImages();
     }
 
@@ -160,7 +160,7 @@ export class DrawService {
             ctx.drawImage(state.background.nativeElement, 0, 0);
             ctx.globalCompositeOperation = 'source-over';
             ctx.drawImage(state.foreground.nativeElement, 0, 0);
-            (this.$drawingImage.get(state.canvasType) as Subject<ImageData>).next(ctx.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT));
+            (this.$drawingImage.get(state.canvasType) as Subject<ImageData>).next(ctx.getImageData(0, 0, Canvas.Width, Canvas.Height));
         });
     }
 
@@ -192,7 +192,7 @@ export class DrawService {
     pasteImageDataOn(targetedForeground: DrawingBoardState, selectedForeground: DrawingBoardState) {
         const targetForeground = targetedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const selectForeground = selectedForeground.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const selectedImageData = selectForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        const selectedImageData = selectForeground.getImageData(0, 0, Canvas.Width, Canvas.Height);
         targetForeground.putImageData(selectedImageData, 0, 0);
     }
 
@@ -232,8 +232,8 @@ export class DrawService {
     switchForegroundImageData(primaryCanvasState: DrawingBoardState, secondCanvasState: DrawingBoardState) {
         const primaryForeground = primaryCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         const secondForeground = secondCanvasState.foreground.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-        const rightImageData = secondForeground.getImageData(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
+        const leftImageData = primaryForeground.getImageData(0, 0, Canvas.Width, Canvas.Height);
+        const rightImageData = secondForeground.getImageData(0, 0, Canvas.Width, Canvas.Height);
         primaryForeground.putImageData(rightImageData, 0, 0);
         secondForeground.putImageData(leftImageData, 0, 0);
     }

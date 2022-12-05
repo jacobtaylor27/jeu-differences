@@ -1,7 +1,7 @@
-import { User } from '@common/user';
-import { Service } from 'typedi';
 import { RejectMessages } from '@app/interface/reject-messages';
 import { GameMode } from '@common/game-mode';
+import { User } from '@common/user';
+import { Service } from 'typedi';
 
 @Service()
 export class MultiplayerGameManager {
@@ -108,7 +108,7 @@ export class MultiplayerGameManager {
         this.gamesWaiting = this.gamesWaiting.filter((game: { gameId: string; roomId: string }) => game.roomId !== roomId);
     }
 
-    initializeRejectMessages() {
+    private initializeRejectMessages() {
         this.rejectMessages.deletedGame = 'le jeu a été supprimé';
         this.rejectMessages.wrongName = 'vous devez choisir un autre nom de joueur';
         this.rejectMessages.allGamesDeleted = 'tous les jeux ont été supprimés';

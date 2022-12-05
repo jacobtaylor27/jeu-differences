@@ -19,7 +19,7 @@ export class TimerService {
         return this.calculateTime(game);
     }
 
-    async setTimerConstant(mode: GameMode, gameId: string) {
+    async setTimerConstant(gameId: string) {
         this.timerConstant.set(gameId, await this.timeConstant.getGameTimeConstant());
     }
 
@@ -28,13 +28,13 @@ export class TimerService {
         game.next();
     }
 
-    gameTime(gameId: string) {
+    private gameTime(gameId: string) {
         const constant = this.timerConstant.get(gameId);
         const init = this.initialTime.get(gameId);
         return !constant || !init ? null : { constant, init };
     }
 
-    calculateLimitedGameTimer(game: Game): number {
+    private calculateLimitedGameTimer(game: Game): number {
         const presentTime = new Date();
         const time = this.gameTime(game.identifier);
         const totalDifferenceFound = this.differences.totalDifferenceFound(game.identifier);
@@ -55,7 +55,7 @@ export class TimerService {
         return timer < 0 ? 0 : timer;
     }
 
-    calculateTime(game: Game): number {
+    private calculateTime(game: Game): number {
         const presentTime = new Date();
         const time = this.initialTime.get(game.identifier);
         const timer = this.gameTime(game.identifier);

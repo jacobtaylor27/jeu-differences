@@ -16,7 +16,9 @@ import { CommunicationService } from '@app/services/communication/communication.
 export class DialogCreateGameComponent implements AfterViewInit {
     @ViewChild('imageDifference', { static: false }) differentImage!: ElementRef<HTMLCanvasElement>;
     theme: typeof Theme = Theme;
-    form: FormGroup = new FormGroup({ name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required]) });
+    form: FormGroup = new FormGroup({
+        name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required, this.noWhiteSpaceValidator]),
+    });
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         @Inject(MAT_DIALOG_DATA)

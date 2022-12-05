@@ -13,7 +13,7 @@
 
     <div class="success-timer-container timer-container">
         <app-game-constant-field
-        [label]="'Temps bonus lors de la détection d\'une différence (s)'"
+        [label]="'Temps bonus lors de la détection d\'une différence (secondes)'"
         [value]="gameTimeConstants.successTime"
         (valueChange)="gameTimeConstants.successTime = $event"
         [min]="gameTimeConstantsParams.successTimeMin"

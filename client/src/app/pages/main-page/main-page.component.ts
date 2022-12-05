@@ -34,6 +34,7 @@ export class MainPageComponent {
     }
 
     onClickPlayLimited(): void {
+        this.matDialog.open(LoadingScreenComponent, { disableClose: true, panelClass: 'custom-dialog-container' });
         this.communicationService.getGamesInfoByPage(1).subscribe({
             next: (response: HttpResponse<CarouselResponse>) => {
                 if (response && response.body) {

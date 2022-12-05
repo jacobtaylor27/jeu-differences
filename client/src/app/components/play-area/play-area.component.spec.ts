@@ -75,7 +75,7 @@ describe('PlayAreaComponent', () => {
                 'isLimitedTime',
                 'isClassic',
             ],
-            { $newGame: new Subject<string>() },
+            { $newGame: new Subject<void>() },
         );
         spyClueHandlerService = jasmine.createSpyObj('ClueHandlerService', ['getClue', 'showClue']);
 
@@ -299,7 +299,7 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
-        const expected = component.canvasImgDifference.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const expected = component['canvasImgDifference'].nativeElement.getContext('2d') as CanvasRenderingContext2D;
         expect(component.getContextDifferences()).toEqual(expected);
     });
 
@@ -310,7 +310,7 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
-        const expected = component.canvasImgOriginal.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const expected = component['canvasImgOriginal'].nativeElement.getContext('2d') as CanvasRenderingContext2D;
         expect(component.getContextImgOriginal()).toEqual(expected);
     });
 
@@ -321,7 +321,7 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
-        const expected = component.canvasImgModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const expected = component['canvasImgModified'].nativeElement.getContext('2d') as CanvasRenderingContext2D;
         expect(component.getContextImgModified()).toEqual(expected);
     });
 
@@ -332,7 +332,7 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
-        const expected = component.canvasOriginal.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const expected = component['canvasOriginal'].nativeElement.getContext('2d') as CanvasRenderingContext2D;
         expect(component.getContextOriginal()).toEqual(expected);
     });
 
@@ -343,7 +343,7 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'ngAfterViewInit').and.callFake(() => {});
         fixture.detectChanges();
 
-        const expected = component.canvasModified.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        const expected = component['canvasModified'].nativeElement.getContext('2d') as CanvasRenderingContext2D;
         expect(component.getContextModified()).toEqual(expected);
     });
 

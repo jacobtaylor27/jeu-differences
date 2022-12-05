@@ -1,11 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
-import { Vec2 } from '@app/interfaces/vec2';
-import { Coordinate } from '@common/coordinate';
-import { GameMode } from '@common/game-mode';
 import { GameTimeConstants } from '@common/game-time-constants';
-import { Message } from '@common/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -17,14 +13,6 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
-
-    basicGet(): Observable<Message> {
-        return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
-    }
-
-    basicPost(message: Message): Observable<void> {
-        return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
-    }
 
     deleteAllGameCards(): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/game/cards`).pipe(catchError(this.handleError<void>('deleteAllGameCards')));
@@ -61,32 +49,6 @@ export class CommunicationService {
                     modify: { width: image.modify.width, height: image.modify.height, data: Array.from(image.modify.data) },
                     differenceRadius: radius,
                     name,
-                },
-                { observe: 'response' },
-            )
-            .pipe(
-                catchError(() => {
-                    return of(null);
-                }),
-            );
-    }
-
-    createGameRoom(playerName: string, gameMode: GameMode) {
-        return this.http.post<{ id: string }>(`${this.baseUrl}/game/create`, { players: [playerName], mode: gameMode }, { observe: 'response' }).pipe(
-            catchError(() => {
-                return of(null);
-            }),
-        );
-    }
-
-    validateCoordinates(id: string, coordinate: Vec2) {
-        return this.http
-            .post<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>(
-                `${this.baseUrl}/game/difference`,
-                {
-                    x: coordinate.x,
-                    y: coordinate.y,
-                    id,
                 },
                 { observe: 'response' },
             )

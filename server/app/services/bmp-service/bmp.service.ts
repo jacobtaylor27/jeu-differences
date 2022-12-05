@@ -12,9 +12,9 @@ export class BmpService {
 
     async getBmpById(bmpId: string, filepath: string): Promise<string> {
         const fullpath: string = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
-        if (!fs.existsSync(fullpath)) throw new Error("Couldn't get the bmp by id");
         return await this.bmpEncoderService.base64Encode(fullpath);
     }
+
     async addBmp(bpmToConvert: ImageData, filepath: string): Promise<string> {
         const bmpData = {
             data: Buffer.from(await Bmp.convertRGBAToARGB(Array.from(bpmToConvert.data))),
@@ -25,9 +25,7 @@ export class BmpService {
         const rawData = bmp.encode(bmpData);
         const bmpId: string = this.idGeneratorService.generateNewId();
         const fullpath = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
-        if (!fs.existsSync(filepath)) {
-            await fs.promises.mkdir(filepath);
-        }
+
         await fs.promises.writeFile(fullpath, rawData.data);
         return bmpId;
     }

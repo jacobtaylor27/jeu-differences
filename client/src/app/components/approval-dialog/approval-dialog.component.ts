@@ -15,7 +15,7 @@ import { Theme } from '@app/enums/theme';
 })
 export class ApprovalDialogComponent {
     @Input() opponentsName: string;
-    favoriteTheme: string = Theme.ClassName;
+    favoriteTheme: string;
 
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
@@ -30,6 +30,7 @@ export class ApprovalDialogComponent {
         private readonly snackBar: MatSnackBar,
     ) {
         this.opponentsName = data.opponentsName;
+        this.favoriteTheme = Theme.ClassName;
     }
 
     onClickApprove() {

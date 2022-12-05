@@ -15,48 +15,60 @@ export class DifferencesAreaComponent implements OnInit {
         private readonly gameInformationHandlerService: GameInformationHandlerService,
         private readonly differenceDetectionHandler: DifferencesDetectionHandlerService,
     ) {
-        this.mainPlayer = this.gameInformationHandlerService.getPlayer();
-        this.opponentPlayer = this.gameInformationHandlerService.getOpponent();
-        if (!this.isMultiLimited()) {
-            this.players = !this.opponentPlayer
-                ? [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFound(this.mainPlayer.name) as string }]
-                : [
-                      { name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFound(this.mainPlayer.name) as string },
-                      { name: this.opponentPlayer.name, nbDifference: this.setNbDifferencesFound(this.opponentPlayer.name) as string },
-                  ];
-
-            this.gameInformationHandlerService.$differenceFound.subscribe((playerName: string) => {
-                const notFindIndex = -1;
-                if (this.getPlayerIndex(playerName) === notFindIndex) {
-                    return;
-                }
-                this.players[this.getPlayerIndex(playerName)].nbDifference = this.setNbDifferencesFound(playerName);
-            });
-        } else {
-            this.players = !this.opponentPlayer
-                ? [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimited() as string }]
-                : [
-                      {
-                          name: this.mainPlayer.name + ' & ' + this.opponentPlayer.name,
-                          nbDifference: this.setNbDifferencesFoundLimited() as string,
-                      },
-                  ];
-            this.gameInformationHandlerService.$playerLeft.subscribe(() => {
-                this.players = [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimited() as string }];
-            });
-
-            this.gameInformationHandlerService.$differenceFound.subscribe(() => {
-                this.players[0].nbDifference = this.setNbDifferencesFoundLimited();
-            });
-        }
+        this.setPlayersInfo();
     }
 
     ngOnInit(): void {
         this.differenceDetectionHandler.resetNumberDifferencesFound();
     }
 
-    isMultiLimited(): boolean {
-        return this.gameInformationHandlerService.isLimitedTime() && this.gameInformationHandlerService.isMulti;
+    setPlayersInfo() {
+        this.mainPlayer = this.gameInformationHandlerService.getPlayer();
+        this.opponentPlayer = this.gameInformationHandlerService.getOpponent();
+        if (!this.isLimited()) {
+            this.setPlayerInfosClassic();
+            return;
+        }
+        this.setPlayerLimitedTime();
+    }
+
+    setPlayerInfosClassic() {
+        this.players = !this.opponentPlayer
+            ? [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFound(this.mainPlayer.name) as string }]
+            : [
+                  { name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFound(this.mainPlayer.name) as string },
+                  { name: this.opponentPlayer.name, nbDifference: this.setNbDifferencesFound(this.opponentPlayer.name) as string },
+              ];
+
+        this.gameInformationHandlerService.$differenceFound.subscribe((playerName: string) => {
+            const notFindIndex = -1;
+            if (this.getPlayerIndex(playerName) === notFindIndex) {
+                return;
+            }
+            this.players[this.getPlayerIndex(playerName)].nbDifference = this.setNbDifferencesFound(playerName);
+        });
+    }
+
+    setPlayerLimitedTime() {
+        this.players = !this.opponentPlayer
+            ? [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimited() as string }]
+            : [
+                  {
+                      name: this.mainPlayer.name + ' & ' + this.opponentPlayer.name,
+                      nbDifference: this.setNbDifferencesFoundLimited() as string,
+                  },
+              ];
+        this.gameInformationHandlerService.$playerLeft.subscribe(() => {
+            this.players = [{ name: this.mainPlayer.name, nbDifference: this.setNbDifferencesFoundLimited() as string }];
+        });
+
+        this.gameInformationHandlerService.$differenceFound.subscribe(() => {
+            this.players[0].nbDifference = this.setNbDifferencesFoundLimited();
+        });
+    }
+
+    isLimited(): boolean {
+        return this.gameInformationHandlerService.isLimitedTime();
     }
 
     getPlayerIndex(playerName: string) {

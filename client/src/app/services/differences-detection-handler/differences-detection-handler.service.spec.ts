@@ -1,4 +1,4 @@
-import { HttpClientModule, HttpResponse } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -9,9 +9,8 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { Coordinate } from '@common/coordinate';
 import { SocketEvent } from '@common/socket-event';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { DifferencesDetectionHandlerService } from './differences-detection-handler.service';
 
@@ -210,10 +209,6 @@ describe('DifferencesDetectionHandlerService', () => {
     it('should verify with server if coord is not valid', () => {
         const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-        spyCommunicationService.validateCoordinates.and.callFake(() => {
-            return of({} as HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }>);
-        });
 
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyDifferenceNotDetected = spyOn(service, 'differenceNotDetected').and.callFake(() => {});

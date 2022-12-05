@@ -9,7 +9,7 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./chat-box.component.scss'],
 })
 export class ChatBoxComponent implements OnInit, AfterViewInit {
-    @ViewChild('scroll', { static: true }) scroll: ElementRef;
+    @ViewChild('scroll', { static: true }) private scroll: ElementRef;
     messages: ChatMessage[] = [];
     currentMessage: string;
 
@@ -30,10 +30,10 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.communicationSocket.on(SocketEvent.Message, (message: string) => {
-            this.addingMessage(message, 'opponent');
+            this.addMessage(message, 'opponent');
         });
         this.communicationSocket.on(SocketEvent.EventMessage, (message: string) => {
-            this.addingMessage(message, 'gameMaster');
+            this.addMessage(message, 'gameMaster');
         });
     }
 
@@ -54,12 +54,12 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     }
 
     onClickSend(): void {
-        this.addingMessage(this.currentMessage, 'personal');
+        this.addMessage(this.currentMessage, 'personal');
         this.communicationSocket.send(SocketEvent.Message, { message: this.currentMessage, roomId: this.gameInformation.roomId });
         this.currentMessage = '';
     }
 
-    addingMessage(message: string, senderType: string) {
+    addMessage(message: string, senderType: string) {
         if (message.trim().length !== 0) {
             this.messages.push({ content: message, type: senderType });
         }

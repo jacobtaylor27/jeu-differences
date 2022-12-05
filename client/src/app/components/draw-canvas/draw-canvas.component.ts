@@ -12,10 +12,10 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./draw-canvas.component.scss'],
 })
 export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('background', { static: false }) background!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('foreground', { static: false }) foreground!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('noContentCanvas', { static: false }) noContentCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() canvasType: CanvasType;
+    @ViewChild('background', { static: false }) private background!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('foreground', { static: false }) private foreground!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('noContentCanvas', { static: false }) private noContentCanvas!: ElementRef<HTMLCanvasElement>;
 
     constructor(private toolBoxService: ToolBoxService, private drawService: DrawService, private canvasStateService: CanvasStateService) {}
 

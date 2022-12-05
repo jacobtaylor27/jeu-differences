@@ -21,12 +21,12 @@ import { SocketEvent } from '@common/socket-event';
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
-    @ViewChild('actionsGameOriginal') canvasOriginal: ElementRef<HTMLCanvasElement>;
-    @ViewChild('actionsGameModified') canvasModified: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgOriginal') canvasImgOriginal: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModified') canvasImgModified: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModifiedWODifference') canvasImgDifference: ElementRef<HTMLCanvasElement>;
     @Input() gameId: string;
+    @ViewChild('actionsGameOriginal') private canvasOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('actionsGameModified') private canvasModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgOriginal') private canvasImgOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModified') private canvasImgModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModifiedWODifference') private canvasImgDifference: ElementRef<HTMLCanvasElement>;
 
     isThirdClue: boolean = false;
     clue: string;
@@ -74,19 +74,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     ngOnInit(): void {
-        this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
-            if (data.nbClues === 3) {
-                this.isThirdClue = true;
-                this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
-                setInterval(() => {
-                    this.isThirdClue = false;
-                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers  -- time to show third clue coordinates
-                }, 5000);
-                return;
-            }
-            this.clueHandlerService.showClue(this.getContextOriginal(), data.clue);
-            this.clueHandlerService.showClue(this.getContextModified(), data.clue);
-        });
+        this.handleClue();
     }
 
     ngAfterViewInit(): void {
@@ -109,12 +97,28 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
         }
     }
 
+    handleClue() {
+        this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
+            if (data.nbClues === 3) {
+                this.isThirdClue = true;
+                this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
+                setInterval(() => {
+                    this.isThirdClue = false;
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers  -- time to show third clue coordinates
+                }, 5000);
+                return;
+            }
+            this.clueHandlerService.showClue(this.getContextOriginal(), data.clue);
+            this.clueHandlerService.showClue(this.getContextModified(), data.clue);
+        });
+    }
+
     handleSocketDifferenceFound() {
         this.communicationSocketService.on(SocketEvent.NewGameBoard, (data: PublicGameInformation) => {
             this.differencesDetectionHandlerService.playCorrectSound();
             this.gameInfoHandlerService.setGameInformation(data);
             this.displayImages();
-            this.gameInfoHandlerService.$newGame.next('');
+            this.gameInfoHandlerService.$newGame.next();
         });
         this.communicationSocketService.on<DifferenceFound>(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
             this.differencesDetectionHandlerService.setNumberDifferencesFound(

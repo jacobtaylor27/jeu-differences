@@ -215,24 +215,6 @@ describe('GameInformationHandlerService', () => {
         expect(service.getGameName()).toEqual('test');
     });
 
-    it('should get game information', () => {
-        const gameInformation = {
-            id: '1',
-            name: 'test',
-            thumbnail: 'image',
-            idOriginalBmp: 'original',
-            idEditedBmp: 'edited',
-            soloScore: [],
-            multiplayerScore: [],
-            differenceRadius: 2,
-            differences: [],
-            nbDifferences: 0,
-            isMulti: false,
-        };
-        service.gameInformation = gameInformation;
-        expect(service.getGameInformation()).toEqual(gameInformation);
-    });
-
     it('reset player', () => {
         service.resetPlayers();
         expect(service.players).toEqual([]);

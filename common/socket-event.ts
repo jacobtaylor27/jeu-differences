@@ -6,7 +6,7 @@ export enum SocketEvent {
     Connection = 'connection',
     Disconnect = 'disconnect',
     CreateGame = 'createGame',
-    CreateGameMulti = 'createGameMutli',
+    CreateGameMulti = 'createGameMulti',
     GameCreated = 'gameCreated',
     GameDeleted = 'gameDeleted',
     GamesDeleted = 'gamesDeleted',

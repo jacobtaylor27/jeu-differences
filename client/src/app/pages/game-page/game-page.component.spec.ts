@@ -68,7 +68,7 @@ describe('GamePageComponent', () => {
                 'isClassic',
                 'getConstants',
             ],
-            { $differenceFound: new Subject<string>(), $newGame: new Subject<string>(), $playerLeft: new Subject() },
+            { $differenceFound: new Subject<string>(), $newGame: new Subject<void>(), $playerLeft: new Subject() },
         );
         gameInformationHandlerServiceSpy.getPlayer.and.callFake(() => {
             return { name: 'test', nbDifferences: 0 };

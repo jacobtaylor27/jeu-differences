@@ -31,7 +31,7 @@ describe('SidebarComponent', () => {
                 'isClassic',
                 'getConstants',
             ],
-            { $newGame: new Subject<string>(), $differenceFound: new Subject<string>() },
+            { $newGame: new Subject<void>(), $differenceFound: new Subject<string>() },
         );
         spyDifferencesDetection = jasmine.createSpyObj('DifferencesDetectionHandlerService', ['nbDifferencesFound', 'resetNumberDifferencesFound']);
         spyGameInfosService.getPlayer.and.callFake(() => {
@@ -105,6 +105,6 @@ describe('SidebarComponent', () => {
         spyGameInfosService.$newGame.subscribe(() => {
             expect(component.gameName).not.toEqual('test');
         });
-        spyGameInfosService.$newGame.next('');
+        spyGameInfosService.$newGame.next();
     });
 });

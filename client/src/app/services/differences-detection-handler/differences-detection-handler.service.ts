@@ -71,7 +71,6 @@ export class DifferencesDetectionHandlerService {
         ctx.fillText('Erreur', mousePosition.x, mousePosition.y, 30);
         this.mouseIsDisabled = true;
 
-        // block
         setTimeout(() => {
             this.mouseIsDisabled = false;
             ctx.clearRect(mousePosition.x, mousePosition.y, 30, -30);

@@ -63,7 +63,7 @@ describe('Bmp decoder service', () => {
     it('decodeBIntoBmp(...) Should throw an error if the file is corrupted', async () => {
         const filepath = './assets/test-bmp/corrupted.bmp';
         await expect(bmpDecoderService.decodeBIntoBmp(filepath))
-            .to.eventually.be.rejectedWith('Le décodage du bmp a échoué')
+            .to.eventually.be.rejectedWith('Decoding the BMP file failed')
             .and.be.an.instanceOf(Error);
     });
 });

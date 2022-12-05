@@ -35,7 +35,7 @@ export class GameManagerService {
             gameCard = (await this.gameInfo.getGameInfoById(gameCardId)) as PrivateGameInformation;
             game = new Game(playerInfo, { info: gameCard, mode });
         }
-        await this.timer.setTimerConstant(mode, game.identifier);
+        await this.timer.setTimerConstant(game.identifier);
         this.games.set(game.identifier, game);
         this.difference.setGameDifferences(game.identifier);
         this.difference.setPlayerDifferences(game.identifier, playerInfo.player.id);

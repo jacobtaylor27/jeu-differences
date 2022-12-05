@@ -127,7 +127,7 @@ describe('Multiplayer Game Manager', () => {
     });
 
     it('should initialize the messages', () => {
-        multiplayerGameManager.initializeRejectMessages();
+        multiplayerGameManager['initializeRejectMessages']();
 
         expect(multiplayerGameManager.rejectMessages.deletedGame).to.equal('le jeu a été supprimé');
         expect(multiplayerGameManager.rejectMessages.wrongName).to.equal('vous devez choisir un autre nom de joueur');

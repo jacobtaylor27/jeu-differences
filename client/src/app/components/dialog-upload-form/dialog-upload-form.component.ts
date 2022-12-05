@@ -13,9 +13,8 @@ import { Subject } from 'rxjs';
 })
 export class DialogUploadFormComponent {
     isPropertiesImageCorrect: ImageCorrect = { size: true, type: true, format: true };
-    img: ImageBitmap;
     isFormSubmitted: boolean = false;
-    canvasType: typeof CanvasType = CanvasType;
+    private img: ImageBitmap;
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: { canvas: CanvasType }, private toolService: ToolBoxService) {}
 

@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
 import { UserNameInputComponent } from '@app/components/user-name-input/user-name-input.component';
 import { Theme } from '@app/enums/theme';
 import { CarouselResponse } from '@app/interfaces/carousel-response';
@@ -33,18 +34,21 @@ export class MainPageComponent {
     }
 
     onClickPlayLimited(): void {
+        this.matDialog.open(LoadingScreenComponent, { disableClose: true, panelClass: 'custom-dialog-container' });
         this.communicationService.getGamesInfoByPage(1).subscribe({
             next: (response: HttpResponse<CarouselResponse>) => {
                 if (response && response.body) {
+                    this.matDialog.closeAll();
                     this.carouselService.setCarouselInformation(response.body.carouselInfo);
+                    this.mainPageService.setGameMode(GameMode.LimitedTime);
+                    this.openNameDialog();
                 }
             },
             error: () => {
                 this.router.redirectToErrorPage();
+                this.matDialog.closeAll();
             },
         });
-        this.mainPageService.setGameMode(GameMode.LimitedTime);
-        this.openNameDialog();
     }
 
     openNameDialog(isMulti: boolean = false) {

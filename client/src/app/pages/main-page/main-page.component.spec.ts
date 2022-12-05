@@ -26,7 +26,7 @@ describe('MainPageComponent', () => {
     beforeEach(async () => {
         spyMainPageService = jasmine.createSpyObj('GamePageService', ['setGameMode']);
         spyGameInfosHandlerService = jasmine.createSpyObj('GameInformationHandlerService', ['setGameMode', 'getGameName', 'getGameMode']);
-        spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
+        spyMatDialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open', 'closeAll']);
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getAllGameInfos', 'getGamesInfoByPage']);
         spyRouter = jasmine.createSpyObj('RouterService', ['redirectToErrorPage']);
 

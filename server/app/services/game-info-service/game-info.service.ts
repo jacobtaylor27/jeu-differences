@@ -82,7 +82,7 @@ export class GameInfoService {
                 await this.bmpSubtractorService.getDifferenceBMP(images.original, images.modify, radius),
             );
             const compressedThumbnail = LZString.compressToUTF16(
-                await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idOriginalBmp + BMP_EXTENSION),
+                await this.bmpEncoderService.base64Encode(this.srcPath + '/' + ID_PREFIX + idEditedBmp + BMP_EXTENSION),
             );
 
             await this.addGameInfo({

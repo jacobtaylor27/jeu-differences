@@ -9,9 +9,9 @@ import { SocketEvent } from '@common/socket-event';
     providedIn: 'root',
 })
 export class CheatModeService {
-    coords: Coordinate[][];
-    intervals: { difference: Coordinate[]; clocks: number[] }[] = [];
     isCheatModeActivated: boolean = false;
+    private coords: Coordinate[][];
+    private intervals: { difference: Coordinate[]; clocks: number[] }[] = [];
 
     constructor(
         private differenceDetectionHandler: DifferencesDetectionHandlerService,

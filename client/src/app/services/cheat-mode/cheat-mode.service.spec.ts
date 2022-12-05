@@ -55,12 +55,12 @@ describe('CheatModeService', () => {
     });
 
     it('should stop all clock for cheat mode', () => {
-        service.intervals = [{ difference: [], clocks: [1] }];
+        service['intervals'] = [{ difference: [], clocks: [1] }];
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const stopCheatModeDifference = spyOn(service, 'stopCheatModeDifference').and.callFake(() => {});
         expect(service['stopCheatMode']({} as CanvasRenderingContext2D, {} as CanvasRenderingContext2D)).toEqual(false);
         expect(stopCheatModeDifference).toHaveBeenCalled();
-        expect(service.intervals).toEqual([]);
+        expect(service['intervals']).toEqual([]);
     });
 
     it('should start cheat mode difference', () => {
@@ -75,12 +75,12 @@ describe('CheatModeService', () => {
         );
         fetchAllDifferenceNotFound.and.resolveTo();
         const spyStartCheatModeDifference = spyOn(Object.getPrototypeOf(service), 'startCheatModeDifference').and.callFake(() => [1]);
-        service.coords = [[{ x: 0, y: 0 }]];
+        service['coords'] = [[{ x: 0, y: 0 }]];
         expect(await service['startCheatMode']({} as CanvasRenderingContext2D, {} as CanvasRenderingContext2D)).toEqual(true);
         expect(fetchAllDifferenceNotFound).toHaveBeenCalled();
         expect(spyStartCheatModeDifference).toHaveBeenCalled();
         expect(
-            service.intervals.find(
+            service['intervals'].find(
                 (interval: { difference: Coordinate[]; clocks: number[] }) =>
                     interval.difference[0].x === 0 && interval.difference[0].y === 0 && interval.clocks[0] === 1,
             ),
@@ -92,13 +92,13 @@ describe('CheatModeService', () => {
         const fetch = service['fetchAllDifferenceNotFound']();
         socketHelper.peerSideEmit(SocketEvent.FetchDifferences, expectedCoords);
         await fetch;
-        expect(service.coords).toEqual(expectedCoords);
+        expect(service['coords']).toEqual(expectedCoords);
     });
 
     it('should find clocks of a specific difference', () => {
         const expectedDifference = [{ x: 0, y: 0 }];
         const expectedInterval = { difference: expectedDifference, clocks: [1] };
-        service.intervals = [expectedInterval];
+        service['intervals'] = [expectedInterval];
         expect(service.findClocksDifference(expectedDifference)).toEqual(expectedInterval);
     });
 

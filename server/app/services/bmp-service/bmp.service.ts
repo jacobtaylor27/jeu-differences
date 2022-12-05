@@ -14,6 +14,7 @@ export class BmpService {
         const fullpath: string = path.join(filepath, ID_PREFIX + bmpId + BMP_EXTENSION);
         return await this.bmpEncoderService.base64Encode(fullpath);
     }
+
     async addBmp(bpmToConvert: ImageData, filepath: string): Promise<string> {
         const bmpData = {
             data: Buffer.from(await Bmp.convertRGBAToARGB(Array.from(bpmToConvert.data))),

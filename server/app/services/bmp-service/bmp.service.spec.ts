@@ -52,6 +52,6 @@ describe('Bmp service', async () => {
 
         await bmpService.addBmp(await bmpObj.toImageData(), dir);
         await bmpService.deleteAllSourceImages(dir);
-        expect((await fs.promises.readdir(dir)).length).to.equal(0);
+        expect((await fs.promises.readdir(dir)).length).to.equal(1);
     });
 });

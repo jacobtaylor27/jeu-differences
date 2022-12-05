@@ -1,7 +1,7 @@
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -49,13 +49,13 @@ describe('DialogCreateGameComponent', () => {
     });
 
     it('should verify if the game name is valid', () => {
-        let form = {value : 'a    '} as FormControl;
-        expect(component.noWhiteSpaceValidator(form)).toEqual(null)    
+        const form = { value: 'a    ' } as FormControl;
+        expect(component.noWhiteSpaceValidator(form)).toEqual(null);
     });
 
     it('should verify if the game name is valid', () => {
-        let form = {value : ''} as FormControl;
-        expect(component.noWhiteSpaceValidator(form)).toEqual({whitespace : true})    
+        const form = { value: '' } as FormControl;
+        expect(component.noWhiteSpaceValidator(form)).toEqual({ whitespace: true });
     });
 
     it('should post the game', () => {

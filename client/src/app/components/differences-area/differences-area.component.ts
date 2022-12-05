@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
+import { Component } from '@angular/core';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 
 @Component({
@@ -7,19 +6,12 @@ import { GameInformationHandlerService } from '@app/services/game-information-ha
     templateUrl: './differences-area.component.html',
     styleUrls: ['./differences-area.component.scss'],
 })
-export class DifferencesAreaComponent implements OnInit {
+export class DifferencesAreaComponent {
     players: { name: string; nbDifference: string }[];
     private mainPlayer: { name: string; nbDifferences: number };
     private opponentPlayer: { name: string; nbDifferences: number };
-    constructor(
-        private readonly gameInformationHandlerService: GameInformationHandlerService,
-        private readonly differenceDetectionHandler: DifferencesDetectionHandlerService,
-    ) {
+    constructor(private readonly gameInformationHandlerService: GameInformationHandlerService) {
         this.setPlayersInfo();
-    }
-
-    ngOnInit(): void {
-        this.differenceDetectionHandler.resetNumberDifferencesFound();
     }
 
     setPlayersInfo() {

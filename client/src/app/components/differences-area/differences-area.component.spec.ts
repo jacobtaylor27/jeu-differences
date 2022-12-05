@@ -2,7 +2,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
 import { AppMaterialModule } from '@app/modules/material.module';
-import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
 import { Subject } from 'rxjs';
 
@@ -12,7 +11,6 @@ describe('DifferencesAreaComponent', () => {
     let component: DifferencesAreaComponent;
     let fixture: ComponentFixture<DifferencesAreaComponent>;
     let spyGameInfosService: jasmine.SpyObj<GameInformationHandlerService>;
-    let differenceDetectionHandlerSpy: jasmine.SpyObj<DifferencesDetectionHandlerService>;
     beforeEach(async () => {
         spyGameInfosService = jasmine.createSpyObj(
             'GameInformationHandlerService',
@@ -22,11 +20,7 @@ describe('DifferencesAreaComponent', () => {
                 $playerLeft: new Subject<string>(),
             },
         );
-        differenceDetectionHandlerSpy = jasmine.createSpyObj('DifferencesDetectionHandlerService', [
-            'resetNumberDifferencesFound',
-            'resetNumberDifferencesFound',
-            'setNumberDifferencesFound',
-        ]);
+
         spyGameInfosService.getPlayer.and.callFake(() => {
             return { name: 'test', nbDifferences: 0 };
         });
@@ -40,10 +34,6 @@ describe('DifferencesAreaComponent', () => {
                 {
                     provide: GameInformationHandlerService,
                     useValue: spyGameInfosService,
-                },
-                {
-                    provide: DifferencesDetectionHandlerService,
-                    useValue: differenceDetectionHandlerSpy,
                 },
             ],
         }).compileComponents();
@@ -121,7 +111,7 @@ describe('DifferencesAreaComponent', () => {
         });
         spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;
-        const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
+        const newComponent = new DifferencesAreaComponent(spyGameInfosService);
         spyOn(newComponent, 'setNbDifferencesFound').and.callFake(() => '1/10');
         expect(newComponent.players).toEqual([{ name: 'test & test2', nbDifference: '0' }]);
     });
@@ -129,7 +119,7 @@ describe('DifferencesAreaComponent', () => {
     it('should call setNbDifferencesFoundLimited on $playerLeft.next', () => {
         spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;
-        const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
+        const newComponent = new DifferencesAreaComponent(spyGameInfosService);
         const spyNbDifferenceFound = spyOn(newComponent, 'setNbDifferencesFoundLimited').and.callFake(() => '1/10');
         spyGameInfosService.$playerLeft.subscribe(() => {
             expect(spyNbDifferenceFound).toHaveBeenCalled();
@@ -141,7 +131,7 @@ describe('DifferencesAreaComponent', () => {
     it('should call setNbDifferencesFoundLimited on $differenceFound.next', () => {
         spyGameInfosService.isLimitedTime.and.callFake(() => true);
         spyGameInfosService.isMulti = true;
-        const newComponent = new DifferencesAreaComponent(spyGameInfosService, differenceDetectionHandlerSpy);
+        const newComponent = new DifferencesAreaComponent(spyGameInfosService);
         const spyNbDifferenceFound = spyOn(newComponent, 'setNbDifferencesFoundLimited').and.callFake(() => '1/10');
         spyGameInfosService.$differenceFound.subscribe(() => {
             expect(spyNbDifferenceFound).toHaveBeenCalled();

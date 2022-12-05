@@ -12,7 +12,7 @@ export class BmpDecoderService {
         try {
             bmpData = bmp.decode(bmpBuffer);
         } catch (e) {
-            throw new Error('Le décodage du bmp a échoué');
+            throw new Error('Decoding the BMP file failed');
         }
         const rawData: number[] = bmpData.data.toJSON().data;
         return new Bmp({ width: bmpData.width, height: bmpData.height }, rawData);

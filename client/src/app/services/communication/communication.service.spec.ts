@@ -180,6 +180,19 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('PATCH');
     });
 
+    it('should handle error when set game time constant', () => {
+        service.setGameTimeConstants({} as GameTimeConstants).subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/constants`);
+        expect(req.request.method).toBe('PATCH');
+        req.error(new ProgressEvent('Random error has occur'));
+    });
+
     it('should refresh all the scores for each game', () => {
         service.refreshAllGames().subscribe({
             next: (response: void) => {

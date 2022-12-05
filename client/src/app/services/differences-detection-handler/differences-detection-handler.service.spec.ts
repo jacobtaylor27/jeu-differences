@@ -57,9 +57,9 @@ describe('DifferencesDetectionHandlerService', () => {
     });
     it('should set the difference found for each player', () => {
         const expectedBeforeMainPlayerScore = 0;
-        service.setNumberDifferencesFound(true, 3);
+        service.setNumberDifferencesFound(true);
         expect(spyGameInfoHandlerService.players[0].nbDifferences).toEqual(expectedBeforeMainPlayerScore + 1);
-        service.setNumberDifferencesFound(false, 3);
+        service.setNumberDifferencesFound(false);
         expect(spyGameInfoHandlerService.players[1].nbDifferences).toEqual(expectedBeforeMainPlayerScore + 1);
     });
 

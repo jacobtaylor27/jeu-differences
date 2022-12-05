@@ -23,7 +23,7 @@
     
     <div class="penalty-timer-container timer-container">
         <app-game-constant-field
-        [label]="'Temps de pénalité lors de la demande d\'une indice (s)'"
+        [label]="'Temps de pénalité lors de la demande d\'une indice (secondes)'"
         [value]="gameTimeConstants.penaltyTime"
         (valueChange)="gameTimeConstants.penaltyTime = $event"
         [min]="gameTimeConstantsParams.penaltyTimeMin"

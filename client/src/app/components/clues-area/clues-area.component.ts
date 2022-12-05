@@ -9,7 +9,7 @@ import { NUMBER_CLUES } from '@common/clues';
 })
 export class CluesAreaComponent implements OnInit {
     clueAskedCounter: number;
-    isDisabled: boolean;
+    private isDisabled: boolean;
 
     constructor(public gameInformation: GameInformationHandlerService, private readonly clueHandlerService: ClueHandlerService) {
         this.clueAskedCounter = 0;
@@ -32,5 +32,9 @@ export class CluesAreaComponent implements OnInit {
                 this.isDisabled = true;
             }
         });
+    }
+
+    isButtonDisabled() {
+        return this.isDisabled;
     }
 }

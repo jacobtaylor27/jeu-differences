@@ -37,6 +37,10 @@ export class DialogCreateGameComponent implements AfterViewInit {
         ctx.putImageData(new ImageData(new Uint8ClampedArray(this.data.differenceImage), Canvas.WIDTH, Canvas.HEIGHT, { colorSpace: 'srgb' }), 0, 0);
     }
 
+    noWhiteSpaceValidator(control: FormControl): { [key: string]: boolean } | null {
+        return !((control.value || '').trim().length === 0) ? null : { whitespace: true };
+    }
+
     createGame() {
         this.dialog.open(LoadingScreenComponent, { disableClose: true, panelClass: 'custom-dialog-container' });
         this.communication

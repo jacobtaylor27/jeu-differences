@@ -19,7 +19,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
     form: FormGroup = new FormGroup({
         name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required, this.noWhiteSpaceValidator]),
     });
-    
+
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         @Inject(MAT_DIALOG_DATA)

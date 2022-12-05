@@ -48,6 +48,16 @@ describe('DialogCreateGameComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('should verify if the game name is valid', () => {
+        let form = {value : 'a    '} as FormControl;
+        expect(component.noWhiteSpaceValidator(form)).toEqual(null)    
+    });
+
+    it('should verify if the game name is valid', () => {
+        let form = {value : ''} as FormControl;
+        expect(component.noWhiteSpaceValidator(form)).toEqual({whitespace : true})    
+    });
+
     it('should post the game', () => {
         spyCommunicationService.createGame.and.callFake(() => {
             return of({} as HttpResponse<Record<string, never>>);

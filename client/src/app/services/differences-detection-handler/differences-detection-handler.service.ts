@@ -12,10 +12,6 @@ import { SocketEvent } from '@common/socket-event';
 })
 export class DifferencesDetectionHandlerService {
     mouseIsDisabled: boolean = false;
-    nbDifferencesFound: number;
-    nbTotalDifferences: number;
-    isGameOver: boolean = false;
-    contextImgModified: CanvasRenderingContext2D;
     correctSound = new Audio('assets/correctanswer.wav');
     wrongSound = new Audio('assets/wronganswer.wav');
 
@@ -25,16 +21,9 @@ export class DifferencesDetectionHandlerService {
         private readonly gameInfoHandlerService: GameInformationHandlerService,
     ) {}
 
-    setNumberDifferencesFound(isPlayerAction: boolean, nbTotalDifference: number) {
-        this.nbTotalDifferences = nbTotalDifference;
+    setNumberDifferencesFound(isPlayerAction: boolean) {
         this.gameInfoHandlerService.players[isPlayerAction ? 0 : 1].nbDifferences++;
         this.gameInfoHandlerService.$differenceFound.next(this.gameInfoHandlerService.players[isPlayerAction ? 0 : 1].name);
-        this.nbDifferencesFound++;
-    }
-
-    resetNumberDifferencesFound() {
-        this.nbTotalDifferences = 0;
-        this.nbDifferencesFound = 0;
     }
 
     playWrongSound() {
@@ -59,10 +48,6 @@ export class DifferencesDetectionHandlerService {
         this.socketService.once(SocketEvent.DifferenceNotFound, () => {
             this.differenceNotDetected(mousePosition, ctx);
         });
-    }
-
-    setContextImgModified(ctx: CanvasRenderingContext2D) {
-        this.contextImgModified = ctx;
     }
 
     differenceNotDetected(mousePosition: Vec2, ctx: CanvasRenderingContext2D) {

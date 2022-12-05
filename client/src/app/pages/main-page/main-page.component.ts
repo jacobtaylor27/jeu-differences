@@ -46,6 +46,7 @@ export class MainPageComponent {
             },
             error: () => {
                 this.router.redirectToErrorPage();
+                this.matDialog.closeAll();
             },
         });
     }

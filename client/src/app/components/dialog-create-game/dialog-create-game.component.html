@@ -4,7 +4,7 @@
     <canvas width="640px" height="480px" id="imageDifference" #imageDifference></canvas>
     <form [formGroup]="this.form">
         <mat-form-field>
-            <input matInput type="text" placeholder="Nom du jeu" formControlName="name" />
+            <input matInput type="text" placeholder="Nom du jeu" formControlName="name" maxlength="20"/>
         </mat-form-field>
         <mat-error *ngIf="!this.form.valid"> Le nom du jeu doit contenir des lettres</mat-error>
     </form>

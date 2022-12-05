@@ -1,7 +1,7 @@
 import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -17,12 +17,12 @@ describe('DialogCreateGameComponent', () => {
     let fixture: ComponentFixture<DialogCreateGameComponent>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
     let spyRouter: jasmine.SpyObj<Router>;
-    const image = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
+    const image = new ImageData(Canvas.Width, Canvas.Height);
     const pixelLength = 4;
     const model = {
         expansionRadius: 0,
         nbDifference: 0,
-        differenceImage: new Array(pixelLength * Canvas.WIDTH * Canvas.HEIGHT).fill(0),
+        differenceImage: new Array(pixelLength * Canvas.Width * Canvas.Height).fill(0),
         src: image,
         difference: image,
     };
@@ -46,6 +46,16 @@ describe('DialogCreateGameComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should verify if the game name is valid', () => {
+        const form = { value: 'a    ' } as FormControl;
+        expect(component.noWhiteSpaceValidator(form)).toEqual(null);
+    });
+
+    it('should verify if the game name is valid', () => {
+        const form = { value: '' } as FormControl;
+        expect(component.noWhiteSpaceValidator(form)).toEqual({ whitespace: true });
     });
 
     it('should post the game', () => {

@@ -80,7 +80,6 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     ngAfterViewInit(): void {
         this.cheatMode.handleSocketEvent(this.getContextOriginal(), this.getContextModified());
         this.displayImages();
-        this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
     }
 
     ngOnDestroy() {
@@ -121,10 +120,7 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
             this.gameInfoHandlerService.$newGame.next();
         });
         this.communicationSocketService.on<DifferenceFound>(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
-            this.differencesDetectionHandlerService.setNumberDifferencesFound(
-                !data.isPlayerFoundDifference,
-                this.gameInfoHandlerService.getNbTotalDifferences(),
-            );
+            this.differencesDetectionHandlerService.setNumberDifferencesFound(!data.isPlayerFoundDifference);
             if (this.cheatMode.isCheatModeActivated) {
                 this.cheatMode.stopCheatModeDifference(this.getContextOriginal(), this.getContextModified(), data.coords);
             }

@@ -59,7 +59,7 @@ describe('CluesAreaComponent', () => {
         component.handleClueAsked();
         spyClueHandler.$clueAsked.next();
         expect(component.clueAskedCounter).toEqual(1);
-        expect(component.isDisabled).toEqual(false);
+        expect(component['isDisabled']).toEqual(false);
         spyClueHandler.getNbCluesAsked.and.callFake(() => {
             return 3;
         });

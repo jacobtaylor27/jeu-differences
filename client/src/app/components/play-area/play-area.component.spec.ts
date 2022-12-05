@@ -183,11 +183,9 @@ describe('PlayAreaComponent', () => {
         spyOn(component, 'getContextOriginal').and.callFake(() => ctx);
         spyOn(component, 'getContextModified').and.callFake(() => ctx);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
-        differenceService.setContextImgModified.and.callFake(() => {});
         component.ngAfterViewInit();
 
         expect(spyDisplayImage).toHaveBeenCalledTimes(3);
-        expect(differenceService.setContextImgModified).toHaveBeenCalled();
     });
 
     it('should return width', () => {

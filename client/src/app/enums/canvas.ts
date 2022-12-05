@@ -1,4 +1,4 @@
 export enum Canvas {
-    WIDTH = 640,
-    HEIGHT = 480,
+    Width = 640,
+    Height = 480,
 }

@@ -55,34 +55,12 @@ describe('DifferencesDetectionHandlerService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-
-    it('should set ctx', () => {
-        const canvas = CanvasTestHelper.createCanvas(SIZE.x, SIZE.y);
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        service.setContextImgModified(ctx);
-        expect(service.contextImgModified).toEqual(ctx);
-    });
-
-    it('should set number of differences found', () => {
-        service.nbDifferencesFound = 1;
-        service.setNumberDifferencesFound(false, 3);
-        expect(service.nbDifferencesFound).toEqual(2);
-        expect(service.nbTotalDifferences).toEqual(3);
-    });
-
     it('should set the difference found for each player', () => {
         const expectedBeforeMainPlayerScore = 0;
-        service.setNumberDifferencesFound(true, 3);
+        service.setNumberDifferencesFound(true);
         expect(spyGameInfoHandlerService.players[0].nbDifferences).toEqual(expectedBeforeMainPlayerScore + 1);
-        service.setNumberDifferencesFound(false, 3);
+        service.setNumberDifferencesFound(false);
         expect(spyGameInfoHandlerService.players[1].nbDifferences).toEqual(expectedBeforeMainPlayerScore + 1);
-    });
-    it('should reset number differences found', () => {
-        service.nbDifferencesFound = 5;
-        service.nbTotalDifferences = 5;
-        service.resetNumberDifferencesFound();
-        expect(service.nbDifferencesFound).toEqual(0);
-        expect(service.nbTotalDifferences).toEqual(0);
     });
 
     it('should play sound', () => {
@@ -157,8 +135,6 @@ describe('DifferencesDetectionHandlerService', () => {
         expect(spyPlayCorrectSound).toHaveBeenCalled();
         expect(spyDisplay).toHaveBeenCalled();
         expect(spyClear).toHaveBeenCalled();
-
-        service.isGameOver = true;
 
         service.differenceDetected(ctx, ctx, []);
         expect(spyDisplay).toHaveBeenCalled();

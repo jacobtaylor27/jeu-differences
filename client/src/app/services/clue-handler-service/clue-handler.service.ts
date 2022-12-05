@@ -12,8 +12,8 @@ import { NUMBER_CLUES } from '@common/clues';
     providedIn: 'root',
 })
 export class ClueHandlerService {
-    clueAskedCounter: number = 0;
     $clueAsked: Subject<void> = new Subject();
+    private clueAskedCounter: number = 0;
 
     constructor(public communicationSocket: CommunicationSocketService, public gameInformation: GameInformationHandlerService) {}
 

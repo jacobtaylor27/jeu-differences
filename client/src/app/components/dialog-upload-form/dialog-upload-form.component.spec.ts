@@ -165,10 +165,10 @@ describe('DialogUploadFormComponent', () => {
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left) as Subject<ImageBitmap>, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Right) as Subject<ImageBitmap>, 'next');
         toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left)?.subscribe((newImage: ImageBitmap) => {
-            expect(newImage).toEqual(component.img);
+            expect(newImage).toEqual(component['img']);
         });
         toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Right)?.subscribe((newImage: ImageBitmap) => {
-            expect(newImage).toEqual(component.img);
+            expect(newImage).toEqual(component['img']);
         });
         component.onSubmit();
         expect(spyDiff).toHaveBeenCalled();
@@ -181,7 +181,7 @@ describe('DialogUploadFormComponent', () => {
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left) as Subject<ImageBitmap>, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Right) as Subject<ImageBitmap>, 'next');
         toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left)?.subscribe((newImage: ImageBitmap) => {
-            expect(newImage).toEqual(component.img);
+            expect(newImage).toEqual(component['img']);
         });
         component.onSubmit();
         expect(spyDiff).toHaveBeenCalled();
@@ -194,7 +194,7 @@ describe('DialogUploadFormComponent', () => {
         const spyDiff = spyOn(toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left) as Subject<ImageBitmap>, 'next');
         const spySource = spyOn(toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Right) as Subject<ImageBitmap>, 'next');
         toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Right)?.subscribe((newImage: ImageBitmap) => {
-            expect(newImage).toEqual(component.img);
+            expect(newImage).toEqual(component['img']);
         });
         component.onSubmit();
         expect(spyDiff).not.toHaveBeenCalled();

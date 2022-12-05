@@ -55,14 +55,14 @@ describe('ClueHandlerService', () => {
 
     it('should increment clue counter when clue is asked', () => {
         const expectedCount = 1;
-        service.clueAskedCounter = 0;
+        service['clueAskedCounter'] = 0;
         spyOn(service, 'isGameOver').and.callFake(() => false);
         const spySend = spyOn(service.communicationSocket, 'send');
         service.getClue();
         socketHelper.peerSideEmit(SocketEvent.Clue, 'clue');
         socketHelper.peerSideEmit(SocketEvent.EventMessage, 'event');
         expect(spySend).toHaveBeenCalled();
-        expect(service.clueAskedCounter).toEqual(expectedCount);
+        expect(service['clueAskedCounter']).toEqual(expectedCount);
     });
 
     it('should say if game is over', () => {
@@ -73,7 +73,7 @@ describe('ClueHandlerService', () => {
     });
 
     it('should return the number of clue asked', () => {
-        service.clueAskedCounter = 3;
+        service['clueAskedCounter'] = 3;
         const result = service.getNbCluesAsked();
         expect(result).toEqual(3);
     });

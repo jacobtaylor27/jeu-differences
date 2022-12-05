@@ -13,11 +13,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
     styleUrls: ['./user-name-input.component.scss'],
 })
 export class UserNameInputComponent {
-    isMulti: boolean;
-    playerName: string;
     form: FormGroup = new FormGroup({ name: new FormControl('', [this.noWhiteSpaceValidator, Validators.required]) });
     favoriteTheme: string = Theme.ClassName;
-    isValid: boolean = false;
+    private isMulti: boolean;
+    private playerName: string;
+    private isValid: boolean = false;
 
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(

@@ -42,7 +42,7 @@ export class ClueHandlerService {
     }
 
     private canAskForClue() {
-        return !this.isGameOver() && this.clueAskedCounter <= NUMBER_CLUES && !this.gameInformation.isMulti;
+        return !this.isGameOver() && this.clueAskedCounter < NUMBER_CLUES && !this.gameInformation.isMulti;
     }
 
     private drawRect(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {

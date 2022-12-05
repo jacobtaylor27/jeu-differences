@@ -3,7 +3,7 @@
 
     <div class="main-timer-container timer-container">
         <app-game-constant-field
-        [label]="'Temps de base du jeu (s)'"
+        [label]="'Temps de base du jeu (secondes)'"
         [value]="gameTimeConstants.gameTime"
         (valueChange)="gameTimeConstants.gameTime = $event"
         [min]="gameTimeConstantsParams.gameTimeMin"

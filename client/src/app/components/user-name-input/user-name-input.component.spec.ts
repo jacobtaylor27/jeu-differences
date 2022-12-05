@@ -62,26 +62,26 @@ describe('UserNameInputComponent', () => {
     });
 
     it('should verify if name is valid', () => {
-        component.playerName = 'test';
+        component['playerName'] = 'test';
         expect(component.isValidName()).toBeTrue();
 
-        component.playerName = '  ';
+        component['playerName'] = '  ';
         expect(component.isValidName()).toBeFalse();
 
-        component.playerName = '';
+        component['playerName'] = '';
         expect(component.isValidName()).toBeFalse();
     });
 
     it('should use socket communication when click and is not multi', () => {
-        component.playerName = 'test';
+        component['playerName'] = 'test';
         component.onClickContinue();
         expect(spySocketCommunication.send).toHaveBeenCalled();
         expect(spyGameInformationService.setPlayerName).toHaveBeenCalled();
     });
 
     it('should use socket communication when click and is multi', () => {
-        component.playerName = 'test';
-        component.isMulti = true;
+        component['playerName'] = 'test';
+        component['isMulti'] = true;
         component.onClickContinue();
         expect(spySocketCommunication.send).toHaveBeenCalled();
         expect(spyGameInformationService.setPlayerName).toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe('UserNameInputComponent', () => {
         spyGameInformationService.isLimitedTime.and.callFake(() => true);
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
         const spyDialog = spyOn(component, 'openGameModeDialog').and.callFake(() => {});
-        component.playerName = 'test';
+        component['playerName'] = 'test';
         component.onClickContinue();
         expect(spyDialog).toHaveBeenCalled();
     });
@@ -104,7 +104,7 @@ describe('UserNameInputComponent', () => {
 
     it('should send information when the button is clicked', () => {
         component.onClickContinue();
-        component.playerName = 'test';
+        component['playerName'] = 'test';
         expect(spyGameInformationService.setPlayerName).toHaveBeenCalledWith('test');
     });
 });

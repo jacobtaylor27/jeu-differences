@@ -16,7 +16,9 @@ import { CommunicationService } from '@app/services/communication/communication.
 export class DialogCreateGameComponent implements AfterViewInit {
     @ViewChild('imageDifference', { static: false }) differentImage!: ElementRef<HTMLCanvasElement>;
     theme: typeof Theme = Theme;
-    form: FormGroup = new FormGroup({ name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required]) });
+    form: FormGroup = new FormGroup({
+        name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required, this.noWhiteSpaceValidator]),
+    });
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -35,6 +37,10 @@ export class DialogCreateGameComponent implements AfterViewInit {
     ngAfterViewInit() {
         const ctx = this.differentImage.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         ctx.putImageData(new ImageData(new Uint8ClampedArray(this.data.differenceImage), Canvas.WIDTH, Canvas.HEIGHT, { colorSpace: 'srgb' }), 0, 0);
+    }
+
+    noWhiteSpaceValidator(control: FormControl): { [key: string]: boolean } | null {
+        return !((control.value || '').trim().length === 0) ? null : { whitespace: true };
     }
 
     createGame() {

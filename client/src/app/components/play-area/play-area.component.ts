@@ -80,7 +80,6 @@ export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
     ngAfterViewInit(): void {
         this.cheatMode.handleSocketEvent(this.getContextOriginal(), this.getContextModified());
         this.displayImages();
-        this.differencesDetectionHandlerService.setContextImgModified(this.getContextImgModified());
     }
 
     ngOnDestroy() {

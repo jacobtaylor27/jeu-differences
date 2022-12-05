@@ -22,7 +22,7 @@ export class ClueHandlerService {
     }
 
     getClue() {
-        if (!this.isGameOver() && this.clueAskedCounter <= NUMBER_CLUES) {
+        if (this.canAskForClue()) {
             this.clueAskedCounter++;
             this.$clueAsked.next();
             this.communicationSocket.send(SocketEvent.Clue, { gameId: this.gameInformation.roomId });
@@ -39,6 +39,10 @@ export class ClueHandlerService {
 
     async showClue(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {
         this.drawRect(ctx, quadrantCoordinate);
+    }
+
+    private canAskForClue() {
+        return !this.isGameOver() && this.clueAskedCounter <= NUMBER_CLUES && !this.gameInformation.isMulti;
     }
 
     private drawRect(ctx: CanvasRenderingContext2D, quadrantCoordinate: Coordinate[]) {

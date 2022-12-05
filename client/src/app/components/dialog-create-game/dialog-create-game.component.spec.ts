@@ -17,12 +17,12 @@ describe('DialogCreateGameComponent', () => {
     let fixture: ComponentFixture<DialogCreateGameComponent>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
     let spyRouter: jasmine.SpyObj<Router>;
-    const image = new ImageData(Canvas.WIDTH, Canvas.HEIGHT);
+    const image = new ImageData(Canvas.Width, Canvas.Height);
     const pixelLength = 4;
     const model = {
         expansionRadius: 0,
         nbDifference: 0,
-        differenceImage: new Array(pixelLength * Canvas.WIDTH * Canvas.HEIGHT).fill(0),
+        differenceImage: new Array(pixelLength * Canvas.Width * Canvas.Height).fill(0),
         src: image,
         difference: image,
     };

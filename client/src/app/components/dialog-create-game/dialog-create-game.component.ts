@@ -19,6 +19,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
     form: FormGroup = new FormGroup({
         name: new FormControl('', [Validators.pattern('[a-zA-Z ]*'), Validators.required, this.noWhiteSpaceValidator]),
     });
+    
     // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -36,7 +37,7 @@ export class DialogCreateGameComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         const ctx = this.differentImage.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        ctx.putImageData(new ImageData(new Uint8ClampedArray(this.data.differenceImage), Canvas.WIDTH, Canvas.HEIGHT, { colorSpace: 'srgb' }), 0, 0);
+        ctx.putImageData(new ImageData(new Uint8ClampedArray(this.data.differenceImage), Canvas.Width, Canvas.Height, { colorSpace: 'srgb' }), 0, 0);
     }
 
     noWhiteSpaceValidator(control: FormControl): { [key: string]: boolean } | null {

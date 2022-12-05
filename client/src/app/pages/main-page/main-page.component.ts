@@ -43,8 +43,6 @@ export class MainPageComponent {
                 this.router.redirectToErrorPage();
             },
         });
-        this.mainPageService.setGameMode(GameMode.LimitedTime);
-        this.openNameDialog();
     }
 
     openNameDialog(isMulti: boolean = false) {

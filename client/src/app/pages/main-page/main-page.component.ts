@@ -38,6 +38,7 @@ export class MainPageComponent {
         this.communicationService.getGamesInfoByPage(1).subscribe({
             next: (response: HttpResponse<CarouselResponse>) => {
                 if (response && response.body) {
+                    this.matDialog.closeAll();
                     this.carouselService.setCarouselInformation(response.body.carouselInfo);
                     this.mainPageService.setGameMode(GameMode.LimitedTime);
                     this.openNameDialog();

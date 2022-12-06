@@ -1,7 +1,4 @@
 <main [ngClass]="favoriteTheme">
-    <mat-toolbar class="header-toolbar" color="primary"><button class="home-button" mat-fab color="primary" routerLink="/"><mat-icon>home</mat-icon></button>Sélectionnez votre jeu</mat-toolbar>
-    <div class="game-number-container">
-        <span class="game-number">{{ getNumberOfGames() }} jeu<span *ngIf="hasGames()">x</span></span>
-    </div>
+    <app-page-header [headerMessage]="'Sélectionnez votre jeu'"></app-page-header>
     <app-game-carousel></app-game-carousel>
 </main>

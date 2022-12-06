@@ -1,30 +1,75 @@
 import { Injectable } from '@angular/core';
-import { GameInfo } from '@common/game-info';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { RouterService } from '@app/services/router-service/router.service';
+import { PublicGameInformation } from '@common/game-information';
 import { GameMode } from '@common/game-mode';
-import { Router } from '@angular/router';
+import { SocketEvent } from '@common/socket-event';
+import { Subject } from 'rxjs';
+import { GameId } from '@common/game-id';
+import { GameTimeConstants } from '@common/game-time-constants';
+import { CommunicationService } from '@app/services/communication/communication.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameInformationHandlerService {
-    playerName: string;
-    gameInformation: GameInfo;
+    players: { name: string; nbDifferences: number }[] = [];
+    roomId: string;
+    $playerLeft: Subject<void> = new Subject();
+    $differenceFound: Subject<string> = new Subject();
+    $newGame: Subject<void> = new Subject();
+    gameInformation: PublicGameInformation;
     gameMode: GameMode = GameMode.Classic;
+    isReadyToAccept: boolean = true;
+    isMulti: boolean = false;
+    gameTimeConstants: GameTimeConstants;
 
-    constructor(private readonly router: Router) {}
+    constructor(
+        private readonly routerService: RouterService,
+        private readonly socket: CommunicationSocketService,
+        private readonly communicationService: CommunicationService,
+    ) {}
 
     propertiesAreUndefined(): boolean {
-        return this.gameInformation === undefined || this.playerName === undefined || this.gameMode === undefined;
+        return this.gameInformation === undefined || this.players === undefined || this.gameMode === undefined;
+    }
+
+    handleSocketEvent() {
+        this.socket.once(SocketEvent.Play, (infos: GameId) => {
+            if (infos.gameCard) {
+                this.setGameInformation(infos.gameCard);
+            }
+            this.roomId = infos.gameId;
+            this.routerService.navigateTo('game');
+        });
+
+        this.socket.on(SocketEvent.WaitPlayer, (roomId: string) => {
+            this.roomId = roomId;
+            this.isMulti = true;
+            this.routerService.navigateTo('waiting');
+        });
+    }
+
+    getConstants(): void {
+        this.communicationService.getGameTimeConstants().subscribe((gameTimeConstants) => {
+            if (gameTimeConstants && gameTimeConstants.body) {
+                this.gameTimeConstants = gameTimeConstants.body;
+            }
+        });
     }
 
     handleNotDefined(): void {
         if (this.propertiesAreUndefined()) {
-            this.router.navigate(['/']);
+            this.routerService.navigateTo('/');
         }
     }
 
+    resetPlayers() {
+        this.players = [];
+    }
+
     setPlayerName(name: string): void {
-        this.playerName = name;
+        this.players.push({ name, nbDifferences: 0 });
     }
 
     getOriginalBmpId(): string {
@@ -35,7 +80,15 @@ export class GameInformationHandlerService {
         return this.gameInformation.idEditedBmp;
     }
 
-    setGameInformation(gameInformation: GameInfo): void {
+    getNbDifferences(playerName: string) {
+        return this.players.find((player) => player.name === playerName)?.nbDifferences;
+    }
+
+    getNbTotalDifferences(): number {
+        return this.gameInformation.nbDifferences;
+    }
+
+    setGameInformation(gameInformation: PublicGameInformation): void {
         this.gameInformation = gameInformation;
     }
 
@@ -48,9 +101,9 @@ export class GameInformationHandlerService {
         return this.gameMode;
     }
 
-    getGameInformation(): GameInfo {
+    getId(): string {
         this.handleNotDefined();
-        return this.gameInformation;
+        return this.gameInformation.id;
     }
 
     getGameName(): string {
@@ -58,8 +111,20 @@ export class GameInformationHandlerService {
         return this.gameInformation.name;
     }
 
-    getPlayerName(): string {
+    getPlayer(): { name: string; nbDifferences: number } {
         this.handleNotDefined();
-        return this.playerName;
+        return this.players[0];
+    }
+
+    getOpponent(): { name: string; nbDifferences: number } {
+        return this.players[1];
+    }
+
+    isClassic() {
+        return this.gameMode === GameMode.Classic;
+    }
+
+    isLimitedTime() {
+        return this.gameMode === GameMode.LimitedTime;
     }
 }

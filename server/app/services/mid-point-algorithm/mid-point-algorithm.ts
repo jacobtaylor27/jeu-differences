@@ -32,7 +32,6 @@ export class MidpointAlgorithm {
 
             this.addAllCoords(center, distance, coordinates);
         }
-
         return coordinates;
     }
 
@@ -107,7 +106,6 @@ export class MidpointAlgorithm {
                 if (this.distance({ x: j, y: k }, { x: coord.getX(), y: coord.getY() }) <= radius) coordinates.push(new BmpCoordinate(j, k));
             }
         }
-
         return coordinates;
     }
 }

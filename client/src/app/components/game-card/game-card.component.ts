@@ -1,10 +1,12 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { TimeFormatter } from '@app/classes/time-formatter';
+import { Theme } from '@app/enums/theme';
 import { GameCard } from '@app/interfaces/game-card';
-import { CommunicationService } from '@app/services/communication/communication.service';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
+import { GamesWaitingInfo } from '@common/games-waiting-info';
 import { Score } from '@common/score';
-import { Observable } from 'rxjs';
+import { SocketEvent } from '@common/socket-event';
 
 @Component({
     selector: 'app-game-card',
@@ -13,39 +15,40 @@ import { Observable } from 'rxjs';
 })
 export class GameCardComponent implements OnInit {
     @Input() gameCard: GameCard;
-    favoriteTheme: string = 'deeppurple-amber-theme';
-    imageData$: Observable<HttpResponse<{ width: number; height: number; data: number[] }>>;
+    favoriteTheme: string = Theme.ClassName;
     imageSrc: string;
 
-    constructor(private readonly communicationService: CommunicationService) {}
+    constructor(
+        private readonly communicationSocket: CommunicationSocketService,
+        private readonly timeFormatter: TimeFormatterService,
+        private readonly gameInfoService: GameInformationHandlerService,
+    ) {}
 
     ngOnInit() {
-        this.getImageName();
+        this.setImagesSrc();
+        this.listenForOpenLobbies();
     }
 
-    getImageName() {
-        this.imageData$ = this.communicationService.getImgData(this.gameCard.gameInformation.idOriginalBmp);
-        this.imageData$.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
-            if (!response || !response.body) {
-                return;
+    listenForOpenLobbies(): void {
+        this.communicationSocket.send(SocketEvent.GetGamesWaiting, { mode: this.gameInfoService.gameMode });
+
+        this.communicationSocket.on(SocketEvent.GetGamesWaiting, (games: GamesWaitingInfo) => {
+            if (this.gameInfoService.gameMode === games.mode) {
+                for (const info of games.gamesWaiting) {
+                    if (this.gameCard.gameInformation.id === info) {
+                        this.gameCard.isMulti = true;
+                    }
+                }
             }
-
-            const canvas = document.createElement('canvas');
-            canvas.width = response.body.width;
-            canvas.height = response.body.height;
-            const ctx = canvas.getContext('2d');
-            const image: ImageData = new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, {
-                colorSpace: 'srgb',
-            });
-
-            ctx?.putImageData(image, 0, 0);
-            const dataUrl = canvas.toDataURL('image/jpeg');
-            this.imageSrc = dataUrl.replace(/^data:image\/(png|jpg);base64,/, '');
         });
     }
 
+    setImagesSrc(): void {
+        this.imageSrc = this.gameCard.gameInformation.thumbnail;
+    }
+
     formatScoreTime(scoreTime: number): string {
-        return TimeFormatter.getMMSSFormat(scoreTime);
+        return this.timeFormatter.formatTime(scoreTime);
     }
 
     getGameName(): string {

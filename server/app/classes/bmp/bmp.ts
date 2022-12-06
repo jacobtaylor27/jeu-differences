@@ -1,18 +1,20 @@
 import { Pixel } from '@app/classes/pixel/pixel';
 import { PIXEL_DEPT } from '@app/constants/encoding';
 import { PIXEL_OFFSET } from '@app/constants/pixel-offset';
-import * as bmp from 'bmp-js';
+import { Dimension } from '@app/interface/dimension';
 import { Buffer } from 'buffer';
 export class Bmp {
-    private width: number;
-    private height: number;
+    private dimensions: Dimension;
     private pixels: Pixel[][];
 
-    constructor(width: number, height: number, rawData: number[]) {
-        this.assertParameters(width, height, rawData);
-        this.pixels = this.convertRawToPixels(rawData, width, height);
-        this.height = height;
-        this.width = width;
+    constructor(dimensions: Dimension, rawData: number[], pixels?: Pixel[][]) {
+        if (!this.areParametersValid(dimensions, rawData, pixels)) throw new Error('The parameters given for creating a bmp are invalid');
+        if (pixels) {
+            this.pixels = pixels;
+        } else {
+            this.pixels = this.convertRawToPixels(rawData, dimensions);
+        }
+        this.dimensions = dimensions;
     }
 
     static async convertRGBAToARGB(data: number[]): Promise<number[]> {
@@ -30,45 +32,32 @@ export class Bmp {
     async toImageData(): Promise<ImageData> {
         const imageData: ImageData = {
             colorSpace: 'srgb',
-            width: this.width,
-            height: this.height,
+            width: this.dimensions.width,
+            height: this.dimensions.height,
             data: new Uint8ClampedArray(Buffer.from(Pixel.convertPixelsToBGRA(this.pixels))),
         };
         return imageData;
     }
 
-    async toBmpImageData(): Promise<bmp.ImageData> {
-        const imageData: bmp.ImageData = {
-            width: this.width,
-            height: this.height,
-            data: await this.getPixelBuffer(),
-        };
-        return bmp.encode(imageData);
-    }
-
     getWidth(): number {
-        return this.width;
+        return this.dimensions.width;
     }
 
     getHeight(): number {
-        return this.height;
+        return this.dimensions.height;
     }
 
     getPixels(): Pixel[][] {
         return this.pixels;
     }
 
-    private async getPixelBuffer(): Promise<Buffer> {
-        return Buffer.from(Pixel.convertPixelsToARGB(this.pixels));
-    }
-
-    private convertRawToPixels(rawData: number[], width: number, height: number): Pixel[][] {
+    private convertRawToPixels(rawData: number[], dimensions: Dimension): Pixel[][] {
         const pixels = [];
-        for (let i = 0; i < height; i++) {
+        for (let i = 0; i < dimensions.height; i++) {
             const scanLine = [];
 
-            for (let j = 0; j < width; j++) {
-                const beginRange = (i * width + j) * PIXEL_DEPT;
+            for (let j = 0; j < dimensions.width; j++) {
+                const beginRange = (i * dimensions.width + j) * PIXEL_DEPT;
                 const pixel: Pixel = this.getPixel(rawData.slice(beginRange, beginRange + PIXEL_DEPT));
                 scanLine.push(pixel);
             }
@@ -78,15 +67,35 @@ export class Bmp {
     }
 
     private getPixel(pixelBuffered: number[]): Pixel {
-        return new Pixel(pixelBuffered[PIXEL_OFFSET.red], pixelBuffered[PIXEL_OFFSET.green], pixelBuffered[PIXEL_OFFSET.blue]);
+        const r = pixelBuffered[PIXEL_OFFSET.red];
+        const g = pixelBuffered[PIXEL_OFFSET.green];
+        const b = pixelBuffered[PIXEL_OFFSET.blue];
+        return new Pixel(r, g, b);
     }
 
-    private assertParameters(width: number, height: number, rawData: number[]): void {
-        if (width <= 0 || height <= 0) {
-            throw new RangeError();
-        }
-        if (rawData.length !== PIXEL_DEPT * height * width) {
-            throw new RangeError();
+    private arePixelDimensionsValid(expectedDimensions: Dimension, pixelDimension: Dimension) {
+        return (
+            expectedDimensions.height * expectedDimensions.width === pixelDimension.height * pixelDimension.width &&
+            expectedDimensions.height === pixelDimension.height &&
+            expectedDimensions.width === pixelDimension.width
+        );
+    }
+
+    private areBufferDimensionsValid(expectedDimensions: Dimension, rawData: number[]) {
+        return rawData.length === PIXEL_DEPT * expectedDimensions.height * expectedDimensions.width;
+    }
+
+    private areBmpDimensionsValid(dimensions: Dimension) {
+        return dimensions.width > 0 && dimensions.height > 0;
+    }
+
+    private areParametersValid(dimensions: Dimension, rawData: number[], pixels: Pixel[][] | undefined): boolean {
+        if (!this.areBmpDimensionsValid(dimensions)) return false;
+
+        if (pixels) {
+            return this.arePixelDimensionsValid(dimensions, { width: pixels[0].length, height: pixels.length });
+        } else {
+            return this.areBufferDimensionsValid(dimensions, rawData);
         }
     }
 }

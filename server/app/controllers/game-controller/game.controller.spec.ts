@@ -1,115 +1,68 @@
 import { Application } from '@app/app';
-import { GameService } from '@app/services/game-info-service/game-info.service';
+import { GameCarousel } from '@app/interface/game-carousel';
+import { PrivateGameInformation } from '@app/interface/game-info';
+import { GameInfoService } from '@app/services/game-info-service/game-info.service';
 import { GameManagerService } from '@app/services/game-manager-service/game-manager.service';
 import { GameValidation } from '@app/services/game-validation-service/game-validation.service';
-import { Coordinate } from '@common/coordinate';
-import { GameInfo } from '@common/game-info';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
-import { createStubInstance, SinonStubbedInstance } from 'sinon';
-import * as supertest from 'supertest';
+import { createStubInstance, SinonStubbedInstance, stub } from 'sinon';
 import { Container } from 'typedi';
+import * as supertest from 'supertest';
+import { GameController } from './game.controller';
+import { GameTimeConstantService } from '@app/services/game-time-constant/game-time-constants.service';
 
 describe('GameController', () => {
-    const expectedGameId = 'test';
+    let gameController: GameController;
     let gameManager: SinonStubbedInstance<GameManagerService>;
-    let gameInfo: SinonStubbedInstance<GameService>;
+    let gameInfo: SinonStubbedInstance<GameInfoService>;
     let gameValidation: SinonStubbedInstance<GameValidation>;
+    let gameTimeConstantsService: SinonStubbedInstance<GameTimeConstantService>;
     let expressApp: Express.Application;
 
     beforeEach(async () => {
-        gameManager = createStubInstance(GameManagerService);
-        gameInfo = createStubInstance(GameService);
+        gameController = Container.get(GameController);
+        gameInfo = createStubInstance(GameInfoService);
         gameValidation = createStubInstance(GameValidation);
+        gameTimeConstantsService = createStubInstance(GameTimeConstantService);
         const app = Container.get(Application);
-        // eslint-disable-next-line dot-notation
         Object.defineProperty(app['gameController'], 'gameManager', { value: gameManager });
         Object.defineProperty(app['gameController'], 'gameInfo', { value: gameInfo });
         Object.defineProperty(app['gameController'], 'gameValidation', { value: gameValidation });
+        Object.defineProperty(app['gameController'], 'gameTimeConstantService', { value: gameTimeConstantsService });
         expressApp = app.app;
     });
 
-    it('should return the id of the new game', async () => {
-        gameManager.createGame.resolves(expectedGameId);
-        return supertest(expressApp)
-            .post('/api/game/create/0')
-            .send({ mode: 'Classic', players: ['testPlayer1'] })
-            .expect(StatusCodes.CREATED)
-            .then((response) => {
-                expect(response.body).to.deep.equal({ id: expectedGameId });
-            });
-    });
-
-    it('should return an error if createGame have a problem', async () => {
-        gameManager.createGame.rejects();
-        return supertest(expressApp)
-            .post('/api/game/create/0')
-            .send({ mode: 'Classic', players: ['testPlayer1'] })
-            .expect(StatusCodes.NOT_FOUND);
-    });
-
-    it('should return an error if game query is not set', async () => {
-        return supertest(expressApp).post('/api/game/create/0').send({}).expect(StatusCodes.BAD_REQUEST);
-    });
-
-    it('should return Not Found if no difference found ', async () => {
-        gameManager.isGameFound.callsFake(() => true);
-        gameManager.isDifference.callsFake(() => null);
-        return supertest(expressApp).post('/api/game/difference').send({ id: '', x: 0, y: 0 }).expect(StatusCodes.NOT_FOUND);
-    });
-
-    it('should return a array of coordinate if a difference is found ', async () => {
-        const expectedDifference = [{} as Coordinate];
-        const expectedDifferenceLeft = 10;
-        gameManager.isGameFound.callsFake(() => true);
-        gameManager.isDifference.callsFake(() => expectedDifference);
-        gameManager.isGameOver.callsFake(() => false);
-        gameManager.differenceLeft.callsFake(() => expectedDifferenceLeft);
-        return supertest(expressApp)
-            .post('/api/game/difference')
-            .send({ id: '', x: 0, y: 0 })
-            .expect(StatusCodes.OK)
-            .then((response) => {
-                expect(response.body.difference).to.deep.equal(expectedDifference);
-                expect(response.body.isGameOver).to.deep.equal(false);
-                expect(response.body.differencesLeft).to.deep.equal(expectedDifferenceLeft);
-            });
-    });
-
-    it('should return an error if the difference query is not set', async () => {
-        return supertest(expressApp).post('/api/game/difference').send({}).expect(StatusCodes.BAD_REQUEST);
-    });
-
     it('should fetch all games cards of the database', async () => {
-        const expectedGameCards = [{} as GameInfo, {} as GameInfo];
-        gameInfo.getAllGames.resolves(expectedGameCards);
+        const expected = {
+            games: [{} as PrivateGameInformation],
+            information: {
+                currentPage: 1,
+                gamesOnPage: 1,
+                nbOfGames: 1,
+                nbOfPages: 1,
+                hasNext: false,
+                hasPrevious: false,
+            },
+        } as GameCarousel;
+
+        gameInfo.getGamesInfo.resolves(expected);
         return supertest(expressApp)
-            .get('/api/game/cards')
-            .expect(StatusCodes.OK)
+            .get('/api/game/cards/?page=1')
             .then((response) => {
-                expect(response.body).to.deep.equal({ games: expectedGameCards });
+                expect(response.body).to.deep.equal({});
+                expect(response.body.games).to.equal(undefined);
             });
+    });
+
+    it('should return bad request when page is undefined', async () => {
+        gameInfo.getGamesInfo.rejects();
+        return supertest(expressApp).get('/api/game/cards/?page=').expect(StatusCodes.BAD_REQUEST);
     });
 
     it('should return nothing if the games cards is empty', async () => {
-        gameInfo.getAllGames.rejects();
-        return supertest(expressApp).get('/api/game/cards').expect(StatusCodes.NOT_FOUND);
-    });
-
-    it('should fetch a games card of the database', async () => {
-        const expectedGameCard = {} as GameInfo;
-        gameInfo.getGameById.resolves(expectedGameCard);
-        return supertest(expressApp)
-            .get('/api/game/cards/0')
-            .expect(StatusCodes.OK)
-            .then((response) => {
-                expect(response.body).to.deep.equal({ games: expectedGameCard });
-            });
-    });
-
-    it('should return Not Found if the game does not exist', async () => {
-        gameInfo.getGameById.rejects();
-        return supertest(expressApp).get('/api/game/cards/0').expect(StatusCodes.NOT_FOUND);
+        gameInfo.getGamesInfo.rejects();
+        return supertest(expressApp).get('/api/game/cards/?page=1').expect(StatusCodes.BAD_REQUEST);
     });
 
     it('should return a bad request if one of the attribute needed is not here to validate a new game card', async () => {
@@ -176,33 +129,12 @@ describe('GameController', () => {
             .then((response) => expect(response.body.numberDifference).to.equal(expectedNumberDifference));
     });
 
-    it('should return Not Found if a problem in the attribute is detected when create a game', async () => {
-        gameValidation.isNbDifferenceValid.rejects();
-        const expectedBody = {
-            original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
-            modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
-            differenceRadius: 0,
-            name: 'test',
-        };
-        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.NOT_FOUND);
-    });
-
-    it('should return Not Accepted if the game is invalid when create a game', async () => {
-        const expectedIsValid = false;
-        gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
-        const expectedBody = {
-            original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
-            modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
-            differenceRadius: 0,
-            name: 'test',
-        };
-        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.NOT_ACCEPTABLE);
-    });
-
     it('should return Accepted if the game is valid', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
-        gameInfo.addGameWrapper.resolves();
+        gameInfo.addGameInfoWrapper.resolves();
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        stub(gameController['socketManager'], 'refreshGames').callsFake(() => {});
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
@@ -212,10 +144,118 @@ describe('GameController', () => {
         return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.CREATED);
     });
 
+    it('should send not found if the game is not found', async () => {
+        gameInfo.deleteGameInfoById.resolves().returns(Promise.resolve(false));
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.NOT_FOUND);
+    });
+
+    it('should send not found if the game is not found', async () => {
+        gameInfo.deleteGameInfoById.resolves().returns(Promise.resolve(true));
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.ACCEPTED);
+    });
+
+    it('should send bad request if there is an error while deleting the game', async () => {
+        gameInfo.deleteGameInfoById.rejects();
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should send accepted if all the games are deleted', async () => {
+        gameInfo.deleteAllGamesInfo.resolves();
+        return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.ACCEPTED);
+    });
+
+    it('should send bad request if there is an error while deleting all the games', async () => {
+        gameInfo.deleteAllGamesInfo.rejects();
+        return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should post new game time constants when valid', async () => {
+        gameTimeConstantsService.setGameTimeConstant.resolves();
+        return supertest(expressApp)
+            .patch('/api/game/constants')
+            .send({
+                gameTime: 30,
+                penaltyTime: 10,
+                successTime: 10,
+            })
+            .expect(StatusCodes.OK);
+    });
+
+    it('should not post new game time constants when invalid', async () => {
+        gameTimeConstantsService.setGameTimeConstant.rejects();
+        return supertest(expressApp).patch('/api/game/constants').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should get game time constants when valid', async () => {
+        gameTimeConstantsService.getGameTimeConstant.resolves();
+        return supertest(expressApp).get('/api/game/constants').expect(StatusCodes.OK);
+    });
+
+    it('should not get game time constants when invalid', async () => {
+        gameTimeConstantsService.getGameTimeConstant.rejects();
+        return supertest(expressApp).get('/api/game/constants').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should reset scores for a specific game when valid', async () => {
+        gameInfo.resetHighScores.resolves();
+        return supertest(expressApp).patch('/api/game/scores/0/reset').expect(StatusCodes.OK);
+    });
+
+    it('should reset scores for a specific game when invalid', async () => {
+        gameInfo.resetHighScores.rejects();
+        return supertest(expressApp).patch('/api/game/scores/0/reset').expect(StatusCodes.NOT_FOUND);
+    });
+
+    it('should send 503 when reset high scores fails', async () => {
+        gameInfo.resetHighScores.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).patch('/api/game/scores/0/reset').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it('should reset scores for all games when valid', async () => {
+        gameInfo.resetAllHighScores.resolves();
+        return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.OK);
+    });
+
+    it('should send 503 when resetting the scores fails', async () => {
+        gameInfo.resetAllHighScores.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it('should reset scores for all games when invalid', async () => {
+        gameInfo.resetAllHighScores.rejects();
+        return supertest(expressApp).patch('/api/game/scores/reset').expect(StatusCodes.BAD_REQUEST);
+    });
+
+    it('should return 503 when getting an error trying to delete a card', async () => {
+        gameInfo.deleteGameInfoById.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).delete('/api/game/cards/0').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it("should return 503 when there's an error deleting all games", async () => {
+        gameInfo.deleteAllGamesInfo.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).delete('/api/game/cards').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it('should return 503 when there is and error getting the cards', async () => {
+        gameInfo.getGamesInfo.resolves().returns(Promise.resolve(null));
+        return supertest(expressApp).get('/api/game/cards?page=1').expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
+    it('should return 503 when there is an error posting a new game', async () => {
+        gameInfo.addGameInfoWrapper.resolves().returns(Promise.resolve(null));
+        const expectedBody = {
+            original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
+            differenceRadius: 0,
+            name: 'test',
+        };
+        return supertest(expressApp).post('/api/game/card').send(expectedBody).expect(StatusCodes.SERVICE_UNAVAILABLE);
+    });
+
     it('should return Not Acceptable if the game creation has a problem', async () => {
         const expectedIsValid = true;
         gameValidation.isNbDifferenceValid.resolves(expectedIsValid);
-        gameInfo.addGameWrapper.rejects();
+        gameInfo.addGameInfoWrapper.rejects();
         const expectedBody = {
             original: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },
             modify: { width: 2, height: 2, data: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3] },

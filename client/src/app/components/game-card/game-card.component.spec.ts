@@ -1,77 +1,59 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TimeFormatter } from '@app/classes/time-formatter';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { GameCardButtonsComponent } from '@app/components/game-card-buttons/game-card-buttons.component';
 import { GameScoreComponent } from '@app/components/game-score/game-score.component';
-import { GameCard } from '@app/interfaces/game-card';
+import { gameCard1 } from '@app/constants/game-card-constant.spec';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { TimeFormatterService } from '@app/services/time-formatter/time-formatter.service';
+import { GameMode } from '@common/game-mode';
+import { SocketEvent } from '@common/socket-event';
 import { of } from 'rxjs';
-// import { CommunicationService } from '@app/services/communication.service';
+import { Socket } from 'socket.io-client';
 import { GameCardComponent } from './game-card.component';
-
-const GAME_CARD: GameCard = {
-    gameInformation: {
-        id: '1',
-        name: 'test',
-        idOriginalBmp: 'imageName',
-        idEditedBmp: '1',
-        idDifferenceBmp: '1',
-        soloScore: [
-            {
-                playerName: 'test2',
-                time: 10,
-            },
-            {
-                playerName: 'test',
-                time: 10,
-            },
-        ],
-        multiplayerScore: [
-            {
-                playerName: 'test2',
-                time: 10,
-            },
-            {
-                playerName: 'test',
-                time: 10,
-            },
-        ],
-        differenceRadius: 3,
-        differences: [],
-    },
-    isShown: true,
-    isAdminCard: true,
-};
 
 describe('GameCardComponent', () => {
     let component: GameCardComponent;
     let fixture: ComponentFixture<GameCardComponent>;
-    let spyTimeFormatter: jasmine.SpyObj<TimeFormatter>;
+    let spyTimeFormatter: jasmine.SpyObj<TimeFormatterService>;
     let spyCommunicationService: jasmine.SpyObj<CommunicationService>;
+
+    let socketServiceMock: CommunicationSocketService;
+    let socketHelper: SocketTestHelper;
 
     beforeEach(async () => {
         spyCommunicationService = jasmine.createSpyObj('CommunicationService', ['getImgData']);
         spyCommunicationService.getImgData.and.returnValue(of());
+        spyTimeFormatter = jasmine.createSpyObj('TimeFormatterService', ['formatTime']);
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new CommunicationSocketService();
+        socketServiceMock['socket'] = socketHelper as unknown as Socket;
+
         await TestBed.configureTestingModule({
             imports: [AppMaterialModule, RouterTestingModule, HttpClientModule],
             declarations: [GameCardComponent, GameScoreComponent, GameCardButtonsComponent],
             providers: [
                 {
-                    provide: TimeFormatter,
-                    useValue: spyTimeFormatter,
-                },
-                {
                     provide: CommunicationService,
                     useValue: spyCommunicationService,
+                },
+                {
+                    provide: CommunicationSocketService,
+                    useValue: socketServiceMock,
+                },
+                {
+                    provide: TimeFormatterService,
+                    useValue: spyTimeFormatter,
                 },
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameCardComponent);
         component = fixture.componentInstance;
-        component.gameCard = GAME_CARD;
+        component.gameCard = gameCard1;
         fixture.detectChanges();
     });
 
@@ -80,13 +62,12 @@ describe('GameCardComponent', () => {
     });
 
     it('should get the base64 image name', () => {
-        expect(spyCommunicationService.getImgData).toHaveBeenCalled();
+        expect(component.imageSrc).toEqual(gameCard1.gameInformation.thumbnail);
     });
 
     it('formatScoreTime should call getMMSSFormat from timerFormatter class', () => {
-        spyTimeFormatter = spyOn(TimeFormatter, 'getMMSSFormat');
         component.formatScoreTime(1);
-        expect(spyTimeFormatter).toHaveBeenCalled();
+        expect(spyTimeFormatter.formatTime).toHaveBeenCalled();
     });
 
     it('getGameName should return the name of the game', () => {
@@ -100,13 +81,13 @@ describe('GameCardComponent', () => {
     it('getMultiplayerScores should return the multiplayer scores for a given game', () => {
         const scores = component.getMultiplayerScores();
         expect(scores).toBeDefined();
-        expect(scores.length).toEqual(2);
+        expect(scores.length).toEqual(3);
     });
 
     it('getSinglePlayerScores should return the single player scores for a given game', () => {
         const scores = component.getSinglePlayerScores();
         expect(scores).toBeDefined();
-        expect(scores.length).toEqual(2);
+        expect(scores.length).toEqual(3);
     });
 
     it('hasMultiplayerScores should return true if the game has a multiplayer score', () => {
@@ -117,8 +98,9 @@ describe('GameCardComponent', () => {
         expect(component.hasSinglePlayerScores()).toEqual(true);
     });
 
-    it('should get the image namecall getImageData from communication service', () => {
-        // spyOn(spyCommunicationService, 'getImgData').and.returnValue(of());
-        // component.getImageName();
+    it('should get all the games waiting for opponent', () => {
+        socketHelper.peerSideEmit(SocketEvent.GetGamesWaiting, { mode: GameMode.Classic, gamesWaiting: ['1', '2'] });
+        component.ngOnInit();
+        expect(gameCard1.isMulti).toEqual(true);
     });
 });

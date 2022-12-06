@@ -1,83 +1,198 @@
-// import { HttpClientModule } from '@angular/common/http';
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { RouterTestingModule } from '@angular/router/testing';
-// import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
-// import { DifferencesAreaComponent } from '@app/components/differences-area/differences-area.component';
-// import { ExitGameButtonComponent } from '@app/components/exit-game-button/exit-game-button.component';
-// import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
-// import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
-// import { TimerCountdownComponent } from '@app/components/timer-countdown/timer-countdown.component';
-// import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
-// import { AppMaterialModule } from '@app/modules/material.module';
-// import { CommunicationService } from '@app/services/communication/communication.service';
-// import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-// import { GameMode } from '@common/game-mode';
-// import { of } from 'rxjs';
-// import { GamePageComponent } from './game-page.component';
-// import SpyObj = jasmine.SpyObj;
+import { HttpClientModule } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { ChatBoxComponent } from '@app/components/chat-box/chat-box.component';
+import { DifferencesAreaComponent } from '@app/components/differences-area/differences-area.component';
+import { ExitGameButtonComponent } from '@app/components/exit-game-button/exit-game-button.component';
+import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
+import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
+import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
+import { AppMaterialModule } from '@app/modules/material.module';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
+import { CommunicationService } from '@app/services/communication/communication.service';
+import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
+import { SocketEvent } from '@common/socket-event';
+import { Subject } from 'rxjs';
+import { Socket } from 'socket.io-client';
+import { GamePageComponent } from './game-page.component';
+import { CluesAreaComponent } from '@app/components/clues-area/clues-area.component';
+import { TimerStopwatchComponent } from '@app/components/timer-stopwatch/timer-stopwatch.component';
+import { GameMode } from '@common/game-mode';
 
-// describe('GamePageComponent', () => {
-//     let component: GamePageComponent;
-//     let fixture: ComponentFixture<GamePageComponent>;
-//     let communicationServiceSpy: SpyObj<CommunicationService>;
-//     let gameInformationHandlerServiceSpy: SpyObj<GameInformationHandlerService>;
+class SocketClientServiceMock extends CommunicationSocketService {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- connect needs to be empty (Nikolay's example)
+    override connect() {}
+}
 
-//     beforeEach(async () => {
-//         communicationServiceSpy = jasmine.createSpyObj('ExampleService', ['getTimeValue', 'getImgData']);
-//         gameInformationHandlerServiceSpy = jasmine.createSpyObj('GameInformationHandlerService', [
-//             'getGameMode',
-//             'getGameName',
-//             'getPlayerName',
-//             'getOriginalBmp',
-//             'getOriginalBmpId',
-//             'getModifiedBmpId',
-//             'getGameInformation',
-//         ]);
-//         communicationServiceSpy.getTimeValue.and.returnValue(of({ title: '', body: '' }));
-//         communicationServiceSpy.getImgData.and.returnValue(of());
+describe('GamePageComponent', () => {
+    let component: GamePageComponent;
+    let fixture: ComponentFixture<GamePageComponent>;
+    let dialogSpyObj: jasmine.SpyObj<MatDialog>;
+    let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
+    let gameInformationHandlerServiceSpy: jasmine.SpyObj<GameInformationHandlerService>;
+    let socketHelper: SocketTestHelper;
+    let socketServiceMock: SocketClientServiceMock;
+    const model = {
+        data: {
+            win: true,
+            winner: '',
+            isClassic: true,
+            nbPoints: 2,
+        },
+    };
 
-//         await TestBed.configureTestingModule({
-//             declarations: [
-//                 GamePageComponent,
-//                 SidebarComponent,
-//                 PlayAreaComponent,
-//                 CluesAreaComponent,
-//                 DifferencesAreaComponent,
-//                 ExitGameButtonComponent,
-//                 TimerCountdownComponent,
-//                 TimerStopwatchComponent,
-//             ],
-//             imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
-//             providers: [
-//                 { provide: CommunicationService, useValue: communicationServiceSpy },
-//                 {
-//                     provide: GameInformationHandlerService,
-//                     useValue: gameInformationHandlerServiceSpy,
-//                 },
-//             ],
-//         }).compileComponents();
-//     });
+    beforeEach(async () => {
+        socketHelper = new SocketTestHelper();
+        socketServiceMock = new SocketClientServiceMock();
+        socketServiceMock.socket = socketHelper as unknown as Socket;
+        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
+        communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['createGameRoom']);
+        gameInformationHandlerServiceSpy = jasmine.createSpyObj(
+            'GameInformationHandlerService',
+            [
+                'getGameMode',
+                'getGameName',
+                'getPlayer',
+                'getOriginalBmp',
+                'getOriginalBmpId',
+                'getModifiedBmpId',
+                'getGameInformation',
+                'getId',
+                'getOpponent',
+                'getNbDifferences',
+                'getNbTotalDifferences',
+                'setGameMode',
+                'isLimitedTime',
+                'isClassic',
+                'getConstants',
+            ],
+            { $differenceFound: new Subject<string>(), $newGame: new Subject<void>(), $playerLeft: new Subject() },
+        );
+        gameInformationHandlerServiceSpy.getPlayer.and.callFake(() => {
+            return { name: 'test', nbDifferences: 0 };
+        });
+        gameInformationHandlerServiceSpy.getOpponent.and.callFake(() => {
+            return { name: 'test2', nbDifferences: 0 };
+        });
+        gameInformationHandlerServiceSpy.gameTimeConstants = { gameTime: 30, penaltyTime: 3, successTime: 3 };
+        gameInformationHandlerServiceSpy.isMulti = false;
+        gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
+        gameInformationHandlerServiceSpy.getNbDifferences.and.callFake(() => 0);
+        gameInformationHandlerServiceSpy.getNbTotalDifferences.and.callFake(() => 0);
+        await TestBed.configureTestingModule({
+            declarations: [
+                GamePageComponent,
+                SidebarComponent,
+                PlayAreaComponent,
+                DifferencesAreaComponent,
+                ExitGameButtonComponent,
+                PageHeaderComponent,
+                ChatBoxComponent,
+                TimerStopwatchComponent,
+                CluesAreaComponent,
+            ],
+            imports: [RouterTestingModule, HttpClientModule, AppMaterialModule],
+            providers: [
+                { provide: MatDialog, useValue: dialogSpyObj },
+                { provide: CommunicationService, useValue: communicationServiceSpy },
+                { provide: CommunicationSocketService, useValue: socketServiceMock },
+                { provide: MAT_DIALOG_DATA, useValue: model },
+                {
+                    provide: GameInformationHandlerService,
+                    useValue: gameInformationHandlerServiceSpy,
+                },
+            ],
+        }).compileComponents();
 
-//     beforeEach(() => {
-//         fixture = TestBed.createComponent(GamePageComponent);
-//         component = fixture.componentInstance;
-//         gameInformationHandlerServiceSpy.gameInformation = {
-//             id: '1',
-//             name: 'test',
-//             idOriginalBmp: 'original',
-//             idEditedBmp: 'edited',
-//             idDifferenceBmp: 'difference',
-//             soloScore: [],
-//             multiplayerScore: [],
-//             differenceRadius: 2,
-//             differences: [],
-//         };
-//         gameInformationHandlerServiceSpy.gameMode = GameMode.Classic;
-//         gameInformationHandlerServiceSpy.playerName = 'test';
-//         fixture.detectChanges();
-//     });
+        fixture = TestBed.createComponent(GamePageComponent);
+        component = fixture.componentInstance;
+    });
 
-//     it('should create', () => {
-//         expect(component).toBeTruthy();
-//     });
-// });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should set the title', () => {
+        expect(component.title).toEqual('Mode Classique Solo');
+
+        gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
+        gameInformationHandlerServiceSpy.isMulti = true;
+        fixture = TestBed.createComponent(GamePageComponent);
+        component = fixture.componentInstance;
+        expect(component.title).toEqual('Mode Temps Limité Multijoueur');
+    });
+
+    it('should open the game over dialog when game mode is Limited time', () => {
+        spyOn(Object.getPrototypeOf(component), 'findNbDifferences').and.callFake(() => 1);
+        gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
+        component.openGameOverDialog(false);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+
+        component.openGameOverDialog(true);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getNbDifferences).toHaveBeenCalled();
+    });
+
+    it('should open the game over dialog when game mode is Limited time', () => {
+        spyOn(Object.getPrototypeOf(component), 'findNbDifferences').and.callFake(() => 1);
+        gameInformationHandlerServiceSpy.gameMode = GameMode.LimitedTime;
+        gameInformationHandlerServiceSpy.getNbDifferences.and.callFake(() => undefined);
+        component.openGameOverDialog(true);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getNbDifferences).toHaveBeenCalled();
+    });
+
+    it('should open the game over dialog when game mode is classic', () => {
+        gameInformationHandlerServiceSpy.isClassic.and.callFake(() => true);
+        component.openGameOverDialog(false);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getOpponent).toHaveBeenCalled();
+
+        component.openGameOverDialog(true);
+        expect(dialogSpyObj.open).toHaveBeenCalled();
+        expect(gameInformationHandlerServiceSpy.getPlayer).toHaveBeenCalled();
+    });
+
+    it('should open the game over dialog with when you win the game', () => {
+        const spyOpenGameOverDialog = spyOn(component, 'openGameOverDialog');
+        socketHelper.peerSideEmit(SocketEvent.Win);
+        expect(spyOpenGameOverDialog).toHaveBeenCalled();
+    });
+
+    it('should open the game over dialog with when you lose the game', () => {
+        const spyOpenGameOverDialog = spyOn(component, 'openGameOverDialog');
+        socketHelper.peerSideEmit(SocketEvent.Lose);
+        expect(spyOpenGameOverDialog).toHaveBeenCalled();
+    });
+
+    it('should open the snack bar with when player leaves time limited', () => {
+        const spyOpenGameOverDialog = spyOn(component, 'openSnackBar');
+        socketHelper.peerSideEmit(SocketEvent.PlayerLeft);
+        expect(spyOpenGameOverDialog).toHaveBeenCalled();
+    });
+
+    it('should return nb of differences', () => {
+        gameInformationHandlerServiceSpy.players = [{ name: 'test', nbDifferences: 2 }];
+        expect(component['findNbDifferences']()).toEqual('2');
+        gameInformationHandlerServiceSpy.players = [
+            { name: 'test', nbDifferences: 2 },
+            { name: 'test', nbDifferences: 3 },
+        ];
+        expect(component['findNbDifferences']()).toEqual('5');
+    });
+
+    it('should emit LeaveGame when the player quit the page', () => {
+        const spyEmit = spyOn(socketHelper, 'emit');
+        component.ngOnDestroy();
+        expect(spyEmit).toHaveBeenCalled();
+    });
+
+    it('should open snackbar', () => {
+        const spySnackBar = spyOn(component['snackBar'], 'openFromComponent').and.resolveTo();
+
+        component.openSnackBar();
+        expect(spySnackBar).toHaveBeenCalled();
+    });
+});

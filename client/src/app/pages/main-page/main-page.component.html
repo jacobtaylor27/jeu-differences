@@ -1,18 +1,19 @@
+<main [ngClass]="favoriteTheme" >
 <div class="grid-container">
-    <div class="grid-item" [ngClass]="favoriteTheme">
+    <div class="grid-item">
         <h1 class="game-title">
             {{ title }}
-            <mat-icon class="game-logo">search</mat-icon>
+            <img src="assets/logoJdD.png" class="game-logo" alt="logo pour le jeux de différences" />
         </h1>
         <ul>
             <li>
-                <button mat-flat-button color="primary" routerLink="/select" (click)="onClickPlayClassic()">Classique</button>
+                <button class="optionsButton" mat-flat-button color="primary" routerLink="/select" (click)="onClickPlayClassic()">Classique</button>
             </li>
             <li>
-                <button mat-flat-button color="primary" routerLink="/select" (click)="onClickPlayLimited()">Temps limité</button>
+                <button mat-flat-button class="optionsButton" color="primary" (click)="onClickPlayLimited()">Temps limité</button>
             </li>
             <li>
-                <button mat-flat-button color="primary" routerLink="/admin">Administration</button>
+                <button mat-flat-button class="optionsButton" color="primary" routerLink="/admin">Administration</button>
             </li>
         </ul>
         <h2 class="team-number">Equipe 106 :</h2>
@@ -21,6 +22,7 @@
     </div>
 
     <div class="grid-item">
-        <img src="../../../assets/img/quote.png" alt="photo pour jeu de différences" />
+        <img src="assets/quote.png" alt="photo pour jeu de différences" />
     </div>
 </div>
+</main>

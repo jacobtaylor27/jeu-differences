@@ -1,9 +1,9 @@
-import { InitGameState } from '@app/classes/init-game-state/init-game-state';
-import { SinonSpiedInstance, spy } from 'sinon';
 import { GameContext } from '@app/classes/game-context/game-context';
-import { expect } from 'chai';
+import { InitGameState } from '@app/classes/init-game-state/init-game-state';
 import { InitTimerState } from '@app/classes/init-timer-state/init-timer-state';
-import { GameMode } from '@app/enum/game-mode';
+import { GameMode } from '@common/game-mode';
+import { expect } from 'chai';
+import { SinonSpiedInstance, spy } from 'sinon';
 
 describe('InitialGameState', () => {
     let state: InitGameState;
@@ -12,7 +12,7 @@ describe('InitialGameState', () => {
 
     beforeEach(() => {
         state = new InitGameState();
-        gameContext = new GameContext(GameMode.Classic, state);
+        gameContext = new GameContext(GameMode.Classic, state, true);
         gameContextSpyObj = spy(gameContext);
         state.setContext(gameContext);
     });
@@ -23,7 +23,7 @@ describe('InitialGameState', () => {
 
     it('should go to the next state', () => {
         const expectedNewState = new InitTimerState();
-        state.next();
+        state.next(true);
         expect(gameContextSpyObj.transitionTo.called).to.equal(true);
         expect(gameContext.gameState()).to.equal(expectedNewState.status());
     });

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Tool } from '@app/enums/tool';
-import { Pencil } from '@app/interfaces/pencil';
+import { SIZE } from '@app/constants/canvas';
+import { CanvasType } from '@app/enums/canvas-type';
 import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { Subject } from 'rxjs';
@@ -14,12 +14,39 @@ describe('DrawCanvasComponent', () => {
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
 
     beforeEach(async () => {
-        drawServiceSpyObj = jasmine.createSpyObj('DrawService', ['reposition'], { $differenceImage: new Subject() });
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
-            $pencil: new Subject(),
-            $uploadImageInDiff: new Subject(),
-            $resetDiff: new Subject(),
+        const drawImage = new Map<CanvasType, Subject<ImageData>>();
+        const foregroundContext = new Map<CanvasType, HTMLCanvasElement>();
+        const uploadImage = new Map<CanvasType, Subject<ImageBitmap>>();
+        drawImage.set(CanvasType.Left, new Subject());
+        foregroundContext.set(CanvasType.Left, {} as HTMLCanvasElement);
+        uploadImage.set(CanvasType.Left, new Subject());
+        drawServiceSpyObj = jasmine.createSpyObj(
+            'DrawService',
+            [
+                'reposition',
+                'addDrawingCanvas',
+                'draw',
+                'updateImage',
+                'createStroke',
+                'resetAllLayers',
+                'startDrawing',
+                'stopDrawing',
+                'clearAllLayers',
+                'clearAllBackground',
+                'leaveCanvas',
+                'enterCanvas',
+                'updateImages',
+            ],
+            {
+                $drawingImage: drawImage,
+                foregroundContext,
+            },
+        );
+
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', ['addCanvasType'], {
+            $uploadImage: uploadImage,
         });
+
         await TestBed.configureTestingModule({
             declarations: [DrawCanvasComponent],
             providers: [
@@ -29,6 +56,7 @@ describe('DrawCanvasComponent', () => {
         }).compileComponents();
         fixture = TestBed.createComponent(DrawCanvasComponent);
         component = fixture.componentInstance;
+        component.canvasType = CanvasType.Left;
         fixture.detectChanges();
     });
 
@@ -36,120 +64,65 @@ describe('DrawCanvasComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('should get the width of the canvas', () => {
+        expect(component.width).toEqual(SIZE.x);
+    });
+
+    it('should get the height of the canvas', () => {
+        expect(component.height).toEqual(SIZE.y);
+    });
+
     it('start should change the click state and call to reposition the pointer', () => {
-        drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
-        component.isClick = false;
-        component.start({} as MouseEvent);
-        expect(component.isClick).toBeTrue();
-        expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
-        component.isClick = false;
-        component.start({} as MouseEvent);
-        expect(component.isClick).toBeTrue();
-    });
-    it('should stop to draw in the canvas', () => {
-        component.isClick = true;
-        component.stop();
-        expect(component.isClick).toBeFalse();
-        component.isClick = false;
-        component.stop();
-        expect(component.isClick).toBeFalse();
-    });
-
-    it('draw and erase should exist', () => {
-        component.draw({} as MouseEvent);
-        component.erase({} as MouseEvent);
-    });
-
-    /*
-    // Commented for sprint 1, but works. Kept for sprint 2.
-    it('should draw when the client is clicking on the canvas', () => {
-        component.isClick = false;
-        component.pencil = DEFAULT_PENCIL;
-        component.pencil.state = Tool.Pencil;
-        component.coordDraw = DEFAULT_POSITION_MOUSE_CLIENT;
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const drawPointSpy = spyOn(component, 'drawPoint').and.callFake(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            return new Promise<void>(() => {});
-        });
+        drawServiceSpyObj.startDrawing.and.callFake(() => {});
+        component.startDrawing({} as MouseEvent);
+        expect(drawServiceSpyObj.startDrawing).toHaveBeenCalled();
+    });
+
+    it('should draw when the client is clicking on the canvas', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+        drawServiceSpyObj.draw.and.callFake((event: MouseEvent) => {});
         component.draw({} as MouseEvent);
-        expect(drawPointSpy).not.toHaveBeenCalled();
-        component.isClick = true;
-        component.draw({} as MouseEvent);
-        expect(drawPointSpy).toHaveBeenCalled();
-    });
-    it('drawPoint should set the style of the pencil and create the point', () => {
-        component.coordDraw = { x: 0, y: 0 };
-        component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
-        component.pencil = { width: 5, cap: 'round', color: '#000000', state: Tool.Pencil };
-        drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
-        const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const beginPathSpy = spyOn(ctx, 'beginPath');
-        const moveToSpy = spyOn(ctx, 'moveTo');
-        const lineToSpy = spyOn(ctx, 'lineTo');
-        const stokeSpy = spyOn(ctx, 'stroke');
-        component.drawPoint({} as MouseEvent);
-        expect(beginPathSpy).toHaveBeenCalled();
-        expect(moveToSpy).toHaveBeenCalled();
-        expect(lineToSpy).toHaveBeenCalled();
-        expect(stokeSpy).toHaveBeenCalled();
-        expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
-        expect(ctx.lineWidth).toEqual(component.pencil.width);
-        expect(ctx.lineCap).toEqual(component.pencil.cap);
-        expect(ctx.strokeStyle).toEqual(component.pencil.color);
+        expect(drawServiceSpyObj.draw).toHaveBeenCalled();
     });
 
-    it('should not erase if the client is clicking and select the eraser', () => {
-        component.pencil.state = Tool.Eraser;
-        component.isClick = true;
-        const eraseSpy = spyOn(component, 'erase');
-        const drawSpy = spyOn(component, 'drawPoint');
-        component.draw({} as MouseEvent);
-        expect(eraseSpy).toHaveBeenCalled();
-        expect(drawSpy).not.toHaveBeenCalled();
+    it('should have the current command to eraser', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        drawServiceSpyObj.stopDrawing.and.callFake(() => {});
+        component.stopDrawing({ clientX: 10, clientY: 10 } as MouseEvent);
+        expect(drawServiceSpyObj.stopDrawing).toHaveBeenCalled();
     });
 
-    it('should erase a point', () => {
-        drawServiceSpyObj.reposition.and.returnValue({ x: 0, y: 0 });
-        component.canvas = { nativeElement: document.createElement('canvas') } as ElementRef<HTMLCanvasElement>;
-        const ctx = component.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const clearRectSpy = spyOn(ctx, 'rect');
-        component.erase({} as MouseEvent);
-        expect(clearRectSpy).toHaveBeenCalled();
-        expect(drawServiceSpyObj.reposition).toHaveBeenCalled();
+    it('should call enterCanvas when the client is entering the canvas', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+        drawServiceSpyObj.enterCanvas.and.callFake((event: MouseEvent) => {});
+        component.enterCanvas({} as MouseEvent);
+        expect(drawServiceSpyObj.enterCanvas).toHaveBeenCalled();
     });
 
-*/
-
-    it('should receive a new pencil', () => {
-        const expectedPencil = { cap: 'round', width: 3, state: Tool.Eraser, color: '#000100' } as Pencil;
-        toolBoxServiceSpyObj.$pencil.next(expectedPencil);
-        expect(component.pencil).toEqual(expectedPencil);
+    it('should call leaveCanvas when the client is leaving the canvas', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+        drawServiceSpyObj.leaveCanvas.and.callFake((event: MouseEvent) => {});
+        component.leaveCanvas({} as MouseEvent);
+        expect(drawServiceSpyObj.leaveCanvas).toHaveBeenCalled();
     });
 
-    it('should subscribe to get the new image and draw it', async () => {
-        // const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        // // eslint-disable-next-line @typescript-eslint/no-empty-function
-        // const resetCanvasSpy = spyOn(component, 'resetCanvas').and.callFake(() => {});
-        // const drawImageSpy = spyOn(ctx, 'drawImage');
-        // toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
-        //     expect(drawImageSpy).toHaveBeenCalled();
-        // });
-        // toolBoxServiceSpyObj.$resetDiff.subscribe(() => {
-        //     expect(resetCanvasSpy).toHaveBeenCalled();
-        // });
-        // // component.ngAfterViewInit();
-        // toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
-        // toolBoxServiceSpyObj.$resetDiff.next();
-    });
-
-    it('should subscribe to get the new image and draw it', async () => {
-        const ctx = component.img.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const spyDrawImage = spyOn(ctx, 'drawImage');
-        toolBoxServiceSpyObj.$uploadImageInDiff.subscribe(() => {
-            expect(spyDrawImage).toHaveBeenCalled();
+    it('should upload image', () => {
+        component['background'] = {
+            nativeElement: {
+                getContext: () => {
+                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                    return { drawImage: () => {} } as unknown as CanvasRenderingContext2D;
+                },
+            } as unknown as HTMLCanvasElement,
+        };
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        drawServiceSpyObj.updateImages.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left)?.subscribe(() => {
+            expect(drawServiceSpyObj.updateImages).toHaveBeenCalled();
         });
         component.ngAfterViewInit();
-        toolBoxServiceSpyObj.$uploadImageInDiff.next({} as ImageBitmap);
+        toolBoxServiceSpyObj.$uploadImage.get(CanvasType.Left)?.next({} as ImageBitmap);
     });
 });

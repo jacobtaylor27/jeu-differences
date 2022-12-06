@@ -1,52 +1,40 @@
 import { Injectable } from '@angular/core';
-import { GameCard } from '@app/interfaces/game-card';
-import { GameCardHandlerService } from '@app/services/game-card-handler/game-card-handler.service';
+import { CarouselInformation } from '@common/carousel-information';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameCarouselService {
-    constructor(private readonly gameCardHandlerService: GameCardHandlerService) {}
+    carouselInformation: CarouselInformation = {
+        currentPage: 0,
+        gamesOnPage: 0,
+        nbOfGames: 0,
+        nbOfPages: 0,
+        hasNext: false,
+        hasPrevious: false,
+    };
 
-    getCards(): GameCard[] {
-        return this.gameCardHandlerService.getGameCards();
+    setCarouselInformation(carouselInfo: CarouselInformation): void {
+        this.carouselInformation = carouselInfo;
     }
 
-    setCards(cards: GameCard[]) {
-        this.gameCardHandlerService.setCards(cards);
+    getNumberOfCards(): number {
+        return this.carouselInformation.nbOfGames;
     }
 
-    getCarouselLength(): number {
-        return this.gameCardHandlerService.getNumberOfCards();
-    }
-
-    resetRange(): void {
-        this.gameCardHandlerService.resetActiveRange();
-    }
-
-    setCardMode(makeAdmin: boolean = false): void {
-        this.gameCardHandlerService.setCardMode(makeAdmin);
+    hasMoreThanOneCard(): boolean {
+        return this.carouselInformation.nbOfGames > 1;
     }
 
     hasCards(): boolean {
-        return this.gameCardHandlerService.hasCards();
+        return this.carouselInformation.nbOfGames > 0;
     }
 
     hasPreviousCards(): boolean {
-        return this.gameCardHandlerService.hasPreviousCards();
+        return this.carouselInformation.hasPrevious;
     }
 
     hasNextCards(): boolean {
-        return this.gameCardHandlerService.hasNextCards();
-    }
-
-    showPreviousFour(): void {
-        this.gameCardHandlerService.decreaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.getActiveCardsRange());
-    }
-
-    showNextFour(): void {
-        this.gameCardHandlerService.increaseActiveRange();
-        this.gameCardHandlerService.setActiveCards(this.gameCardHandlerService.getActiveCardsRange());
+        return this.carouselInformation.hasNext;
     }
 }

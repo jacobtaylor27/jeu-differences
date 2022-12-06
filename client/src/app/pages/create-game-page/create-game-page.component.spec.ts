@@ -1,17 +1,26 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { CentralBoxComponent } from '@app/components/central-tool-box/central-tool-box.component';
+import { CommonToolBoxComponent } from '@app/components/common-tool-box/common-tool-box.component';
+import { DialogCreateGameComponent } from '@app/components/dialog-create-game/dialog-create-game.component';
 import { DialogFormsErrorComponent } from '@app/components/dialog-forms-error/dialog-forms-error.component';
 import { DrawCanvasComponent } from '@app/components/draw-canvas/draw-canvas.component';
+import { ExitGameButtonComponent } from '@app/components/exit-game-button/exit-game-button.component';
+import { LoadingScreenComponent } from '@app/components/loading-screen/loading-screen.component';
+import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { ToolBoxComponent } from '@app/components/tool-box/tool-box.component';
+import { CanvasType } from '@app/enums/canvas-type';
 import { AppMaterialModule } from '@app/modules/material.module';
+import { CanvasEventHandlerService } from '@app/services/canvas-event-handler/canvas-event-handler.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
+import { DrawService } from '@app/services/draw-service/draw-service.service';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
 import { of, Subject } from 'rxjs';
-
 import { CreateGamePageComponent } from './create-game-page.component';
 
 describe('CreateGamePageComponent', () => {
@@ -20,24 +29,55 @@ describe('CreateGamePageComponent', () => {
     let dialogSpyObj: jasmine.SpyObj<MatDialog>;
     let communicationSpyObject: jasmine.SpyObj<CommunicationService>;
     let toolBoxServiceSpyObj: jasmine.SpyObj<ToolBoxService>;
+    let drawServiceSpyObj: jasmine.SpyObj<DrawService>;
+    let canvasEventHandlerSpyObj: jasmine.SpyObj<CanvasEventHandlerService>;
 
     beforeEach(async () => {
-        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
+        const drawImageSubjects = new Map();
+        drawImageSubjects.set(CanvasType.Left, new Subject());
+        dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
         communicationSpyObject = jasmine.createSpyObj('CommunicationService', ['validateGame']);
-        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', [], {
-            $uploadImageInSource: new Subject(),
-            $resetSource: new Subject(),
-            $pencil: new Subject(),
-            $uploadImageInDiff: new Subject(),
-            $resetDiff: new Subject(),
+        toolBoxServiceSpyObj = jasmine.createSpyObj('ToolBoxService', ['addCanvasType'], {
+            $uploadImage: new Map<CanvasType, Subject<ImageBitmap>>(),
+            $resetBackground: new Map<CanvasType, Subject<void>>(),
+            $switchForeground: new Map<CanvasType, Subject<void>>(),
+            $resetForeground: new Map<CanvasType, Subject<void>>(),
         });
+        canvasEventHandlerSpyObj = jasmine.createSpyObj('CanvasEventHandlerService', ['handleCtrlShiftZ', 'handleCtrlZ']);
+        drawServiceSpyObj = jasmine.createSpyObj(
+            'DrawService',
+            ['addDrawingCanvas', 'resetAllLayers', 'clearAllLayers', 'clearAllBackground', 'initialize'],
+            {
+                $drawingImage: drawImageSubjects,
+                foregroundContext: new Map(),
+            },
+        );
         await TestBed.configureTestingModule({
-            declarations: [CreateGamePageComponent, DrawCanvasComponent, ToolBoxComponent],
-            imports: [HttpClientTestingModule, AppMaterialModule, BrowserAnimationsModule, ReactiveFormsModule],
+            declarations: [
+                CreateGamePageComponent,
+                DrawCanvasComponent,
+                ToolBoxComponent,
+                DialogCreateGameComponent,
+                PageHeaderComponent,
+                ExitGameButtonComponent,
+                LoadingScreenComponent,
+                CommonToolBoxComponent,
+                CentralBoxComponent,
+            ],
+            imports: [
+                AppMaterialModule,
+                HttpClientTestingModule,
+                BrowserAnimationsModule,
+                ReactiveFormsModule,
+                RouterTestingModule,
+                HttpClientModule,
+            ],
             providers: [
                 { provide: MatDialog, useValue: dialogSpyObj },
                 { provide: CommunicationService, useValue: communicationSpyObject },
                 { provide: ToolBoxService, useValue: toolBoxServiceSpyObj },
+                { provide: DrawService, useValue: drawServiceSpyObj },
+                { provide: CanvasEventHandlerService, useValue: canvasEventHandlerSpyObj },
             ],
         }).compileComponents();
 
@@ -62,46 +102,6 @@ describe('CreateGamePageComponent', () => {
         });
     });
 
-    it('should differenceValidator return null if the number of difference is not < 10 and > 2 ', () => {
-        const calcDiffSpy = spyOn(component, 'calculateDifference').and.callFake(() => 0);
-        const mockControl = { value: 'test' } as FormControl;
-        const nbDifference = component.differenceValidator()(mockControl);
-        expect(calcDiffSpy).toHaveBeenCalled();
-        expect(nbDifference).toEqual(null);
-    });
-
-    it('should differenceValidator return the value control of if the number of difference is < 10 and > 2', () => {
-        const mockDiff = 5;
-        const calcDiffSpy = spyOn(component, 'calculateDifference').and.callFake(() => mockDiff);
-        const mockControl = { value: 'test' } as FormControl;
-        const nbDifference = component.differenceValidator()(mockControl);
-        expect(calcDiffSpy).toHaveBeenCalled();
-        expect(nbDifference).not.toEqual(null);
-        expect(nbDifference?.difference.value).toEqual(mockControl.value);
-    });
-
-    it('should calculateDifference return the number of difference between two images', () => {
-        const expectedDifference = 5;
-        expect(component.calculateDifference()).toEqual(expectedDifference);
-    });
-    it('should subscribe to get the new image and draw it', async () => {
-        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const spyDrawImage = spyOn(ctx, 'drawImage');
-        toolBoxServiceSpyObj.$uploadImageInSource.subscribe(() => {
-            expect(spyDrawImage).toHaveBeenCalled();
-        });
-        component.ngAfterViewInit();
-        toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
-    });
-
-    it('should create the source image from the canvas', async () => {
-        const expectedBmpImage = new ImageData(1, 1);
-        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const spyCreateBmpImage = spyOn(ctx, 'getImageData').and.returnValue(expectedBmpImage);
-        expect(component.createSourceImageFromCanvas()).toEqual(expectedBmpImage);
-        expect(spyCreateBmpImage).toHaveBeenCalled();
-    });
-
     it('should open a dialog to validate the game settings', async () => {
         component.validateForm(0, [0]);
         expect(dialogSpyObj.open).toHaveBeenCalled();
@@ -109,8 +109,8 @@ describe('CreateGamePageComponent', () => {
 
     it('should open the validate dialog if the form is valid', async () => {
         spyOnProperty(component.form, 'valid').and.returnValue(true);
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        spyOn(component, 'validateForm').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
         communicationSpyObject.validateGame.and.callFake(() => {
             return of({ body: { numberDifference: 0, data: [0], height: 1, width: 1 } } as HttpResponse<{
                 numberDifference: number;
@@ -120,29 +120,36 @@ describe('CreateGamePageComponent', () => {
             }>);
         });
         component.isGameValid();
-        // expect(spyValidateFormDialog).toHaveBeenCalled();
+        expect(validateFormSpy).toHaveBeenCalled();
     });
 
-    it('should subscribe to get the new image and draw it', async () => {
-        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const spyDrawImage = spyOn(ctx, 'drawImage');
-        toolBoxServiceSpyObj.$uploadImageInSource.subscribe(() => {
-            expect(spyDrawImage).toHaveBeenCalled();
+    it('should not open the validate dialog if the form is not valid and body is null', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
+        communicationSpyObject.validateGame.and.callFake(() => {
+            return of({ body: null } as HttpResponse<{
+                numberDifference: number;
+                width: number;
+                height: number;
+                data: number[];
+            }>);
         });
-        component.ngAfterViewInit();
-        toolBoxServiceSpyObj.$uploadImageInSource.next({} as ImageBitmap);
+        component.isGameValid();
+        expect(validateFormSpy).not.toHaveBeenCalled();
+        expect(manageErrorFormFormSpy).toHaveBeenCalled();
     });
 
-    it('should clear an image', () => {
-        const ctx = component.sourceImg.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        const createRectangleSpy = spyOn(ctx, 'rect');
-        const fillRectSpy = spyOn(ctx, 'fill');
-        toolBoxServiceSpyObj.$resetSource.subscribe(() => {
-            expect(createRectangleSpy).toHaveBeenCalled();
-            expect(fillRectSpy).toHaveBeenCalled();
-        });
-        component.ngAfterViewInit();
-        toolBoxServiceSpyObj.$resetSource.next();
+    it('should not open the validate dialog if the form is not valid and response is null', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const validateFormSpy = spyOn(component, 'validateForm').and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake and return {}
+        const manageErrorFormFormSpy = spyOn(component, 'manageErrorInForm').and.callFake(() => {});
+        communicationSpyObject.validateGame.and.callFake(() => of(null));
+        component.isGameValid();
+        expect(validateFormSpy).not.toHaveBeenCalled();
+        expect(manageErrorFormFormSpy).toHaveBeenCalled();
     });
 
     it('should do not validate the form if the response is undefined', () => {
@@ -161,5 +168,47 @@ describe('CreateGamePageComponent', () => {
         );
         component.isGameValid();
         expect(validateFormSpy).not.toHaveBeenCalled();
+    });
+
+    it('should add new image ', () => {
+        const spySetDrawingImage = spyOn(component.drawingImage as Map<CanvasType, ImageData>, 'set');
+        drawServiceSpyObj.$drawingImage.get(CanvasType.Left)?.next({} as ImageData);
+        expect(spySetDrawingImage).toHaveBeenCalled();
+    });
+
+    it('should handleCtrlShiftZ if key down', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlShiftZ.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlZ.and.callFake(() => {});
+        component.keyEvent({ ctrlKey: true, key: 'Z', shiftKey: true } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
+    });
+
+    it('should handleCtrlZ if key down', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlShiftZ.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlZ.and.callFake(() => {});
+        component.keyEvent({ ctrlKey: true, key: 'z', shiftKey: false } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).toHaveBeenCalled();
+    });
+
+    it('should not handle control if it s not shiftKey or control z', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlShiftZ.and.callFake(() => {});
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        canvasEventHandlerSpyObj.handleCtrlZ.and.callFake(() => {});
+        component.keyEvent({} as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
+        component.keyEvent({ ctrlKey: true, key: 'a' } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
+        component.keyEvent({ ctrlKey: true, key: 'A' } as KeyboardEvent);
+        expect(canvasEventHandlerSpyObj.handleCtrlShiftZ).not.toHaveBeenCalled();
+        expect(canvasEventHandlerSpyObj.handleCtrlZ).not.toHaveBeenCalled();
     });
 });

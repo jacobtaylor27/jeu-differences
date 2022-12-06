@@ -18,10 +18,8 @@ export class BmpController {
         this.router.get('/:id', async (req: Request, res: Response) => {
             try {
                 const bmpRequested = await this.bmpService.getBmpById(req.params.id, DEFAULT_BMP_ASSET_PATH);
-                res.status(StatusCodes.CREATED).send({
-                    width: bmpRequested.getWidth(),
-                    height: bmpRequested.getHeight(),
-                    data: Array.from((await bmpRequested.toImageData()).data),
+                res.status(StatusCodes.OK).send({
+                    image: bmpRequested,
                 });
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send();

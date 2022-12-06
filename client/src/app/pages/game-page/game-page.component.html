@@ -1,21 +1,14 @@
 <main [ngClass]="favoriteTheme">
-    <mat-toolbar color="primary">
-        <span>MODE CLASSIQUE SOLO</span>
-        <span class="filler"></span>
-        <app-exit-game-button></app-exit-game-button>
-    </mat-toolbar>
-
-    <div class="game-section">
-        <app-sidebar></app-sidebar>
-
-        <section class="container">
-            <section>
-                <app-play-area class="play-area" tabindex="0"></app-play-area>
+    <app-page-header [headerMessage]="this.title" [isHomeButtonEnabled]="false" [isExitButtonEnabled]="true"> </app-page-header>
+    <div class="main-wrapper">
+        <div class="game-section">
+            <app-sidebar></app-sidebar>
+            <section class="container">
+                <app-play-area class="play-area" tabindex="0" [gameId]="this.gameInfoHandlerService.roomId"></app-play-area>
             </section>
-            <!-- <section class="play-area-container" id="canvas2">
-                <app-play-area class="play-area" tabindex="0"></app-play-area>
-            </section> -->
-            <!-- <img class="image" src="https://picsum.photos/500" alt="" width="500" height="500" /> -->
-        </section>
+        </div>
+        <div class="chat-section">
+            <app-chat-box></app-chat-box>
+        </div>
     </div>
 </main>

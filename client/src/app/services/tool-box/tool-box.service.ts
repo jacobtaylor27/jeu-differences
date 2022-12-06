@@ -1,21 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Pencil } from '@app/interfaces/pencil';
+import { CanvasType } from '@app/enums/canvas-type';
 import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolBoxService {
-    $pencil: Subject<Pencil>;
-    $uploadImageInSource: Subject<ImageBitmap>;
-    $uploadImageInDiff: Subject<ImageBitmap>;
-    $resetSource: Subject<void>;
-    $resetDiff: Subject<void>;
+    $uploadImage: Map<CanvasType, Subject<ImageBitmap>>;
+
     constructor() {
-        this.$uploadImageInSource = new Subject();
-        this.$uploadImageInDiff = new Subject();
-        this.$pencil = new Subject();
-        this.$resetSource = new Subject();
-        this.$resetDiff = new Subject();
+        this.$uploadImage = new Map();
+    }
+
+    addCanvasType(canvasType: CanvasType) {
+        this.$uploadImage.set(canvasType, new Subject<ImageBitmap>());
     }
 }

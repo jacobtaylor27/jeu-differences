@@ -7,10 +7,10 @@ label {
     width: 100vw;
     height: 100vh;
 }
-
 .drawImg {
     display: flex;
     flex-direction: column;
+    width: 640px;
 }
 
 .img {
@@ -19,13 +19,15 @@ label {
 
 .img-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    gap: 2vw;
 }
 
 .toolbox-container {
     display: flex;
     justify-content: center;
+    align-self: end;
     margin-top: 4vh;
 }
 
@@ -44,5 +46,21 @@ label {
 }
 
 .space-under-title-bar {
+    height: 2vh;
+}
+
+.toolbox-specific {
+    margin-top: 0.5em;
+    justify-self: center;
+    align-self: center;
+    min-width: 500px;
+}
+
+.common-toolbox-container {
+    display: flex;
+    justify-content: center;
+}
+
+.space-between-canvas-and-tools {
     height: 2vh;
 }

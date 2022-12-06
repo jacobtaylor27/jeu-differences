@@ -2,6 +2,10 @@
     text-align: right;
 }
 
+.title-true, .title-false {
+    font-weight: bolder;
+}
+
 ul.highscores {
     margin: 0;
     padding-inline-start: 0;
@@ -9,5 +13,15 @@ ul.highscores {
 }
 
 .empty-scores {
-    color: gray;
+    color: rgb(176, 176, 176);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.game-score {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: 500;
 }

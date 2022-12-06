@@ -1,41 +1,49 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SIZE } from '@app/constants/canvas';
-import { Vec2 } from '@app/interfaces/vec2';
+import { CheatModeService } from '@app/services/cheat-mode/cheat-mode.service';
+import { ClueHandlerService } from '@app/services/clue-handler-service/clue-handler.service';
+import { CommunicationSocketService } from '@app/services/communication-socket/communication-socket.service';
 import { CommunicationService } from '@app/services/communication/communication.service';
 import { DifferencesDetectionHandlerService } from '@app/services/differences-detection-handler/differences-detection-handler.service';
 import { GameInformationHandlerService } from '@app/services/game-information-handler/game-information-handler.service';
-import { TimerService } from '@app/services/timer.service';
+import { MouseHandlerService } from '@app/services/mouse-handler/mouse-handler.service';
+import { RouterService } from '@app/services/router-service/router.service';
+import { BASE_64_HEADER } from '@common/base64';
 import { Coordinate } from '@common/coordinate';
+import { DifferenceFound } from '@common/difference';
+import { PublicGameInformation } from '@common/game-information';
+import { SocketEvent } from '@common/socket-event';
+
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
     styleUrls: ['./play-area.component.scss'],
 })
-export class PlayAreaComponent implements AfterViewInit {
-    @ViewChild('actionsGameOriginal') canvasOriginal!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('actionsGameModified') canvasModified!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgOriginal') canvasImgOriginal!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModified') canvasImgModified!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('imgModifiedWODifference') canvasImgDifference!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('gameOverDialog')
-    private readonly gameOverDialogRef: TemplateRef<HTMLElement>;
+export class PlayAreaComponent implements AfterViewInit, OnDestroy, OnInit {
+    @Input() gameId: string;
+    @ViewChild('actionsGameOriginal') private canvasOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('actionsGameModified') private canvasModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgOriginal') private canvasImgOriginal: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModified') private canvasImgModified: ElementRef<HTMLCanvasElement>;
+    @ViewChild('imgModifiedWODifference') private canvasImgDifference: ElementRef<HTMLCanvasElement>;
 
-    mousePosition: Vec2 = { x: 0, y: 0 };
+    isThirdClue: boolean = false;
+    clue: string;
     buttonPressed = '';
-    gameId: string;
-
-    // eslint-disable-next-line max-params
+    intervals = [];
+    // eslint-disable-next-line max-params -- absolutely need all the imported services
     constructor(
         private readonly differencesDetectionHandlerService: DifferencesDetectionHandlerService,
         private readonly gameInfoHandlerService: GameInformationHandlerService,
         private readonly communicationService: CommunicationService,
-        private readonly timerService: TimerService,
-        private readonly matDialog: MatDialog,
+        private readonly mouseHandlerService: MouseHandlerService,
+        private readonly communicationSocketService: CommunicationSocketService,
+        private readonly routerService: RouterService,
+        private cheatMode: CheatModeService,
+        private readonly clueHandlerService: ClueHandlerService,
     ) {
-        this.createGameRoom();
+        this.handleSocketDifferenceFound();
     }
 
     get width(): number {
@@ -51,23 +59,76 @@ export class PlayAreaComponent implements AfterViewInit {
         this.buttonPressed = event.key;
     }
 
-    ngAfterViewInit(): void {
-        this.displayImage(true, this.getContextImgOriginal());
-        this.displayImage(false, this.getContextImgModified());
-        this.displayImage(true, this.getContextDifferences());
-    }
+    @HostListener('window:keyup', ['$event'])
+    async keyBoardDetected(event: KeyboardEvent) {
+        if ((event.target as HTMLElement).tagName === 'INPUT') {
+            return;
+        }
+        if (event.key === 't') {
+            await this.cheatMode.manageCheatMode(this.getContextOriginal(), this.getContextModified());
+        }
 
-    // eslint-disable-next-line no-unused-vars
-    onClick($event: MouseEvent, canvas: string) {
-        if (!this.isMouseDisabled()) {
-            this.mouseHitDetect($event, canvas);
+        if (event.key === 'i') {
+            this.clueHandlerService.getClue();
         }
     }
 
-    mouseHitDetect($event: MouseEvent, canvas: string) {
-        this.mousePosition = { x: $event.offsetX, y: $event.offsetY };
-        const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
-        this.getDifferenceValidation(this.gameId, this.mousePosition, ctx);
+    ngOnInit(): void {
+        this.handleClue();
+    }
+
+    ngAfterViewInit(): void {
+        this.cheatMode.handleSocketEvent(this.getContextOriginal(), this.getContextModified());
+        this.displayImages();
+    }
+
+    ngOnDestroy() {
+        this.communicationSocketService.off(SocketEvent.DifferenceFound);
+        this.communicationSocketService.off(SocketEvent.NewGameBoard);
+        this.communicationSocketService.off(SocketEvent.Clue);
+        this.cheatMode.removeHandleSocketEvent();
+    }
+
+    onClick($event: MouseEvent, canvas: string) {
+        if (!this.isMouseDisabled()) {
+            const ctx: CanvasRenderingContext2D = canvas === 'original' ? this.getContextOriginal() : this.getContextModified();
+            this.mouseHandlerService.mouseHitDetect($event, ctx, this.gameInfoHandlerService.roomId);
+        }
+    }
+
+    handleClue() {
+        this.communicationSocketService.on(SocketEvent.Clue, (data: { clue: Coordinate[]; nbClues: number }) => {
+            if (data.nbClues === 3) {
+                this.isThirdClue = true;
+                this.clue = '(' + data.clue[0].x.toString() + ', ' + data.clue[0].y.toString() + ')';
+                setInterval(() => {
+                    this.isThirdClue = false;
+                    // eslint-disable-next-line @typescript-eslint/no-magic-numbers  -- time to show third clue coordinates
+                }, 5000);
+                return;
+            }
+            this.clueHandlerService.showClue(this.getContextOriginal(), data.clue);
+            this.clueHandlerService.showClue(this.getContextModified(), data.clue);
+        });
+    }
+
+    handleSocketDifferenceFound() {
+        this.communicationSocketService.on(SocketEvent.NewGameBoard, (data: PublicGameInformation) => {
+            this.differencesDetectionHandlerService.playCorrectSound();
+            this.gameInfoHandlerService.setGameInformation(data);
+            this.displayImages();
+            this.gameInfoHandlerService.$newGame.next();
+        });
+        this.communicationSocketService.on<DifferenceFound>(SocketEvent.DifferenceFound, (data: DifferenceFound) => {
+            this.differencesDetectionHandlerService.setNumberDifferencesFound(!data.isPlayerFoundDifference);
+            if (this.cheatMode.isCheatModeActivated) {
+                this.cheatMode.stopCheatModeDifference(this.getContextOriginal(), this.getContextModified(), data.coords);
+            }
+            if (this.gameInfoHandlerService.isClassic()) {
+                this.differencesDetectionHandlerService.differenceDetected(this.getContextOriginal(), this.getContextImgModified(), data.coords);
+                this.differencesDetectionHandlerService.differenceDetected(this.getContextModified(), this.getContextImgModified(), data.coords);
+            }
+        });
     }
 
     getContextImgOriginal() {
@@ -94,61 +155,31 @@ export class PlayAreaComponent implements AfterViewInit {
         return this.communicationService.getImgData(source);
     }
 
-    displayImage(isOriginalImage: boolean = true, ctx: CanvasRenderingContext2D): void {
+    displayImage(isOriginalImage: boolean, ctx: CanvasRenderingContext2D): void {
         const originalImageData = isOriginalImage
             ? this.getImageData(this.gameInfoHandlerService.getOriginalBmpId())
             : this.getImageData(this.gameInfoHandlerService.getModifiedBmpId());
 
-        originalImageData.subscribe((response: HttpResponse<{ width: number; height: number; data: number[] }> | null) => {
+        originalImageData.subscribe((response: HttpResponse<{ image: string }> | null) => {
             if (!response || !response.body) {
                 return;
             }
-            const image: ImageData = new ImageData(new Uint8ClampedArray(response.body.data), response.body.width, response.body.height, {
-                colorSpace: 'srgb',
-            });
-
-            ctx.putImageData(image, 0, 0);
+            const imageBase64 = response.body.image;
+            const image = new Image();
+            image.src = BASE_64_HEADER + imageBase64;
+            image.onload = () => {
+                ctx.drawImage(image, 0, 0);
+            };
+            image.onerror = () => {
+                this.routerService.navigateTo('home');
+            };
         });
     }
 
-    createGameRoom() {
-        this.communicationService
-            .createGameRoom(
-                this.gameInfoHandlerService.getPlayerName(),
-                this.gameInfoHandlerService.getGameMode(),
-                this.gameInfoHandlerService.getGameInformation().id as string,
-            )
-            .subscribe((response: HttpResponse<{ id: string }> | null) => {
-                if (!response || !response.body) {
-                    return;
-                }
-                this.gameId = response.body.id;
-            });
-    }
-
-    getDifferenceValidation(id: string, mousePosition: Vec2, ctx: CanvasRenderingContext2D) {
-        return this.communicationService
-            .validateCoordinates(id, mousePosition)
-            .subscribe((response: HttpResponse<{ difference: Coordinate[]; isGameOver: boolean; differencesLeft: number }> | null) => {
-                if (!response || !response.body) {
-                    this.differencesDetectionHandlerService.differenceNotDetected(mousePosition, ctx);
-                    return;
-                }
-
-                this.differencesDetectionHandlerService.setNumberDifferencesFound(
-                    response.body.differencesLeft,
-                    this.gameInfoHandlerService.gameInformation.differences.length,
-                );
-                this.timerService.setNbOfDifferencesFound();
-                if (response.body.isGameOver) {
-                    this.differencesDetectionHandlerService.setGameOver();
-                    const dialogConfig = new MatDialogConfig();
-                    dialogConfig.disableClose = true;
-                    dialogConfig.minWidth = '50%';
-                    this.matDialog.open(this.gameOverDialogRef, dialogConfig);
-                }
-                this.differencesDetectionHandlerService.differenceDetected(ctx, this.getContextImgModified(), response.body.difference);
-            });
+    private displayImages() {
+        this.displayImage(true, this.getContextImgModified());
+        this.displayImage(false, this.getContextDifferences());
+        this.displayImage(false, this.getContextImgOriginal());
     }
 
     private isMouseDisabled() {

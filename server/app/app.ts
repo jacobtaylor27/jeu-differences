@@ -1,15 +1,14 @@
 import { HttpException } from '@app/classes/http/http.exception';
-import { CountdownTimerController } from '@app/controllers/countdown-timer-controller/countdown-timer.controller';
-import { DateController } from '@app/controllers/date-controller/date.controller';
 import { GameController } from '@app/controllers/game-controller/game.controller';
+import { StatusCodes } from 'http-status-codes';
+import { Service } from 'typedi';
+import { BmpController } from './controllers/bmp-controller/bmp.controller';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
-import { StatusCodes } from 'http-status-codes';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
-import { Service } from 'typedi';
-import { BmpController } from './controllers/bmp-controller/bmp.controller';
+import * as compression from 'compression';
 
 @Service()
 export class Application {
@@ -17,13 +16,7 @@ export class Application {
     private readonly internalError: number = StatusCodes.INTERNAL_SERVER_ERROR;
     private readonly swaggerOptions: swaggerJSDoc.Options;
 
-    // eslint-disable-next-line max-params
-    constructor(
-        private readonly dateController: DateController,
-        private readonly gameController: GameController,
-        private readonly bmpController: BmpController,
-        private readonly countDownController: CountdownTimerController,
-    ) {
+    constructor(private readonly gameController: GameController, private readonly bmpController: BmpController) {
         this.app = express();
 
         this.swaggerOptions = {
@@ -45,8 +38,6 @@ export class Application {
     bindRoutes(): void {
         this.app.use('/api/game', this.gameController.router);
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
-        this.app.use('/api/date', this.dateController.router);
-        this.app.use('/api/game', this.countDownController.router);
         this.app.use('/api/bmp', this.bmpController.router);
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
@@ -60,6 +51,7 @@ export class Application {
         this.app.use(express.urlencoded({ limit: '100mb', extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors());
+        this.app.use(compression());
     }
 
     private errorHandling(): void {

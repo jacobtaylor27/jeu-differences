@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Theme } from '@app/enums/theme';
 import { AdminService } from '@app/services/admin-service/admin.service';
+import { ConfirmDeleteDialogComponent } from '@app/components/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
     selector: 'app-admin-commands',
@@ -7,12 +10,12 @@ import { AdminService } from '@app/services/admin-service/admin.service';
     styleUrls: ['./admin-commands.component.scss'],
 })
 export class AdminCommandsComponent {
-    favoriteTheme: string = 'deeppurple-amber-theme';
+    favoriteTheme: string = Theme.ClassName;
 
-    constructor(private readonly adminService: AdminService) {}
+    constructor(private readonly adminService: AdminService, private readonly matDialog: MatDialog) {}
 
     hasCards(): boolean {
-        return this.adminService.hasGameCards();
+        return this.adminService.hasCards();
     }
 
     onClickModifySettings(): void {
@@ -20,10 +23,10 @@ export class AdminCommandsComponent {
     }
 
     onClickDeleteGames(): void {
-        this.adminService.deleteAllGames();
+        this.matDialog.open(ConfirmDeleteDialogComponent, { data: { singleGameDelete: false } });
     }
 
-    onClickResetHighScores(): void {
-        this.adminService.resetAllHighScores();
+    onClickRefreshGames(): void {
+        this.adminService.refreshAllGames();
     }
 }

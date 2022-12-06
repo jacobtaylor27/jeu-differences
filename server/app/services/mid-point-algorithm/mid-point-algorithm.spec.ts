@@ -5,7 +5,7 @@ import { describe } from 'mocha';
 import { Container } from 'typedi';
 import { MidpointAlgorithm } from './mid-point-algorithm';
 
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers -- test with random numbers */
 describe('Midpoint Algorithn', async () => {
     let midpointAlgorithm: MidpointAlgorithm;
 
@@ -13,7 +13,7 @@ describe('Midpoint Algorithn', async () => {
         midpointAlgorithm = Container.get(MidpointAlgorithm);
     });
 
-    it('Should return return center when radius is 0', () => {
+    it('findContourEnlargement(...) should return return center when radius is 0', () => {
         const center: BmpCoordinate = new BmpCoordinate(2, 3);
         const radius = 0;
         const coordinates: BmpCoordinate[] = midpointAlgorithm['findContourEnlargement'](center, radius);
@@ -23,25 +23,25 @@ describe('Midpoint Algorithn', async () => {
         expect(coordinates[0].getY()).to.equal(3);
     });
 
-    it('Should return correct value is in Quadrant', () => {
+    it('isInQuadrant(...) should return correct value is in Quadrant', () => {
         const distanceCorrect: Coordinate = { x: 3, y: 1 };
         const distanceCIncorrect: Coordinate = { x: 1, y: 3 };
         const distanceCIncorrect2: Coordinate = { x: 1, y: 1 };
-        expect(midpointAlgorithm['isInQuadrant'](distanceCorrect));
-        expect(!midpointAlgorithm['isInQuadrant'](distanceCIncorrect));
-        expect(!midpointAlgorithm['isInQuadrant'](distanceCIncorrect2));
+        expect(midpointAlgorithm['isInQuadrant'](distanceCorrect)).to.equal(true);
+        expect(midpointAlgorithm['isInQuadrant'](distanceCIncorrect)).to.equal(false);
+        expect(midpointAlgorithm['isInQuadrant'](distanceCIncorrect2)).to.equal(false);
     });
 
-    it('Should return correct value is outside Quadrant', () => {
+    it('isOutsideQuadrant(...) should return correct value is outside Quadrant', () => {
         const distanceCorrect: Coordinate = { x: 1, y: 3 };
         const distanceCIncorrect: Coordinate = { x: 3, y: 1 };
         const distanceCIncorrect2: Coordinate = { x: 1, y: 1 };
-        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCorrect));
-        expect(!midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect));
-        expect(!midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect2));
+        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCorrect)).to.equal(true);
+        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect)).to.equal(false);
+        expect(midpointAlgorithm['isOutsideQuadrant'](distanceCIncorrect2)).to.equal(false);
     });
 
-    it('Should invert the distance coordinates', () => {
+    it('invertDistance(...) should invert the distance coordinates', () => {
         const distance: Coordinate = { x: 1, y: 3 };
         const distanceInverted = midpointAlgorithm['invertDistance'](distance);
         const expectedDistance: Coordinate = { x: 3, y: 1 };
@@ -50,23 +50,23 @@ describe('Midpoint Algorithn', async () => {
         expect(distanceInverted.y).to.equal(expectedDistance.y);
     });
 
-    it('Should return correct value if perimeter is negative', () => {
+    it('perimeterIsNegative(...) should return correct value if perimeter is negative', () => {
         const perimeterCorrect = -1;
         const perimeterCorrect2 = 0;
         const perimeterIncorrect = 1;
-        expect(midpointAlgorithm['perimeterIsNegative'](perimeterCorrect));
-        expect(!midpointAlgorithm['perimeterIsNegative'](perimeterCorrect2));
-        expect(!midpointAlgorithm['perimeterIsNegative'](perimeterIncorrect));
+        expect(midpointAlgorithm['perimeterIsNegative'](perimeterCorrect)).to.equal(true);
+        expect(midpointAlgorithm['perimeterIsNegative'](perimeterCorrect2)).to.equal(true);
+        expect(midpointAlgorithm['perimeterIsNegative'](perimeterIncorrect)).to.equal(false);
     });
 
-    it('Should return true if is not equidistant', () => {
+    it('isNotEquidistant(...) should return true if is not equidistant', () => {
         const distanceEquidistant: Coordinate = { x: 1, y: 1 };
         const distanceNotEquidistant: Coordinate = { x: 1, y: 3 };
-        expect(midpointAlgorithm['isNotEquidistant'](distanceNotEquidistant));
-        expect(!midpointAlgorithm['isNotEquidistant'](distanceEquidistant));
+        expect(midpointAlgorithm['isNotEquidistant'](distanceNotEquidistant)).to.equal(true);
+        expect(midpointAlgorithm['isNotEquidistant'](distanceEquidistant)).to.equal(false);
     });
 
-    it('should increment the perimeter correctly ', () => {
+    it('incrementPerimeter(...) should increment the perimeter correctly ', () => {
         const distance: Coordinate = { x: 1, y: 3 };
         const perimeterPositive = 1;
         const expectedPerimeterPositive = 8;
@@ -77,7 +77,7 @@ describe('Midpoint Algorithn', async () => {
         expect(midpointAlgorithm['incrementPerimeter'](perimeterNegative, distance)).to.equal(expectedPerimeterNegative);
     });
 
-    it('should add all four initial coordinates ', () => {
+    it('addInitial4Coords(...) should add all four initial coordinates ', () => {
         const center: BmpCoordinate = new BmpCoordinate(2, 2);
         const distance: Coordinate = { x: 1, y: 3 };
         const coordinates: BmpCoordinate[] = [];
@@ -94,7 +94,7 @@ describe('Midpoint Algorithn', async () => {
         expect(coordinates[3].getY()).to.equal(1);
     });
 
-    it('should not add coord if coord is negative', () => {
+    it('addInitial4Coords(...) should not add coord if coord is negative', () => {
         const center: BmpCoordinate = new BmpCoordinate(0, 0);
         const distance: Coordinate = { x: 1, y: 3 };
         const coordinates: BmpCoordinate[] = [];
@@ -103,8 +103,8 @@ describe('Midpoint Algorithn', async () => {
         expect(coordinates.length).to.equal(2);
     });
 
-    it('should not add coord if coord is outside bound', () => {
-        const center: BmpCoordinate = new BmpCoordinate(640, 480);
+    it('addInitial4Coords(...) should not add coord if coord is outside bound', () => {
+        const center: BmpCoordinate = new BmpCoordinate(479, 639);
         const distance: Coordinate = { x: 1, y: 3 };
         const coordinates: BmpCoordinate[] = [];
         midpointAlgorithm['addInitial4Coords'](center, distance, coordinates);

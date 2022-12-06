@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BMP_HEADER_OFFSET, FORMAT_IMAGE, IMAGE_TYPE, SIZE } from '@app/constants/canvas';
-import { PropagateCanvasEvent } from '@app/enums/propagate-canvas-event';
+import { CanvasType } from '@app/enums/canvas-type';
 import { ImageCorrect } from '@app/interfaces/image-correct';
 import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-dialog-upload-form',
@@ -11,18 +12,11 @@ import { ToolBoxService } from '@app/services/tool-box/tool-box.service';
     styleUrls: ['./dialog-upload-form.component.scss'],
 })
 export class DialogUploadFormComponent {
-    form: FormGroup;
     isPropertiesImageCorrect: ImageCorrect = { size: true, type: true, format: true };
-    img: ImageBitmap;
     isFormSubmitted: boolean = false;
-    typePropagateCanvasEvent: typeof PropagateCanvasEvent = PropagateCanvasEvent;
+    private img: ImageBitmap;
 
-    constructor(private toolService: ToolBoxService) {
-        this.form = new FormGroup({
-            type: new FormControl('', Validators.required),
-            uploadImage: new FormControl(null, Validators.required),
-        });
-    }
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { canvas: CanvasType }, private toolService: ToolBoxService) {}
 
     async uploadImage(event: Event) {
         const files: FileList = (event.target as HTMLInputElement).files as FileList;
@@ -61,23 +55,15 @@ export class DialogUploadFormComponent {
     }
 
     onSubmit(): void {
-        switch ((this.form.get('type') as FormControl).value) {
-            case this.typePropagateCanvasEvent.Both: {
-                this.toolService.$uploadImageInDiff.next(this.img);
-                this.toolService.$uploadImageInSource.next(this.img);
-                break;
-            }
-            case this.typePropagateCanvasEvent.Difference: {
-                this.toolService.$uploadImageInDiff.next(this.img);
-                break;
-            }
-            case this.typePropagateCanvasEvent.Source: {
-                this.toolService.$uploadImageInSource.next(this.img);
-                break;
-            }
-            default: {
-                return;
-            }
+        if (!this.isFormSubmitted || !this.data.canvas) {
+            return;
         }
+        if (this.data.canvas === CanvasType.Both) {
+            this.toolService.$uploadImage.forEach((event: Subject<ImageBitmap>) => {
+                event.next(this.img);
+            });
+            return;
+        }
+        (this.toolService.$uploadImage.get(this.data.canvas) as Subject<ImageBitmap>).next(this.img);
     }
 }

@@ -1,13 +1,12 @@
 <section [ngClass]="favoriteTheme">
-    <div class="dialog-content">
+    <form [formGroup]="form">
         <mat-form-field>
-            <mat-label>Quel est votre nom?</mat-label>
-            <input [(ngModel)]="playerName" matInput/>
+            <input matInput placeholder="Nom" formControlName="name" maxlength="15"/>
         </mat-form-field>
-    </div>
-
-    <div mat-dialog-actions>
-        <button mat-flat-button color="primary" mat-dialog-close>Annuler</button>
-        <button mat-flat-button type="submit" color="primary" [disabled]="!playerName" (click)="onClickContinue()">Continuer</button>
-    </div>
+        <mat-error *ngIf="!form.valid">Entrez un nom valide</mat-error>
+    </form>
+    <mat-dialog-actions>
+        <button mat-flat-button color="primary" mat-button mat-dialog-close>Annuler</button>
+        <button type="button" type="submit" mat-raised-button mat-dialog-close color="primary" [disabled]="!form.valid" (click)="onClickContinue()">Continuer</button>
+    </mat-dialog-actions>
 </section>

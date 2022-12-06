@@ -1,10 +1,10 @@
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { VALID_GAME } from '@app/constants/server';
+import { CREATE_GAME, DELETE_GAMES, VALID_GAME } from '@app/constants/server';
+import { CarouselResponse } from '@app/interfaces/carousel-response';
 import { CommunicationService } from '@app/services/communication/communication.service';
-import { GameInfo } from '@common/game-info';
-import { Message } from '@common/message';
+import { GameTimeConstants } from '@common/game-time-constants';
 
 describe('CommunicationService', () => {
     let httpMock: HttpTestingController;
@@ -17,7 +17,6 @@ describe('CommunicationService', () => {
         });
         service = TestBed.inject(CommunicationService);
         httpMock = TestBed.inject(HttpTestingController);
-        // eslint-disable-next-line dot-notation -- baseUrl is private and we need access for the test
         baseUrl = service['baseUrl'];
     });
 
@@ -29,88 +28,16 @@ describe('CommunicationService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return expected message (HttpClient called once)', () => {
-        const expectedMessage: Message = { body: 'Hello', title: 'World' };
-
-        // check the content of the mocked call
-        service.basicGet().subscribe({
-            next: (response: Message) => {
-                expect(response.title).toEqual(expectedMessage.title);
-                expect(response.body).toEqual(expectedMessage.body);
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/example`);
-        expect(req.request.method).toBe('GET');
-        // actually send the request
-        req.flush(expectedMessage);
-    });
-
-    it('should return expected message (timer) when game page is loaded', () => {
-        const expectedMessage: Message = { body: 'TimerAdmin', title: '120' };
-        service.getTimeValue().subscribe({
-            next: (response: Message) => {
-                expect(response.title).toEqual(expectedMessage.title);
-                expect(response.body).toEqual(expectedMessage.body);
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game`);
-        expect(req.request.method).toBe('GET');
-        req.flush(expectedMessage);
-    });
-
     it('should get image data when game card is loaded', () => {
         service.getImgData('original').subscribe({
-            next: (response: HttpResponse<{ width: number; height: number; data: number[] }>) => {
-                expect(response.body).toEqual({ width: 0, height: 0, data: [] });
+            next: (response: HttpResponse<{ image: string }>) => {
+                expect(response.body).toEqual({ image: '' });
             },
             error: fail,
         });
 
         const req = httpMock.expectOne(`${baseUrl}/bmp/original`);
         expect(req.request.method).toBe('GET');
-    });
-
-    it('should get games info when select or admin page is loaded', () => {
-        service.getAllGameInfos().subscribe({
-            next: (response: HttpResponse<{ games: GameInfo[] }>) => {
-                expect(response.body).toEqual({ games: [] });
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/game/cards`);
-        expect(req.request.method).toBe('GET');
-    });
-
-    it('should not return any message when sending a POST request (HttpClient called once)', () => {
-        const sentMessage: Message = { body: 'Hello', title: 'World' };
-        // subscribe to the mocked call
-        service.basicPost(sentMessage).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            next: () => {},
-            error: fail,
-        });
-        const req = httpMock.expectOne(`${baseUrl}/example/send`);
-        expect(req.request.method).toBe('POST');
-        // actually send the request
-        req.flush(sentMessage);
-    });
-
-    it('should handle http error safely', () => {
-        service.basicGet().subscribe({
-            next: (response: Message) => {
-                expect(response).toBeUndefined();
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/example`);
-        expect(req.request.method).toBe('GET');
-        req.error(new ProgressEvent('Random error occurred'));
     });
 
     it('should send a request to validate a game', () => {
@@ -121,7 +48,7 @@ describe('CommunicationService', () => {
                 0,
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -142,7 +69,7 @@ describe('CommunicationService', () => {
                 0,
             )
             .subscribe({
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
                 next: () => {},
                 error: fail,
             });
@@ -151,19 +78,142 @@ describe('CommunicationService', () => {
         req.error(new ProgressEvent('Random error occurred'));
     });
 
-    // it('should return expected imgData (HttpClient called once)', () => {
-    //     const expectedImgData: ImgData = EXPECTED_IMG_DATA;
+    it('should send a request to create a game', () => {
+        service
+            .createGame(
+                {
+                    original: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                    modify: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                },
+                3,
+                '',
+            )
+            .subscribe({
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
+                next: () => {},
+                error: fail,
+            });
+        const req = httpMock.expectOne(`${baseUrl}/game/card`);
+        expect(req.request.method).toBe('POST');
+        req.flush({
+            original: { width: 0, height: 0, data: Array.from([]) },
+            modify: { width: 0, height: 0, data: Array.from([]) },
+            differenceRadius: 0,
+            name: '',
+        });
+    });
 
-    //     // TODO: make a better test with something else than 'hello'
-    //     service.getImgData('hello').subscribe({
-    //         next: (response: ImgData) => {
-    //             expect(response.imgData).toEqual(expectedImgData.imgData);
-    //         },
-    //         error: fail,
-    //     });
+    it('should handle http error when create a game', () => {
+        service
+            .createGame(
+                {
+                    original: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                    modify: { width: 0, height: 0, data: new Uint8ClampedArray() } as ImageData,
+                },
+                3,
+                '',
+            )
+            .subscribe({
+                // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
+                next: (response) => {
+                    expect(response).toBeNull();
+                },
+            });
+        const req = httpMock.expectOne(CREATE_GAME);
+        expect(req.request.method).toBe('POST');
+        req.error(new ProgressEvent('Random error occurred'));
+    });
 
-    //     const req = httpMock.expectOne(`${baseUrl}/bmp/hello`);
-    //     expect(req.request.method).toBe('GET');
-    //     req.flush(expectedImgData);
-    // });
+    it('should handle delete all game cards', () => {
+        service.deleteAllGameCards().subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(DELETE_GAMES);
+        expect(req.request.method).toBe('DELETE');
+    });
+
+    it('should delete a game by id', () => {
+        service.deleteGame('gameid').subscribe({
+            // eslint-disable-next-line @typescript-eslint/no-empty-function -- calls fake next and return {}
+            next: () => {},
+            error: fail,
+        });
+        const req = httpMock.expectOne(DELETE_GAMES + '/gameid');
+        expect(req.request.method).toBe('DELETE');
+    });
+
+    it('should get cards by page number', () => {
+        service.getGamesInfoByPage().subscribe({
+            next: (response: HttpResponse<CarouselResponse>) => {
+                expect(response.body).toEqual({} as CarouselResponse);
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/cards/?page=1`);
+        expect(req.request.method).toBe('GET');
+    });
+
+    it('should get the game time constants', () => {
+        service.getGameTimeConstants().subscribe({
+            next: (response: HttpResponse<GameTimeConstants>) => {
+                expect(response.body).toEqual({} as GameTimeConstants);
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/constants`);
+        expect(req.request.method).toBe('GET');
+    });
+
+    it('should set the game time constants', () => {
+        service.setGameTimeConstants({} as GameTimeConstants).subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/constants`);
+        expect(req.request.method).toBe('PATCH');
+    });
+
+    it('should handle error when set game time constant', () => {
+        service.setGameTimeConstants({} as GameTimeConstants).subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/constants`);
+        expect(req.request.method).toBe('PATCH');
+        req.error(new ProgressEvent('Random error has occur'));
+    });
+
+    it('should refresh all the scores for each game', () => {
+        service.refreshAllGames().subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/scores/reset`);
+        expect(req.request.method).toBe('PATCH');
+    });
+
+    it('should reset the scores for a single game', () => {
+        service.refreshSingleGame('1').subscribe({
+            next: (response: void) => {
+                expect(response).toBeUndefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/game/scores/1/reset`);
+        expect(req.request.method).toBe('PATCH');
+    });
 });

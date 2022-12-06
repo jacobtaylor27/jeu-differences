@@ -6,9 +6,9 @@ export class Pixel {
     g: number;
     b: number;
     a: number;
+    isVisited: boolean = false;
 
     constructor(r: number, g: number, b: number) {
-        if (!this.arePixelsValid(r, g, b)) throw new Error('Les pixels ne peuvent pas avoir une valeur négative');
         this.r = r;
         this.g = g;
         this.b = b;
@@ -41,16 +41,16 @@ export class Pixel {
         return raw;
     }
 
+    isEqual(pixel: Pixel) {
+        return pixel.a === this.a && pixel.b === this.b && pixel.g === this.g && pixel.r === this.r;
+    }
+
     isWhite() {
         return this.isColor(PIXEL_COLOR.white);
     }
 
     isBlack() {
         return this.isColor(PIXEL_COLOR.black);
-    }
-
-    setWhite() {
-        this.setColor(PIXEL_COLOR.white);
     }
 
     setBlack() {
@@ -65,9 +65,5 @@ export class Pixel {
         this.b = color;
         this.g = color;
         this.r = color;
-    }
-
-    private arePixelsValid(r: number, g: number, b: number): boolean {
-        return r >= 0 && b >= 0 && g >= 0;
     }
 }

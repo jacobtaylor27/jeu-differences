@@ -3,6 +3,7 @@ import { DatabaseService } from '@app/services/database-service/database.service
 import * as http from 'http';
 import { AddressInfo } from 'net';
 import { Service } from 'typedi';
+import { SocketManagerService } from './services/socket-manager-service/socket-manager-service.service';
 
 @Service()
 export class Server {
@@ -11,7 +12,11 @@ export class Server {
     private static readonly baseDix: number = 10;
     private server: http.Server;
 
-    constructor(private readonly application: Application, private readonly databaseService: DatabaseService) {}
+    constructor(
+        private readonly application: Application,
+        private readonly databaseService: DatabaseService,
+        private socketManager: SocketManagerService,
+    ) {}
 
     private static normalizePort(val: number | string): number | string | boolean {
         const port: number = typeof val === 'string' ? parseInt(val, this.baseDix) : val;
@@ -29,6 +34,8 @@ export class Server {
         this.server.listen(Server.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
+        this.socketManager.server = this.server;
+        this.socketManager.handleSockets();
         await this.databaseService.start();
     }
 

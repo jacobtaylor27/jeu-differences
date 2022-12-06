@@ -1,8 +1,11 @@
 .game-title {
     font-size: 40px;
-    margin-bottom: 8rem;
-    margin-top: 1em;
+    margin-bottom: 7rem;
+    margin-top: 2em;
     text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 .grid-container {
     display: grid;
@@ -10,6 +13,7 @@
     padding: 1em;
 }
 .game-logo {
+    padding-left: 2vw;
     width: 100px;
     font-size: 100px;
     height: 100px;
@@ -28,7 +32,7 @@ span {
 p {
     text-align: right;
 }
-button {
+.optionsButton {
     margin-top: 2vh;
     border: none;
     color: white;

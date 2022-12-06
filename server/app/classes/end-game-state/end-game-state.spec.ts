@@ -1,8 +1,8 @@
-import { SinonSpiedInstance, spy } from 'sinon';
-import { GameContext } from '@app/classes/game-context/game-context';
-import { expect } from 'chai';
 import { EndGameState } from '@app/classes/end-game-state/end-game-state';
-import { GameMode } from '@app/enum/game-mode';
+import { GameContext } from '@app/classes/game-context/game-context';
+import { GameMode } from '@common/game-mode';
+import { expect } from 'chai';
+import { SinonSpiedInstance, spy } from 'sinon';
 
 describe('EndGame', () => {
     let state: EndGameState;
@@ -11,7 +11,7 @@ describe('EndGame', () => {
 
     beforeEach(() => {
         state = new EndGameState();
-        gameContext = new GameContext(GameMode.Classic, state);
+        gameContext = new GameContext(GameMode.Classic, state, true);
         gameContextSpyObj = spy(gameContext);
         state.setContext(gameContext);
     });
@@ -21,7 +21,9 @@ describe('EndGame', () => {
     });
 
     it('should go to the next state', () => {
-        state.next();
+        state.next(true);
         expect(gameContextSpyObj.transitionTo.called).to.equal(false);
+        state.next(false);
+        expect(gameContextSpyObj.transitionTo.calledTwice).to.equal(false);
     });
 });

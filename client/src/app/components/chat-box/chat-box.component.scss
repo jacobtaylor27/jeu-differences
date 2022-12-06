@@ -35,6 +35,7 @@
     justify-content: center;
 }
 .message-content {
+    word-wrap: break-word;
     min-width: none;
     max-width: 160px;
     margin: 5px;
